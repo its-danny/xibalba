@@ -41,11 +41,11 @@ public class CaveGenerator {
     }
 
     // Start off with all ground, then create emptiness randomly
-    // (40% chance)
+    // (43% chance)
     private void initialize() {
         for (int x = 0; x < map.length; x++) {
             for (int y = 0; y < map[x].length; y++) {
-                if (MathUtils.random() < 0.40f) {
+                if (MathUtils.random() < 0.43f) {
                     map[x][y] = Constants.EMPTINESS;
                 }
             }
