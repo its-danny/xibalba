@@ -5,6 +5,8 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -20,7 +22,7 @@ import me.dannytatom.x2600BC.systems.MovementSystem;
 
 import java.util.Map;
 
-public class PlayScreen implements Screen {
+public class PlayScreen implements Screen, InputProcessor {
     static int SPRITE_WIDTH = 24;
     static int SPRITE_HEIGHT = 24;
     final Main game;
@@ -49,6 +51,9 @@ public class PlayScreen implements Screen {
         this.camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         camera.update();
 
+        // Setup input
+        Gdx.input.setInputProcessor(this);
+
         // Add player entity
         this.player = new Entity();
         player.add(new PositionComponent(startingPosition.get("x"), startingPosition.get("y")));
@@ -56,15 +61,15 @@ public class PlayScreen implements Screen {
         engine.addEntity(player);
 
         // Create some mobs
-        for (int i = 0; i < 3; i++) {
-            Map<String, Integer> pos = cave.findMobStart();
-            Entity mob = new Entity();
-
-            mob.add(new PositionComponent(pos.get("x"), pos.get("y")));
-            mob.add(new VisualComponent(game.assets, "sprites/spider.png"));
-
-            engine.addEntity(mob);
-        }
+//        for (int i = 0; i < 3; i++) {
+//            Map<String, Integer> pos = cave.findMobStart();
+//            Entity mob = new Entity();
+//
+//            mob.add(new PositionComponent(pos.get("x"), pos.get("y")));
+//            mob.add(new VisualComponent(game.assets, "sprites/spider.png"));
+//
+//            engine.addEntity(mob);
+//        }
     }
 
     @Override
@@ -153,5 +158,79 @@ public class PlayScreen implements Screen {
     @Override
     public void dispose() {
         batch.dispose();
+    }
+
+    @Override
+    public boolean keyDown(int keyCode) {
+        PositionComponent position = player.getComponent(PositionComponent.class);
+
+        switch (keyCode) {
+            case Input.Keys.UP:
+                position.moveN = true;
+                break;
+            case Input.Keys.RIGHT:
+                position.moveE = true;
+                break;
+            case Input.Keys.DOWN:
+                position.moveS = true;
+                break;
+            case Input.Keys.LEFT:
+                position.moveW = true;
+                break;
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean keyUp(int keyCode) {
+        PositionComponent position = player.getComponent(PositionComponent.class);
+
+        switch (keyCode) {
+            case Input.Keys.UP:
+                position.moveN = false;
+                break;
+            case Input.Keys.RIGHT:
+                position.moveE = false;
+                break;
+            case Input.Keys.DOWN:
+                position.moveS = false;
+                break;
+            case Input.Keys.LEFT:
+                position.moveW = false;
+                break;
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean keyTyped(char character) {
+        return false;
+    }
+
+    @Override
+    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        return false;
+    }
+
+    @Override
+    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        return false;
+    }
+
+    @Override
+    public boolean touchDragged(int screenX, int screenY, int pointer) {
+        return false;
+    }
+
+    @Override
+    public boolean mouseMoved(int screenX, int screenY) {
+        return false;
+    }
+
+    @Override
+    public boolean scrolled(int amount) {
+        return false;
     }
 }
