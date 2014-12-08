@@ -1,6 +1,5 @@
 package me.dannytatom.x2600BC.generators;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
 import me.dannytatom.x2600BC.Constants;
 
@@ -13,9 +12,9 @@ public class CaveGenerator {
     int height;
     int[][] map;
 
-    public CaveGenerator(int spriteWidth, int spriteHeight) {
-        this.width = Gdx.graphics.getWidth() / spriteWidth;
-        this.height = Gdx.graphics.getHeight() / spriteHeight;
+    public CaveGenerator(int width, int height) {
+        this.width = width;
+        this.height = height;
 
         this.map = new int[width][height];
 
@@ -46,7 +45,7 @@ public class CaveGenerator {
     private void initialize() {
         for (int x = 0; x < map.length; x++) {
             for (int y = 0; y < map[x].length; y++) {
-                if (MathUtils.random() < 0.43f) {
+                if (MathUtils.random() < 0.40f) {
                     map[x][y] = Constants.EMPTINESS;
                 }
             }
@@ -125,14 +124,19 @@ public class CaveGenerator {
     }
 
     // If a space is empty & has at least some ground near it,
-    // it's a wall
+    // it's a wall. If the one before it is a front wall, it's a top wall.
+    // Otherwise it's a front wall.
     private void makeWalls() {
         for (int x = 0; x < map.length; x++) {
             for (int y = 0; y < map[x].length; y++) {
                 int neighbours = groundNeighbours(x, y);
 
                 if (map[x][y] == Constants.EMPTINESS && neighbours > 0) {
-                    map[x][y] = Constants.WALL;
+                    if (y - 1 > 0 && (map[x][y - 1] == Constants.WALL_FRONT || map[x][y - 1] == Constants.WALL_TOP)) {
+                        map[x][y] = Constants.WALL_TOP;
+                    } else {
+                        map[x][y] = Constants.WALL_FRONT;
+                    }
                 }
             }
         }

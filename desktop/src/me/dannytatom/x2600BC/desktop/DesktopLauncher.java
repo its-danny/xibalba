@@ -10,7 +10,7 @@ public class DesktopLauncher {
 
         config.title = "2600 BC";
         config.width = 960;
-        config.height = 600;
+        config.height = 480;
 
         new LwjglApplication(new Main(), config);
     }

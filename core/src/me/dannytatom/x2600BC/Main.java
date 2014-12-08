@@ -6,6 +6,7 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -20,7 +21,7 @@ import me.dannytatom.x2600BC.systems.MovementSystem;
 import java.util.Map;
 
 public class Main extends ApplicationAdapter {
-    private static int SPRITE_WIDTH = 16;
+    private static int SPRITE_WIDTH = 24;
     private static int SPRITE_HEIGHT = 24;
 
     Engine engine;
@@ -29,7 +30,8 @@ public class Main extends ApplicationAdapter {
     OrthographicCamera camera;
     Entity player;
     Texture ground;
-    Texture wall;
+    Texture wallTop;
+    Texture wallFront;
     int[][] map;
 
     @Override
@@ -39,20 +41,21 @@ public class Main extends ApplicationAdapter {
         // Set font
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/Monaco.ttf"));
         font = generator.generateFont(new FreeTypeFontGenerator.FreeTypeFontParameter());
+        font.setColor(Color.WHITE);
         generator.dispose();
 
         // Generate cave & find player starting position
-        CaveGenerator cave = new CaveGenerator(SPRITE_WIDTH, SPRITE_HEIGHT);
+        CaveGenerator cave = new CaveGenerator(40, 30);
         map = cave.generate();
         Map<String, Integer> startingPosition = cave.findPlayerStart();
 
         // Initialize textures
         ground = new Texture("sprites/ground.png");
-        wall = new Texture("sprites/wall.png");
+        wallTop = new Texture("sprites/wall_top.png");
+        wallFront = new Texture("sprites/wall_front.png");
 
         // Setup camera
         camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        camera.position.set(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2, 0);
         camera.update();
 
         // Add player entity
@@ -79,6 +82,9 @@ public class Main extends ApplicationAdapter {
         engine.update(Gdx.graphics.getDeltaTime());
 
         // Update camera
+        camera.position.set(player.getComponent(PositionComponent.class).x * SPRITE_WIDTH,
+                player.getComponent(PositionComponent.class).y * SPRITE_HEIGHT,
+                0);
         camera.update();
 
         // Draw shit
@@ -89,15 +95,20 @@ public class Main extends ApplicationAdapter {
         for (int x = 0; x < map.length; x++) {
             for (int y = 0; y < map[x].length; y++) {
                 int tile = map[x][y];
+                int realX = x * SPRITE_WIDTH;
+                int realY = y * SPRITE_HEIGHT;
 
                 switch (tile) {
                     case Constants.EMPTINESS:
                         break;
                     case Constants.GROUND:
-                        batch.draw(ground, x * SPRITE_WIDTH, y * SPRITE_HEIGHT);
+                        batch.draw(ground, realX, realY);
                         break;
-                    case Constants.WALL:
-                        batch.draw(wall, x * SPRITE_WIDTH, y * SPRITE_HEIGHT);
+                    case Constants.WALL_TOP:
+                        batch.draw(wallTop, realX, realY);
+                        break;
+                    case Constants.WALL_FRONT:
+                        batch.draw(wallFront, realX, realY);
                         break;
                 }
             }
@@ -109,8 +120,12 @@ public class Main extends ApplicationAdapter {
             PositionComponent position = Mappers.position.get(entity);
             VisualComponent visual = Mappers.visual.get(entity);
 
-            batch.draw(visual.sprite, position.x * SPRITE_WIDTH, position.y * SPRITE_HEIGHT);
+            int realX = position.x * SPRITE_WIDTH;
+            int realY = position.y * SPRITE_HEIGHT;
+
+            batch.draw(visual.sprite, realX, realY);
         }
+
         batch.end();
     }
 }
