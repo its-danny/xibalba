@@ -28,6 +28,7 @@ public class PlayScreen implements Screen {
     SpriteBatch batch;
     Engine engine;
     Entity player;
+    CaveGenerator cave;
     int[][] map;
 
     public PlayScreen(final Main game) {
@@ -36,7 +37,7 @@ public class PlayScreen implements Screen {
         this.batch = new SpriteBatch();
 
         // Generate cave & find player starting position
-        CaveGenerator cave = new CaveGenerator(40, 30);
+        this.cave = new CaveGenerator(40, 30);
         this.map = cave.generate();
         Map<String, Integer> startingPosition = cave.findPlayerStart();
 
@@ -52,9 +53,18 @@ public class PlayScreen implements Screen {
         this.player = new Entity();
         player.add(new PositionComponent(startingPosition.get("x"), startingPosition.get("y")));
         player.add(new VisualComponent(game.assets, "sprites/player.png"));
-
-        // Add entities to engine
         engine.addEntity(player);
+
+        // Create some mobs
+        for (int i = 0; i < 3; i++) {
+            Map<String, Integer> pos = cave.findMobStart();
+            Entity mob = new Entity();
+
+            mob.add(new PositionComponent(pos.get("x"), pos.get("y")));
+            mob.add(new VisualComponent(game.assets, "sprites/spider.png"));
+
+            engine.addEntity(mob);
+        }
     }
 
     @Override

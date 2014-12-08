@@ -23,6 +23,7 @@ public class LoadingScreen implements Screen {
         game.assets.load("sprites/wall_front.png", Texture.class);
         game.assets.load("sprites/wall_top.png", Texture.class);
         game.assets.load("sprites/player.png", Texture.class);
+        game.assets.load("sprites/spider.png", Texture.class);
     }
 
     @Override

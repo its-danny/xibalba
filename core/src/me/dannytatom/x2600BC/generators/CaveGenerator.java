@@ -205,4 +205,22 @@ public class CaveGenerator {
 
         return space;
     }
+
+    // Keep looking at random cells until you find one
+    // with nothing on it
+    public Map<String, Integer> findMobStart() {
+        Map<String, Integer> space = new HashMap<>();
+        int x;
+        int y;
+
+        do {
+            x = MathUtils.random(0, map.length);
+            y = MathUtils.random(0, map[x].length);
+        } while (map[x][y] != Constants.GROUND);
+
+        space.put("x", x);
+        space.put("y", y);
+
+        return space;
+    }
 }
