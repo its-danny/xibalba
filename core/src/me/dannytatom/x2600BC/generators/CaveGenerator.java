@@ -148,14 +148,12 @@ public class CaveGenerator {
                 int nx = x + i;
                 int ny = y + j;
 
-                if (i == 0 && j == 0) {
-                    // Ignore ourselves
-                } else if (nx < 0 || ny < 0 || nx >= map.length || ny >= map[0].length) {
-                    // Index is off the edge of the map, count it as empty
-                    count += 1;
-                } else if (map[nx][ny] == Constants.EMPTINESS) {
-                    // Normal check
-                    count += 1;
+                if (i != 0 || j != 0) {
+                    if (nx < 0 || ny < 0 || nx >= map.length || ny >= map[0].length) {
+                        count += 1;
+                    } else if (map[nx][ny] == Constants.EMPTINESS) {
+                        count += 1;
+                    }
                 }
             }
         }
@@ -172,13 +170,12 @@ public class CaveGenerator {
                 int nx = x + i;
                 int ny = y + j;
 
-                if (i == 0 && j == 0) {
-                    // Ignore ourselves
-                } else if (nx < 0 || ny < 0 || nx >= map.length || ny >= map[0].length) {
-                    // Index is off the edge of the map, ignore it
-                } else if (map[nx][ny] == Constants.GROUND) {
-                    // Normal check
-                    count += 1;
+                if (i != 0 || j != 0) {
+                    if (nx >= 0 && ny >= 0 && nx < map.length && ny < map[0].length) {
+                        if (map[nx][ny] == Constants.GROUND) {
+                            count += 1;
+                        }
+                    }
                 }
             }
         }
