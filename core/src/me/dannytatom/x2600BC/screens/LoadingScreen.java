@@ -20,6 +20,7 @@ public class LoadingScreen implements Screen {
         this.batch = new SpriteBatch();
 
         game.assets.load("sprites/ground.png", Texture.class);
+        game.assets.load("sprites/cave_floor.png", Texture.class);
         game.assets.load("sprites/wall_front.png", Texture.class);
         game.assets.load("sprites/wall_top.png", Texture.class);
         game.assets.load("sprites/player.png", Texture.class);
