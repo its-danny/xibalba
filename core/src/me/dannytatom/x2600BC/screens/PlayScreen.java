@@ -58,7 +58,7 @@ public class PlayScreen implements Screen, InputProcessor {
 
         lightShader.begin();
         lightShader.setUniformf("ambientColor", ambientColor.x, ambientColor.y, ambientColor.z, ambientIntensity);
-        ;
+
         lightShader.setUniformf("resolution", Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         lightShader.setUniformi("u_lightmap", 1);
         lightShader.end();
@@ -138,7 +138,13 @@ public class PlayScreen implements Screen, InputProcessor {
         camera.position.set(playerPosition.x * SPRITE_WIDTH, playerPosition.y * SPRITE_HEIGHT, 0);
         camera.update();
 
-        // Draw shader
+        renderLight();
+        renderMap();
+    }
+
+    public void renderLight() {
+        PositionComponent playerPosition = player.getComponent(PositionComponent.class);
+
         buffer.begin();
         batch.setProjectionMatrix(camera.combined);
         batch.setShader(defaultShader);
@@ -150,8 +156,11 @@ public class PlayScreen implements Screen, InputProcessor {
                 10 * SPRITE_WIDTH, 10 * SPRITE_HEIGHT);
         batch.end();
         buffer.end();
+    }
 
-        // Draw other shit
+    public void renderMap() {
+        ImmutableArray<Entity> entities = engine.getEntitiesFor(Family.all(AttributesComponent.class, PositionComponent.class, VisualComponent.class).get());
+
         batch.setProjectionMatrix(camera.combined);
         batch.setShader(lightShader);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -209,6 +218,7 @@ public class PlayScreen implements Screen, InputProcessor {
         buffer.dispose();
         defaultShader.dispose();
         lightShader.dispose();
+        light.dispose();
     }
 
     @Override
