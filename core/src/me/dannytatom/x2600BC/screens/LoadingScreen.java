@@ -5,6 +5,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import me.dannytatom.x2600BC.Main;
 
 public class LoadingScreen implements Screen {
@@ -19,10 +20,7 @@ public class LoadingScreen implements Screen {
         this.font = new BitmapFont();
         this.batch = new SpriteBatch();
 
-        game.assets.load("sprites/ground.png", Texture.class);
-        game.assets.load("sprites/cave_floor.png", Texture.class);
-        game.assets.load("sprites/wall_front.png", Texture.class);
-        game.assets.load("sprites/wall_top.png", Texture.class);
+        game.assets.load("sprites/cave.atlas", TextureAtlas.class);
         game.assets.load("sprites/player.png", Texture.class);
         game.assets.load("sprites/spider.png", Texture.class);
     }

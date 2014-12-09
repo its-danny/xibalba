@@ -10,10 +10,7 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import me.dannytatom.x2600BC.Constants;
 import me.dannytatom.x2600BC.Main;
 import me.dannytatom.x2600BC.Mappers;
 import me.dannytatom.x2600BC.components.AttributesComponent;
@@ -36,7 +33,6 @@ public class PlayScreen implements Screen, InputProcessor {
     Entity player;
     CaveGenerator cave;
     Queue<Entity> queue;
-    int[][] map;
 
     public PlayScreen(final Main game) {
         this.game = game;
@@ -45,13 +41,12 @@ public class PlayScreen implements Screen, InputProcessor {
         this.queue = new LinkedList<>();
 
         // Generate cave & find player starting position
-        this.cave = new CaveGenerator(40, 30);
-        this.map = cave.generate();
+        this.cave = new CaveGenerator(game.assets.get("sprites/cave.atlas"), 40, 30);
         Map<String, Integer> startingPosition = cave.findPlayerStart();
 
         // Setup engine
         this.engine = new Engine();
-        engine.addSystem(new MovementSystem(map));
+        engine.addSystem(new MovementSystem(cave.geometry));
 
         // Setup camera
         this.camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -63,7 +58,7 @@ public class PlayScreen implements Screen, InputProcessor {
         // Add player entity
         this.player = new Entity();
         player.add(new PositionComponent(startingPosition.get("x"), startingPosition.get("y")));
-        player.add(new VisualComponent(game.assets, "sprites/player.png"));
+        player.add(new VisualComponent(game.assets.get("sprites/player.png")));
         player.add(new AttributesComponent(100));
         engine.addEntity(player);
 
@@ -73,7 +68,7 @@ public class PlayScreen implements Screen, InputProcessor {
             Entity mob = new Entity();
 
             mob.add(new PositionComponent(pos.get("x"), pos.get("y")));
-            mob.add(new VisualComponent(game.assets, "sprites/spider.png"));
+            mob.add(new VisualComponent(game.assets.get("sprites/spider.png")));
             mob.add(new AttributesComponent(100));
 
             engine.addEntity(mob);
@@ -118,27 +113,9 @@ public class PlayScreen implements Screen, InputProcessor {
         batch.setProjectionMatrix(camera.combined);
 
         // Draw map
-        for (int x = 0; x < map.length; x++) {
-            for (int y = 0; y < map[x].length; y++) {
-                Texture texture = null;
-
-                switch (map[x][y]) {
-                    case Constants.EMPTINESS:
-                        break;
-                    case Constants.GROUND:
-                        texture = game.assets.get("sprites/ground.png");
-                        break;
-                    case Constants.WALL_TOP:
-                        texture = game.assets.get("sprites/wall_top.png");
-                        break;
-                    case Constants.WALL_FRONT:
-                        texture = game.assets.get("sprites/wall_front.png");
-                        break;
-                }
-
-                if (texture != null) {
-                    batch.draw(texture, x * SPRITE_WIDTH, y * SPRITE_HEIGHT);
-                }
+        for (int x = 0; x < cave.map.length; x++) {
+            for (int y = 0; y < cave.map[x].length; y++) {
+                batch.draw(cave.map[x][y], x * SPRITE_WIDTH, y * SPRITE_HEIGHT);
             }
         }
 

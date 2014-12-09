@@ -9,8 +9,6 @@ import me.dannytatom.x2600BC.MoveAction;
 import me.dannytatom.x2600BC.components.AttributesComponent;
 import me.dannytatom.x2600BC.components.PositionComponent;
 
-import java.util.Objects;
-
 public class MovementSystem extends IteratingSystem {
     private int[][] map;
 

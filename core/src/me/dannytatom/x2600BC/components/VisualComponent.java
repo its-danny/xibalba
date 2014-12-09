@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 public class VisualComponent extends Component {
     public Sprite sprite;
 
-    public VisualComponent(AssetManager manager, String path) {
-        this.sprite = new Sprite((Texture) manager.get(path));
+    public VisualComponent(Texture texture) {
+        this.sprite = new Sprite(texture);
     }
 }
