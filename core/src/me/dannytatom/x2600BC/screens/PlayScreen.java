@@ -24,10 +24,7 @@ import me.dannytatom.x2600BC.components.PositionComponent;
 import me.dannytatom.x2600BC.components.VisualComponent;
 import me.dannytatom.x2600BC.generators.CaveGenerator;
 import me.dannytatom.x2600BC.systems.MovementSystem;
-
-import java.util.LinkedList;
 import java.util.Map;
-import java.util.Queue;
 
 public class PlayScreen implements Screen, InputProcessor {
     static final int SPRITE_WIDTH = 24;
@@ -41,7 +38,6 @@ public class PlayScreen implements Screen, InputProcessor {
     Engine engine;
     Entity player;
     CaveGenerator cave;
-    Queue<Entity> queue;
     ShaderProgram defaultShader;
     ShaderProgram lightShader;
     FrameBuffer buffer;
@@ -69,7 +65,6 @@ public class PlayScreen implements Screen, InputProcessor {
         light = game.assets.get("sprites/light.png");
 
         batch = new SpriteBatch();
-        queue = new LinkedList<>();
 
         // Generate cave & find player starting position
         cave = new CaveGenerator(game.assets.get("sprites/cave.atlas"), 40, 30);
@@ -93,24 +88,16 @@ public class PlayScreen implements Screen, InputProcessor {
         player.add(new AttributesComponent(100));
         engine.addEntity(player);
 
-        // Create some mobs
-        for (int i = 0; i < 5; i++) {
-            Map<String, Integer> pos = cave.findMobStart();
-            Entity mob = new Entity();
-
-            mob.add(new PositionComponent(pos.get("x"), pos.get("y")));
-            mob.add(new VisualComponent(game.assets.get("sprites/spider.png")));
-            mob.add(new AttributesComponent(100));
-
-            engine.addEntity(mob);
-        }
+        spawnMobs();
     }
 
     @Override
     public void render(float delta) {
-        // Get all entities with a position & visual component
-        ImmutableArray<Entity> entities = engine.getEntitiesFor(Family.all(AttributesComponent.class, PositionComponent.class, VisualComponent.class).get());
         PositionComponent playerPosition = player.getComponent(PositionComponent.class);
+
+        // Get all entities with a position & visual component
+        ImmutableArray<Entity> entities = engine.getEntitiesFor(Family.all(AttributesComponent.class,
+                PositionComponent.class, VisualComponent.class).get());
 
         // Clear screen
         Gdx.gl.glClearColor(0, 0, 0, 1);
@@ -159,7 +146,8 @@ public class PlayScreen implements Screen, InputProcessor {
     }
 
     public void renderMap() {
-        ImmutableArray<Entity> entities = engine.getEntitiesFor(Family.all(AttributesComponent.class, PositionComponent.class, VisualComponent.class).get());
+        ImmutableArray<Entity> entities = engine.getEntitiesFor(Family.all(AttributesComponent.class,
+                PositionComponent.class, VisualComponent.class).get());
 
         batch.setProjectionMatrix(camera.combined);
         batch.setShader(lightShader);
@@ -185,6 +173,19 @@ public class PlayScreen implements Screen, InputProcessor {
         }
 
         batch.end();
+    }
+
+    public void spawnMobs() {
+        for (int i = 0; i < 5; i++) {
+            Map<String, Integer> pos = cave.findMobStart();
+            Entity mob = new Entity();
+
+            mob.add(new PositionComponent(pos.get("x"), pos.get("y")));
+            mob.add(new VisualComponent(game.assets.get("sprites/spider.png")));
+            mob.add(new AttributesComponent(100));
+
+            engine.addEntity(mob);
+        }
     }
 
     @Override
@@ -229,19 +230,19 @@ public class PlayScreen implements Screen, InputProcessor {
         switch (keyCode) {
             case Input.Keys.UP:
                 attributes.actions.add("move");
-                position.moveN = true;
+                position.moveDir = "N";
                 break;
             case Input.Keys.RIGHT:
                 attributes.actions.add("move");
-                position.moveE = true;
+                position.moveDir = "E";
                 break;
             case Input.Keys.DOWN:
                 attributes.actions.add("move");
-                position.moveS = true;
+                position.moveDir = "S";
                 break;
             case Input.Keys.LEFT:
                 attributes.actions.add("move");
-                position.moveW = true;
+                position.moveDir = "W";
                 break;
         }
 
@@ -250,24 +251,7 @@ public class PlayScreen implements Screen, InputProcessor {
 
     @Override
     public boolean keyUp(int keyCode) {
-        PositionComponent position = player.getComponent(PositionComponent.class);
-
-        switch (keyCode) {
-            case Input.Keys.UP:
-                position.moveN = false;
-                break;
-            case Input.Keys.RIGHT:
-                position.moveE = false;
-                break;
-            case Input.Keys.DOWN:
-                position.moveS = false;
-                break;
-            case Input.Keys.LEFT:
-                position.moveW = false;
-                break;
-        }
-
-        return true;
+        return false;
     }
 
     @Override
