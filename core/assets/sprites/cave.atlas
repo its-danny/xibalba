@@ -163,9 +163,37 @@ caveWallBack-3
   orig: 24, 24
   offset: 0, 0
   index: -1
-nothing
+caveWallTop-1
+  rotate: false
+  xy: 652, 2
+  size: 3, 24
+  orig: 24, 24
+  offset: 21, 0
+  index: -1
+caveWallTop-2
+  rotate: false
+  xy: 657, 2
+  size: 3, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: -1
+caveWallTop-3
+  rotate: true
+  xy: 662, 2
+  size: 24, 3
+  orig: 24, 24
+  offset: 0, 0
+  index: -1
+caveWallTop-4
   rotate: false
   xy: 600, 2
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: -1
+nothing
+  rotate: false
+  xy: 626, 2
   size: 24, 24
   orig: 24, 24
   offset: 0, 0

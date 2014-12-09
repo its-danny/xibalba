@@ -126,20 +126,14 @@ public class CaveGenerator {
         }
     }
 
-    // If a space is empty & has at least some ground near it,
-    // it's a wall. If the one before it is a front wall, it's a top wall.
-    // Otherwise it's a front wall.
+    // If a space is empty & has at least some ground near it, make a well!
     private void makeWalls() {
         for (int x = 0; x < geometry.length; x++) {
             for (int y = 0; y < geometry[x].length; y++) {
                 int neighbours = groundNeighbours(x, y);
 
                 if (geometry[x][y] == Constants.EMPTINESS && neighbours > 0) {
-                    if (y - 1 > 0 && (geometry[x][y - 1] == Constants.WALL_FRONT || geometry[x][y - 1] == Constants.WALL_TOP)) {
-                        geometry[x][y] = Constants.WALL_TOP;
-                    } else {
-                        geometry[x][y] = Constants.WALL_FRONT;
-                    }
+                    geometry[x][y] = Constants.WALL;
                 }
             }
         }
@@ -153,11 +147,8 @@ public class CaveGenerator {
                     case Constants.GROUND:
                         map[x][y] = atlas.createSprite("caveFloor-" + MathUtils.random(1, 16));
                         break;
-                    case Constants.WALL_TOP:
-                        map[x][y] = atlas.createSprite("caveWallBack-" + MathUtils.random(1, 3));
-                        break;
-                    case Constants.WALL_FRONT:
-                        map[x][y] = atlas.createSprite("caveWall-" + MathUtils.random(1, 4));
+                    case Constants.WALL:
+                        map[x][y] = atlas.createSprite("caveWallTop-4");
                         break;
                     default:
                         map[x][y] = atlas.createSprite("nothing");
@@ -239,7 +230,7 @@ public class CaveGenerator {
 
         do {
             x = MathUtils.random(0, geometry.length - 1);
-            y = MathUtils.random(0, geometry[x].length- 1);
+            y = MathUtils.random(0, geometry[x].length - 1);
         } while (geometry[x][y] != Constants.GROUND);
 
         space.put("x", x);

@@ -24,25 +24,25 @@ public class MovementSystem extends IteratingSystem {
 
         if (attributes.actions.indexOf("move") > -1 && attributes.speed >= MoveAction.COST) {
             if (position.moveN) {
-                if (map[position.x][position.y + 1] != Constants.WALL_TOP && map[position.x][position.y + 1] != Constants.WALL_FRONT) {
+                if (map[position.x][position.y + 1] != Constants.WALL) {
                     position.y += 1;
                 }
             }
 
             if (position.moveS) {
-                if (map[position.x][position.y - 1] != Constants.WALL_TOP && map[position.x][position.y - 1] != Constants.WALL_FRONT) {
+                if (map[position.x][position.y - 1] != Constants.WALL) {
                     position.y -= 1;
                 }
             }
 
             if (position.moveW) {
-                if (map[position.x - 1][position.y] != Constants.WALL_TOP && map[position.x - 1][position.y] != Constants.WALL_FRONT) {
+                if (map[position.x - 1][position.y] != Constants.WALL) {
                     position.x -= 1;
                 }
             }
 
             if (position.moveE) {
-                if (map[position.x + 1][position.y] != Constants.WALL_TOP && map[position.x + 1][position.y] != Constants.WALL_FRONT) {
+                if (map[position.x + 1][position.y] != Constants.WALL) {
                     position.x += 1;
                 }
             }

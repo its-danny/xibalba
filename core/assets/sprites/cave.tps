@@ -212,6 +212,10 @@
             <filename>cave/caveWallBack-2.png</filename>
             <filename>cave/caveWallBack-3.png</filename>
             <filename>cave/nothing.png</filename>
+            <filename>cave/caveWallTop-1.png</filename>
+            <filename>cave/caveWallTop-2.png</filename>
+            <filename>cave/caveWallTop-3.png</filename>
+            <filename>cave/caveWallTop-4.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>
