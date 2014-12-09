@@ -20,6 +20,7 @@ public class LoadingScreen implements Screen {
         this.font = new BitmapFont();
         this.batch = new SpriteBatch();
 
+        game.assets.load("sprites/light.png", Texture.class);
         game.assets.load("sprites/cave.atlas", TextureAtlas.class);
         game.assets.load("sprites/player.png", Texture.class);
         game.assets.load("sprites/spider.png", Texture.class);

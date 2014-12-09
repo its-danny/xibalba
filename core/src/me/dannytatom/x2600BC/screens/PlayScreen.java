@@ -8,9 +8,15 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.FrameBuffer;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.math.Vector3;
 import me.dannytatom.x2600BC.Main;
 import me.dannytatom.x2600BC.Mappers;
 import me.dannytatom.x2600BC.components.AttributesComponent;
@@ -24,8 +30,11 @@ import java.util.Map;
 import java.util.Queue;
 
 public class PlayScreen implements Screen, InputProcessor {
-    static int SPRITE_WIDTH = 24;
-    static int SPRITE_HEIGHT = 24;
+    static final int SPRITE_WIDTH = 24;
+    static final int SPRITE_HEIGHT = 24;
+    static final float ambientIntensity = .7f;
+    static final Vector3 ambientColor = new Vector3(0.3f, 0.3f, 0.7f);
+
     final Main game;
     OrthographicCamera camera;
     SpriteBatch batch;
@@ -33,30 +42,52 @@ public class PlayScreen implements Screen, InputProcessor {
     Entity player;
     CaveGenerator cave;
     Queue<Entity> queue;
+    ShaderProgram defaultShader;
+    ShaderProgram lightShader;
+    FrameBuffer buffer;
+    Texture light;
 
     public PlayScreen(final Main game) {
         this.game = game;
 
-        this.batch = new SpriteBatch();
-        this.queue = new LinkedList<>();
+        ShaderProgram.pedantic = false;
+        defaultShader = new ShaderProgram(new FileHandle("vertexShader.glsl").readString(),
+                new FileHandle("defaultShader.glsl").readString());
+        lightShader = new ShaderProgram(new FileHandle("vertexShader.glsl").readString(),
+                new FileHandle("lightShader.glsl").readString());
+
+        lightShader.begin();
+        lightShader.setUniformf("ambientColor", ambientColor.x, ambientColor.y, ambientColor.z, ambientIntensity);
+        ;
+        lightShader.setUniformf("resolution", Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        lightShader.setUniformi("u_lightmap", 1);
+        lightShader.end();
+
+        buffer = new FrameBuffer(Pixmap.Format.RGBA8888, Gdx.graphics.getWidth(),
+                Gdx.graphics.getHeight(), false);
+
+        light = game.assets.get("sprites/light.png");
+
+        batch = new SpriteBatch();
+        queue = new LinkedList<>();
 
         // Generate cave & find player starting position
-        this.cave = new CaveGenerator(game.assets.get("sprites/cave.atlas"), 40, 30);
+        cave = new CaveGenerator(game.assets.get("sprites/cave.atlas"), 40, 30);
         Map<String, Integer> startingPosition = cave.findPlayerStart();
 
         // Setup engine
-        this.engine = new Engine();
+        engine = new Engine();
         engine.addSystem(new MovementSystem(cave.geometry));
 
         // Setup camera
-        this.camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         camera.update();
 
         // Setup input
         Gdx.input.setInputProcessor(this);
 
         // Add player entity
-        this.player = new Entity();
+        player = new Entity();
         player.add(new PositionComponent(startingPosition.get("x"), startingPosition.get("y")));
         player.add(new VisualComponent(game.assets.get("sprites/player.png")));
         player.add(new AttributesComponent(100));
@@ -83,7 +114,6 @@ public class PlayScreen implements Screen, InputProcessor {
 
         // Clear screen
         Gdx.gl.glClearColor(0, 0, 0, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         // Don't update any entities until the player has
         // an action to take
@@ -108,9 +138,26 @@ public class PlayScreen implements Screen, InputProcessor {
         camera.position.set(playerPosition.x * SPRITE_WIDTH, playerPosition.y * SPRITE_HEIGHT, 0);
         camera.update();
 
-        // Draw shit
-        batch.begin();
+        // Draw shader
+        buffer.begin();
         batch.setProjectionMatrix(camera.combined);
+        batch.setShader(defaultShader);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        batch.begin();
+        batch.draw(light,
+                (playerPosition.x * SPRITE_WIDTH) - (5 * SPRITE_WIDTH) + (SPRITE_WIDTH / 2),
+                (playerPosition.y * SPRITE_HEIGHT) - (5 * SPRITE_HEIGHT) + (SPRITE_HEIGHT / 2),
+                10 * SPRITE_WIDTH, 10 * SPRITE_HEIGHT);
+        batch.end();
+        buffer.end();
+
+        // Draw other shit
+        batch.setProjectionMatrix(camera.combined);
+        batch.setShader(lightShader);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        batch.begin();
+        buffer.getColorBufferTexture().bind(1);
+        light.bind(0);
 
         // Draw map
         for (int x = 0; x < cave.map.length; x++) {
@@ -159,6 +206,9 @@ public class PlayScreen implements Screen, InputProcessor {
     @Override
     public void dispose() {
         batch.dispose();
+        buffer.dispose();
+        defaultShader.dispose();
+        lightShader.dispose();
     }
 
     @Override

@@ -145,10 +145,19 @@ public class CaveGenerator {
             for (int y = 0; y < geometry[x].length; y++) {
                 switch (geometry[x][y]) {
                     case Constants.GROUND:
-                        map[x][y] = atlas.createSprite("caveFloor-" + MathUtils.random(1, 16));
+                        float rand = MathUtils.random();
+
+                        if (rand <= .8) {
+                            // Less dirty
+                            map[x][y] = atlas.createSprite("caveFloor-" + MathUtils.random(10, 16));
+                        } else {
+                            // More dirty
+                            map[x][y] = atlas.createSprite("caveFloor-" + MathUtils.random(1, 9));
+                        }
+
                         break;
                     case Constants.WALL:
-                        map[x][y] = atlas.createSprite("caveWallTop-4");
+                        map[x][y] = atlas.createSprite("caveWallBack-1");
                         break;
                     default:
                         map[x][y] = atlas.createSprite("nothing");
