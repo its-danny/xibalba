@@ -3,12 +3,11 @@ package me.dannytatom.x2600BC.components;
 import com.badlogic.ashley.core.Component;
 
 public class PositionComponent extends Component {
-  public int x;
-  public int y;
+  public int x, y;
   public String moveDir;
 
   /**
-   * Component that holds position data for all entities.
+   * Holds entity position.
    *
    * @param x The entity's current x position
    * @param y The entity's current y position

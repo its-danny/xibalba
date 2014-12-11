@@ -264,8 +264,7 @@ public class CaveGenerator {
    */
   public Map<String, Integer> findMobStart() {
     Map<String, Integer> space = new HashMap<>();
-    int x;
-    int y;
+    int x, y;
 
     do {
       x = MathUtils.random(0, geometry.length - 1);

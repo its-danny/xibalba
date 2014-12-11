@@ -8,6 +8,11 @@ public class AttributesComponent extends Component {
   public int speed;
   public ArrayList<String> actions;
 
+  /**
+   * Holds entity attributes.
+   *
+   * @param speed The entity's speed
+   */
   public AttributesComponent(int speed) {
     this.speed = speed;
     actions = new ArrayList<>();

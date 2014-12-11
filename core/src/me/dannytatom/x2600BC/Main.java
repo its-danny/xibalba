@@ -13,7 +13,7 @@ public class Main extends Game {
    * Initialize the asset manager and start the loading screen.
    */
   public void create() {
-    this.assets = new AssetManager();
+    assets = new AssetManager();
 
     setScreen(new LoadingScreen(this));
   }
