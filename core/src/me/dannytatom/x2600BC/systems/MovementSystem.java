@@ -30,8 +30,22 @@ public class MovementSystem extends IteratingSystem {
                     }
 
                     break;
+                case "NE":
+                    if (geometry[position.x + 1][position.y + 1] != Constants.WALL) {
+                        position.y += 1;
+                        position.x += 1;
+                    }
+
+                    break;
                 case "E":
                     if (geometry[position.x + 1][position.y] != Constants.WALL) {
+                        position.x += 1;
+                    }
+
+                    break;
+                case "SE":
+                    if (geometry[position.x + 1][position.y - 1] != Constants.WALL) {
+                        position.y -= 1;
                         position.x += 1;
                     }
 
@@ -42,8 +56,22 @@ public class MovementSystem extends IteratingSystem {
                     }
 
                     break;
+                case "SW":
+                    if (geometry[position.x - 1][position.y - 1] != Constants.WALL) {
+                        position.y -= 1;
+                        position.x -= 1;
+                    }
+
+                    break;
                 case "W":
                     if (geometry[position.x - 1][position.y] != Constants.WALL) {
+                        position.x -= 1;
+                    }
+
+                    break;
+                case "NW":
+                    if (geometry[position.x - 1][position.y + 1] != Constants.WALL) {
+                        position.y += 1;
                         position.x -= 1;
                     }
 

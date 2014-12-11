@@ -24,6 +24,7 @@ import me.dannytatom.x2600BC.components.PositionComponent;
 import me.dannytatom.x2600BC.components.VisualComponent;
 import me.dannytatom.x2600BC.generators.CaveGenerator;
 import me.dannytatom.x2600BC.systems.MovementSystem;
+
 import java.util.Map;
 
 public class PlayScreen implements Screen, InputProcessor {
@@ -237,17 +238,33 @@ public class PlayScreen implements Screen, InputProcessor {
                 attributes.actions.add("move");
                 position.moveDir = "N";
                 break;
+            case Input.Keys.U:
+                attributes.actions.add("move");
+                position.moveDir = "NE";
+                break;
             case Input.Keys.L:
                 attributes.actions.add("move");
                 position.moveDir = "E";
+                break;
+            case Input.Keys.N:
+                attributes.actions.add("move");
+                position.moveDir = "SE";
                 break;
             case Input.Keys.J:
                 attributes.actions.add("move");
                 position.moveDir = "S";
                 break;
+            case Input.Keys.B:
+                attributes.actions.add("move");
+                position.moveDir = "SW";
+                break;
             case Input.Keys.H:
                 attributes.actions.add("move");
                 position.moveDir = "W";
+                break;
+            case Input.Keys.Y:
+                attributes.actions.add("move");
+                position.moveDir = "NW";
                 break;
         }
 
