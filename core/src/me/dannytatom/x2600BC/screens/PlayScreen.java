@@ -150,7 +150,9 @@ public class PlayScreen implements Screen, InputProcessor {
                 PositionComponent.class, VisualComponent.class).get());
 
         batch.setProjectionMatrix(camera.combined);
-        batch.setShader(lightShader);
+        if (game.lightEnabled) {
+            batch.setShader(lightShader);
+        }
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
         buffer.getColorBufferTexture().bind(1);
@@ -228,19 +230,22 @@ public class PlayScreen implements Screen, InputProcessor {
         AttributesComponent attributes = player.getComponent(AttributesComponent.class);
 
         switch (keyCode) {
-            case Input.Keys.UP:
+            case Input.Keys.BACKSLASH:
+                game.lightEnabled ^= true;
+                break;
+            case Input.Keys.K:
                 attributes.actions.add("move");
                 position.moveDir = "N";
                 break;
-            case Input.Keys.RIGHT:
+            case Input.Keys.L:
                 attributes.actions.add("move");
                 position.moveDir = "E";
                 break;
-            case Input.Keys.DOWN:
+            case Input.Keys.J:
                 attributes.actions.add("move");
                 position.moveDir = "S";
                 break;
-            case Input.Keys.LEFT:
+            case Input.Keys.H:
                 attributes.actions.add("move");
                 position.moveDir = "W";
                 break;

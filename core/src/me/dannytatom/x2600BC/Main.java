@@ -7,6 +7,8 @@ import me.dannytatom.x2600BC.screens.LoadingScreen;
 public class Main extends Game {
     public AssetManager assets;
 
+    public boolean lightEnabled = true;
+
     public void create() {
         this.assets = new AssetManager();
 
