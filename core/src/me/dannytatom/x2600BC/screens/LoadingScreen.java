@@ -14,11 +14,11 @@ public class LoadingScreen implements Screen {
     SpriteBatch batch;
     BitmapFont font;
 
-    public LoadingScreen(final Main game) {
-        this.game = game;
+    public LoadingScreen(Main g) {
+        game = g;
 
-        this.font = new BitmapFont();
-        this.batch = new SpriteBatch();
+        font = new BitmapFont();
+        batch = new SpriteBatch();
 
         game.assets.load("sprites/light.png", Texture.class);
         game.assets.load("sprites/cave.atlas", TextureAtlas.class);

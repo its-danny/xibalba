@@ -8,6 +8,6 @@ public class VisualComponent extends Component {
     public Sprite sprite;
 
     public VisualComponent(Texture texture) {
-        this.sprite = new Sprite(texture);
+        sprite = new Sprite(texture);
     }
 }

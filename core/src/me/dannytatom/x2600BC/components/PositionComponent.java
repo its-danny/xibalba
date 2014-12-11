@@ -10,6 +10,6 @@ public class PositionComponent extends Component {
     public PositionComponent(int x, int y) {
         this.x = x;
         this.y = y;
-        this.moveDir = null;
+        moveDir = null;
     }
 }

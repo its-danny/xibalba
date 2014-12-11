@@ -21,8 +21,8 @@ public class CaveGenerator {
         this.width = width;
         this.height = height;
 
-        this.geometry = new int[width][height];
-        this.map = new Sprite[width][height];
+        geometry = new int[width][height];
+        map = new Sprite[width][height];
 
         for (int[] row : geometry) {
             Arrays.fill(row, Constants.GROUND);

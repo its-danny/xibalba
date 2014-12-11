@@ -10,6 +10,6 @@ public class AttributesComponent extends Component {
 
     public AttributesComponent(int speed) {
         this.speed = speed;
-        this.actions = new ArrayList<>();
+        actions = new ArrayList<>();
     }
 }

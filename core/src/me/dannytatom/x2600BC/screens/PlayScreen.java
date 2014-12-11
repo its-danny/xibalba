@@ -43,8 +43,11 @@ public class PlayScreen implements Screen, InputProcessor {
     FrameBuffer buffer;
     Texture light;
 
-    public PlayScreen(final Main game) {
-        this.game = game;
+    public PlayScreen(Main g) {
+        game = g;
+
+        // Setup input
+        Gdx.input.setInputProcessor(this);
 
         ShaderProgram.pedantic = false;
         defaultShader = new ShaderProgram(new FileHandle("vertexShader.glsl").readString(),
@@ -77,9 +80,6 @@ public class PlayScreen implements Screen, InputProcessor {
         // Setup camera
         camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         camera.update();
-
-        // Setup input
-        Gdx.input.setInputProcessor(this);
 
         // Add player entity
         player = new Entity();
@@ -138,9 +138,9 @@ public class PlayScreen implements Screen, InputProcessor {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
         batch.draw(light,
-                (playerPosition.x * SPRITE_WIDTH) - (5 * SPRITE_WIDTH) + (SPRITE_WIDTH / 2),
-                (playerPosition.y * SPRITE_HEIGHT) - (5 * SPRITE_HEIGHT) + (SPRITE_HEIGHT / 2),
-                10 * SPRITE_WIDTH, 10 * SPRITE_HEIGHT);
+                (playerPosition.x * SPRITE_WIDTH) - (6 * SPRITE_WIDTH) + (SPRITE_WIDTH / 2),
+                (playerPosition.y * SPRITE_HEIGHT) - (6 * SPRITE_HEIGHT) + (SPRITE_HEIGHT / 2),
+                12 * SPRITE_WIDTH, 12 * SPRITE_HEIGHT);
         batch.end();
         buffer.end();
     }
