@@ -5,11 +5,11 @@ import com.badlogic.ashley.core.Component;
 import java.util.ArrayList;
 
 public class AttributesComponent extends Component {
-    public int speed;
-    public ArrayList<String> actions;
+  public int speed;
+  public ArrayList<String> actions;
 
-    public AttributesComponent(int speed) {
-        this.speed = speed;
-        actions = new ArrayList<>();
-    }
+  public AttributesComponent(int speed) {
+    this.speed = speed;
+    actions = new ArrayList<>();
+  }
 }

@@ -14,7 +14,7 @@ uniform sampler2D u_lightmap;   //light map
 
 //additional parameters for the shader
 uniform vec2 resolution; //resolution of screen
-uniform LOWP vec4 ambientColor; //ambient RGB, alpha channel is intensity 
+uniform LOWP vec4 ambientColor; //ambient RGB, alpha channel is intensity
 
 void main() {
 	vec4 diffuseColor = texture2D(u_texture, vTexCoord);

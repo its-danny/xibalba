@@ -5,17 +5,20 @@ import com.badlogic.gdx.assets.AssetManager;
 import me.dannytatom.x2600BC.screens.LoadingScreen;
 
 public class Main extends Game {
-    public AssetManager assets;
+  public AssetManager assets;
 
-    public boolean lightEnabled = true;
+  public boolean lightEnabled = true;
 
-    public void create() {
-        this.assets = new AssetManager();
+  /**
+   * Initialize the asset manager and start the loading screen.
+   */
+  public void create() {
+    this.assets = new AssetManager();
 
-        setScreen(new LoadingScreen(this));
-    }
+    setScreen(new LoadingScreen(this));
+  }
 
-    public void render() {
-        super.render();
-    }
+  public void render() {
+    super.render();
+  }
 }

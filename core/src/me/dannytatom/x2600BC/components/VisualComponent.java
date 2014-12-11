@@ -5,9 +5,9 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 
 public class VisualComponent extends Component {
-    public Sprite sprite;
+  public Sprite sprite;
 
-    public VisualComponent(Texture texture) {
-        sprite = new Sprite(texture);
-    }
+  public VisualComponent(Texture texture) {
+    sprite = new Sprite(texture);
+  }
 }
