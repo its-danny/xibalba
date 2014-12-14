@@ -1,20 +1,19 @@
 package me.dannytatom.x2600BC.generators;
 
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.MathUtils;
-import me.dannytatom.x2600BC.Constants;
+import me.dannytatom.x2600BC.Cell;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 public class CaveGenerator {
-  public int[][] geometry;
-  public Sprite[][] map;
+  public Cell[][] map;
   int width;
   int height;
   TextureAtlas atlas;
+  boolean[][] geometry;
 
   /**
    * Generates a cave.
@@ -28,26 +27,24 @@ public class CaveGenerator {
     this.width = width;
     this.height = height;
 
-    geometry = new int[width][height];
-    map = new Sprite[width][height];
+    geometry = new boolean[width][height];
 
-    for (int[] row : geometry) {
-      Arrays.fill(row, Constants.GROUND);
+    for (boolean[] row : geometry) {
+      Arrays.fill(row, true);
     }
 
     initialize();
 
     for (int i = 0; i < 4; i++) {
-      firstShapingStep();
+      shapeGeometry();
     }
 
     for (int i = 0; i < 3; i++) {
-      secondShapingStep();
+      shapeGeometryAgain();
     }
 
-    emptyEdges();
-    makeWalls();
-    paintSprites();
+    emptyGeometryEdges();
+    createMap();
   }
 
   // Start off with all ground, then create emptiness randomly
@@ -56,7 +53,7 @@ public class CaveGenerator {
     for (int x = 0; x < geometry.length; x++) {
       for (int y = 0; y < geometry[x].length; y++) {
         if (MathUtils.random() < 0.43f) {
-          geometry[x][y] = Constants.EMPTINESS;
+          geometry[x][y] = false;
         }
       }
     }
@@ -64,26 +61,18 @@ public class CaveGenerator {
 
   // A tile becomes empty if it's already empty and 4 or more of its nine neighbours are empty,
   // or if it is not empty and 5 or more neighbours are or the tile is in open space
-  private void firstShapingStep() {
-    int[][] newGeo = new int[width][height];
+  private void shapeGeometry() {
+    boolean[][] newGeo = new boolean[width][height];
 
     for (int x = 0; x < geometry.length; x++) {
       for (int y = 0; y < geometry[x].length; y++) {
         int neighbours1 = emptyNeighbours(1, x, y);
         int neighbours2 = emptyNeighbours(2, x, y);
 
-        if (geometry[x][y] == Constants.EMPTINESS) {
-          if (neighbours1 >= 4) {
-            newGeo[x][y] = Constants.EMPTINESS;
-          } else {
-            newGeo[x][y] = Constants.GROUND;
-          }
+        if (!geometry[x][y]) {
+          newGeo[x][y] = neighbours1 < 4;
         } else {
-          if (neighbours1 >= 5 || neighbours2 <= 2) {
-            newGeo[x][y] = Constants.EMPTINESS;
-          } else {
-            newGeo[x][y] = Constants.GROUND;
-          }
+          newGeo[x][y] = !(neighbours1 >= 5 || neighbours2 <= 2);
         }
       }
     }
@@ -91,26 +80,18 @@ public class CaveGenerator {
     geometry = newGeo;
   }
 
-  // Same as #firstShapingStep, except we don't care about open space
-  private void secondShapingStep() {
-    int[][] newGeo = new int[width][height];
+  // Same as #shapeGeometry, except we don't care about open space
+  private void shapeGeometryAgain() {
+    boolean[][] newGeo = new boolean[width][height];
 
     for (int x = 0; x < geometry.length; x++) {
       for (int y = 0; y < geometry[x].length; y++) {
         int neighbours = emptyNeighbours(1, x, y);
 
-        if (geometry[x][y] == Constants.EMPTINESS) {
-          if (neighbours >= 4) {
-            newGeo[x][y] = Constants.EMPTINESS;
-          } else {
-            newGeo[x][y] = Constants.GROUND;
-          }
+        if (!geometry[x][y]) {
+          newGeo[x][y] = neighbours < 4;
         } else {
-          if (neighbours >= 5) {
-            newGeo[x][y] = Constants.EMPTINESS;
-          } else {
-            newGeo[x][y] = Constants.GROUND;
-          }
+          newGeo[x][y] = neighbours < 5;
         }
       }
     }
@@ -119,55 +100,40 @@ public class CaveGenerator {
   }
 
   // Edge of the geometry should always be inaccessible
-  private void emptyEdges() {
+  private void emptyGeometryEdges() {
     for (int x = 0; x < geometry.length; x++) {
       for (int y = 0; y < geometry[x].length; y++) {
         if (x == 0 || y == 0) {
-          geometry[x][y] = Constants.EMPTINESS;
+          geometry[x][y] = false;
         }
 
         if (x == geometry.length - 1 || y == geometry[x].length - 1) {
-          geometry[x][y] = Constants.EMPTINESS;
+          geometry[x][y] = false;
         }
       }
     }
   }
 
-  // If a space is empty & has at least some ground near it, make a well!
-  private void makeWalls() {
+  // I'M GONNA PAINT THE TOWN RED
+  private void createMap() {
+    map = new Cell[width][height];
+
     for (int x = 0; x < geometry.length; x++) {
       for (int y = 0; y < geometry[x].length; y++) {
-        int neighbours = groundNeighbours(x, y);
+        if (geometry[x][y]) {
+          if (MathUtils.random() <= .8) {
+            map[x][y] = new Cell(atlas.createSprite("caveFloor-" + MathUtils.random(10, 16)), false);
+          } else {
+            map[x][y] = new Cell(atlas.createSprite("caveFloor-" + MathUtils.random(1, 9)), false);
+          }
+        } else {
+          int neighbours = groundNeighbours(x, y);
 
-        if (geometry[x][y] == Constants.EMPTINESS && neighbours > 0) {
-          geometry[x][y] = Constants.WALL;
-        }
-      }
-    }
-  }
-
-  // I'M GONNA PAINT THE CAVE RED
-  private void paintSprites() {
-    for (int x = 0; x < geometry.length; x++) {
-      for (int y = 0; y < geometry[x].length; y++) {
-        switch (geometry[x][y]) {
-          case Constants.GROUND:
-            float rand = MathUtils.random();
-
-            if (rand <= .8) {
-              // Less dirty
-              map[x][y] = atlas.createSprite("caveFloor-" + MathUtils.random(10, 16));
-            } else {
-              // More dirty
-              map[x][y] = atlas.createSprite("caveFloor-" + MathUtils.random(1, 9));
-            }
-
-            break;
-          case Constants.WALL:
-            map[x][y] = atlas.createSprite("caveWallBack-1");
-            break;
-          default:
-            map[x][y] = atlas.createSprite("nothing");
+          if (neighbours > 0) {
+            map[x][y] = new Cell(atlas.createSprite("caveWallBack-1"), true);
+          } else {
+            map[x][y] = new Cell(atlas.createSprite("nothing"), true);
+          }
         }
       }
     }
@@ -196,7 +162,7 @@ public class CaveGenerator {
         if (i != 0 || j != 0) {
           if (nx < 0 || ny < 0 || nx >= geometry.length || ny >= geometry[0].length) {
             count += 1;
-          } else if (geometry[nx][ny] == Constants.EMPTINESS) {
+          } else if (!geometry[nx][ny]) {
             count += 1;
           }
         }
@@ -223,7 +189,7 @@ public class CaveGenerator {
 
         if (i != 0 || j != 0) {
           if (nx >= 0 && ny >= 0 && nx < geometry.length && ny < geometry[0].length) {
-            if (geometry[nx][ny] == Constants.GROUND) {
+            if (geometry[nx][ny]) {
               count += 1;
             }
           }
@@ -243,9 +209,9 @@ public class CaveGenerator {
     Map<String, Integer> space = new HashMap<>();
 
     search:
-    for (int x = 0; x < geometry.length; x++) {
-      for (int y = 0; y < geometry[x].length; y++) {
-        if (geometry[x][y] == Constants.GROUND) {
+    for (int x = 0; x < map.length; x++) {
+      for (int y = 0; y < map[x].length; y++) {
+        if (!map[x][y].blocksMovement) {
           space.put("x", x);
           space.put("y", y);
 
@@ -264,12 +230,13 @@ public class CaveGenerator {
    */
   public Map<String, Integer> findMobStart() {
     Map<String, Integer> space = new HashMap<>();
-    int x, y;
+    int x;
+    int y;
 
     do {
-      x = MathUtils.random(0, geometry.length - 1);
-      y = MathUtils.random(0, geometry[x].length - 1);
-    } while (geometry[x][y] != Constants.GROUND);
+      x = MathUtils.random(0, map.length - 1);
+      y = MathUtils.random(0, map[x].length - 1);
+    } while (map[x][y].blocksMovement);
 
     space.put("x", x);
     space.put("y", y);

@@ -22,6 +22,7 @@ import me.dannytatom.x2600BC.Mappers;
 import me.dannytatom.x2600BC.components.AttributesComponent;
 import me.dannytatom.x2600BC.components.PositionComponent;
 import me.dannytatom.x2600BC.components.VisualComponent;
+import me.dannytatom.x2600BC.factories.MobFactory;
 import me.dannytatom.x2600BC.generators.CaveGenerator;
 import me.dannytatom.x2600BC.systems.MovementSystem;
 
@@ -39,6 +40,7 @@ public class PlayScreen implements Screen, InputProcessor {
   Engine engine;
   Entity player;
   CaveGenerator cave;
+  MobFactory mobFactory;
   ShaderProgram defaultShader;
   ShaderProgram lightShader;
   FrameBuffer buffer;
@@ -77,12 +79,15 @@ public class PlayScreen implements Screen, InputProcessor {
 
     batch = new SpriteBatch();
 
+    // Setup factories
+    mobFactory = new MobFactory(game.assets);
+
     // Generate cave
     cave = new CaveGenerator(game.assets.get("sprites/cave.atlas"), 40, 30);
 
     // Setup engine
     engine = new Engine();
-    engine.addSystem(new MovementSystem(cave.geometry));
+    engine.addSystem(new MovementSystem(cave.map));
 
     // Setup camera
     camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -93,7 +98,7 @@ public class PlayScreen implements Screen, InputProcessor {
     player = new Entity();
     player.add(new PositionComponent(startingPosition.get("x"), startingPosition.get("y")));
     player.add(new VisualComponent(game.assets.get("sprites/player.png")));
-    player.add(new AttributesComponent(100));
+    player.add(new AttributesComponent(100, 50, 10));
     engine.addEntity(player);
 
     spawnMobs();
@@ -180,7 +185,7 @@ public class PlayScreen implements Screen, InputProcessor {
     // Draw map
     for (int x = 0; x < cave.map.length; x++) {
       for (int y = 0; y < cave.map[x].length; y++) {
-        batch.draw(cave.map[x][y], x * SPRITE_WIDTH, y * SPRITE_HEIGHT);
+        batch.draw(cave.map[x][y].sprite, x * SPRITE_WIDTH, y * SPRITE_HEIGHT);
       }
     }
 
@@ -205,11 +210,7 @@ public class PlayScreen implements Screen, InputProcessor {
   public void spawnMobs() {
     for (int i = 0; i < 5; i++) {
       Map<String, Integer> pos = cave.findMobStart();
-      Entity mob = new Entity();
-
-      mob.add(new PositionComponent(pos.get("x"), pos.get("y")));
-      mob.add(new VisualComponent(game.assets.get("sprites/spider.png")));
-      mob.add(new AttributesComponent(100));
+      Entity mob = mobFactory.spawn(pos.get("x"), pos.get("y"));
 
       engine.addEntity(mob);
     }
