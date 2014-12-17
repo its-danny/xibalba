@@ -10,10 +10,10 @@ import java.util.Map;
 
 public class CaveGenerator {
   public Cell[][] map;
-  boolean[][] geometry;
-  int width;
-  int height;
-  TextureAtlas atlas;
+  private boolean[][] geometry;
+  private int width;
+  private int height;
+  private TextureAtlas atlas;
 
   /**
    * Generates a cave.

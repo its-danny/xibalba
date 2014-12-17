@@ -7,9 +7,6 @@ public final class Mappers {
   public static final ComponentMapper<BrainComponent> brain =
       ComponentMapper.getFor(BrainComponent.class);
 
-  public static final ComponentMapper<WanderComponent> wander =
-      ComponentMapper.getFor(WanderComponent.class);
-
   public static final ComponentMapper<PositionComponent> position =
       ComponentMapper.getFor(PositionComponent.class);
 

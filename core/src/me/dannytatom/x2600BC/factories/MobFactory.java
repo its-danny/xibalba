@@ -6,7 +6,7 @@ import me.dannytatom.x2600BC.blueprints.SpiderMonkey;
 import me.dannytatom.x2600BC.components.*;
 
 public class MobFactory {
-  AssetManager assets;
+  private AssetManager assets;
 
   public MobFactory(AssetManager assets) {
     this.assets = assets;
@@ -19,7 +19,7 @@ public class MobFactory {
    * @param cellY y position to spawn
    * @return the newly made entity
    */
-  public Entity spawn(String type, int cellX, int cellY) {
+  public Entity spawn(int cellX, int cellY) {
     Entity entity = new Entity();
 
     entity.add(new BrainComponent(3));
@@ -28,9 +28,7 @@ public class MobFactory {
     entity.add(new MovementComponent());
     entity.add(new VisualComponent(assets.get(SpiderMonkey.visual.get("spritePath"))));
     entity.add(new AttributesComponent(
-        SpiderMonkey.attributes.get("speed"),
-        SpiderMonkey.attributes.get("health"),
-        SpiderMonkey.attributes.get("damage")
+        SpiderMonkey.attributes.get("speed")
     ));
 
     return entity;

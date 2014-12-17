@@ -11,7 +11,7 @@ import me.dannytatom.x2600BC.components.MovementComponent;
 import me.dannytatom.x2600BC.components.PositionComponent;
 
 public class MovementSystem extends IteratingSystem {
-  Cell[][] map;
+  private Cell[][] map;
 
   /**
    * System to control movement of entities.

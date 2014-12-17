@@ -8,12 +8,12 @@ import me.dannytatom.x2600BC.Mappers;
 import me.dannytatom.x2600BC.components.*;
 
 public class BrainSystem extends IteratingSystem {
-  Engine engine;
+  private Engine engine;
 
   /**
    * THA CONTROL CENTER. Handles AI states.
    *
-   * @param engine Instance of Ahsley engine, used to get player
+   * @param engine Instance of Ashley engine, used to get player
    */
   public BrainSystem(Engine engine) {
     super(Family.all(BrainComponent.class).get());

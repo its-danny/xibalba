@@ -9,10 +9,10 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import me.dannytatom.x2600BC.Main;
 
 public class LoadingScreen implements Screen {
-  final Main game;
+  private final Main game;
 
-  SpriteBatch batch;
-  BitmapFont font;
+  private SpriteBatch batch;
+  private BitmapFont font;
 
   /**
    * Loading Screen.

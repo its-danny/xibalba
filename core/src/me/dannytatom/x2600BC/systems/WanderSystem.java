@@ -8,7 +8,7 @@ import me.dannytatom.x2600BC.components.MovementComponent;
 import me.dannytatom.x2600BC.components.WanderComponent;
 
 public class WanderSystem extends IteratingSystem {
-  Cell[][] map;
+  private Cell[][] map;
 
   /**
    * AI State for wandering around.
@@ -23,6 +23,6 @@ public class WanderSystem extends IteratingSystem {
 
   @Override
   protected void processEntity(Entity entity, float deltaTime) {
-    // TODO: Wander
+    // TODO: Wander, use MoveAction.COST
   }
 }

@@ -18,8 +18,4 @@ public class Main extends Game {
 
     setScreen(new LoadingScreen(this));
   }
-
-  public void render() {
-    super.render();
-  }
 }

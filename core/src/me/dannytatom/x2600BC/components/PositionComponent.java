@@ -9,11 +9,11 @@ public class PositionComponent extends Component {
   /**
    * Holds entity position.
    *
-   * @param cellX The entity's current x position
-   * @param cellY The entity's current y position
+   * @param x The entity's current x position
+   * @param y The entity's current y position
    */
-  public PositionComponent(int cellX, int cellY) {
-    this.x = cellX;
-    this.y = cellY;
+  public PositionComponent(int x, int y) {
+    this.x = x;
+    this.y = y;
   }
 }

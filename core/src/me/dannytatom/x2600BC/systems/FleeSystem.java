@@ -8,7 +8,7 @@ import me.dannytatom.x2600BC.components.FleeComponent;
 import me.dannytatom.x2600BC.components.MovementComponent;
 
 public class FleeSystem extends IteratingSystem {
-  Cell[][] map;
+  private Cell[][] map;
 
   /**
    * AI State for fleeing a target.
@@ -23,6 +23,6 @@ public class FleeSystem extends IteratingSystem {
 
   @Override
   protected void processEntity(Entity entity, float deltaTime) {
-    // TODO: Flee
+    // TODO: Flee, use MoveAction.COST
   }
 }

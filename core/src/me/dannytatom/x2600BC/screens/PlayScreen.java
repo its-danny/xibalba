@@ -23,17 +23,17 @@ import me.dannytatom.x2600BC.systems.WanderSystem;
 
 import java.util.Map;
 
-public class PlayScreen implements Screen, InputProcessor {
-  static final int SPRITE_WIDTH = 24;
-  static final int SPRITE_HEIGHT = 24;
+class PlayScreen implements Screen, InputProcessor {
+  private static final int SPRITE_WIDTH = 24;
+  private static final int SPRITE_HEIGHT = 24;
 
-  final Main game;
-  OrthographicCamera camera;
-  SpriteBatch batch;
-  Engine engine;
-  Entity player;
-  CaveGenerator cave;
-  MobFactory mobFactory;
+  private final Main game;
+  private OrthographicCamera camera;
+  private SpriteBatch batch;
+  private Engine engine;
+  private Entity player;
+  private CaveGenerator cave;
+  private MobFactory mobFactory;
 
   /**
    * Play Screen.
@@ -73,7 +73,7 @@ public class PlayScreen implements Screen, InputProcessor {
     player.add(new PositionComponent(startingPosition.get("x"), startingPosition.get("y")));
     player.add(new MovementComponent());
     player.add(new VisualComponent(game.assets.get("sprites/player.png")));
-    player.add(new AttributesComponent(100, 50, 10));
+    player.add(new AttributesComponent(100));
     engine.addEntity(player);
 
     spawnMobs();
@@ -117,7 +117,7 @@ public class PlayScreen implements Screen, InputProcessor {
   /**
    * Render the map and all entities on it.
    */
-  public void renderMap() {
+  void renderMap() {
     batch.setProjectionMatrix(camera.combined);
 
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -150,10 +150,10 @@ public class PlayScreen implements Screen, InputProcessor {
   /**
    * Spawn mobs, randomly for now.
    */
-  public void spawnMobs() {
+  void spawnMobs() {
     for (int i = 0; i < 20; i++) {
       Map<String, Integer> pos = cave.findMobStart();
-      Entity mob = mobFactory.spawn("spiderMonkey", pos.get("x"), pos.get("y"));
+      Entity mob = mobFactory.spawn(pos.get("x"), pos.get("y"));
 
       engine.addEntity(mob);
     }
