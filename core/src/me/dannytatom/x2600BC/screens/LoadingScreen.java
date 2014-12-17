@@ -17,18 +17,17 @@ public class LoadingScreen implements Screen {
   /**
    * Loading Screen.
    *
-   * @param g Instance of main class
+   * @param main Instance of main class
    */
-  public LoadingScreen(Main g) {
-    game = g;
+  public LoadingScreen(Main main) {
+    game = main;
 
     font = new BitmapFont();
     batch = new SpriteBatch();
 
-    game.assets.load("sprites/light.png", Texture.class);
     game.assets.load("sprites/cave.atlas", TextureAtlas.class);
     game.assets.load("sprites/player.png", Texture.class);
-    game.assets.load("sprites/spider.png", Texture.class);
+    game.assets.load("sprites/spiderMonkey.png", Texture.class);
   }
 
   @Override

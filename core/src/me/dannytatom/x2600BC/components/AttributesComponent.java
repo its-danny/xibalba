@@ -2,13 +2,11 @@ package me.dannytatom.x2600BC.components;
 
 import com.badlogic.ashley.core.Component;
 
-import java.util.ArrayList;
-
 public class AttributesComponent extends Component {
+  public int energy;
   public int speed;
   public int health;
   public int damage;
-  public ArrayList<String> actions;
 
   /**
    * Holds entity attributes.
@@ -18,10 +16,9 @@ public class AttributesComponent extends Component {
    * @param damage The entity's damage
    */
   public AttributesComponent(int speed, int health, int damage) {
+    this.energy = speed;
     this.speed = speed;
     this.health = health;
     this.damage = damage;
-
-    actions = new ArrayList<>();
   }
 }

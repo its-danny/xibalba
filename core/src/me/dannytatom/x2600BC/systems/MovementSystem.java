@@ -7,6 +7,7 @@ import me.dannytatom.x2600BC.Cell;
 import me.dannytatom.x2600BC.Mappers;
 import me.dannytatom.x2600BC.MoveAction;
 import me.dannytatom.x2600BC.components.AttributesComponent;
+import me.dannytatom.x2600BC.components.MovementComponent;
 import me.dannytatom.x2600BC.components.PositionComponent;
 
 public class MovementSystem extends IteratingSystem {
@@ -18,7 +19,9 @@ public class MovementSystem extends IteratingSystem {
    * @param map the map we're moving on
    */
   public MovementSystem(Cell[][] map) {
-    super(Family.all(PositionComponent.class).get());
+    super(Family.all(PositionComponent.class,
+        MovementComponent.class,
+        AttributesComponent.class).get());
 
     this.map = map;
   }
@@ -33,13 +36,11 @@ public class MovementSystem extends IteratingSystem {
    */
   public void processEntity(Entity entity, float deltaTime) {
     PositionComponent position = Mappers.position.get(entity);
+    MovementComponent movement = Mappers.movement.get(entity);
     AttributesComponent attributes = Mappers.attributes.get(entity);
 
-    if ((attributes.actions.indexOf("move") > -1)
-        && (attributes.speed >= MoveAction.COST)
-        && (position.moveDir != null)) {
-
-      switch (position.moveDir) {
+    if (movement.direction != null) {
+      switch (movement.direction) {
         case "N":
           if (!map[position.x][position.y + 1].blocksMovement) {
             position.y += 1;
@@ -95,9 +96,8 @@ public class MovementSystem extends IteratingSystem {
         default:
       }
 
-      attributes.actions.remove(attributes.actions.indexOf("move"));
-      attributes.speed -= MoveAction.COST;
-      position.moveDir = null;
+      attributes.energy -= MoveAction.COST;
+      movement.direction = null;
     }
   }
 }

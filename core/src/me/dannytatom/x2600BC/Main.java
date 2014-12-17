@@ -7,7 +7,8 @@ import me.dannytatom.x2600BC.screens.LoadingScreen;
 public class Main extends Game {
   public AssetManager assets;
 
-  public boolean lightEnabled = true;
+  public boolean debug = false;
+  public boolean executeTurn = false;
 
   /**
    * Initialize the asset manager and start the loading screen.

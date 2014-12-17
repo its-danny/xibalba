@@ -10,10 +10,10 @@ import java.util.Map;
 
 public class CaveGenerator {
   public Cell[][] map;
+  boolean[][] geometry;
   int width;
   int height;
   TextureAtlas atlas;
-  boolean[][] geometry;
 
   /**
    * Generates a cave.
@@ -122,9 +122,11 @@ public class CaveGenerator {
       for (int y = 0; y < geometry[x].length; y++) {
         if (geometry[x][y]) {
           if (MathUtils.random() <= .8) {
-            map[x][y] = new Cell(atlas.createSprite("caveFloor-" + MathUtils.random(10, 16)), false);
+            map[x][y] = new Cell(atlas.createSprite("caveFloor-"
+                + MathUtils.random(10, 16)), false);
           } else {
-            map[x][y] = new Cell(atlas.createSprite("caveFloor-" + MathUtils.random(1, 9)), false);
+            map[x][y] = new Cell(atlas.createSprite("caveFloor-"
+                + MathUtils.random(1, 9)), false);
           }
         } else {
           int neighbours = groundNeighbours(x, y);
@@ -139,25 +141,22 @@ public class CaveGenerator {
     }
   }
 
-  // Returns number of empty neighbours around (x, y) within
-  // the amount of spaces given
-
   /**
    * Returns number of empty neighbors around cell within
    * the amount of space given.
    *
    * @param amount How many neighboring cells to check
-   * @param x      x of cell to search from
-   * @param y      y of cell to search from
+   * @param cellX  x of cell to search from
+   * @param cellY  y of cell to search from
    * @return number of empty neighbors
    */
-  private int emptyNeighbours(int amount, int x, int y) {
+  private int emptyNeighbours(int amount, int cellX, int cellY) {
     int count = 0;
 
     for (int i = -amount; i < amount + 1; i++) {
       for (int j = -amount; j < amount + 1; j++) {
-        int nx = x + i;
-        int ny = y + j;
+        int nx = cellX + i;
+        int ny = cellY + j;
 
         if (i != 0 || j != 0) {
           if (nx < 0 || ny < 0 || nx >= geometry.length || ny >= geometry[0].length) {
@@ -175,17 +174,17 @@ public class CaveGenerator {
   /**
    * Get number of ground cells around a cell.
    *
-   * @param x x of cell to search from
-   * @param y x of cell to search from
+   * @param cellX x of cell to search from
+   * @param cellY y of cell to search from
    * @return number of ground neighbors
    */
-  private int groundNeighbours(int x, int y) {
+  private int groundNeighbours(int cellX, int cellY) {
     int count = 0;
 
     for (int i = -1; i < 2; i++) {
       for (int j = -1; j < 2; j++) {
-        int nx = x + i;
-        int ny = y + j;
+        int nx = cellX + i;
+        int ny = cellY + j;
 
         if (i != 0 || j != 0) {
           if (nx >= 0 && ny >= 0 && nx < geometry.length && ny < geometry[0].length) {
@@ -230,16 +229,16 @@ public class CaveGenerator {
    */
   public Map<String, Integer> findMobStart() {
     Map<String, Integer> space = new HashMap<>();
-    int x;
-    int y;
+    int cellX;
+    int cellY;
 
     do {
-      x = MathUtils.random(0, map.length - 1);
-      y = MathUtils.random(0, map[x].length - 1);
-    } while (map[x][y].blocksMovement);
+      cellX = MathUtils.random(0, map.length - 1);
+      cellY = MathUtils.random(0, map[cellX].length - 1);
+    } while (map[cellX][cellY].blocksMovement);
 
-    space.put("x", x);
-    space.put("y", y);
+    space.put("x", cellX);
+    space.put("y", cellY);
 
     return space;
   }

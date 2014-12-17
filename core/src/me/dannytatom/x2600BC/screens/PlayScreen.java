@@ -8,31 +8,24 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.FrameBuffer;
-import com.badlogic.gdx.graphics.glutils.ShaderProgram;
-import com.badlogic.gdx.math.Vector3;
 import me.dannytatom.x2600BC.Main;
 import me.dannytatom.x2600BC.Mappers;
-import me.dannytatom.x2600BC.components.AttributesComponent;
-import me.dannytatom.x2600BC.components.PositionComponent;
-import me.dannytatom.x2600BC.components.VisualComponent;
+import me.dannytatom.x2600BC.components.*;
 import me.dannytatom.x2600BC.factories.MobFactory;
 import me.dannytatom.x2600BC.generators.CaveGenerator;
+import me.dannytatom.x2600BC.systems.BrainSystem;
+import me.dannytatom.x2600BC.systems.FleeSystem;
 import me.dannytatom.x2600BC.systems.MovementSystem;
+import me.dannytatom.x2600BC.systems.WanderSystem;
 
 import java.util.Map;
 
 public class PlayScreen implements Screen, InputProcessor {
   static final int SPRITE_WIDTH = 24;
   static final int SPRITE_HEIGHT = 24;
-  static final float AMBIENT_INTENSITY = .7f;
-  static final Vector3 AMBIENT_COLOR = new Vector3(0.3f, 0.3f, 0.7f);
 
   final Main game;
   OrthographicCamera camera;
@@ -41,41 +34,17 @@ public class PlayScreen implements Screen, InputProcessor {
   Entity player;
   CaveGenerator cave;
   MobFactory mobFactory;
-  ShaderProgram defaultShader;
-  ShaderProgram lightShader;
-  FrameBuffer buffer;
-  Texture light;
 
   /**
    * Play Screen.
    *
-   * @param g Instance of Main class
+   * @param main Instance of Main class
    */
-  public PlayScreen(Main g) {
-    game = g;
+  public PlayScreen(Main main) {
+    game = main;
 
     // Setup input
     Gdx.input.setInputProcessor(this);
-
-    ShaderProgram.pedantic = false;
-    defaultShader = new ShaderProgram(new FileHandle("vertexShader.glsl").readString(),
-        new FileHandle("defaultShader.glsl").readString());
-    lightShader = new ShaderProgram(new FileHandle("vertexShader.glsl").readString(),
-        new FileHandle("lightShader.glsl").readString());
-
-    lightShader.begin();
-    lightShader.setUniformf("ambientColor",
-        AMBIENT_COLOR.x, AMBIENT_COLOR.y,
-        AMBIENT_COLOR.z, AMBIENT_INTENSITY);
-
-    lightShader.setUniformf("resolution", Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-    lightShader.setUniformi("u_lightmap", 1);
-    lightShader.end();
-
-    buffer = new FrameBuffer(Pixmap.Format.RGBA8888, Gdx.graphics.getWidth(),
-        Gdx.graphics.getHeight(), false);
-
-    light = game.assets.get("sprites/light.png");
 
     batch = new SpriteBatch();
 
@@ -86,7 +55,11 @@ public class PlayScreen implements Screen, InputProcessor {
     cave = new CaveGenerator(game.assets.get("sprites/cave.atlas"), 40, 30);
 
     // Setup engine
+    // TODO: Maybe there's a better place to store engine & map?
     engine = new Engine();
+    engine.addSystem(new BrainSystem(engine));
+    engine.addSystem(new WanderSystem(cave.map));
+    engine.addSystem(new FleeSystem(cave.map));
     engine.addSystem(new MovementSystem(cave.map));
 
     // Setup camera
@@ -96,7 +69,9 @@ public class PlayScreen implements Screen, InputProcessor {
     // Add player entity
     Map<String, Integer> startingPosition = cave.findPlayerStart();
     player = new Entity();
+    player.add(new PlayerComponent());
     player.add(new PositionComponent(startingPosition.get("x"), startingPosition.get("y")));
+    player.add(new MovementComponent());
     player.add(new VisualComponent(game.assets.get("sprites/player.png")));
     player.add(new AttributesComponent(100, 50, 10));
     engine.addEntity(player);
@@ -106,62 +81,37 @@ public class PlayScreen implements Screen, InputProcessor {
 
   @Override
   public void render(float delta) {
-    PositionComponent playerPosition = player.getComponent(PositionComponent.class);
-
-    // Get all entities with a position & visual component
-    ImmutableArray<Entity> entities = engine.getEntitiesFor(Family.all(AttributesComponent.class,
-        PositionComponent.class, VisualComponent.class).get());
-
     // Clear screen
     Gdx.gl.glClearColor(0, 0, 0, 1);
 
     // Don't update any entities until the player has
     // an action to take
-    if (!player.getComponent(AttributesComponent.class).actions.isEmpty()) {
-      // Update Ashley engine
+    if (game.executeTurn) {
+      // Let the systems run!
       engine.update(delta);
 
+      // Get all entities with energy to spend
+      ImmutableArray<Entity> entities =
+          engine.getEntitiesFor(Family.all(AttributesComponent.class).get());
+
       // Give energy back
-      //
-      // elapsed = player action cost * 100 / player speed
       for (Entity entity : entities) {
         AttributesComponent attributes = Mappers.attributes.get(entity);
-        player.getComponent(AttributesComponent.class).speed = 100;
-        int playerSpeed = player.getComponent(AttributesComponent.class).speed;
-        int elapsed = ((100 - playerSpeed) * 100) / playerSpeed;
-
-        attributes.speed += (attributes.speed * elapsed) / 100;
+        attributes.energy += attributes.speed;
       }
+
+      // Turn over
+      game.executeTurn = false;
     }
+
+    // Get player position for camera
+    PositionComponent playerPosition = player.getComponent(PositionComponent.class);
 
     // Update camera
     camera.position.set(playerPosition.x * SPRITE_WIDTH, playerPosition.y * SPRITE_HEIGHT, 0);
     camera.update();
 
-    renderLight();
     renderMap();
-  }
-
-  /**
-   * Render torch light around player.
-   */
-  public void renderLight() {
-    buffer.begin();
-    batch.setProjectionMatrix(camera.combined);
-    batch.setShader(defaultShader);
-
-    Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-    PositionComponent playerPosition = player.getComponent(PositionComponent.class);
-
-    batch.begin();
-    batch.draw(light,
-        (playerPosition.x * SPRITE_WIDTH) - (6 * SPRITE_WIDTH) + (SPRITE_WIDTH / 2),
-        (playerPosition.y * SPRITE_HEIGHT) - (6 * SPRITE_HEIGHT) + (SPRITE_HEIGHT / 2),
-        12 * SPRITE_WIDTH, 12 * SPRITE_HEIGHT);
-    batch.end();
-
-    buffer.end();
   }
 
   /**
@@ -170,17 +120,9 @@ public class PlayScreen implements Screen, InputProcessor {
   public void renderMap() {
     batch.setProjectionMatrix(camera.combined);
 
-    if (game.lightEnabled) {
-      batch.setShader(lightShader);
-    }
-
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
     batch.begin();
-
-    // Idk what this does, but it's needed?
-    buffer.getColorBufferTexture().bind(1);
-    light.bind(0);
 
     // Draw map
     for (int x = 0; x < cave.map.length; x++) {
@@ -191,14 +133,15 @@ public class PlayScreen implements Screen, InputProcessor {
 
     // Iterate entities with a Position & Visual component
     // and draw them
-    ImmutableArray<Entity> entities = engine.getEntitiesFor(Family.all(AttributesComponent.class,
-        PositionComponent.class, VisualComponent.class).get());
+    ImmutableArray<Entity> entities =
+        engine.getEntitiesFor(Family.all(PositionComponent.class, VisualComponent.class).get());
 
     for (Entity entity : entities) {
       PositionComponent position = Mappers.position.get(entity);
       VisualComponent visual = Mappers.visual.get(entity);
 
-      batch.draw(visual.sprite, position.x * SPRITE_WIDTH, position.y * SPRITE_HEIGHT);
+      batch.draw(visual.sprite, position.x * SPRITE_WIDTH,
+          (position.y * SPRITE_HEIGHT) + (SPRITE_HEIGHT / 2));
     }
 
     batch.end();
@@ -208,9 +151,9 @@ public class PlayScreen implements Screen, InputProcessor {
    * Spawn mobs, randomly for now.
    */
   public void spawnMobs() {
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < 20; i++) {
       Map<String, Integer> pos = cave.findMobStart();
-      Entity mob = mobFactory.spawn(pos.get("x"), pos.get("y"));
+      Entity mob = mobFactory.spawn("spiderMonkey", pos.get("x"), pos.get("y"));
 
       engine.addEntity(mob);
     }
@@ -244,52 +187,50 @@ public class PlayScreen implements Screen, InputProcessor {
   @Override
   public void dispose() {
     batch.dispose();
-    buffer.dispose();
-    defaultShader.dispose();
-    lightShader.dispose();
-    light.dispose();
   }
 
   @Override
   public boolean keyDown(int keyCode) {
-    PositionComponent position = player.getComponent(PositionComponent.class);
-    AttributesComponent attributes = player.getComponent(AttributesComponent.class);
+    MovementComponent movement = player.getComponent(MovementComponent.class);
 
     switch (keyCode) {
       case Input.Keys.BACKSLASH:
-        game.lightEnabled ^= true;
+        game.debug ^= true;
+        break;
+      case Input.Keys.SPACE:
+        game.executeTurn = true;
         break;
       case Input.Keys.K:
-        attributes.actions.add("move");
-        position.moveDir = "N";
+        movement.direction = "N";
+        game.executeTurn = true;
         break;
       case Input.Keys.U:
-        attributes.actions.add("move");
-        position.moveDir = "NE";
+        movement.direction = "NE";
+        game.executeTurn = true;
         break;
       case Input.Keys.L:
-        attributes.actions.add("move");
-        position.moveDir = "E";
+        movement.direction = "E";
+        game.executeTurn = true;
         break;
       case Input.Keys.N:
-        attributes.actions.add("move");
-        position.moveDir = "SE";
+        movement.direction = "SE";
+        game.executeTurn = true;
         break;
       case Input.Keys.J:
-        attributes.actions.add("move");
-        position.moveDir = "S";
+        movement.direction = "S";
+        game.executeTurn = true;
         break;
       case Input.Keys.B:
-        attributes.actions.add("move");
-        position.moveDir = "SW";
+        movement.direction = "SW";
+        game.executeTurn = true;
         break;
       case Input.Keys.H:
-        attributes.actions.add("move");
-        position.moveDir = "W";
+        movement.direction = "W";
+        game.executeTurn = true;
         break;
       case Input.Keys.Y:
-        attributes.actions.add("move");
-        position.moveDir = "NW";
+        movement.direction = "NW";
+        game.executeTurn = true;
         break;
       default:
     }
