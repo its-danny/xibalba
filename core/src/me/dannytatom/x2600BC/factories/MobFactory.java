@@ -1,9 +1,12 @@
 package me.dannytatom.x2600BC.factories;
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
-import me.dannytatom.x2600BC.blueprints.SpiderMonkey;
+import com.badlogic.gdx.utils.Json;
 import me.dannytatom.x2600BC.components.*;
+import me.dannytatom.x2600BC.components.ai.WanderComponent;
+import me.dannytatom.x2600BC.utils.Blueprint;
 
 public class MobFactory {
   private AssetManager assets;
@@ -15,20 +18,25 @@ public class MobFactory {
   /**
    * Handles mob spawning.
    *
-   * @param cellX x position to spawn
-   * @param cellY y position to spawn
+   * @param x x position to spawn
+   * @param y y position to spawn
    * @return the newly made entity
    */
-  public Entity spawn(int cellX, int cellY) {
+  public Entity spawn(String type, int x, int y) {
+    Json json = new Json();
+    Blueprint blueprint = json.fromJson(Blueprint.class,
+        Gdx.files.internal("blueprints/mobs/" + type + ".json"));
+
     Entity entity = new Entity();
 
-    entity.add(new BrainComponent(3));
+    entity.add(new BrainComponent());
     entity.add(new WanderComponent());
-    entity.add(new PositionComponent(cellX, cellY));
+    entity.add(new PositionComponent(x, y));
     entity.add(new MovementComponent());
-    entity.add(new VisualComponent(assets.get(SpiderMonkey.visual.get("spritePath"))));
+    entity.add(new VisualComponent(assets.get(blueprint.visual.get("spritePath"))));
     entity.add(new AttributesComponent(
-        SpiderMonkey.attributes.get("speed")
+        blueprint.attributes.get("vision"),
+        blueprint.attributes.get("speed")
     ));
 
     return entity;

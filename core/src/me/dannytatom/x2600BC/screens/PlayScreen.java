@@ -11,17 +11,17 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 import me.dannytatom.x2600BC.Main;
-import me.dannytatom.x2600BC.Mappers;
 import me.dannytatom.x2600BC.components.*;
 import me.dannytatom.x2600BC.factories.MobFactory;
-import me.dannytatom.x2600BC.generators.CaveGenerator;
+import me.dannytatom.x2600BC.map.CaveGenerator;
+import me.dannytatom.x2600BC.map.Map;
 import me.dannytatom.x2600BC.systems.BrainSystem;
-import me.dannytatom.x2600BC.systems.FleeSystem;
 import me.dannytatom.x2600BC.systems.MovementSystem;
-import me.dannytatom.x2600BC.systems.WanderSystem;
-
-import java.util.Map;
+import me.dannytatom.x2600BC.systems.ai.TargetSystem;
+import me.dannytatom.x2600BC.systems.ai.WanderSystem;
+import me.dannytatom.x2600BC.utils.ComponentMappers;
 
 class PlayScreen implements Screen, InputProcessor {
   private static final int SPRITE_WIDTH = 24;
@@ -33,6 +33,7 @@ class PlayScreen implements Screen, InputProcessor {
   private Engine engine;
   private Entity player;
   private CaveGenerator cave;
+  private Map map;
   private MobFactory mobFactory;
 
   /**
@@ -42,38 +43,37 @@ class PlayScreen implements Screen, InputProcessor {
    */
   public PlayScreen(Main main) {
     game = main;
+    engine = new Engine();
+    batch = new SpriteBatch();
 
     // Setup input
     Gdx.input.setInputProcessor(this);
-
-    batch = new SpriteBatch();
 
     // Setup factories
     mobFactory = new MobFactory(game.assets);
 
     // Generate cave
     cave = new CaveGenerator(game.assets.get("sprites/cave.atlas"), 40, 30);
+    map = new Map(engine, cave.geometry, cave.map);
 
     // Setup engine
-    // TODO: Maybe there's a better place to store engine & map?
-    engine = new Engine();
-    engine.addSystem(new BrainSystem(engine));
-    engine.addSystem(new WanderSystem(cave.map));
-    engine.addSystem(new FleeSystem(cave.map));
-    engine.addSystem(new MovementSystem(cave.map));
+    engine.addSystem(new MovementSystem(map));
+    engine.addSystem(new BrainSystem(map));
+    engine.addSystem(new WanderSystem(map));
+    engine.addSystem(new TargetSystem(map));
 
     // Setup camera
     camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     camera.update();
 
     // Add player entity
-    Map<String, Integer> startingPosition = cave.findPlayerStart();
+    Vector2 startingPosition = map.findPlayerStart();
     player = new Entity();
     player.add(new PlayerComponent());
-    player.add(new PositionComponent(startingPosition.get("x"), startingPosition.get("y")));
+    player.add(new PositionComponent((int) startingPosition.x, (int) startingPosition.y));
     player.add(new MovementComponent());
     player.add(new VisualComponent(game.assets.get("sprites/player.png")));
-    player.add(new AttributesComponent(100));
+    player.add(new AttributesComponent(5, 100));
     engine.addEntity(player);
 
     spawnMobs();
@@ -96,7 +96,7 @@ class PlayScreen implements Screen, InputProcessor {
 
       // Give energy back
       for (Entity entity : entities) {
-        AttributesComponent attributes = Mappers.attributes.get(entity);
+        AttributesComponent attributes = ComponentMappers.attributes.get(entity);
         attributes.energy += attributes.speed;
       }
 
@@ -114,9 +114,6 @@ class PlayScreen implements Screen, InputProcessor {
     renderMap();
   }
 
-  /**
-   * Render the map and all entities on it.
-   */
   void renderMap() {
     batch.setProjectionMatrix(camera.combined);
 
@@ -137,8 +134,8 @@ class PlayScreen implements Screen, InputProcessor {
         engine.getEntitiesFor(Family.all(PositionComponent.class, VisualComponent.class).get());
 
     for (Entity entity : entities) {
-      PositionComponent position = Mappers.position.get(entity);
-      VisualComponent visual = Mappers.visual.get(entity);
+      PositionComponent position = ComponentMappers.position.get(entity);
+      VisualComponent visual = ComponentMappers.visual.get(entity);
 
       batch.draw(visual.sprite, position.x * SPRITE_WIDTH,
           (position.y * SPRITE_HEIGHT) + (SPRITE_HEIGHT / 2));
@@ -147,13 +144,10 @@ class PlayScreen implements Screen, InputProcessor {
     batch.end();
   }
 
-  /**
-   * Spawn mobs, randomly for now.
-   */
   void spawnMobs() {
     for (int i = 0; i < 20; i++) {
-      Map<String, Integer> pos = cave.findMobStart();
-      Entity mob = mobFactory.spawn(pos.get("x"), pos.get("y"));
+      Vector2 pos = map.findMobStart();
+      Entity mob = mobFactory.spawn("spiderMonkey", (int) pos.x, (int) pos.y);
 
       engine.addEntity(mob);
     }

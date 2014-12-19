@@ -3,22 +3,21 @@ package me.dannytatom.x2600BC.systems;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
-import me.dannytatom.x2600BC.Cell;
-import me.dannytatom.x2600BC.Mappers;
-import me.dannytatom.x2600BC.MoveAction;
 import me.dannytatom.x2600BC.components.AttributesComponent;
 import me.dannytatom.x2600BC.components.MovementComponent;
 import me.dannytatom.x2600BC.components.PositionComponent;
+import me.dannytatom.x2600BC.map.Map;
+import me.dannytatom.x2600BC.utils.ComponentMappers;
 
 public class MovementSystem extends IteratingSystem {
-  private Cell[][] map;
+  private Map map;
 
   /**
    * System to control movement of entities.
    *
    * @param map the map we're moving on
    */
-  public MovementSystem(Cell[][] map) {
+  public MovementSystem(Map map) {
     super(Family.all(PositionComponent.class,
         MovementComponent.class,
         AttributesComponent.class).get());
@@ -35,59 +34,59 @@ public class MovementSystem extends IteratingSystem {
    * @param deltaTime Time since last frame
    */
   public void processEntity(Entity entity, float deltaTime) {
-    PositionComponent position = Mappers.position.get(entity);
-    MovementComponent movement = Mappers.movement.get(entity);
-    AttributesComponent attributes = Mappers.attributes.get(entity);
+    PositionComponent position = ComponentMappers.position.get(entity);
+    MovementComponent movement = ComponentMappers.movement.get(entity);
+    AttributesComponent attributes = ComponentMappers.attributes.get(entity);
 
     if (movement.direction != null) {
       switch (movement.direction) {
         case "N":
-          if (!map[position.x][position.y + 1].blocksMovement) {
+          if (!map.isBlocked(position.x, position.y + 1)) {
             position.y += 1;
           }
 
           break;
         case "NE":
-          if (!map[position.x + 1][position.y + 1].blocksMovement) {
+          if (!map.isBlocked(position.x + 1, position.y + 1)) {
             position.y += 1;
             position.x += 1;
           }
 
           break;
         case "E":
-          if (!map[position.x + 1][position.y].blocksMovement) {
+          if (!map.isBlocked(position.x + 1, position.y)) {
             position.x += 1;
           }
 
           break;
         case "SE":
-          if (!map[position.x + 1][position.y - 1].blocksMovement) {
+          if (!map.isBlocked(position.x + 1, position.y - 1)) {
             position.y -= 1;
             position.x += 1;
           }
 
           break;
         case "S":
-          if (!map[position.x][position.y - 1].blocksMovement) {
+          if (!map.isBlocked(position.x, position.y - 1)) {
             position.y -= 1;
           }
 
           break;
         case "SW":
-          if (!map[position.x - 1][position.y - 1].blocksMovement) {
+          if (!map.isBlocked(position.x - 1, position.y - 1)) {
             position.y -= 1;
             position.x -= 1;
           }
 
           break;
         case "W":
-          if (!map[position.x - 1][position.y].blocksMovement) {
+          if (!map.isBlocked(position.x - 1, position.y)) {
             position.x -= 1;
           }
 
           break;
         case "NW":
-          if (!map[position.x - 1][position.y + 1].blocksMovement) {
+          if (!map.isBlocked(position.x - 1, position.y + 1)) {
             position.y += 1;
             position.x -= 1;
           }
@@ -96,7 +95,7 @@ public class MovementSystem extends IteratingSystem {
         default:
       }
 
-      attributes.energy -= MoveAction.COST;
+      attributes.energy -= 100;
       movement.direction = null;
     }
   }

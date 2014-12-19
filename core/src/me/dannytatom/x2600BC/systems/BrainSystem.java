@@ -1,51 +1,48 @@
 package me.dannytatom.x2600BC.systems;
 
-import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
-import me.dannytatom.x2600BC.Mappers;
-import me.dannytatom.x2600BC.components.*;
+import com.badlogic.gdx.math.Vector2;
+import me.dannytatom.x2600BC.components.AttributesComponent;
+import me.dannytatom.x2600BC.components.BrainComponent;
+import me.dannytatom.x2600BC.components.PositionComponent;
+import me.dannytatom.x2600BC.components.ai.TargetComponent;
+import me.dannytatom.x2600BC.components.ai.WanderComponent;
+import me.dannytatom.x2600BC.map.Map;
+import me.dannytatom.x2600BC.utils.ComponentMappers;
 
 public class BrainSystem extends IteratingSystem {
-  private Engine engine;
+  private Map map;
 
   /**
    * THA CONTROL CENTER. Handles AI states.
    *
-   * @param engine Instance of Ashley engine, used to get player
+   * @param map The map we're currently on
    */
-  public BrainSystem(Engine engine) {
+  public BrainSystem(Map map) {
     super(Family.all(BrainComponent.class).get());
 
-    this.engine = engine;
+    this.map = map;
   }
 
   @Override
   protected void processEntity(Entity entity, float deltaTime) {
-    Entity player = engine.getEntitiesFor(Family.one(PlayerComponent.class).get()).first();
+    Vector2 playerPosition = map.getPlayerPosition();
+    PositionComponent position = ComponentMappers.position.get(entity);
+    AttributesComponent attributes = ComponentMappers.attributes.get(entity);
 
-    BrainComponent brain = Mappers.brain.get(entity);
-    PositionComponent playerPosition = Mappers.position.get(player);
+    entity.remove(WanderComponent.class);
+    entity.remove(TargetComponent.class);
 
-    if (nearPlayer(entity, brain.vision)) {
-      entity.remove(WanderComponent.class);
-      entity.add(new FleeComponent(playerPosition.x, playerPosition.y));
+    if (map.isNearPlayer(position.x, position.y, attributes.vision)) {
+      if (attributes.energy >= 100) {
+        entity.add(new TargetComponent((int) playerPosition.x, (int) playerPosition.y));
+      }
     } else {
-      entity.remove(FleeComponent.class);
-      entity.add(new WanderComponent());
+      if (attributes.energy >= 100) {
+        entity.add(new WanderComponent());
+      }
     }
-  }
-
-  private boolean nearPlayer(Entity entity, int distance) {
-    Entity player = engine.getEntitiesFor(Family.one(PlayerComponent.class).get()).first();
-
-    PositionComponent entityPosition = Mappers.position.get(entity);
-    PositionComponent playerPosition = Mappers.position.get(player);
-
-    return entityPosition.x < playerPosition.x + distance
-        && entityPosition.x > playerPosition.x - distance
-        && entityPosition.y < playerPosition.y + distance
-        && entityPosition.y > playerPosition.y - distance;
   }
 }

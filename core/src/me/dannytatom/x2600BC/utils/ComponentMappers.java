@@ -1,9 +1,9 @@
-package me.dannytatom.x2600BC;
+package me.dannytatom.x2600BC.utils;
 
 import com.badlogic.ashley.core.ComponentMapper;
 import me.dannytatom.x2600BC.components.*;
 
-public final class Mappers {
+public final class ComponentMappers {
   public static final ComponentMapper<BrainComponent> brain =
       ComponentMapper.getFor(BrainComponent.class);
 

@@ -1,16 +1,14 @@
-package me.dannytatom.x2600BC.generators;
+package me.dannytatom.x2600BC.map;
 
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.MathUtils;
-import me.dannytatom.x2600BC.Cell;
 
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 
 public class CaveGenerator {
+  public boolean[][] geometry;
   public Cell[][] map;
-  private boolean[][] geometry;
+
   private int width;
   private int height;
   private TextureAtlas atlas;
@@ -146,17 +144,17 @@ public class CaveGenerator {
    * the amount of space given.
    *
    * @param amount How many neighboring cells to check
-   * @param cellX  x of cell to search from
-   * @param cellY  y of cell to search from
+   * @param x      x of cell to search from
+   * @param y      y of cell to search from
    * @return number of empty neighbors
    */
-  private int emptyNeighbours(int amount, int cellX, int cellY) {
+  private int emptyNeighbours(int amount, int x, int y) {
     int count = 0;
 
     for (int i = -amount; i < amount + 1; i++) {
       for (int j = -amount; j < amount + 1; j++) {
-        int nx = cellX + i;
-        int ny = cellY + j;
+        int nx = x + i;
+        int ny = y + j;
 
         if (i != 0 || j != 0) {
           if (nx < 0 || ny < 0 || nx >= geometry.length || ny >= geometry[0].length) {
@@ -174,17 +172,17 @@ public class CaveGenerator {
   /**
    * Get number of ground cells around a cell.
    *
-   * @param cellX x of cell to search from
-   * @param cellY y of cell to search from
+   * @param x x of cell to search from
+   * @param y y of cell to search from
    * @return number of ground neighbors
    */
-  private int groundNeighbours(int cellX, int cellY) {
+  private int groundNeighbours(int x, int y) {
     int count = 0;
 
     for (int i = -1; i < 2; i++) {
       for (int j = -1; j < 2; j++) {
-        int nx = cellX + i;
-        int ny = cellY + j;
+        int nx = x + i;
+        int ny = y + j;
 
         if (i != 0 || j != 0) {
           if (nx >= 0 && ny >= 0 && nx < geometry.length && ny < geometry[0].length) {
@@ -197,49 +195,5 @@ public class CaveGenerator {
     }
 
     return count;
-  }
-
-  /**
-   * Find a good starting area for player.
-   *
-   * @return x & y position of cell
-   */
-  public Map<String, Integer> findPlayerStart() {
-    Map<String, Integer> space = new HashMap<>();
-
-    search:
-    for (int x = 0; x < map.length; x++) {
-      for (int y = 0; y < map[x].length; y++) {
-        if (!map[x][y].blocksMovement) {
-          space.put("x", x);
-          space.put("y", y);
-
-          break search;
-        }
-      }
-    }
-
-    return space;
-  }
-
-  /**
-   * Find a good spot for a mob.
-   *
-   * @return x & y position of cell
-   */
-  public Map<String, Integer> findMobStart() {
-    Map<String, Integer> space = new HashMap<>();
-    int cellX;
-    int cellY;
-
-    do {
-      cellX = MathUtils.random(0, map.length - 1);
-      cellY = MathUtils.random(0, map[cellX].length - 1);
-    } while (map[cellX][cellY].blocksMovement);
-
-    space.put("x", cellX);
-    space.put("y", cellY);
-
-    return space;
   }
 }

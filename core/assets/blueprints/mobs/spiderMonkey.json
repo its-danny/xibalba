@@ -1,0 +1,10 @@
+{
+  "name": "Spider Monkey",
+  "visual": {
+    "spritePath": "sprites/spiderMonkey.png"
+  },
+  "attributes": {
+    "speed": 100,
+    "vision": 3
+  }
+}
