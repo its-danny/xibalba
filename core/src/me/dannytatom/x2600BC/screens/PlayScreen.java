@@ -10,18 +10,22 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import me.dannytatom.x2600BC.Main;
 import me.dannytatom.x2600BC.components.*;
 import me.dannytatom.x2600BC.factories.MobFactory;
 import me.dannytatom.x2600BC.map.CaveGenerator;
+import me.dannytatom.x2600BC.map.Cell;
 import me.dannytatom.x2600BC.map.Map;
 import me.dannytatom.x2600BC.systems.BrainSystem;
 import me.dannytatom.x2600BC.systems.MovementSystem;
+import me.dannytatom.x2600BC.systems.PlayerSystem;
 import me.dannytatom.x2600BC.systems.ai.TargetSystem;
 import me.dannytatom.x2600BC.systems.ai.WanderSystem;
 import me.dannytatom.x2600BC.utils.ComponentMappers;
+import org.xguzm.pathfinding.grid.GridCell;
 
 class PlayScreen implements Screen, InputProcessor {
   private static final int SPRITE_WIDTH = 24;
@@ -32,7 +36,6 @@ class PlayScreen implements Screen, InputProcessor {
   private SpriteBatch batch;
   private Engine engine;
   private Entity player;
-  private CaveGenerator cave;
   private Map map;
   private MobFactory mobFactory;
 
@@ -53,10 +56,11 @@ class PlayScreen implements Screen, InputProcessor {
     mobFactory = new MobFactory(game.assets);
 
     // Generate cave
-    cave = new CaveGenerator(game.assets.get("sprites/cave.atlas"), 40, 30);
+    CaveGenerator cave = new CaveGenerator(game.assets.get("sprites/cave.atlas"), 80, 60);
     map = new Map(engine, cave.geometry, cave.map);
 
     // Setup engine
+    engine.addSystem(new PlayerSystem(map));
     engine.addSystem(new MovementSystem(map));
     engine.addSystem(new BrainSystem(map));
     engine.addSystem(new WanderSystem(map));
@@ -73,7 +77,7 @@ class PlayScreen implements Screen, InputProcessor {
     player.add(new PositionComponent((int) startingPosition.x, (int) startingPosition.y));
     player.add(new MovementComponent());
     player.add(new VisualComponent(game.assets.get("sprites/player.png")));
-    player.add(new AttributesComponent(5, 100));
+    player.add(new AttributesComponent(100, 5));
     engine.addEntity(player);
 
     spawnMobs();
@@ -81,51 +85,66 @@ class PlayScreen implements Screen, InputProcessor {
 
   @Override
   public void render(float delta) {
-    // Clear screen
     Gdx.gl.glClearColor(0, 0, 0, 1);
 
-    // Don't update any entities until the player has
-    // an action to take
     if (game.executeTurn) {
-      // Let the systems run!
-      engine.update(delta);
-
-      // Get all entities with energy to spend
-      ImmutableArray<Entity> entities =
-          engine.getEntitiesFor(Family.all(AttributesComponent.class).get());
-
-      // Give energy back
-      for (Entity entity : entities) {
-        AttributesComponent attributes = ComponentMappers.attributes.get(entity);
-        attributes.energy += attributes.speed;
-      }
-
-      // Turn over
-      game.executeTurn = false;
+      executeTurn(delta);
     }
 
+    updateCamera();
+    renderWorld();
+  }
+
+  /**
+   * Don't update any entities until the player has
+   * an action to take.
+   *
+   * @param delta Time since last frame
+   */
+  void executeTurn(float delta) {
+    // Let the systems run!
+    engine.update(delta);
+
+    // Get all entities with energy to spend
+    ImmutableArray<Entity> entities =
+        engine.getEntitiesFor(Family.all(AttributesComponent.class).get());
+
+    // Give energy back
+    for (Entity entity : entities) {
+      AttributesComponent attributes = ComponentMappers.attributes.get(entity);
+      attributes.energy += attributes.speed;
+    }
+
+    // Turn over
+    game.executeTurn = false;
+  }
+
+  void updateCamera() {
     // Get player position for camera
     PositionComponent playerPosition = player.getComponent(PositionComponent.class);
 
     // Update camera
     camera.position.set(playerPosition.x * SPRITE_WIDTH, playerPosition.y * SPRITE_HEIGHT, 0);
     camera.update();
-
-    renderMap();
   }
 
-  void renderMap() {
+  void renderWorld() {
     batch.setProjectionMatrix(camera.combined);
 
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
     batch.begin();
 
-    // Draw map
-    for (int x = 0; x < cave.map.length; x++) {
-      for (int y = 0; y < cave.map[x].length; y++) {
-        batch.draw(cave.map[x][y].sprite, x * SPRITE_WIDTH, y * SPRITE_HEIGHT);
+    for (int x = 0; x < map.width; x++) {
+      for (int y = 0; y < map.height; y++) {
+        Cell cell = map.getCell(x, y);
+
+        batch.draw(cell.sprite, x * SPRITE_WIDTH, y * SPRITE_HEIGHT);
       }
+    }
+
+    if (game.debug) {
+      renderDebug();
     }
 
     // Iterate entities with a Position & Visual component
@@ -144,12 +163,28 @@ class PlayScreen implements Screen, InputProcessor {
     batch.end();
   }
 
-  void spawnMobs() {
-    for (int i = 0; i < 20; i++) {
-      Vector2 pos = map.findMobStart();
-      Entity mob = mobFactory.spawn("spiderMonkey", (int) pos.x, (int) pos.y);
+  void renderDebug() {
+    ImmutableArray<Entity> entities =
+        engine.getEntitiesFor(Family.all(MovementComponent.class).get());
 
-      engine.addEntity(mob);
+    for (Entity entity : entities) {
+      MovementComponent movement = ComponentMappers.movement.get(entity);
+
+      if (movement.path != null) {
+        batch.draw((Texture) game.assets.get("sprites/utils/path.png"), movement.position.x * SPRITE_WIDTH, movement.position.y * SPRITE_HEIGHT);
+
+        for (GridCell cell : movement.path) {
+          batch.draw((Texture) game.assets.get("sprites/utils/path.png"), cell.getX() * SPRITE_WIDTH, cell.getY() * SPRITE_HEIGHT);
+        }
+      }
+    }
+  }
+
+  void spawnMobs() {
+    for (int i = 0; i < 10; i++) {
+      Vector2 pos = map.getRandomOpenPosition();
+
+      engine.addEntity(mobFactory.spawn("spiderMonkey", (int) pos.x, (int) pos.y));
     }
   }
 
@@ -186,6 +221,7 @@ class PlayScreen implements Screen, InputProcessor {
   @Override
   public boolean keyDown(int keyCode) {
     MovementComponent movement = player.getComponent(MovementComponent.class);
+    PositionComponent position = player.getComponent(PositionComponent.class);
 
     switch (keyCode) {
       case Input.Keys.BACKSLASH:
@@ -195,35 +231,35 @@ class PlayScreen implements Screen, InputProcessor {
         game.executeTurn = true;
         break;
       case Input.Keys.K:
-        movement.direction = "N";
+        movement.position = new Vector2(position.x, position.y + 1);
         game.executeTurn = true;
         break;
       case Input.Keys.U:
-        movement.direction = "NE";
+        movement.position = new Vector2(position.x + 1, position.y + 1);
         game.executeTurn = true;
         break;
       case Input.Keys.L:
-        movement.direction = "E";
+        movement.position = new Vector2(position.x + 1, position.y);
         game.executeTurn = true;
         break;
       case Input.Keys.N:
-        movement.direction = "SE";
+        movement.position = new Vector2(position.x + 1, position.y - 1);
         game.executeTurn = true;
         break;
       case Input.Keys.J:
-        movement.direction = "S";
+        movement.position = new Vector2(position.x, position.y - 1);
         game.executeTurn = true;
         break;
       case Input.Keys.B:
-        movement.direction = "SW";
+        movement.position = new Vector2(position.x - 1, position.y - 1);
         game.executeTurn = true;
         break;
       case Input.Keys.H:
-        movement.direction = "W";
+        movement.position = new Vector2(position.x - 1, position.y);
         game.executeTurn = true;
         break;
       case Input.Keys.Y:
-        movement.direction = "NW";
+        movement.position = new Vector2(position.x - 1, position.y + 1);
         game.executeTurn = true;
         break;
       default:

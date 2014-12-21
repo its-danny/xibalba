@@ -23,8 +23,7 @@ public class MobFactory {
    * @return the newly made entity
    */
   public Entity spawn(String type, int x, int y) {
-    Json json = new Json();
-    Blueprint blueprint = json.fromJson(Blueprint.class,
+    Blueprint blueprint = (new Json()).fromJson(Blueprint.class,
         Gdx.files.internal("blueprints/mobs/" + type + ".json"));
 
     Entity entity = new Entity();
@@ -35,8 +34,8 @@ public class MobFactory {
     entity.add(new MovementComponent());
     entity.add(new VisualComponent(assets.get(blueprint.visual.get("spritePath"))));
     entity.add(new AttributesComponent(
-        blueprint.attributes.get("vision"),
-        blueprint.attributes.get("speed")
+        blueprint.attributes.get("speed"),
+        blueprint.attributes.get("vision")
     ));
 
     return entity;

@@ -18,9 +18,7 @@ public class MovementSystem extends IteratingSystem {
    * @param map the map we're moving on
    */
   public MovementSystem(Map map) {
-    super(Family.all(PositionComponent.class,
-        MovementComponent.class,
-        AttributesComponent.class).get());
+    super(Family.all(PositionComponent.class, MovementComponent.class, AttributesComponent.class).get());
 
     this.map = map;
   }
@@ -38,65 +36,14 @@ public class MovementSystem extends IteratingSystem {
     MovementComponent movement = ComponentMappers.movement.get(entity);
     AttributesComponent attributes = ComponentMappers.attributes.get(entity);
 
-    if (movement.direction != null) {
-      switch (movement.direction) {
-        case "N":
-          if (!map.isBlocked(position.x, position.y + 1)) {
-            position.y += 1;
-          }
-
-          break;
-        case "NE":
-          if (!map.isBlocked(position.x + 1, position.y + 1)) {
-            position.y += 1;
-            position.x += 1;
-          }
-
-          break;
-        case "E":
-          if (!map.isBlocked(position.x + 1, position.y)) {
-            position.x += 1;
-          }
-
-          break;
-        case "SE":
-          if (!map.isBlocked(position.x + 1, position.y - 1)) {
-            position.y -= 1;
-            position.x += 1;
-          }
-
-          break;
-        case "S":
-          if (!map.isBlocked(position.x, position.y - 1)) {
-            position.y -= 1;
-          }
-
-          break;
-        case "SW":
-          if (!map.isBlocked(position.x - 1, position.y - 1)) {
-            position.y -= 1;
-            position.x -= 1;
-          }
-
-          break;
-        case "W":
-          if (!map.isBlocked(position.x - 1, position.y)) {
-            position.x -= 1;
-          }
-
-          break;
-        case "NW":
-          if (!map.isBlocked(position.x - 1, position.y + 1)) {
-            position.y += 1;
-            position.x -= 1;
-          }
-
-          break;
-        default:
+    if (movement.position != null && attributes.energy >= 100) {
+      if (map.isWalkable((int) movement.position.x, (int) movement.position.y)) {
+        position.x = (int) movement.position.x;
+        position.y = (int) movement.position.y;
       }
 
       attributes.energy -= 100;
-      movement.direction = null;
+      movement.position = null;
     }
   }
 }

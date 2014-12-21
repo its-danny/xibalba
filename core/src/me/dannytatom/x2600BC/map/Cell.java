@@ -4,16 +4,16 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 
 public class Cell {
   public Sprite sprite;
-  public boolean isBlocked;
+  public boolean isWall;
 
   /**
    * Holds map cell data.
    *
-   * @param sprite    tile sprite
-   * @param isBlocked whether or not an entity can move onto this cell
+   * @param sprite tile sprite
+   * @param isWall whether or not an entity can move onto this cell
    */
-  public Cell(Sprite sprite, boolean isBlocked) {
+  public Cell(Sprite sprite, boolean isWall) {
     this.sprite = sprite;
-    this.isBlocked = isBlocked;
+    this.isWall = isWall;
   }
 }

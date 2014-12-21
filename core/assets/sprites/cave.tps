@@ -4,7 +4,7 @@
         <key>fileFormatVersion</key>
         <int>3</int>
         <key>texturePackerVersion</key>
-        <string>3.5.3</string>
+        <string>3.6.0</string>
         <key>fileName</key>
         <string>/Users/danny/Development/x2600BC/core/assets/sprites/cave.tps</string>
         <key>autoSDSettings</key>
@@ -215,7 +215,6 @@
             <filename>cave/caveWallTop-1.png</filename>
             <filename>cave/caveWallTop-2.png</filename>
             <filename>cave/caveWallTop-3.png</filename>
-            <filename>cave/caveWallTop-4.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>

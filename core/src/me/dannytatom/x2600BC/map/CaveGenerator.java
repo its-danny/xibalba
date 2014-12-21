@@ -119,7 +119,7 @@ public class CaveGenerator {
     for (int x = 0; x < geometry.length; x++) {
       for (int y = 0; y < geometry[x].length; y++) {
         if (geometry[x][y]) {
-          if (MathUtils.random() <= .8) {
+          if (MathUtils.random() <= .95) {
             map[x][y] = new Cell(atlas.createSprite("caveFloor-"
                 + MathUtils.random(10, 16)), false);
           } else {
@@ -130,7 +130,8 @@ public class CaveGenerator {
           int neighbours = groundNeighbours(x, y);
 
           if (neighbours > 0) {
-            map[x][y] = new Cell(atlas.createSprite("caveWallBack-1"), true);
+            map[x][y] = new Cell(atlas.createSprite("caveWallBack-"
+                + MathUtils.random(1, 3)), true);
           } else {
             map[x][y] = new Cell(atlas.createSprite("nothing"), true);
           }

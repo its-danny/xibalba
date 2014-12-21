@@ -21,7 +21,7 @@ public class BrainSystem extends IteratingSystem {
    * @param map The map we're currently on
    */
   public BrainSystem(Map map) {
-    super(Family.all(BrainComponent.class).get());
+    super(Family.all(BrainComponent.class, AttributesComponent.class, PositionComponent.class).get());
 
     this.map = map;
   }
