@@ -6,7 +6,7 @@
         <key>texturePackerVersion</key>
         <string>3.6.0</string>
         <key>fileName</key>
-        <string>/Users/danny/Development/x2600BC/core/assets/sprites/cave.tps</string>
+        <string>/Users/danny/Development/xibalba/core/assets/sprites/cave.tps</string>
         <key>autoSDSettings</key>
         <array>
             <struct type="AutoSDSettings">

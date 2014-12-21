@@ -14,7 +14,7 @@ allprojects {
     version = '1.0'
 
     ext {
-        appName = 'x2600BC'
+        appName = 'xibalba'
         gdxVersion = '1.4.1'
         roboVMVersion = '1.0.0-alpha-04'
         box2DLightsVersion = '1.3'
