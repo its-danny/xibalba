@@ -36,28 +36,28 @@ public class WanderSystem extends IteratingSystem {
 
       NavigationGrid<GridCell> grid = new NavigationGrid<>(map.createGridCells());
       AStarGridFinder<GridCell> finder = new AStarGridFinder<>(GridCell.class);
-      Vector2 randomPosition = map.getRandomOpenPosition();
 
-      movement.path = finder.findPath(position.x, position.y, (int) randomPosition.x, (int) randomPosition.y, grid);
+      do {
+        Vector2 randomPosition = map.getRandomOpenPosition();
+        movement.path = finder.findPath(position.x, position.y, (int) randomPosition.x, (int) randomPosition.y, grid);
+      } while (movement.path == null);
     }
 
-    // If a path to the target could be found, start walking.
-    // If it becomes blocked, create a new path to somewhere else.
+    // Start walking.
+    // If the path becomes blocked, reset the path.
     //
     // TODO: Instead of checking next cell, check any cell in the path that's in their vision
-    if (movement.path != null) {
-      GridCell cell = movement.path.get(0);
+    GridCell cell = movement.path.get(0);
 
-      if (cell.isWalkable()) {
-        movement.position = new Vector2(cell.getX(), cell.getY());
+    if (cell.isWalkable()) {
+      movement.position = new Vector2(cell.getX(), cell.getY());
 
-        List<GridCell> newPath = new ArrayList<>(movement.path);
-        newPath.remove(cell);
+      List<GridCell> newPath = new ArrayList<>(movement.path);
+      newPath.remove(cell);
 
-        movement.path = newPath;
-      } else {
-        movement.path = null;
-      }
+      movement.path = newPath;
+    } else {
+      movement.path = null;
     }
   }
 }

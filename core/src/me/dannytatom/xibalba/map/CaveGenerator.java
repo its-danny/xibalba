@@ -6,9 +6,8 @@ import com.badlogic.gdx.math.MathUtils;
 import java.util.Arrays;
 
 public class CaveGenerator {
-  private boolean[][] geometry;
   public Cell[][] map;
-
+  private boolean[][] geometry;
   private int width;
   private int height;
   private TextureAtlas atlas;

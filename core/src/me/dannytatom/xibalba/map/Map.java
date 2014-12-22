@@ -20,8 +20,8 @@ public class Map {
   /**
    * Holds logic for dealing with maps.
    *
-   * @param engine   The Ashley engine
-   * @param map      The actual map
+   * @param engine The Ashley engine
+   * @param map    The actual map
    */
   public Map(Engine engine, Cell[][] map) {
     this.engine = engine;
@@ -99,10 +99,10 @@ public class Map {
   public boolean isNearPlayer(int x, int y, int distance) {
     Vector2 playerPosition = getPlayerPosition();
 
-    return x < playerPosition.x + distance
-        && x > playerPosition.x - distance
-        && y < playerPosition.y + distance
-        && y > playerPosition.y - distance;
+    return x <= playerPosition.x + distance
+        && x >= playerPosition.x - distance
+        && y <= playerPosition.y + distance
+        && y >= playerPosition.y - distance;
   }
 
   public GridCell[][] createGridCells() {

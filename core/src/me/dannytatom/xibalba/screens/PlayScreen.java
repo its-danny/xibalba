@@ -15,6 +15,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.components.*;
+import me.dannytatom.xibalba.components.ai.TargetComponent;
 import me.dannytatom.xibalba.factories.MobFactory;
 import me.dannytatom.xibalba.map.CaveGenerator;
 import me.dannytatom.xibalba.map.Cell;
@@ -22,6 +23,7 @@ import me.dannytatom.xibalba.map.Map;
 import me.dannytatom.xibalba.systems.BrainSystem;
 import me.dannytatom.xibalba.systems.MovementSystem;
 import me.dannytatom.xibalba.systems.PlayerSystem;
+import me.dannytatom.xibalba.systems.ai.AttackSystem;
 import me.dannytatom.xibalba.systems.ai.TargetSystem;
 import me.dannytatom.xibalba.systems.ai.WanderSystem;
 import me.dannytatom.xibalba.utils.ComponentMappers;
@@ -56,15 +58,16 @@ class PlayScreen implements Screen, InputProcessor {
     mobFactory = new MobFactory(game.assets);
 
     // Generate cave
-    CaveGenerator cave = new CaveGenerator(game.assets.get("sprites/cave.atlas"), 80, 60);
+    CaveGenerator cave = new CaveGenerator(game.assets.get("sprites/cave.atlas"), 15, 15);
     map = new Map(engine, cave.map);
 
-    // Setup engine
+    // Setup engine (they're run in order added)
     engine.addSystem(new PlayerSystem());
-    engine.addSystem(new MovementSystem(map));
     engine.addSystem(new BrainSystem(map));
     engine.addSystem(new WanderSystem(map));
     engine.addSystem(new TargetSystem(map));
+    engine.addSystem(new AttackSystem(map));
+    engine.addSystem(new MovementSystem(map));
 
     // Setup camera
     camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -81,7 +84,7 @@ class PlayScreen implements Screen, InputProcessor {
     engine.addEntity(player);
 
     // Spawn some spider monkeys
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 1; i++) {
       Vector2 pos = map.getRandomOpenPosition();
 
       engine.addEntity(mobFactory.spawn("spiderMonkey", (int) pos.x, (int) pos.y));
@@ -176,10 +179,16 @@ class PlayScreen implements Screen, InputProcessor {
       MovementComponent movement = ComponentMappers.movement.get(entity);
 
       if (movement.path != null) {
-        batch.draw((Texture) game.assets.get("sprites/utils/path.png"), movement.position.x * SPRITE_WIDTH, movement.position.y * SPRITE_HEIGHT);
+        Texture texture;
+
+        if (entity.getComponent(TargetComponent.class) != null) {
+          texture = game.assets.get("sprites/utils/target.png");
+        } else {
+          texture = game.assets.get("sprites/utils/wander.png");
+        }
 
         for (GridCell cell : movement.path) {
-          batch.draw((Texture) game.assets.get("sprites/utils/path.png"), cell.getX() * SPRITE_WIDTH, cell.getY() * SPRITE_HEIGHT);
+          batch.draw(texture, cell.getX() * SPRITE_WIDTH, cell.getY() * SPRITE_HEIGHT);
         }
       }
     }

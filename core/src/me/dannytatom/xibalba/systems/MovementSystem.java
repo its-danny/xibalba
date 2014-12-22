@@ -7,6 +7,7 @@ import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.MovementComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.map.Map;
+import me.dannytatom.xibalba.utils.Actions;
 import me.dannytatom.xibalba.utils.ComponentMappers;
 
 public class MovementSystem extends IteratingSystem {
@@ -36,13 +37,13 @@ public class MovementSystem extends IteratingSystem {
     MovementComponent movement = ComponentMappers.movement.get(entity);
     AttributesComponent attributes = ComponentMappers.attributes.get(entity);
 
-    if (movement.position != null && attributes.energy >= 100) {
+    if (movement.position != null && attributes.energy >= Actions.MOVE) {
       if (map.isWalkable((int) movement.position.x, (int) movement.position.y)) {
         position.x = (int) movement.position.x;
         position.y = (int) movement.position.y;
       }
 
-      attributes.energy -= 100;
+      attributes.energy -= Actions.MOVE;
       movement.position = null;
     }
   }

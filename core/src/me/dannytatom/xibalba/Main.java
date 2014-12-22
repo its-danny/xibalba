@@ -7,7 +7,7 @@ import me.dannytatom.xibalba.screens.LoadingScreen;
 public class Main extends Game {
   public AssetManager assets;
 
-  public boolean debug = false;
+  public boolean debug = true;
   public boolean executeTurn = false;
 
   /**

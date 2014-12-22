@@ -42,7 +42,7 @@ public class TargetSystem extends IteratingSystem {
     }
 
     // If a path to the target could be found, start walking.
-    // If it becomes blocked, create a new path to somewhere else.
+    // If it becomes blocked, reset the path.
     //
     // TODO: Instead of checking next cell, check any cell in the path that's in their vision
     if (movement.path != null) {
