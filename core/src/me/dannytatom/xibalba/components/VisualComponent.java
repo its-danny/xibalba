@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 
 public class VisualComponent extends Component {
-  public Sprite sprite;
+  public final Sprite sprite;
 
   /**
    * Holds entity's sprite.

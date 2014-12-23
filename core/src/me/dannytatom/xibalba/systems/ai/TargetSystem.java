@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TargetSystem extends IteratingSystem {
-  private Map map;
+  private final Map map;
 
   public TargetSystem(Map map) {
     super(Family.all(TargetComponent.class, PositionComponent.class, MovementComponent.class).get());
@@ -38,7 +38,8 @@ public class TargetSystem extends IteratingSystem {
       NavigationGrid<GridCell> grid = new NavigationGrid<>(map.createGridCells());
       AStarGridFinder<GridCell> finder = new AStarGridFinder<>(GridCell.class);
 
-      movement.path = finder.findPath(position.x, position.y, target.x, target.y, grid);
+      movement.path = finder.findPath((int) position.pos.x, (int) position.pos.y,
+          (int) target.pos.x, (int) target.pos.y, grid);
     }
 
     // If a path to the target could be found, start walking.
@@ -49,7 +50,7 @@ public class TargetSystem extends IteratingSystem {
       GridCell cell = movement.path.get(0);
 
       if (cell.isWalkable()) {
-        movement.position = new Vector2(cell.getX(), cell.getY());
+        movement.pos = new Vector2(cell.getX(), cell.getY());
 
         List<GridCell> newPath = new ArrayList<>(movement.path);
         newPath.remove(cell);

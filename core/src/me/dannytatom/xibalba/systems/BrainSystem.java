@@ -16,7 +16,7 @@ import me.dannytatom.xibalba.utils.Actions;
 import me.dannytatom.xibalba.utils.ComponentMappers;
 
 public class BrainSystem extends IteratingSystem {
-  private Map map;
+  private final Map map;
 
   /**
    * THA CONTROL CENTER. Handles AI states.
@@ -47,12 +47,10 @@ public class BrainSystem extends IteratingSystem {
   private void handleWander(Entity entity) {
     PositionComponent position = ComponentMappers.position.get(entity);
     AttributesComponent attributes = ComponentMappers.attributes.get(entity);
-    MovementComponent movement = ComponentMappers.movement.get(entity);
     Vector2 playerPosition = map.getPlayerPosition();
 
     // If he can attack the player, do that
-    if (map.isNearPlayer(position.x, position.y, 1) && attributes.energy >= Actions.ATTACK) {
-      movement.path = null;
+    if (map.isNearPlayer(position.pos, 1) && attributes.energy >= Actions.ATTACK) {
       switchToAttack(entity, playerPosition);
 
       return;
@@ -61,8 +59,7 @@ public class BrainSystem extends IteratingSystem {
     // If he can move
     if (attributes.energy >= Actions.MOVE) {
       // If he's near the player, target
-      if (map.isNearPlayer(position.x, position.y, attributes.vision)) {
-        movement.path = null;
+      if (map.isNearPlayer(position.pos, attributes.vision)) {
         switchToTarget(entity, playerPosition);
       }
     }
@@ -79,13 +76,11 @@ public class BrainSystem extends IteratingSystem {
   private void handleTarget(Entity entity) {
     PositionComponent position = ComponentMappers.position.get(entity);
     AttributesComponent attributes = ComponentMappers.attributes.get(entity);
-    MovementComponent movement = ComponentMappers.movement.get(entity);
     TargetComponent target = ComponentMappers.target.get(entity);
     Vector2 playerPosition = map.getPlayerPosition();
 
     // If he can attack the player, do that
-    if (map.isNearPlayer(position.x, position.y, 1) && attributes.energy >= Actions.ATTACK) {
-      movement.path = null;
+    if (map.isNearPlayer(position.pos, 1) && attributes.energy >= Actions.ATTACK) {
       switchToAttack(entity, playerPosition);
 
       return;
@@ -95,12 +90,11 @@ public class BrainSystem extends IteratingSystem {
     if (attributes.energy >= Actions.MOVE) {
       // If he's near the player & player moves, retarget
       // Otherwise, go back to wandering
-      if (map.isNearPlayer(position.x, position.y, attributes.vision)) {
-        if (playerPosition != new Vector2(target.x, target.y)) {
-          movement.path = null;
+      if (map.isNearPlayer(position.pos, attributes.vision)) {
+        if (playerPosition != target.pos) {
+          switchToTarget(entity, playerPosition);
         }
       } else {
-        movement.path = null;
         switchToWander(entity);
       }
     }
@@ -118,8 +112,8 @@ public class BrainSystem extends IteratingSystem {
     PositionComponent position = ComponentMappers.position.get(entity);
     AttributesComponent attributes = ComponentMappers.attributes.get(entity);
 
-    // If he goes out of position to attack, go back to targeting
-    if (!map.isNearPlayer(position.x, position.y, 1) && attributes.energy >= Actions.MOVE) {
+    // If he goes out of pos to attack, go back to targeting
+    if (!map.isNearPlayer(position.pos, 1) && attributes.energy >= Actions.MOVE) {
       Vector2 playerPosition = map.getPlayerPosition();
 
       switchToTarget(entity, playerPosition);

@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.components.*;
@@ -34,12 +35,11 @@ class PlayScreen implements Screen, InputProcessor {
   private static final int SPRITE_HEIGHT = 24;
 
   private final Main game;
-  private OrthographicCamera camera;
-  private SpriteBatch batch;
-  private Engine engine;
-  private Entity player;
-  private Map map;
-  private MobFactory mobFactory;
+  private final OrthographicCamera camera;
+  private final SpriteBatch batch;
+  private final Engine engine;
+  private final Entity player;
+  private final Map map;
 
   /**
    * Play Screen.
@@ -55,10 +55,11 @@ class PlayScreen implements Screen, InputProcessor {
     Gdx.input.setInputProcessor(this);
 
     // Setup factories
-    mobFactory = new MobFactory(game.assets);
+    MobFactory mobFactory = new MobFactory(game.assets);
 
     // Generate cave
-    CaveGenerator cave = new CaveGenerator(game.assets.get("sprites/cave.atlas"), 15, 15);
+    CaveGenerator cave = new CaveGenerator(game.assets.get("sprites/cave.atlas"),
+        MathUtils.random(50, 80), MathUtils.random(30, 60));
     map = new Map(engine, cave.map);
 
     // Setup engine (they're run in order added)
@@ -77,17 +78,17 @@ class PlayScreen implements Screen, InputProcessor {
     Vector2 startingPosition = map.findPlayerStart();
     player = new Entity();
     player.add(new PlayerComponent());
-    player.add(new PositionComponent((int) startingPosition.x, (int) startingPosition.y));
+    player.add(new PositionComponent(startingPosition));
     player.add(new MovementComponent());
     player.add(new VisualComponent(game.assets.get("sprites/player.png")));
-    player.add(new AttributesComponent(100, 5));
+    player.add(new AttributesComponent(100, 3));
     engine.addEntity(player);
 
     // Spawn some spider monkeys
-    for (int i = 0; i < 1; i++) {
+    for (int i = 0; i < 5; i++) {
       Vector2 pos = map.getRandomOpenPosition();
 
-      engine.addEntity(mobFactory.spawn("spiderMonkey", (int) pos.x, (int) pos.y));
+      engine.addEntity(mobFactory.spawn("spiderMonkey", pos));
     }
   }
 
@@ -128,11 +129,11 @@ class PlayScreen implements Screen, InputProcessor {
   }
 
   void updateCamera() {
-    // Get player position for camera
+    // Get player pos for camera
     PositionComponent playerPosition = player.getComponent(PositionComponent.class);
 
     // Update camera
-    camera.position.set(playerPosition.x * SPRITE_WIDTH, playerPosition.y * SPRITE_HEIGHT, 0);
+    camera.position.set(playerPosition.pos.x * SPRITE_WIDTH, playerPosition.pos.y * SPRITE_HEIGHT, 0);
     camera.update();
   }
 
@@ -164,8 +165,8 @@ class PlayScreen implements Screen, InputProcessor {
       PositionComponent position = ComponentMappers.position.get(entity);
       VisualComponent visual = ComponentMappers.visual.get(entity);
 
-      batch.draw(visual.sprite, position.x * SPRITE_WIDTH,
-          (position.y * SPRITE_HEIGHT) + (SPRITE_HEIGHT / 2));
+      batch.draw(visual.sprite, position.pos.x * SPRITE_WIDTH,
+          (position.pos.y * SPRITE_HEIGHT) + (SPRITE_HEIGHT / 2));
     }
 
     batch.end();
@@ -173,7 +174,7 @@ class PlayScreen implements Screen, InputProcessor {
 
   void renderDebug() {
     ImmutableArray<Entity> entities =
-        engine.getEntitiesFor(Family.all(MovementComponent.class).get());
+        engine.getEntitiesFor(Family.all(MovementComponent.class, AttributesComponent.class).get());
 
     for (Entity entity : entities) {
       MovementComponent movement = ComponentMappers.movement.get(entity);
@@ -237,35 +238,35 @@ class PlayScreen implements Screen, InputProcessor {
         game.executeTurn = true;
         break;
       case Input.Keys.K:
-        movement.position = new Vector2(position.x, position.y + 1);
+        movement.pos = new Vector2(position.pos.x, position.pos.y + 1);
         game.executeTurn = true;
         break;
       case Input.Keys.U:
-        movement.position = new Vector2(position.x + 1, position.y + 1);
+        movement.pos = new Vector2(position.pos.x + 1, position.pos.y + 1);
         game.executeTurn = true;
         break;
       case Input.Keys.L:
-        movement.position = new Vector2(position.x + 1, position.y);
+        movement.pos = new Vector2(position.pos.x + 1, position.pos.y);
         game.executeTurn = true;
         break;
       case Input.Keys.N:
-        movement.position = new Vector2(position.x + 1, position.y - 1);
+        movement.pos = new Vector2(position.pos.x + 1, position.pos.y - 1);
         game.executeTurn = true;
         break;
       case Input.Keys.J:
-        movement.position = new Vector2(position.x, position.y - 1);
+        movement.pos = new Vector2(position.pos.x, position.pos.y - 1);
         game.executeTurn = true;
         break;
       case Input.Keys.B:
-        movement.position = new Vector2(position.x - 1, position.y - 1);
+        movement.pos = new Vector2(position.pos.x - 1, position.pos.y - 1);
         game.executeTurn = true;
         break;
       case Input.Keys.H:
-        movement.position = new Vector2(position.x - 1, position.y);
+        movement.pos = new Vector2(position.pos.x - 1, position.pos.y);
         game.executeTurn = true;
         break;
       case Input.Keys.Y:
-        movement.position = new Vector2(position.x - 1, position.y + 1);
+        movement.pos = new Vector2(position.pos.x - 1, position.pos.y + 1);
         game.executeTurn = true;
         break;
       default:

@@ -1,19 +1,18 @@
 package me.dannytatom.xibalba.components;
 
 import com.badlogic.ashley.core.Component;
+import com.badlogic.gdx.math.Vector2;
 
 public class PositionComponent extends Component {
-  public int x;
-  public int y;
+  public Vector2 pos;
 
   /**
-   * Holds entity position.
+   * Holds entity pos.
    *
-   * @param x The entity's current x position
-   * @param y The entity's current y position
+   * @param x The entity's current x pos
+   * @param y The entity's current y pos
    */
-  public PositionComponent(int x, int y) {
-    this.x = x;
-    this.y = y;
+  public PositionComponent(Vector2 position) {
+    this.pos = position;
   }
 }

@@ -8,10 +8,10 @@ import java.util.List;
 
 public class MovementComponent extends Component {
   public List<GridCell> path;
-  public Vector2 position;
+  public Vector2 pos;
 
   public MovementComponent() {
     this.path = null;
-    this.position = null;
+    this.pos = null;
   }
 }

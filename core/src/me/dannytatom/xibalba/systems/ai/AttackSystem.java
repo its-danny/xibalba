@@ -9,7 +9,7 @@ import me.dannytatom.xibalba.components.ai.AttackComponent;
 import me.dannytatom.xibalba.map.Map;
 
 public class AttackSystem extends IteratingSystem {
-  private Map map;
+  private final Map map;
 
   public AttackSystem(Map map) {
     super(Family.all(AttackComponent.class, PositionComponent.class, MovementComponent.class).get());

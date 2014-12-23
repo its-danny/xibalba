@@ -3,9 +3,9 @@ package me.dannytatom.xibalba.components;
 import com.badlogic.ashley.core.Component;
 
 public class AttributesComponent extends Component {
+  public final int speed;
+  public final int vision;
   public int energy;
-  public int speed;
-  public int vision;
 
   /**
    * Holds entity attributes.

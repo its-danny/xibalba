@@ -6,11 +6,11 @@ import com.badlogic.gdx.math.MathUtils;
 import java.util.Arrays;
 
 public class CaveGenerator {
+  private final int width;
+  private final int height;
+  private final TextureAtlas atlas;
   public Cell[][] map;
   private boolean[][] geometry;
-  private int width;
-  private int height;
-  private TextureAtlas atlas;
 
   /**
    * Generates a cave.

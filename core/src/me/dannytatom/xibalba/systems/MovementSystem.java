@@ -11,7 +11,7 @@ import me.dannytatom.xibalba.utils.Actions;
 import me.dannytatom.xibalba.utils.ComponentMappers;
 
 public class MovementSystem extends IteratingSystem {
-  private Map map;
+  private final Map map;
 
   /**
    * System to control movement of entities.
@@ -37,14 +37,12 @@ public class MovementSystem extends IteratingSystem {
     MovementComponent movement = ComponentMappers.movement.get(entity);
     AttributesComponent attributes = ComponentMappers.attributes.get(entity);
 
-    if (movement.position != null && attributes.energy >= Actions.MOVE) {
-      if (map.isWalkable((int) movement.position.x, (int) movement.position.y)) {
-        position.x = (int) movement.position.x;
-        position.y = (int) movement.position.y;
+    if (movement.pos != null && attributes.energy >= Actions.MOVE) {
+      if (map.isWalkable((int) movement.pos.x, (int) movement.pos.y)) {
+        position.pos = movement.pos;
       }
 
       attributes.energy -= Actions.MOVE;
-      movement.position = null;
     }
   }
 }

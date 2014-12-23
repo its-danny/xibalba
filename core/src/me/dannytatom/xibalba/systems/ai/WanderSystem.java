@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WanderSystem extends IteratingSystem {
-  private Map map;
+  private final Map map;
 
   public WanderSystem(Map map) {
     super(Family.all(WanderComponent.class, PositionComponent.class, MovementComponent.class).get());
@@ -39,7 +39,8 @@ public class WanderSystem extends IteratingSystem {
 
       do {
         Vector2 randomPosition = map.getRandomOpenPosition();
-        movement.path = finder.findPath(position.x, position.y, (int) randomPosition.x, (int) randomPosition.y, grid);
+        movement.path = finder.findPath((int) position.pos.x, (int) position.pos.y,
+            (int) randomPosition.x, (int) randomPosition.y, grid);
       } while (movement.path == null);
     }
 
@@ -50,7 +51,7 @@ public class WanderSystem extends IteratingSystem {
     GridCell cell = movement.path.get(0);
 
     if (cell.isWalkable()) {
-      movement.position = new Vector2(cell.getX(), cell.getY());
+      movement.pos = new Vector2(cell.getX(), cell.getY());
 
       List<GridCell> newPath = new ArrayList<>(movement.path);
       newPath.remove(cell);

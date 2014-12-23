@@ -11,8 +11,8 @@ import me.dannytatom.xibalba.Main;
 public class LoadingScreen implements Screen {
   private final Main game;
 
-  private SpriteBatch batch;
-  private BitmapFont font;
+  private final SpriteBatch batch;
+  private final BitmapFont font;
 
   /**
    * Loading Screen.
@@ -27,6 +27,7 @@ public class LoadingScreen implements Screen {
 
     game.assets.load("sprites/utils/wander.png", Texture.class);
     game.assets.load("sprites/utils/target.png", Texture.class);
+    game.assets.load("sprites/utils/vision.png", Texture.class);
     game.assets.load("sprites/cave.atlas", TextureAtlas.class);
     game.assets.load("sprites/player.png", Texture.class);
     game.assets.load("sprites/spiderMonkey.png", Texture.class);

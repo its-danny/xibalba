@@ -3,8 +3,8 @@ package me.dannytatom.xibalba.map;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 
 public class Cell {
-  public Sprite sprite;
-  public boolean isWall;
+  public final Sprite sprite;
+  public final boolean isWall;
 
   /**
    * Holds map cell data.

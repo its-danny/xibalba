@@ -12,10 +12,10 @@ import me.dannytatom.xibalba.utils.ComponentMappers;
 import org.xguzm.pathfinding.grid.GridCell;
 
 public class Map {
-  public int width;
-  public int height;
-  private Engine engine;
-  private Cell[][] map;
+  public final int width;
+  public final int height;
+  private final Engine engine;
+  private final Cell[][] map;
 
   /**
    * Holds logic for dealing with maps.
@@ -32,37 +32,26 @@ public class Map {
   }
 
   /**
-   * Does a cell at this position exist?
+   * Get the cell for this pos
    *
-   * @param x x position of cell
-   * @param y y position of cell
-   * @return Whether or not a cell exists
-   */
-  public boolean hasCell(int x, int y) {
-    return (x >= 0 && x <= map.length - 1) && (y >= 0 && y <= map[x].length - 1);
-  }
-
-  /**
-   * Get the cell for this position
-   *
-   * @param x x position of cell
-   * @param y y position of cell
-   * @return The Cell instance at this position
+   * @param x x pos of cell
+   * @param y y pos of cell
+   * @return The Cell instance at this pos
    */
   public Cell getCell(int x, int y) {
     return map[x][y];
   }
 
   /**
-   * Find player position.
+   * Find player pos.
    *
-   * @return Vector2 of player position
+   * @return Vector2 of player pos
    */
   public Vector2 getPlayerPosition() {
     Entity player = engine.getEntitiesFor(Family.one(PlayerComponent.class).get()).first();
     PositionComponent position = ComponentMappers.position.get(player);
 
-    return new Vector2(position.x, position.y);
+    return position.pos;
   }
 
   boolean isBlocked(int x, int y) {
@@ -74,7 +63,7 @@ public class Map {
       for (Entity entity : entities) {
         PositionComponent position = ComponentMappers.position.get(entity);
 
-        if (position.x == x && position.y == y) {
+        if (position.pos.x == x && position.pos.y == y) {
           blocked = true;
           break;
         }
@@ -96,13 +85,13 @@ public class Map {
    * @param distance distance around cell to look
    * @return whether we're near the player or not
    */
-  public boolean isNearPlayer(int x, int y, int distance) {
+  public boolean isNearPlayer(Vector2 position, int distance) {
     Vector2 playerPosition = getPlayerPosition();
 
-    return x <= playerPosition.x + distance
-        && x >= playerPosition.x - distance
-        && y <= playerPosition.y + distance
-        && y >= playerPosition.y - distance;
+    return position.x <= playerPosition.x + distance
+        && position.x >= playerPosition.x - distance
+        && position.y <= playerPosition.y + distance
+        && position.y >= playerPosition.y - distance;
   }
 
   public GridCell[][] createGridCells() {
