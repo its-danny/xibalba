@@ -60,7 +60,7 @@ public class BrainSystem extends IteratingSystem {
     if (attributes.energy >= Actions.MOVE) {
       // If he's near the player, target
       if (map.isNearPlayer(position.pos, attributes.vision)) {
-        switchToTarget(entity, playerPosition);
+        switchToTarget(entity, map.getNearPlayer(1));
       }
     }
   }
@@ -92,7 +92,7 @@ public class BrainSystem extends IteratingSystem {
       // Otherwise, go back to wandering
       if (map.isNearPlayer(position.pos, attributes.vision)) {
         if (playerPosition != target.pos) {
-          switchToTarget(entity, playerPosition);
+          switchToTarget(entity, map.getNearPlayer(1));
         }
       } else {
         switchToWander(entity);
@@ -114,9 +114,7 @@ public class BrainSystem extends IteratingSystem {
 
     // If he goes out of pos to attack, go back to targeting
     if (!map.isNearPlayer(position.pos, 1) && attributes.energy >= Actions.MOVE) {
-      Vector2 playerPosition = map.getPlayerPosition();
-
-      switchToTarget(entity, playerPosition);
+      switchToTarget(entity, map.getNearPlayer(1));
     }
   }
 

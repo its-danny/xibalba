@@ -54,6 +54,33 @@ public class Map {
     return position.pos;
   }
 
+  /**
+   * Returns an open position near the player.
+   *
+   * TODO: Make this less retarded.
+   *
+   * @param distance How far from player to get
+   * @return
+   */
+  public Vector2 getNearPlayer(int distance) {
+    Vector2 playerPosition = getPlayerPosition();
+    Vector2 position;
+
+    if (isWalkable((int) playerPosition.x + 1, (int) playerPosition.y)) {
+      position = new Vector2(playerPosition.x + 1, playerPosition.y);
+    } else if (isWalkable((int) playerPosition.x - 1, (int) playerPosition.y)) {
+      position = new Vector2(playerPosition.x - 1, playerPosition.y);
+    } else if (isWalkable((int) playerPosition.x, (int) playerPosition.y + 1)) {
+      position = new Vector2(playerPosition.x, playerPosition.y + 1);
+    } else if (isWalkable((int) playerPosition.x, (int) playerPosition.y - 1)) {
+      position = new Vector2(playerPosition.x, playerPosition.y - 1);
+    } else {
+      position = null;
+    }
+
+    return position;
+  }
+
   boolean isBlocked(int x, int y) {
     boolean blocked = map[x][y].isWall;
 
@@ -80,8 +107,7 @@ public class Map {
   /**
    * Check if something is near the player.
    *
-   * @param x        x of cell to check
-   * @param y        y of cell to check
+   * @param position starting position
    * @param distance distance around cell to look
    * @return whether we're near the player or not
    */
