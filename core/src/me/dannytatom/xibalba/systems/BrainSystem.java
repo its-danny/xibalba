@@ -31,6 +31,8 @@ public class BrainSystem extends IteratingSystem {
 
   @Override
   protected void processEntity(Entity entity, float deltaTime) {
+    AttributesComponent attributes = ComponentMappers.attributes.get(entity);
+
     if (entity.getComponent(WanderComponent.class) != null) {
       handleWander(entity);
     }

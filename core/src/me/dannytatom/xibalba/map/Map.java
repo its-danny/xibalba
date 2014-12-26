@@ -56,7 +56,7 @@ public class Map {
 
   /**
    * Returns an open position near the player.
-   *
+   * <p>
    * TODO: Make this less retarded.
    *
    * @param distance How far from player to get

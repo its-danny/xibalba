@@ -15,12 +15,17 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import me.dannytatom.xibalba.Main;
-import me.dannytatom.xibalba.components.*;
+import me.dannytatom.xibalba.components.AttributesComponent;
+import me.dannytatom.xibalba.components.MovementComponent;
+import me.dannytatom.xibalba.components.PositionComponent;
+import me.dannytatom.xibalba.components.VisualComponent;
 import me.dannytatom.xibalba.components.ai.TargetComponent;
 import me.dannytatom.xibalba.factories.MobFactory;
+import me.dannytatom.xibalba.factories.PlayerFactory;
 import me.dannytatom.xibalba.map.CaveGenerator;
 import me.dannytatom.xibalba.map.Cell;
 import me.dannytatom.xibalba.map.Map;
+import me.dannytatom.xibalba.systems.AttributesSystem;
 import me.dannytatom.xibalba.systems.BrainSystem;
 import me.dannytatom.xibalba.systems.MovementSystem;
 import me.dannytatom.xibalba.systems.PlayerSystem;
@@ -55,6 +60,7 @@ class PlayScreen implements Screen, InputProcessor {
     Gdx.input.setInputProcessor(this);
 
     // Setup factories
+    PlayerFactory playerFactory = new PlayerFactory(game.assets);
     MobFactory mobFactory = new MobFactory(game.assets);
 
     // Generate cave
@@ -63,6 +69,7 @@ class PlayScreen implements Screen, InputProcessor {
     map = new Map(engine, cave.map);
 
     // Setup engine (they're run in order added)
+    engine.addSystem(new AttributesSystem());
     engine.addSystem(new PlayerSystem());
     engine.addSystem(new BrainSystem(map));
     engine.addSystem(new WanderSystem(map));
@@ -75,20 +82,12 @@ class PlayScreen implements Screen, InputProcessor {
     camera.update();
 
     // Add player entity
-    Vector2 startingPosition = map.findPlayerStart();
-    player = new Entity();
-    player.add(new PlayerComponent());
-    player.add(new PositionComponent(startingPosition));
-    player.add(new MovementComponent());
-    player.add(new VisualComponent(game.assets.get("sprites/player.png")));
-    player.add(new AttributesComponent(100, 3));
+    player = playerFactory.spawn(map.findPlayerStart());
     engine.addEntity(player);
 
     // Spawn some spider monkeys
     for (int i = 0; i < 5; i++) {
-      Vector2 pos = map.getRandomOpenPosition();
-
-      engine.addEntity(mobFactory.spawn("spiderMonkey", pos));
+      engine.addEntity(mobFactory.spawn("spiderMonkey", map.getRandomOpenPosition()));
     }
   }
 
@@ -114,16 +113,6 @@ class PlayScreen implements Screen, InputProcessor {
     // Let the systems run!
     engine.update(delta);
 
-    // Get all entities with energy to spend
-    ImmutableArray<Entity> entities =
-        engine.getEntitiesFor(Family.all(AttributesComponent.class).get());
-
-    // Give energy back
-    for (Entity entity : entities) {
-      AttributesComponent attributes = ComponentMappers.attributes.get(entity);
-      attributes.energy += attributes.speed;
-    }
-
     // Turn over
     game.executeTurn = false;
   }
@@ -144,6 +133,7 @@ class PlayScreen implements Screen, InputProcessor {
 
     batch.begin();
 
+    // Render tiles
     for (int x = 0; x < map.width; x++) {
       for (int y = 0; y < map.height; y++) {
         Cell cell = map.getCell(x, y);
