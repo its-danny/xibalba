@@ -19,8 +19,14 @@ import java.util.List;
 public class TargetSystem extends IteratingSystem {
   private final Map map;
 
+  /**
+   * TargetSystem constructor.
+   *
+   * @param map The map we're on
+   */
   public TargetSystem(Map map) {
-    super(Family.all(TargetComponent.class, PositionComponent.class, MovementComponent.class).get());
+    super(Family.all(TargetComponent.class, PositionComponent.class,
+        MovementComponent.class).get());
 
     this.map = map;
   }

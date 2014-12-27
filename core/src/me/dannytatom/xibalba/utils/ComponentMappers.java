@@ -5,9 +5,7 @@ import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.MovementComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.VisualComponent;
-import me.dannytatom.xibalba.components.ai.AttackComponent;
 import me.dannytatom.xibalba.components.ai.TargetComponent;
-import me.dannytatom.xibalba.components.ai.WanderComponent;
 
 public final class ComponentMappers {
   public static final ComponentMapper<PositionComponent> position =
@@ -22,12 +20,6 @@ public final class ComponentMappers {
   public static final ComponentMapper<AttributesComponent> attributes =
       ComponentMapper.getFor(AttributesComponent.class);
 
-  public static final ComponentMapper<WanderComponent> wander =
-      ComponentMapper.getFor(WanderComponent.class);
-
   public static final ComponentMapper<TargetComponent> target =
       ComponentMapper.getFor(TargetComponent.class);
-
-  public static final ComponentMapper<AttackComponent> attack =
-      ComponentMapper.getFor(AttackComponent.class);
 }

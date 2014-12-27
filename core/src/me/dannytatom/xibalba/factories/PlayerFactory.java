@@ -12,6 +12,12 @@ public class PlayerFactory {
     this.assets = assets;
   }
 
+  /**
+   * Spawn an entity at a given location.
+   *
+   * @param position Position to spawn
+   * @return The entity
+   */
   public Entity spawn(Vector2 position) {
     Entity player = new Entity();
 

@@ -19,8 +19,8 @@ public class MobFactory {
   /**
    * Handles mob spawning.
    *
-   * @param x x pos to spawn
-   * @param y y pos to spawn
+   * @param type     what to spawn
+   * @param position where to spawn it
    * @return the newly made entity
    */
   public Entity spawn(String type, Vector2 position) {

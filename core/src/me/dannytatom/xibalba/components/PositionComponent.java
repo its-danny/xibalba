@@ -9,8 +9,7 @@ public class PositionComponent extends Component {
   /**
    * Holds entity pos.
    *
-   * @param x The entity's current x pos
-   * @param y The entity's current y pos
+   * @param position where to spawn it
    */
   public PositionComponent(Vector2 position) {
     this.pos = position;

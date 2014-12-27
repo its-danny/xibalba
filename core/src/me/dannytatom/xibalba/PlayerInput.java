@@ -8,8 +8,8 @@ import me.dannytatom.xibalba.components.MovementComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
 
 public class PlayerInput implements InputProcessor {
-  private Main game;
-  private Entity player;
+  private final Main game;
+  private final Entity player;
 
   public PlayerInput(Main game, Entity player) {
     this.game = game;

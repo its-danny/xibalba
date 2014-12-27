@@ -32,7 +32,7 @@ public class Map {
   }
 
   /**
-   * Get the cell for this pos
+   * Get the cell for this position.
    *
    * @param x x pos of cell
    * @param y y pos of cell
@@ -56,13 +56,11 @@ public class Map {
 
   /**
    * Returns an open position near the player.
-   * <p>
    * TODO: Make this less retarded.
    *
-   * @param distance How far from player to get
-   * @return
+   * @return player position
    */
-  public Vector2 getNearPlayer(int distance) {
+  public Vector2 getNearPlayer() {
     Vector2 playerPosition = getPlayerPosition();
     Vector2 position;
 
@@ -85,7 +83,8 @@ public class Map {
     boolean blocked = map[x][y].isWall;
 
     if (!blocked) {
-      ImmutableArray<Entity> entities = engine.getEntitiesFor(Family.all(PositionComponent.class).get());
+      ImmutableArray<Entity> entities =
+          engine.getEntitiesFor(Family.all(PositionComponent.class).get());
 
       for (Entity entity : entities) {
         PositionComponent position = ComponentMappers.position.get(entity);
@@ -120,6 +119,11 @@ public class Map {
         && position.y >= playerPosition.y - distance;
   }
 
+  /**
+   * Get pathfinding cells.
+   *
+   * @return 2d array of GridCells
+   */
   public GridCell[][] createGridCells() {
     GridCell[][] cells = new GridCell[width][height];
 
@@ -133,12 +137,13 @@ public class Map {
   }
 
   /**
-   * Find a random open cell
+   * Find a random open cell.
    *
    * @return Random open cell
    */
   public Vector2 getRandomOpenPosition() {
-    int x, y;
+    int x;
+    int y;
 
     do {
       x = MathUtils.random(0, map.length - 1);

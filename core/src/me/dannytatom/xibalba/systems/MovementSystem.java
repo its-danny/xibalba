@@ -19,7 +19,8 @@ public class MovementSystem extends IteratingSystem {
    * @param map the map we're moving on
    */
   public MovementSystem(Map map) {
-    super(Family.all(PositionComponent.class, MovementComponent.class, AttributesComponent.class).get());
+    super(Family.all(PositionComponent.class, MovementComponent.class,
+        AttributesComponent.class).get());
 
     this.map = map;
   }

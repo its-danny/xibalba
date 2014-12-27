@@ -19,8 +19,14 @@ import java.util.List;
 public class WanderSystem extends IteratingSystem {
   private final Map map;
 
+  /**
+   * WanderSystem constructor.
+   *
+   * @param map The map we're on
+   */
   public WanderSystem(Map map) {
-    super(Family.all(WanderComponent.class, PositionComponent.class, MovementComponent.class).get());
+    super(Family.all(WanderComponent.class, PositionComponent.class,
+        MovementComponent.class).get());
 
     this.map = map;
   }

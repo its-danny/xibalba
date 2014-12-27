@@ -24,15 +24,14 @@ public class BrainSystem extends IteratingSystem {
    * @param map The map we're currently on
    */
   public BrainSystem(Map map) {
-    super(Family.all(BrainComponent.class, AttributesComponent.class, PositionComponent.class).get());
+    super(Family.all(BrainComponent.class, AttributesComponent.class,
+        PositionComponent.class).get());
 
     this.map = map;
   }
 
   @Override
   protected void processEntity(Entity entity, float deltaTime) {
-    AttributesComponent attributes = ComponentMappers.attributes.get(entity);
-
     if (entity.getComponent(WanderComponent.class) != null) {
       handleWander(entity);
     }
@@ -62,7 +61,7 @@ public class BrainSystem extends IteratingSystem {
     if (attributes.energy >= Actions.MOVE) {
       // If he's near the player, target
       if (map.isNearPlayer(position.pos, attributes.vision)) {
-        switchToTarget(entity, map.getNearPlayer(1));
+        switchToTarget(entity, map.getNearPlayer());
       }
     }
   }
@@ -94,7 +93,7 @@ public class BrainSystem extends IteratingSystem {
       // Otherwise, go back to wandering
       if (map.isNearPlayer(position.pos, attributes.vision)) {
         if (playerPosition != target.pos) {
-          switchToTarget(entity, map.getNearPlayer(1));
+          switchToTarget(entity, map.getNearPlayer());
         }
       } else {
         switchToWander(entity);
@@ -116,7 +115,7 @@ public class BrainSystem extends IteratingSystem {
 
     // If he goes out of pos to attack, go back to targeting
     if (!map.isNearPlayer(position.pos, 1) && attributes.energy >= Actions.MOVE) {
-      switchToTarget(entity, map.getNearPlayer(1));
+      switchToTarget(entity, map.getNearPlayer());
     }
   }
 
