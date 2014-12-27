@@ -6,7 +6,6 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -15,6 +14,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import me.dannytatom.xibalba.Main;
+import me.dannytatom.xibalba.PlayerInput;
 import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.MovementComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
@@ -35,7 +35,7 @@ import me.dannytatom.xibalba.systems.ai.WanderSystem;
 import me.dannytatom.xibalba.utils.ComponentMappers;
 import org.xguzm.pathfinding.grid.GridCell;
 
-class PlayScreen implements Screen, InputProcessor {
+class PlayScreen implements Screen {
   private static final int SPRITE_WIDTH = 24;
   private static final int SPRITE_HEIGHT = 24;
 
@@ -55,9 +55,6 @@ class PlayScreen implements Screen, InputProcessor {
     game = main;
     engine = new Engine();
     batch = new SpriteBatch();
-
-    // Setup input
-    Gdx.input.setInputProcessor(this);
 
     // Setup factories
     PlayerFactory playerFactory = new PlayerFactory(game.assets);
@@ -89,6 +86,9 @@ class PlayScreen implements Screen, InputProcessor {
     for (int i = 0; i < 5; i++) {
       engine.addEntity(mobFactory.spawn("spiderMonkey", map.getRandomOpenPosition()));
     }
+
+    // Setup input
+    Gdx.input.setInputProcessor(new PlayerInput(game, player));
   }
 
   @Override
@@ -213,90 +213,5 @@ class PlayScreen implements Screen, InputProcessor {
   @Override
   public void dispose() {
     batch.dispose();
-  }
-
-  @Override
-  public boolean keyDown(int keyCode) {
-    MovementComponent movement = player.getComponent(MovementComponent.class);
-    PositionComponent position = player.getComponent(PositionComponent.class);
-
-    switch (keyCode) {
-      case Input.Keys.BACKSLASH:
-        game.debug ^= true;
-        break;
-      case Input.Keys.SPACE:
-        game.executeTurn = true;
-        break;
-      case Input.Keys.K:
-        movement.pos = new Vector2(position.pos.x, position.pos.y + 1);
-        game.executeTurn = true;
-        break;
-      case Input.Keys.U:
-        movement.pos = new Vector2(position.pos.x + 1, position.pos.y + 1);
-        game.executeTurn = true;
-        break;
-      case Input.Keys.L:
-        movement.pos = new Vector2(position.pos.x + 1, position.pos.y);
-        game.executeTurn = true;
-        break;
-      case Input.Keys.N:
-        movement.pos = new Vector2(position.pos.x + 1, position.pos.y - 1);
-        game.executeTurn = true;
-        break;
-      case Input.Keys.J:
-        movement.pos = new Vector2(position.pos.x, position.pos.y - 1);
-        game.executeTurn = true;
-        break;
-      case Input.Keys.B:
-        movement.pos = new Vector2(position.pos.x - 1, position.pos.y - 1);
-        game.executeTurn = true;
-        break;
-      case Input.Keys.H:
-        movement.pos = new Vector2(position.pos.x - 1, position.pos.y);
-        game.executeTurn = true;
-        break;
-      case Input.Keys.Y:
-        movement.pos = new Vector2(position.pos.x - 1, position.pos.y + 1);
-        game.executeTurn = true;
-        break;
-      default:
-    }
-
-    return true;
-  }
-
-  @Override
-  public boolean keyUp(int keyCode) {
-    return false;
-  }
-
-  @Override
-  public boolean keyTyped(char character) {
-    return false;
-  }
-
-  @Override
-  public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-    return false;
-  }
-
-  @Override
-  public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-    return false;
-  }
-
-  @Override
-  public boolean touchDragged(int screenX, int screenY, int pointer) {
-    return false;
-  }
-
-  @Override
-  public boolean mouseMoved(int screenX, int screenY) {
-    return false;
-  }
-
-  @Override
-  public boolean scrolled(int amount) {
-    return false;
   }
 }
