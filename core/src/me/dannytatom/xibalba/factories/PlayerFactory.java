@@ -7,7 +7,6 @@ import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.VisualComponent;
-import me.dannytatom.xibalba.components.actions.MovementComponent;
 
 public class PlayerFactory {
   private final AssetManager assets;
@@ -27,9 +26,8 @@ public class PlayerFactory {
 
     player.add(new PlayerComponent());
     player.add(new PositionComponent(position));
-    player.add(new MovementComponent());
     player.add(new VisualComponent(assets.get("sprites/player.png")));
-    player.add(new AttributesComponent("Player", 100, 3, 100));
+    player.add(new AttributesComponent("Player", 100, 3, 100, 10));
 
     return player;
   }

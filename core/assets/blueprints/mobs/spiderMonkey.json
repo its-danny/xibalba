@@ -4,8 +4,9 @@
     "spritePath": "sprites/spiderMonkey.png"
   },
   "attributes": {
-    "speed": 100,
+    "speed": 80,
     "vision": 3,
-    "maxHealth": 50
+    "maxHealth": 50,
+    "damage": 10
   }
 }

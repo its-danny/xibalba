@@ -4,21 +4,26 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector2;
+import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
+import me.dannytatom.xibalba.components.actions.MeleeComponent;
 import me.dannytatom.xibalba.components.actions.MovementComponent;
+import me.dannytatom.xibalba.map.Map;
 
 public class PlayerInput implements InputProcessor {
   private final Main game;
+  private final Map map;
   private final Entity player;
 
-  public PlayerInput(Main game, Entity player) {
+  public PlayerInput(Main game, Map map, Entity player) {
     this.game = game;
+    this.map = map;
     this.player = player;
   }
 
   @Override
   public boolean keyDown(int keycode) {
-    MovementComponent movement = player.getComponent(MovementComponent.class);
+    AttributesComponent attributes = player.getComponent(AttributesComponent.class);
     PositionComponent position = player.getComponent(PositionComponent.class);
 
     switch (keycode) {
@@ -29,36 +34,28 @@ public class PlayerInput implements InputProcessor {
         game.executeTurn = true;
         break;
       case Keys.K:
-        movement.pos = new Vector2(position.pos.x, position.pos.y + 1);
-        game.executeTurn = true;
+        moveOrAttack(attributes.energy, new Vector2(position.pos.x, position.pos.y + 1));
         break;
       case Keys.U:
-        movement.pos = new Vector2(position.pos.x + 1, position.pos.y + 1);
-        game.executeTurn = true;
+        moveOrAttack(attributes.energy, new Vector2(position.pos.x + 1, position.pos.y + 1));
         break;
       case Keys.L:
-        movement.pos = new Vector2(position.pos.x + 1, position.pos.y);
-        game.executeTurn = true;
+        moveOrAttack(attributes.energy, new Vector2(position.pos.x + 1, position.pos.y));
         break;
       case Keys.N:
-        movement.pos = new Vector2(position.pos.x + 1, position.pos.y - 1);
-        game.executeTurn = true;
+        moveOrAttack(attributes.energy, new Vector2(position.pos.x + 1, position.pos.y - 1));
         break;
       case Keys.J:
-        movement.pos = new Vector2(position.pos.x, position.pos.y - 1);
-        game.executeTurn = true;
+        moveOrAttack(attributes.energy, new Vector2(position.pos.x, position.pos.y - 1));
         break;
       case Keys.B:
-        movement.pos = new Vector2(position.pos.x - 1, position.pos.y - 1);
-        game.executeTurn = true;
+        moveOrAttack(attributes.energy, new Vector2(position.pos.x - 1, position.pos.y - 1));
         break;
       case Keys.H:
-        movement.pos = new Vector2(position.pos.x - 1, position.pos.y);
-        game.executeTurn = true;
+        moveOrAttack(attributes.energy, new Vector2(position.pos.x - 1, position.pos.y));
         break;
       case Keys.Y:
-        movement.pos = new Vector2(position.pos.x - 1, position.pos.y + 1);
-        game.executeTurn = true;
+        moveOrAttack(attributes.energy, new Vector2(position.pos.x - 1, position.pos.y + 1));
         break;
       default:
     }
@@ -99,5 +96,15 @@ public class PlayerInput implements InputProcessor {
   @Override
   public boolean scrolled(int amount) {
     return false;
+  }
+
+  private void moveOrAttack(int energy, Vector2 pos) {
+    if (map.isWalkable((int) pos.x, (int) pos.y) && energy >= MovementComponent.COST) {
+      player.add(new MovementComponent(pos));
+      game.executeTurn = true;
+    } else if (map.getEntityAt(pos) != null && energy >= MeleeComponent.COST) {
+      player.add(new MeleeComponent(pos));
+      game.executeTurn = true;
+    }
   }
 }

@@ -10,12 +10,14 @@ import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.PlayerInput;
 import me.dannytatom.xibalba.UIRenderer;
 import me.dannytatom.xibalba.WorldRenderer;
+import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.factories.MobFactory;
 import me.dannytatom.xibalba.factories.PlayerFactory;
 import me.dannytatom.xibalba.map.CaveGenerator;
 import me.dannytatom.xibalba.map.Map;
 import me.dannytatom.xibalba.systems.AttributesSystem;
 import me.dannytatom.xibalba.systems.PlayerSystem;
+import me.dannytatom.xibalba.systems.actions.MeleeSystem;
 import me.dannytatom.xibalba.systems.actions.MovementSystem;
 import me.dannytatom.xibalba.systems.ai.BrainSystem;
 import me.dannytatom.xibalba.systems.ai.TargetSystem;
@@ -27,6 +29,7 @@ class PlayScreen implements Screen {
   private final UIRenderer uiRenderer;
   private final SpriteBatch batch;
   private final Engine engine;
+  private final Entity player;
 
   /**
    * Play Screen.
@@ -44,7 +47,7 @@ class PlayScreen implements Screen {
     Map map = new Map(engine, cave.map);
 
     // Add player entity
-    Entity player = new PlayerFactory(game.assets).spawn(map.findPlayerStart());
+    player = new PlayerFactory(game.assets).spawn(map.findPlayerStart());
     engine.addEntity(player);
 
     // Spawn some spider monkeys
@@ -60,13 +63,14 @@ class PlayScreen implements Screen {
     engine.addSystem(new WanderSystem(map));
     engine.addSystem(new TargetSystem(map));
     engine.addSystem(new MovementSystem(map));
+    engine.addSystem(new MeleeSystem(engine, map));
 
     // Setup input
-    Gdx.input.setInputProcessor(new PlayerInput(game, player));
+    Gdx.input.setInputProcessor(new PlayerInput(game, map, player));
 
     // Setup renderers
-    worldRenderer = new WorldRenderer(engine, batch, map, player);
-    uiRenderer = new UIRenderer(engine, batch, map, player);
+    worldRenderer = new WorldRenderer(game, engine, batch, map, player);
+    uiRenderer = new UIRenderer(engine, batch);
   }
 
   @Override
@@ -79,6 +83,10 @@ class PlayScreen implements Screen {
 
     worldRenderer.render();
     uiRenderer.render();
+
+    if (player.getComponent(AttributesComponent.class).health <= 0) {
+      game.setScreen(new LoadingScreen(game));
+    }
   }
 
   @Override

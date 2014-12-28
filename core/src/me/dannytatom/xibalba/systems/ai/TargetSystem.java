@@ -6,6 +6,7 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.math.Vector2;
 import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.actions.MovementComponent;
+import me.dannytatom.xibalba.components.ai.BrainComponent;
 import me.dannytatom.xibalba.components.ai.TargetComponent;
 import me.dannytatom.xibalba.map.Map;
 import me.dannytatom.xibalba.utils.ComponentMappers;
@@ -25,26 +26,25 @@ public class TargetSystem extends IteratingSystem {
    * @param map The map we're on
    */
   public TargetSystem(Map map) {
-    super(Family.all(TargetComponent.class, PositionComponent.class,
-        MovementComponent.class).get());
+    super(Family.all(TargetComponent.class, PositionComponent.class).get());
 
     this.map = map;
   }
 
   @Override
   protected void processEntity(Entity entity, float deltaTime) {
+    BrainComponent brain = ComponentMappers.brain.get(entity);
     TargetComponent target = ComponentMappers.target.get(entity);
-    MovementComponent movement = ComponentMappers.movement.get(entity);
 
     // Create path to a random open cell on the map if one
     // doesn't already exist.
-    if (target.path == null || target.path.isEmpty()) {
+    if (brain.path == null || brain.path.isEmpty()) {
       PositionComponent position = ComponentMappers.position.get(entity);
 
       NavigationGrid<GridCell> grid = new NavigationGrid<>(map.createGridCells());
       AStarGridFinder<GridCell> finder = new AStarGridFinder<>(GridCell.class);
 
-      target.path = finder.findPath((int) position.pos.x, (int) position.pos.y,
+      brain.path = finder.findPath((int) position.pos.x, (int) position.pos.y,
           (int) target.pos.x, (int) target.pos.y, grid);
     }
 
@@ -52,18 +52,18 @@ public class TargetSystem extends IteratingSystem {
     // If it becomes blocked, reset the path.
     //
     // TODO: Instead of checking next cell, check any cell in the path that's in their vision
-    if (target.path != null) {
-      GridCell cell = target.path.get(0);
+    if (brain.path != null) {
+      GridCell cell = brain.path.get(0);
 
       if (cell.isWalkable()) {
-        movement.pos = new Vector2(cell.getX(), cell.getY());
+        entity.add(new MovementComponent(new Vector2(cell.getX(), cell.getY())));
 
-        List<GridCell> newPath = new ArrayList<>(target.path);
+        List<GridCell> newPath = new ArrayList<>(brain.path);
         newPath.remove(cell);
 
-        target.path = newPath;
+        brain.path = newPath;
       } else {
-        target.path = null;
+        brain.path = null;
       }
     }
   }

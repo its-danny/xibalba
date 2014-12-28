@@ -11,29 +11,24 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.PlayerComponent;
-import me.dannytatom.xibalba.map.Map;
+import me.dannytatom.xibalba.components.PositionComponent;
+import me.dannytatom.xibalba.components.ai.BrainComponent;
 import me.dannytatom.xibalba.utils.ComponentMappers;
 
 public class UIRenderer {
   private final OrthographicCamera camera;
   private final Engine engine;
   private final SpriteBatch batch;
-  private final Map map;
-  private final Entity player;
   private final BitmapFont font;
 
   /**
    * UIRenderer constructor.
-   *
-   * @param engine Ashely engine
+   *  @param engine Ashely engine
    * @param batch  The sprite batch to use (set in PlayScreen)
-   * @param map    The map we're on
    */
-  public UIRenderer(Engine engine, SpriteBatch batch, Map map, Entity player) {
+  public UIRenderer(Engine engine, SpriteBatch batch) {
     this.engine = engine;
     this.batch = batch;
-    this.map = map;
-    this.player = player;
 
     font = new BitmapFont();
 
@@ -52,20 +47,24 @@ public class UIRenderer {
     batch.setProjectionMatrix(camera.combined);
     batch.begin();
 
-    drawHealth();
+    drawShit();
 
     batch.end();
   }
 
-  private void drawHealth() {
+  private void drawShit() {
     ImmutableArray<Entity> entities = engine.getEntitiesFor(Family.all(AttributesComponent.class).get());
 
     for (int i = 0; i < entities.size(); i++) {
       Entity entity = entities.get(i);
+      BrainComponent brain = ComponentMappers.brain.get(entity);
       AttributesComponent attributes = ComponentMappers.attributes.get(entity);
-      String str = "(" + entity.getId() + ") " + attributes.name + " "
-          + attributes.energy + "e "
-          + attributes.health + "/" + attributes.maxHealth + "hp";
+      PositionComponent position = ComponentMappers.position.get(entity);
+
+      String str =
+          (brain != null ? brain.state.toString().toLowerCase() : "player") + " "
+          + attributes.energy + "e " + attributes.health + "hp "
+          + position.pos.x + ", " + position.pos.y;
 
       if (entity.getComponent(PlayerComponent.class) != null) {
         font.setColor(Color.WHITE);
@@ -74,6 +73,8 @@ public class UIRenderer {
       }
 
       font.draw(batch, str, 10, Gdx.graphics.getHeight() - (10 + (i * 20)));
+
+      entity.getComponents();
     }
   }
 }

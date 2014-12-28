@@ -6,6 +6,7 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import javafx.geometry.Pos;
 import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.utils.ComponentMappers;
@@ -52,6 +53,19 @@ public class Map {
     PositionComponent position = ComponentMappers.position.get(player);
 
     return position.pos;
+  }
+
+  public Entity getEntityAt(Vector2 position) {
+    ImmutableArray<Entity> entities =
+        engine.getEntitiesFor(Family.all(PositionComponent.class).get());
+
+    for (Entity entity : entities) {
+      if (entity.getComponent(PositionComponent.class).pos.epsilonEquals(position, 0)) {
+        return entity;
+      }
+    }
+
+    return null;
   }
 
   /**

@@ -3,12 +3,12 @@ package me.dannytatom.xibalba.components.actions;
 import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.math.Vector2;
 
-public class MovementComponent extends Component {
+public class MeleeComponent extends Component {
   public static final int COST = 100;
 
-  public final Vector2 pos;
+  public final Vector2 target;
 
-  public MovementComponent(Vector2 pos) {
-    this.pos = pos;
+  public MeleeComponent(Vector2 target) {
+    this.target = target;
   }
 }

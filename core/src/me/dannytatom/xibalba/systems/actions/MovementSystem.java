@@ -37,11 +37,11 @@ public class MovementSystem extends IteratingSystem {
     MovementComponent movement = ComponentMappers.movement.get(entity);
     AttributesComponent attributes = ComponentMappers.attributes.get(entity);
 
-    if (movement.pos != null && attributes.energy >= MovementComponent.COST) {
-      if (map.isWalkable((int) movement.pos.x, (int) movement.pos.y)) {
-        position.pos = movement.pos;
-        attributes.energy -= MovementComponent.COST;
-      }
+    if (movement.pos != null && map.isWalkable((int) movement.pos.x, (int) movement.pos.y)) {
+      position.pos = movement.pos;
+      attributes.energy -= MovementComponent.COST;
     }
+
+    entity.remove(MovementComponent.class);
   }
 }
