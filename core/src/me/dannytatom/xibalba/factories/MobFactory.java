@@ -5,7 +5,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Json;
-import me.dannytatom.xibalba.components.*;
+import me.dannytatom.xibalba.components.AttributesComponent;
+import me.dannytatom.xibalba.components.PositionComponent;
+import me.dannytatom.xibalba.components.VisualComponent;
+import me.dannytatom.xibalba.components.actions.MovementComponent;
+import me.dannytatom.xibalba.components.ai.BrainComponent;
 import me.dannytatom.xibalba.components.ai.WanderComponent;
 import me.dannytatom.xibalba.utils.Blueprint;
 
@@ -35,8 +39,10 @@ public class MobFactory {
     entity.add(new MovementComponent());
     entity.add(new VisualComponent(assets.get(blueprint.visual.get("spritePath"))));
     entity.add(new AttributesComponent(
+        blueprint.name,
         blueprint.attributes.get("speed"),
-        blueprint.attributes.get("vision")
+        blueprint.attributes.get("vision"),
+        blueprint.attributes.get("maxHealth")
     ));
 
     return entity;

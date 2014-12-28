@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 public class Cell {
   public final Sprite sprite;
   public final boolean isWall;
+  public String description;
 
   /**
    * Holds map cell data.
@@ -15,5 +16,7 @@ public class Cell {
   public Cell(Sprite sprite, boolean isWall) {
     this.sprite = sprite;
     this.isWall = isWall;
+
+    this.description = "The floor, silly.";
   }
 }

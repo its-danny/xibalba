@@ -1,17 +1,14 @@
-package me.dannytatom.xibalba.components;
+package me.dannytatom.xibalba.components.actions;
 
 import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.math.Vector2;
-import org.xguzm.pathfinding.grid.GridCell;
-
-import java.util.List;
 
 public class MovementComponent extends Component {
-  public List<GridCell> path;
+  public static final int COST = 100;
+
   public Vector2 pos;
 
   public MovementComponent() {
-    this.path = null;
     this.pos = null;
   }
 }

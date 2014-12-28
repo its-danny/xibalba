@@ -1,13 +1,12 @@
-package me.dannytatom.xibalba.systems;
+package me.dannytatom.xibalba.systems.actions;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import me.dannytatom.xibalba.components.AttributesComponent;
-import me.dannytatom.xibalba.components.MovementComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
+import me.dannytatom.xibalba.components.actions.MovementComponent;
 import me.dannytatom.xibalba.map.Map;
-import me.dannytatom.xibalba.utils.Actions;
 import me.dannytatom.xibalba.utils.ComponentMappers;
 
 public class MovementSystem extends IteratingSystem {
@@ -38,12 +37,11 @@ public class MovementSystem extends IteratingSystem {
     MovementComponent movement = ComponentMappers.movement.get(entity);
     AttributesComponent attributes = ComponentMappers.attributes.get(entity);
 
-    if (movement.pos != null && attributes.energy >= Actions.MOVE) {
+    if (movement.pos != null && attributes.energy >= MovementComponent.COST) {
       if (map.isWalkable((int) movement.pos.x, (int) movement.pos.y)) {
         position.pos = movement.pos;
+        attributes.energy -= MovementComponent.COST;
       }
-
-      attributes.energy -= Actions.MOVE;
     }
   }
 }

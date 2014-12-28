@@ -5,6 +5,7 @@
   },
   "attributes": {
     "speed": 100,
-    "vision": 3
+    "vision": 3,
+    "maxHealth": 50
   }
 }

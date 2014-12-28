@@ -8,22 +8,23 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.PlayerInput;
+import me.dannytatom.xibalba.UIRenderer;
 import me.dannytatom.xibalba.WorldRenderer;
 import me.dannytatom.xibalba.factories.MobFactory;
 import me.dannytatom.xibalba.factories.PlayerFactory;
 import me.dannytatom.xibalba.map.CaveGenerator;
 import me.dannytatom.xibalba.map.Map;
 import me.dannytatom.xibalba.systems.AttributesSystem;
-import me.dannytatom.xibalba.systems.BrainSystem;
-import me.dannytatom.xibalba.systems.MovementSystem;
 import me.dannytatom.xibalba.systems.PlayerSystem;
-import me.dannytatom.xibalba.systems.ai.AttackSystem;
+import me.dannytatom.xibalba.systems.actions.MovementSystem;
+import me.dannytatom.xibalba.systems.ai.BrainSystem;
 import me.dannytatom.xibalba.systems.ai.TargetSystem;
 import me.dannytatom.xibalba.systems.ai.WanderSystem;
 
 class PlayScreen implements Screen {
   private final Main game;
   private final WorldRenderer worldRenderer;
+  private final UIRenderer uiRenderer;
   private final SpriteBatch batch;
   private final Engine engine;
 
@@ -58,25 +59,26 @@ class PlayScreen implements Screen {
     engine.addSystem(new BrainSystem(map));
     engine.addSystem(new WanderSystem(map));
     engine.addSystem(new TargetSystem(map));
-    engine.addSystem(new AttackSystem(map));
     engine.addSystem(new MovementSystem(map));
 
     // Setup input
     Gdx.input.setInputProcessor(new PlayerInput(game, player));
 
     // Setup renderers
-    worldRenderer = new WorldRenderer(engine, batch, map);
+    worldRenderer = new WorldRenderer(engine, batch, map, player);
+    uiRenderer = new UIRenderer(engine, batch, map, player);
   }
 
   @Override
   public void render(float delta) {
-    worldRenderer.render();
-
     if (game.executeTurn) {
       engine.update(delta);
 
       game.executeTurn = false;
     }
+
+    worldRenderer.render();
+    uiRenderer.render();
   }
 
   @Override

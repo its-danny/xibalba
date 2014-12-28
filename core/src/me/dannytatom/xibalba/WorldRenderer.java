@@ -8,7 +8,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.VisualComponent;
 import me.dannytatom.xibalba.map.Cell;
@@ -23,6 +22,7 @@ public class WorldRenderer {
   private final Engine engine;
   private final SpriteBatch batch;
   private final Map map;
+  private final Entity player;
 
   /**
    * WorldRenderer constructor.
@@ -31,12 +31,13 @@ public class WorldRenderer {
    * @param batch  The sprite batch to use (set in PlayScreen)
    * @param map    The map we're on
    */
-  public WorldRenderer(Engine engine, SpriteBatch batch, Map map) {
+  public WorldRenderer(Engine engine, SpriteBatch batch, Map map, Entity player) {
     this.engine = engine;
     this.batch = batch;
     this.map = map;
+    this.player = player;
 
-    camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+    camera = new OrthographicCamera((Gdx.graphics.getWidth() / 4) * 3, Gdx.graphics.getHeight());
     camera.update();
   }
 
@@ -46,9 +47,9 @@ public class WorldRenderer {
   public void render() {
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
     Gdx.gl.glClearColor(0, 0, 0, 1);
+    Gdx.gl.glViewport(0, 0, (Gdx.graphics.getWidth() / 4) * 3, Gdx.graphics.getHeight());
 
     // Get player pos for worldCamera
-    Entity player = engine.getEntitiesFor(Family.all(PlayerComponent.class).get()).first();
     PositionComponent playerPosition = player.getComponent(PositionComponent.class);
 
     // Update worldCamera
