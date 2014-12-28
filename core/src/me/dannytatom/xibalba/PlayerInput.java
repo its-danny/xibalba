@@ -99,7 +99,7 @@ public class PlayerInput implements InputProcessor {
   }
 
   private void moveOrAttack(int energy, Vector2 pos) {
-    if (map.isWalkable((int) pos.x, (int) pos.y) && energy >= MovementComponent.COST) {
+    if (map.isWalkable(pos) && energy >= MovementComponent.COST) {
       player.add(new MovementComponent(pos));
       game.executeTurn = true;
     } else if (map.getEntityAt(pos) != null && energy >= MeleeComponent.COST) {

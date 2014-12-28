@@ -9,7 +9,6 @@ import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.VisualComponent;
 import me.dannytatom.xibalba.components.ai.BrainComponent;
-import me.dannytatom.xibalba.components.ai.WanderComponent;
 import me.dannytatom.xibalba.utils.Blueprint;
 
 public class MobFactory {

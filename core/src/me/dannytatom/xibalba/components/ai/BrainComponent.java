@@ -9,11 +9,11 @@ public class BrainComponent extends Component {
   public State state;
   public List<GridCell> path = null;
 
-  public enum State {
-    WAITING, WANDERING, TARGETING, ATTACKING
-  }
-
   public BrainComponent() {
     this.state = State.WAITING;
+  }
+
+  public enum State {
+    WAITING, WANDERING, TARGETING, ATTACKING
   }
 }

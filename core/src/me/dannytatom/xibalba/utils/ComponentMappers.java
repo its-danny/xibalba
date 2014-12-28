@@ -8,7 +8,6 @@ import me.dannytatom.xibalba.components.actions.MeleeComponent;
 import me.dannytatom.xibalba.components.actions.MovementComponent;
 import me.dannytatom.xibalba.components.ai.BrainComponent;
 import me.dannytatom.xibalba.components.ai.TargetComponent;
-import me.dannytatom.xibalba.components.ai.WanderComponent;
 
 public final class ComponentMappers {
   public static final ComponentMapper<BrainComponent> brain =
@@ -25,9 +24,6 @@ public final class ComponentMappers {
 
   public static final ComponentMapper<AttributesComponent> attributes =
       ComponentMapper.getFor(AttributesComponent.class);
-
-  public static final ComponentMapper<WanderComponent> wander =
-      ComponentMapper.getFor(WanderComponent.class);
 
   public static final ComponentMapper<TargetComponent> target =
       ComponentMapper.getFor(TargetComponent.class);

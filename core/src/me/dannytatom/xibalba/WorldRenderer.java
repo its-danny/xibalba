@@ -7,23 +7,17 @@ import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.VisualComponent;
-import me.dannytatom.xibalba.components.actions.MovementComponent;
-import me.dannytatom.xibalba.components.ai.TargetComponent;
-import me.dannytatom.xibalba.components.ai.WanderComponent;
 import me.dannytatom.xibalba.map.Cell;
 import me.dannytatom.xibalba.map.Map;
 import me.dannytatom.xibalba.utils.ComponentMappers;
-import org.xguzm.pathfinding.grid.GridCell;
 
 public class WorldRenderer {
   private static final int SPRITE_WIDTH = 24;
   private static final int SPRITE_HEIGHT = 24;
 
-  private final Main game;
   private final Engine engine;
   private final SpriteBatch batch;
   private final Map map;
@@ -37,8 +31,7 @@ public class WorldRenderer {
    * @param batch  The sprite batch to use (set in PlayScreen)
    * @param map    The map we're on
    */
-  public WorldRenderer(Main game, Engine engine, SpriteBatch batch, Map map, Entity player) {
-    this.game = game;
+  public WorldRenderer(Engine engine, SpriteBatch batch, Map map, Entity player) {
     this.engine = engine;
     this.batch = batch;
     this.map = map;

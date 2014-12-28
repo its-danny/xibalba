@@ -23,7 +23,8 @@ public class UIRenderer {
 
   /**
    * UIRenderer constructor.
-   *  @param engine Ashely engine
+   *
+   * @param engine Ashely engine
    * @param batch  The sprite batch to use (set in PlayScreen)
    */
   public UIRenderer(Engine engine, SpriteBatch batch) {
@@ -63,8 +64,8 @@ public class UIRenderer {
 
       String str =
           (brain != null ? brain.state.toString().toLowerCase() : "player") + " "
-          + attributes.energy + "e " + attributes.health + "hp "
-          + position.pos.x + ", " + position.pos.y;
+              + attributes.energy + "e " + attributes.health + "hp "
+              + position.pos.x + ", " + position.pos.y;
 
       if (entity.getComponent(PlayerComponent.class) != null) {
         font.setColor(Color.WHITE);

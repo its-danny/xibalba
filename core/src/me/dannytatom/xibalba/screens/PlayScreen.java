@@ -69,7 +69,7 @@ class PlayScreen implements Screen {
     Gdx.input.setInputProcessor(new PlayerInput(game, map, player));
 
     // Setup renderers
-    worldRenderer = new WorldRenderer(game, engine, batch, map, player);
+    worldRenderer = new WorldRenderer(engine, batch, map, player);
     uiRenderer = new UIRenderer(engine, batch);
   }
 

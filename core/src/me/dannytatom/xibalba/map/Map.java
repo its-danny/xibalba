@@ -6,7 +6,6 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import javafx.geometry.Pos;
 import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.utils.ComponentMappers;
@@ -78,13 +77,13 @@ public class Map {
     Vector2 playerPosition = getPlayerPosition();
     Vector2 position;
 
-    if (isWalkable((int) playerPosition.x + 1, (int) playerPosition.y)) {
+    if (isWalkable(new Vector2(playerPosition.x + 1, playerPosition.y))) {
       position = new Vector2(playerPosition.x + 1, playerPosition.y);
-    } else if (isWalkable((int) playerPosition.x - 1, (int) playerPosition.y)) {
+    } else if (isWalkable(new Vector2(playerPosition.x - 1, playerPosition.y))) {
       position = new Vector2(playerPosition.x - 1, playerPosition.y);
-    } else if (isWalkable((int) playerPosition.x, (int) playerPosition.y + 1)) {
+    } else if (isWalkable(new Vector2(playerPosition.x, playerPosition.y + 1))) {
       position = new Vector2(playerPosition.x, playerPosition.y + 1);
-    } else if (isWalkable((int) playerPosition.x, (int) playerPosition.y - 1)) {
+    } else if (isWalkable(new Vector2(playerPosition.x, playerPosition.y - 1))) {
       position = new Vector2(playerPosition.x, playerPosition.y - 1);
     } else {
       position = null;
@@ -93,17 +92,17 @@ public class Map {
     return position;
   }
 
-  boolean isBlocked(int x, int y) {
-    boolean blocked = map[x][y].isWall;
+  boolean isBlocked(Vector2 position) {
+    boolean blocked = map[(int) position.x][(int) position.y].isWall;
 
     if (!blocked) {
       ImmutableArray<Entity> entities =
           engine.getEntitiesFor(Family.all(PositionComponent.class).get());
 
       for (Entity entity : entities) {
-        PositionComponent position = ComponentMappers.position.get(entity);
+        PositionComponent ep = ComponentMappers.position.get(entity);
 
-        if (position.pos.x == x && position.pos.y == y) {
+        if (ep.pos.epsilonEquals(position, 0)) {
           blocked = true;
           break;
         }
@@ -113,8 +112,8 @@ public class Map {
     return blocked;
   }
 
-  public boolean isWalkable(int x, int y) {
-    return !isBlocked(x, y);
+  public boolean isWalkable(Vector2 position) {
+    return !isBlocked(position);
   }
 
   /**
@@ -143,7 +142,7 @@ public class Map {
 
     for (int x = 0; x < map.length; x++) {
       for (int y = 0; y < map[x].length; y++) {
-        cells[x][y] = new GridCell(x, y, isWalkable(x, y));
+        cells[x][y] = new GridCell(x, y, isWalkable(new Vector2(x, y)));
       }
     }
 
@@ -162,7 +161,7 @@ public class Map {
     do {
       x = MathUtils.random(0, map.length - 1);
       y = MathUtils.random(0, map[x].length - 1);
-    } while (isBlocked(x, y));
+    } while (isBlocked(new Vector2(x, y)));
 
     return new Vector2(x, y);
   }
@@ -178,7 +177,7 @@ public class Map {
     search:
     for (int x = 0; x < map.length; x++) {
       for (int y = 0; y < map[x].length; y++) {
-        if (isWalkable(x, y)) {
+        if (isWalkable(new Vector2(x, y))) {
           space.add(x, y);
 
           break search;
