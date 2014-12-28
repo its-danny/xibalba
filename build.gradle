@@ -47,7 +47,6 @@ project(":core") {
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
         compile "com.badlogicgames.ashley:ashley:$ashleyVersion"
         compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
-        compile "com.stewsters.util:stewsters-util:0.9"
         compile "com.github.xaguzman:pathfinding:0.2.4-SNAPSHOT"
     }
 }
