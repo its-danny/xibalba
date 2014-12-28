@@ -59,7 +59,7 @@ public class Map {
         engine.getEntitiesFor(Family.all(PositionComponent.class).get());
 
     for (Entity entity : entities) {
-      if (entity.getComponent(PositionComponent.class).pos.epsilonEquals(position, 0)) {
+      if (entity.getComponent(PositionComponent.class).pos.epsilonEquals(position, 0.00001f)) {
         return entity;
       }
     }
@@ -102,7 +102,7 @@ public class Map {
       for (Entity entity : entities) {
         PositionComponent ep = ComponentMappers.position.get(entity);
 
-        if (ep.pos.epsilonEquals(position, 0)) {
+        if (ep.pos.epsilonEquals(position, 0.00001f)) {
           blocked = true;
           break;
         }
