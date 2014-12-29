@@ -7,7 +7,7 @@ public class ActionLog {
 
   public ActionLog() {
     items = new ArrayList<>();
-    items.add("Welcome to Xibalba...");
+    items.add("Make it to Xibalba, Necahual, and kill the 12 Lords of Xibalba");
   }
 
   public void add(String str) {

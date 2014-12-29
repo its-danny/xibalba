@@ -88,10 +88,13 @@ public class MeleeSystem extends IteratingSystem {
         action = "missed " + targetAttributes.name;
       }
 
+      logger.add(attributes.name + " " + action);
+
       if (targetAttributes.health <= 0) {
         skills.unarmedCombatCounter += 10;
 
         engine.removeEntity(target);
+        logger.add(attributes.name + " killed " + targetAttributes.name + "!");
       }
 
       if (skills.unarmedCombatCounter >= (skills.unarmedCombat * 10) && skills.unarmedCombat < 12) {
@@ -99,8 +102,6 @@ public class MeleeSystem extends IteratingSystem {
       }
 
       attributes.energy -= MeleeComponent.COST;
-
-      logger.add(attributes.name + " " + action);
     }
 
     entity.remove(MeleeComponent.class);
