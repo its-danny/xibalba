@@ -8,8 +8,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import me.dannytatom.xibalba.*;
 import me.dannytatom.xibalba.components.AttributesComponent;
-import me.dannytatom.xibalba.factories.MobFactory;
-import me.dannytatom.xibalba.factories.PlayerFactory;
 import me.dannytatom.xibalba.map.CaveGenerator;
 import me.dannytatom.xibalba.map.Map;
 import me.dannytatom.xibalba.systems.AttributesSystem;
@@ -19,6 +17,7 @@ import me.dannytatom.xibalba.systems.actions.MovementSystem;
 import me.dannytatom.xibalba.systems.ai.BrainSystem;
 import me.dannytatom.xibalba.systems.ai.TargetSystem;
 import me.dannytatom.xibalba.systems.ai.WanderSystem;
+import me.dannytatom.xibalba.utils.EntityFactory;
 
 class PlayScreen implements Screen {
   private final Main game;
@@ -43,14 +42,15 @@ class PlayScreen implements Screen {
         MathUtils.random(50, 80), MathUtils.random(30, 60));
     Map map = new Map(engine, cave.map);
 
+    EntityFactory entityFactory = new EntityFactory(game.assets);
+
     // Add player entity
-    player = new PlayerFactory(game.assets).spawn(map.findPlayerStart());
+    player = entityFactory.spawnPlayer(map.findPlayerStart());
     engine.addEntity(player);
 
     // Spawn some spider monkeys
-    MobFactory mobFactory = new MobFactory(game.assets);
     for (int i = 0; i < 5; i++) {
-      engine.addEntity(mobFactory.spawn("spiderMonkey", map.getRandomOpenPosition()));
+      engine.addEntity(entityFactory.spawnMob("spiderMonkey", map.getRandomOpenPosition()));
     }
 
     // Setup action log
