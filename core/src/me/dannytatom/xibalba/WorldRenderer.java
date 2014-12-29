@@ -7,8 +7,11 @@ import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import me.dannytatom.xibalba.components.AttributesComponent;
+import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.VisualComponent;
 import me.dannytatom.xibalba.map.Cell;
@@ -20,6 +23,7 @@ public class WorldRenderer {
   private static final int SPRITE_WIDTH = 24;
   private static final int SPRITE_HEIGHT = 24;
 
+  private final Main game;
   private final Engine engine;
   private final SpriteBatch batch;
   private final Map map;
@@ -34,7 +38,8 @@ public class WorldRenderer {
    * @param batch  The sprite batch to use (set in PlayScreen)
    * @param map    The map we're on
    */
-  public WorldRenderer(Engine engine, SpriteBatch batch, Map map, Entity player) {
+  public WorldRenderer(Main main, Engine engine, SpriteBatch batch, Map map, Entity player) {
+    game = main;
     this.engine = engine;
     this.batch = batch;
     this.map = map;
@@ -78,7 +83,7 @@ public class WorldRenderer {
         }
 
         if (!cell.hidden) {
-          batch.setColor(1f, 1f, 1f, lightMap[x][y] <= 0.4f ? 0.4f : lightMap[x][y]);
+          batch.setColor(1f, 1f, 1f, lightMap[x][y] <= 0.35f ? 0.35f : lightMap[x][y]);
           batch.draw(cell.sprite, x * SPRITE_WIDTH, y * SPRITE_HEIGHT);
           batch.setColor(1f, 1f, 1f, 1f);
         }
@@ -91,11 +96,40 @@ public class WorldRenderer {
     for (Entity entity : entities) {
       PositionComponent position = ComponentMappers.position.get(entity);
       VisualComponent visual = ComponentMappers.visual.get(entity);
+      AttributesComponent attributes = ComponentMappers.attributes.get(entity);
 
       if (!map.getCell(position.pos).hidden) {
         batch.setColor(1f, 1f, 1f, lightMap[(int) position.pos.x][(int) position.pos.y]);
+
+        if (attributes != null) {
+          TextureAtlas atlas = game.assets.get("sprites/ui.atlas");
+          Sprite sprite;
+
+          int which;
+          int fourth = (attributes.maxHealth / 4) - (attributes.health / 4);
+
+          if (fourth <= 2.5) {
+            which = 1;
+          } else if (fourth <= 5) {
+            which = 2;
+          } else if (fourth <= 7.5) {
+            which = 3;
+          } else {
+            which = 4;
+          }
+
+          if (entity.getComponent(PlayerComponent.class) != null) {
+            sprite = atlas.createSprite("player-health-" + which);
+          } else {
+            sprite = atlas.createSprite("enemy-health-" + which);
+          }
+
+          batch.draw(sprite, position.pos.x * SPRITE_WIDTH, position.pos.y * SPRITE_HEIGHT);
+        }
+
         batch.draw(visual.sprite, position.pos.x * SPRITE_WIDTH,
             (position.pos.y * SPRITE_HEIGHT) + (SPRITE_HEIGHT / 2));
+
         batch.setColor(1f, 1f, 1f, 1f);
       }
     }

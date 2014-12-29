@@ -37,7 +37,6 @@ public class MobFactory {
     entity.add(new VisualComponent(assets.get(blueprint.visual.get("spritePath"))));
     entity.add(new SkillsComponent());
     entity.add(new AttributesComponent(
-        blueprint.name,
         blueprint.attributes.get("speed"),
         blueprint.attributes.get("vision"),
         blueprint.attributes.get("maxHealth"),
