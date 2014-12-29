@@ -5,7 +5,7 @@
   },
   "attributes": {
     "speed": 80,
-    "vision": 3,
+    "vision": 10,
     "maxHealth": 50,
     "damage": 10
   }

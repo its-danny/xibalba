@@ -140,16 +140,24 @@ public class Map {
    * Check if something is near the player.
    *
    * @param position starting position
-   * @param distance distance around cell to look
    * @return whether we're near the player or not
    */
-  public boolean isNearPlayer(Vector2 position, int distance) {
+  public boolean isNearPlayer(Vector2 position) {
     Vector2 playerPosition = getPlayerPosition();
 
-    return position.x <= playerPosition.x + distance
-        && position.x >= playerPosition.x - distance
-        && position.y <= playerPosition.y + distance
-        && position.y >= playerPosition.y - distance;
+    return position.x <= playerPosition.x + 1
+        && position.x >= playerPosition.x - 1
+        && position.y <= playerPosition.y + 1
+        && position.y >= playerPosition.y - 1;
+  }
+
+  public boolean canSeePlayer(Vector2 position, int distance) {
+    ShadowCaster caster = new ShadowCaster();
+    float[][] lightMap = caster.calculateFOV(getResistanceMap(),
+        (int) position.x, (int) position.y, distance);
+    Vector2 playerPosition = getPlayerPosition();
+
+    return lightMap[(int) playerPosition.x][(int) playerPosition.y] > 0;
   }
 
   /**

@@ -54,7 +54,7 @@ public class BrainSystem extends IteratingSystem {
     PositionComponent position = ComponentMappers.position.get(entity);
     AttributesComponent attributes = ComponentMappers.attributes.get(entity);
 
-    if (map.isNearPlayer(position.pos, 1)) {
+    if (map.isNearPlayer(position.pos)) {
       if (attributes.energy >= MeleeComponent.COST) {
         switchToAttack(entity);
       } else if (attributes.energy >= MovementComponent.COST) {
@@ -62,7 +62,7 @@ public class BrainSystem extends IteratingSystem {
       }
     } else {
       if (attributes.energy >= MovementComponent.COST) {
-        if (map.isNearPlayer(position.pos, attributes.vision)) {
+        if (map.canSeePlayer(position.pos, attributes.vision)) {
           switchToTarget(entity, map.getNearPlayer());
         } else {
           switchToWander(entity);
@@ -75,7 +75,7 @@ public class BrainSystem extends IteratingSystem {
     PositionComponent position = ComponentMappers.position.get(entity);
     AttributesComponent attributes = ComponentMappers.attributes.get(entity);
 
-    if (map.isNearPlayer(position.pos, 1)) {
+    if (map.isNearPlayer(position.pos)) {
       if (attributes.energy >= MeleeComponent.COST) {
         switchToAttack(entity);
       } else if (attributes.energy >= MovementComponent.COST) {
@@ -85,7 +85,7 @@ public class BrainSystem extends IteratingSystem {
       }
     } else {
       if (attributes.energy >= MovementComponent.COST) {
-        if (map.isNearPlayer(position.pos, attributes.vision)) {
+        if (map.canSeePlayer(position.pos, attributes.vision)) {
           switchToTarget(entity, map.getNearPlayer());
         } else {
           switchToWander(entity);
@@ -102,7 +102,7 @@ public class BrainSystem extends IteratingSystem {
     TargetComponent target = ComponentMappers.target.get(entity);
     Vector2 playerPosition = map.getPlayerPosition();
 
-    if (map.isNearPlayer(position.pos, 1)) {
+    if (map.isNearPlayer(position.pos)) {
       if (attributes.energy >= MeleeComponent.COST) {
         switchToAttack(entity);
       } else {
@@ -110,7 +110,7 @@ public class BrainSystem extends IteratingSystem {
       }
     } else {
       if (attributes.energy >= MovementComponent.COST) {
-        if (map.isNearPlayer(position.pos, attributes.vision)) {
+        if (map.canSeePlayer(position.pos, attributes.vision)) {
           if (playerPosition != target.pos) {
             switchToTarget(entity, map.getNearPlayer());
           }
@@ -127,7 +127,7 @@ public class BrainSystem extends IteratingSystem {
     PositionComponent position = ComponentMappers.position.get(entity);
     AttributesComponent attributes = ComponentMappers.attributes.get(entity);
 
-    if (map.isNearPlayer(position.pos, 1)) {
+    if (map.isNearPlayer(position.pos)) {
       if (attributes.energy >= MeleeComponent.COST) {
         entity.add(new MeleeComponent(map.getPlayerPosition()));
       } else if (attributes.energy >= MovementComponent.COST) {
@@ -135,7 +135,7 @@ public class BrainSystem extends IteratingSystem {
       }
     } else {
       if (attributes.energy >= MovementComponent.COST) {
-        if (map.isNearPlayer(position.pos, attributes.vision)) {
+        if (map.canSeePlayer(position.pos, attributes.vision)) {
           switchToTarget(entity, map.getNearPlayer());
         } else {
           switchToWander(entity);
