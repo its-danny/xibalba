@@ -87,8 +87,6 @@ public class MeleeSystem extends IteratingSystem {
 
       if (skills.unarmedCombatCounter >= (skills.unarmedCombat * 10) && skills.unarmedCombat < 12) {
         skills.unarmedCombat += 2;
-
-        Gdx.app.log("Unarmed Combat", "" + skills.unarmedCombat);
       }
 
       attributes.energy -= MeleeComponent.COST;

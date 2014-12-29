@@ -40,7 +40,7 @@ public class WorldRenderer {
     this.map = map;
     this.player = player;
 
-    camera = new OrthographicCamera((Gdx.graphics.getWidth() / 4) * 3, Gdx.graphics.getHeight());
+    camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     camera.update();
 
     caster = new ShadowCaster();
@@ -52,7 +52,6 @@ public class WorldRenderer {
   public void render() {
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
     Gdx.gl.glClearColor(0, 0, 0, 1);
-    Gdx.gl.glViewport(0, 0, (Gdx.graphics.getWidth() / 4) * 3, Gdx.graphics.getHeight());
 
     // Get player pos & attributes
     PositionComponent playerPosition = player.getComponent(PositionComponent.class);
