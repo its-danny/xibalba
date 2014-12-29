@@ -42,6 +42,22 @@ public class Map {
     return map[x][y];
   }
 
+  public Cell getCell(Vector2 position) {
+    return getCell((int) position.x, (int) position.y);
+  }
+
+  public float[][] getResistanceMap() {
+    float[][] resistanceMap = new float[width][height];
+
+    for (int x = 0; x < width; x++) {
+      for (int y = 0; y < height; y++) {
+        resistanceMap[x][y] = getCell(x, y).isWall ? 1 : 0;
+      }
+    }
+
+    return resistanceMap;
+  }
+
   /**
    * Find player pos.
    *
@@ -65,6 +81,10 @@ public class Map {
     }
 
     return null;
+  }
+
+  public Entity getEntityAt(int x, int y) {
+    return getEntityAt(new Vector2((float) x, (float) y));
   }
 
   /**

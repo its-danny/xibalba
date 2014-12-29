@@ -8,10 +8,12 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.VisualComponent;
 import me.dannytatom.xibalba.map.Cell;
 import me.dannytatom.xibalba.map.Map;
+import me.dannytatom.xibalba.map.ShadowCaster;
 import me.dannytatom.xibalba.utils.ComponentMappers;
 
 public class WorldRenderer {
@@ -23,6 +25,7 @@ public class WorldRenderer {
   private final Map map;
   private final Entity player;
   private final OrthographicCamera camera;
+  private final ShadowCaster caster;
 
   /**
    * WorldRenderer constructor.
@@ -39,6 +42,8 @@ public class WorldRenderer {
 
     camera = new OrthographicCamera((Gdx.graphics.getWidth() / 4) * 3, Gdx.graphics.getHeight());
     camera.update();
+
+    caster = new ShadowCaster();
   }
 
   /**
@@ -49,8 +54,9 @@ public class WorldRenderer {
     Gdx.gl.glClearColor(0, 0, 0, 1);
     Gdx.gl.glViewport(0, 0, (Gdx.graphics.getWidth() / 4) * 3, Gdx.graphics.getHeight());
 
-    // Get player pos for worldCamera
+    // Get player pos & attributes
     PositionComponent playerPosition = player.getComponent(PositionComponent.class);
+    AttributesComponent playerAttributes = player.getComponent(AttributesComponent.class);
 
     // Update worldCamera
     camera.position.set(playerPosition.pos.x * SPRITE_WIDTH,
@@ -60,11 +66,23 @@ public class WorldRenderer {
     batch.setProjectionMatrix(camera.combined);
     batch.begin();
 
+    float[][] lightMap = caster.calculateFOV(map.getResistanceMap(),
+        (int) playerPosition.pos.x, (int) playerPosition.pos.y,
+        playerAttributes.vision);
+
     for (int x = 0; x < map.width; x++) {
       for (int y = 0; y < map.height; y++) {
         Cell cell = map.getCell(x, y);
 
-        batch.draw(cell.sprite, x * SPRITE_WIDTH, y * SPRITE_HEIGHT);
+        if (lightMap[x][y] > 0) {
+          cell.hidden = false;
+        }
+
+        if (!cell.hidden) {
+          batch.setColor(1f, 1f, 1f, lightMap[x][y] <= 0.4f ? 0.4f : lightMap[x][y]);
+          batch.draw(cell.sprite, x * SPRITE_WIDTH, y * SPRITE_HEIGHT);
+          batch.setColor(1f, 1f, 1f, 1f);
+        }
       }
     }
 
@@ -75,8 +93,12 @@ public class WorldRenderer {
       PositionComponent position = ComponentMappers.position.get(entity);
       VisualComponent visual = ComponentMappers.visual.get(entity);
 
-      batch.draw(visual.sprite, position.pos.x * SPRITE_WIDTH,
-          (position.pos.y * SPRITE_HEIGHT) + (SPRITE_HEIGHT / 2));
+      if (!map.getCell(position.pos).hidden) {
+        batch.setColor(1f, 1f, 1f, lightMap[(int) position.pos.x][(int) position.pos.y]);
+        batch.draw(visual.sprite, position.pos.x * SPRITE_WIDTH,
+            (position.pos.y * SPRITE_HEIGHT) + (SPRITE_HEIGHT / 2));
+        batch.setColor(1f, 1f, 1f, 1f);
+      }
     }
 
     batch.end();
