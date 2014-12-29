@@ -25,7 +25,7 @@ public class PlayerFactory {
     player.add(new PositionComponent(position));
     player.add(new VisualComponent(assets.get("sprites/player.png")));
     player.add(new SkillsComponent());
-    player.add(new AttributesComponent(100, 10, 100, 10, 10));
+    player.add(new AttributesComponent("You", 100, 10, 100, 10, 10));
 
     return player;
   }

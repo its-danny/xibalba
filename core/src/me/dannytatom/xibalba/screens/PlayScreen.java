@@ -6,10 +6,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
-import me.dannytatom.xibalba.Main;
-import me.dannytatom.xibalba.PlayerInput;
-import me.dannytatom.xibalba.UIRenderer;
-import me.dannytatom.xibalba.WorldRenderer;
+import me.dannytatom.xibalba.*;
 import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.factories.MobFactory;
 import me.dannytatom.xibalba.factories.PlayerFactory;
@@ -56,6 +53,9 @@ class PlayScreen implements Screen {
       engine.addEntity(mobFactory.spawn("spiderMonkey", map.getRandomOpenPosition()));
     }
 
+    // Setup action log
+    ActionLog logger = new ActionLog();
+
     // Setup engine (they're run in order added)
     engine.addSystem(new AttributesSystem());
     engine.addSystem(new PlayerSystem());
@@ -63,14 +63,14 @@ class PlayScreen implements Screen {
     engine.addSystem(new WanderSystem(map));
     engine.addSystem(new TargetSystem(map));
     engine.addSystem(new MovementSystem(map));
-    engine.addSystem(new MeleeSystem(engine, map));
+    engine.addSystem(new MeleeSystem(engine, logger, map));
 
     // Setup input
     Gdx.input.setInputProcessor(new PlayerInput(game, map, player));
 
     // Setup renderers
     worldRenderer = new WorldRenderer(game, engine, batch, map, player);
-    uiRenderer = new UIRenderer();
+    uiRenderer = new UIRenderer(logger);
   }
 
   @Override

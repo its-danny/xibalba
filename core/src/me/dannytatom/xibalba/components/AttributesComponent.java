@@ -8,6 +8,7 @@ public class AttributesComponent extends Component {
   public final int maxHealth;
   public final int toughness;
   public final int damage;
+  public final String name;
   public int health;
   public int energy;
 
@@ -16,8 +17,9 @@ public class AttributesComponent extends Component {
    *
    * @param speed The entity's speed
    */
-  public AttributesComponent(int speed, int vision, int maxHealth, int toughness, int damage) {
+  public AttributesComponent(String name, int speed, int vision, int maxHealth, int toughness, int damage) {
     this.energy = speed;
+    this.name = name;
     this.speed = speed;
     this.vision = vision;
     this.maxHealth = maxHealth;

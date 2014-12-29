@@ -5,6 +5,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.math.MathUtils;
+import me.dannytatom.xibalba.ActionLog;
 import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.SkillsComponent;
 import me.dannytatom.xibalba.components.actions.MeleeComponent;
@@ -12,13 +13,15 @@ import me.dannytatom.xibalba.map.Map;
 import me.dannytatom.xibalba.utils.ComponentMappers;
 
 public class MeleeSystem extends IteratingSystem {
+  private final ActionLog logger;
   private final Engine engine;
   private final Map map;
 
-  public MeleeSystem(Engine engine, Map map) {
+  public MeleeSystem(Engine engine, ActionLog logger, Map map) {
     super(Family.all(MeleeComponent.class).get());
 
     this.engine = engine;
+    this.logger = logger;
     this.map = map;
   }
 
@@ -49,6 +52,7 @@ public class MeleeSystem extends IteratingSystem {
       int skillRoll = MathUtils.random(1, skills.unarmedCombat);
       int sixRoll = MathUtils.random(1, 6);
       int result;
+      String action;
 
       if (skillRoll > sixRoll) {
         if (skillRoll == skills.unarmedCombat) {
@@ -75,7 +79,13 @@ public class MeleeSystem extends IteratingSystem {
 
         if (damage > targetAttributes.toughness) {
           targetAttributes.health -= damage - targetAttributes.toughness;
+
+          action = "hit " + targetAttributes.name + " for " + damage + " damage";
+        } else {
+          action = "hit " + targetAttributes.name + " but did no damage";
         }
+      } else {
+        action = "missed " + targetAttributes.name;
       }
 
       if (targetAttributes.health <= 0) {
@@ -89,6 +99,8 @@ public class MeleeSystem extends IteratingSystem {
       }
 
       attributes.energy -= MeleeComponent.COST;
+
+      logger.add(attributes.name + " " + action);
     }
 
     entity.remove(MeleeComponent.class);
