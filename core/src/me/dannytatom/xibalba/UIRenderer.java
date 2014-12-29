@@ -20,7 +20,6 @@ public class UIRenderer {
     skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
 
     list = new VerticalGroup();
-    list.setDebug(true);
     list.setWidth(300);
     list.pad(10);
     list.left();
