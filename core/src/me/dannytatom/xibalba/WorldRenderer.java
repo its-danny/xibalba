@@ -66,7 +66,7 @@ public class WorldRenderer {
     batch.setProjectionMatrix(camera.combined);
     batch.begin();
 
-    float[][] lightMap = caster.calculateFOV(map.getResistanceMap(),
+    float[][] lightMap = caster.calculateFOV(map.createResistanceMap(),
         (int) playerPosition.pos.x, (int) playerPosition.pos.y,
         playerAttributes.vision);
 

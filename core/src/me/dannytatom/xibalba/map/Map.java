@@ -32,6 +32,42 @@ public class Map {
   }
 
   /**
+   * Get pathfinding cells.
+   *
+   * @return 2d array of GridCells
+   */
+  public GridCell[][] createGridCells() {
+    GridCell[][] cells = new GridCell[width][height];
+
+    for (int x = 0; x < map.length; x++) {
+      for (int y = 0; y < map[x].length; y++) {
+        cells[x][y] = new GridCell(x, y, isWalkable(new Vector2(x, y)));
+      }
+    }
+
+    return cells;
+  }
+
+  /**
+   * Get starting light map.
+   * <p>
+   * 1 is blocked, 0 is not
+   *
+   * @return Resistance map
+   */
+  public float[][] createResistanceMap() {
+    float[][] resistanceMap = new float[width][height];
+
+    for (int x = 0; x < width; x++) {
+      for (int y = 0; y < height; y++) {
+        resistanceMap[x][y] = getCell(x, y).isWall ? 1 : 0;
+      }
+    }
+
+    return resistanceMap;
+  }
+
+  /**
    * Get the cell for this position.
    *
    * @param x x pos of cell
@@ -46,18 +82,6 @@ public class Map {
     return getCell((int) position.x, (int) position.y);
   }
 
-  public float[][] getResistanceMap() {
-    float[][] resistanceMap = new float[width][height];
-
-    for (int x = 0; x < width; x++) {
-      for (int y = 0; y < height; y++) {
-        resistanceMap[x][y] = getCell(x, y).isWall ? 1 : 0;
-      }
-    }
-
-    return resistanceMap;
-  }
-
   /**
    * Find player pos.
    *
@@ -70,6 +94,13 @@ public class Map {
     return position.pos;
   }
 
+  /**
+   * Attempt to get the entity at the given position,
+   * returns null if nobody is there.
+   *
+   * @param position The entity's position
+   * @return The entity
+   */
   public Entity getEntityAt(Vector2 position) {
     ImmutableArray<Entity> entities =
         engine.getEntitiesFor(Family.all(PositionComponent.class).get());
@@ -83,15 +114,11 @@ public class Map {
     return null;
   }
 
-  public Entity getEntityAt(int x, int y) {
-    return getEntityAt(new Vector2((float) x, (float) y));
-  }
-
   /**
    * Returns an open position near the player.
    * TODO: Make this less retarded.
    *
-   * @return player position
+   * @return Player position
    */
   public Vector2 getNearPlayer() {
     Vector2 playerPosition = getPlayerPosition();
@@ -112,6 +139,12 @@ public class Map {
     return position;
   }
 
+  /**
+   * Returns whether or not the given position is blocked.
+   *
+   * @param position Position to check
+   * @return Is it blocked?
+   */
   boolean isBlocked(Vector2 position) {
     boolean blocked = map[(int) position.x][(int) position.y].isWall;
 
@@ -139,8 +172,8 @@ public class Map {
   /**
    * Check if something is near the player.
    *
-   * @param position starting position
-   * @return whether we're near the player or not
+   * @param position Starting position
+   * @return Whether we're near the player or not
    */
   public boolean isNearPlayer(Vector2 position) {
     Vector2 playerPosition = getPlayerPosition();
@@ -151,30 +184,20 @@ public class Map {
         && position.y >= playerPosition.y - 1;
   }
 
+  /**
+   * Uses light map to determine if they can see the player.
+   *
+   * @param position Entity's position
+   * @param distance Radius to use
+   * @return Can they see the player?
+   */
   public boolean canSeePlayer(Vector2 position, int distance) {
     ShadowCaster caster = new ShadowCaster();
-    float[][] lightMap = caster.calculateFOV(getResistanceMap(),
+    float[][] lightMap = caster.calculateFOV(createResistanceMap(),
         (int) position.x, (int) position.y, distance);
     Vector2 playerPosition = getPlayerPosition();
 
     return lightMap[(int) playerPosition.x][(int) playerPosition.y] > 0;
-  }
-
-  /**
-   * Get pathfinding cells.
-   *
-   * @return 2d array of GridCells
-   */
-  public GridCell[][] createGridCells() {
-    GridCell[][] cells = new GridCell[width][height];
-
-    for (int x = 0; x < map.length; x++) {
-      for (int y = 0; y < map[x].length; y++) {
-        cells[x][y] = new GridCell(x, y, isWalkable(new Vector2(x, y)));
-      }
-    }
-
-    return cells;
   }
 
   /**
