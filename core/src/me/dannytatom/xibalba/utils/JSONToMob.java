@@ -2,11 +2,9 @@ package me.dannytatom.xibalba.utils;
 
 import java.util.HashMap;
 
-public class Blueprint {
-  @SuppressWarnings("UnusedDeclaration")
+@SuppressWarnings("UnusedDeclaration")
+class JSONToMob {
   public String name;
-  @SuppressWarnings("UnusedDeclaration")
   public HashMap<String, String> visual;
-  @SuppressWarnings("UnusedDeclaration")
   public HashMap<String, Integer> attributes;
 }

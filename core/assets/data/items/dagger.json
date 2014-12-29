@@ -1,0 +1,15 @@
+{
+  "name": "Dagger",
+  "skill": "fencing",
+  "verbs": [
+    "cut", "slashed", "stabbed"
+  ],
+  "attributes": {
+    "damage": 10
+  },
+  "actions": {
+    "canWield": true,
+    "canWear": false,
+    "canUse": false
+  }
+}

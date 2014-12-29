@@ -53,6 +53,9 @@ class PlayScreen implements Screen {
       engine.addEntity(entityFactory.spawnMob("spiderMonkey", map.getRandomOpenPosition()));
     }
 
+    // Add ano item
+    engine.addEntity(entityFactory.spawnItem("dagger"));
+
     // Setup action log
     ActionLog logger = new ActionLog();
 

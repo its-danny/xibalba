@@ -3,6 +3,7 @@ package me.dannytatom.xibalba.utils;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Json;
 import me.dannytatom.xibalba.components.*;
@@ -28,23 +29,36 @@ public class EntityFactory {
   }
 
   public Entity spawnMob(String type, Vector2 position) {
-    Blueprint blueprint = (new Json()).fromJson(Blueprint.class,
-        Gdx.files.internal("blueprints/mobs/" + type + ".json"));
+    JSONToMob json = (new Json()).fromJson(JSONToMob.class,
+        Gdx.files.internal("data/mobs/" + type + ".json"));
 
     Entity entity = new Entity();
 
     entity.add(new BrainComponent());
     entity.add(new PositionComponent(position));
-    entity.add(new VisualComponent(assets.get(blueprint.visual.get("spritePath"))));
+    entity.add(new VisualComponent(assets.get(json.visual.get("spritePath"))));
     entity.add(new SkillsComponent());
     entity.add(new AttributesComponent(
-        blueprint.name,
-        blueprint.attributes.get("speed"),
-        blueprint.attributes.get("vision"),
-        blueprint.attributes.get("maxHealth"),
-        blueprint.attributes.get("toughness"),
-        blueprint.attributes.get("damage")
+        json.name,
+        json.attributes.get("speed"),
+        json.attributes.get("vision"),
+        json.attributes.get("maxHealth"),
+        json.attributes.get("toughness"),
+        json.attributes.get("damage")
     ));
+
+    return entity;
+  }
+
+  public Entity spawnItem(String type) {
+    Entity entity = new Entity();
+    entity.add((new Json()).fromJson(ItemComponent.class,
+        Gdx.files.internal("data/items/" + type + ".json")));
+
+    ItemComponent item = entity.getComponent(ItemComponent.class);
+
+    item.attributes.put("damage",
+        MathUtils.random(item.attributes.get("damage"), item.attributes.get("damage") + 10));
 
     return entity;
   }
