@@ -9,16 +9,20 @@ import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.actions.MeleeComponent;
 import me.dannytatom.xibalba.components.actions.MovementComponent;
 import me.dannytatom.xibalba.map.Map;
+import me.dannytatom.xibalba.utils.EntityHelpers;
 
 public class PlayerInput implements InputProcessor {
   private final Main game;
   private final Map map;
+  private final EntityHelpers entityHelpers;
   private final Entity player;
 
-  public PlayerInput(Main game, Map map, Entity player) {
+  public PlayerInput(Main game, Map map, EntityHelpers entityHelpers) {
     this.game = game;
     this.map = map;
-    this.player = player;
+    this.entityHelpers = entityHelpers;
+
+    this.player = entityHelpers.getPlayer();
   }
 
   @Override
@@ -102,8 +106,8 @@ public class PlayerInput implements InputProcessor {
     if (map.isWalkable(pos) && energy >= MovementComponent.COST) {
       player.add(new MovementComponent(pos));
       game.executeTurn = true;
-    } else if (map.getEntityAt(pos) != null && energy >= MeleeComponent.COST) {
-      player.add(new MeleeComponent(pos));
+    } else if (entityHelpers.isEnemy(map.getEntityAt(pos)) && energy >= MeleeComponent.COST) {
+      player.add(new MeleeComponent(map.getEntityAt(pos)));
       game.executeTurn = true;
     }
   }

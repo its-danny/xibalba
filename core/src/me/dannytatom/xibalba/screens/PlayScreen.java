@@ -17,7 +17,7 @@ import me.dannytatom.xibalba.systems.actions.MovementSystem;
 import me.dannytatom.xibalba.systems.ai.BrainSystem;
 import me.dannytatom.xibalba.systems.ai.TargetSystem;
 import me.dannytatom.xibalba.systems.ai.WanderSystem;
-import me.dannytatom.xibalba.utils.EntityFactory;
+import me.dannytatom.xibalba.utils.EntityHelpers;
 
 class PlayScreen implements Screen {
   private final Main game;
@@ -37,24 +37,26 @@ class PlayScreen implements Screen {
     engine = new Engine();
     batch = new SpriteBatch();
 
+    EntityHelpers entityHelpers = new EntityHelpers(engine, game.assets);
+
     // Generate cave & initialize map
     CaveGenerator cave = new CaveGenerator(game.assets.get("sprites/cave.atlas"),
         MathUtils.random(50, 80), MathUtils.random(30, 60));
-    Map map = new Map(engine, cave.map);
-
-    EntityFactory entityFactory = new EntityFactory(game.assets);
+    Map map = new Map(engine, entityHelpers, cave.map);
 
     // Add player entity
-    player = entityFactory.spawnPlayer(map.findPlayerStart());
+    player = entityHelpers.spawnPlayer(map.findPlayerStart());
     engine.addEntity(player);
 
     // Spawn some spider monkeys
     for (int i = 0; i < 5; i++) {
-      engine.addEntity(entityFactory.spawnMob("spiderMonkey", map.getRandomOpenPosition()));
+      engine.addEntity(entityHelpers.spawnEnemy("spiderMonkey", map.getRandomOpenPosition()));
     }
 
-    // Add ano item
-    engine.addEntity(entityFactory.spawnItem("dagger"));
+    // Add an item
+    for (int i = 0; i < 10; i++) {
+      engine.addEntity(entityHelpers.spawnItem("dagger", map.getRandomOpenPosition()));
+    }
 
     // Setup action log
     ActionLog logger = new ActionLog();
@@ -62,14 +64,14 @@ class PlayScreen implements Screen {
     // Setup engine (they're run in order added)
     engine.addSystem(new AttributesSystem());
     engine.addSystem(new PlayerSystem());
-    engine.addSystem(new BrainSystem(map));
+    engine.addSystem(new BrainSystem(entityHelpers, map));
     engine.addSystem(new WanderSystem(map));
     engine.addSystem(new TargetSystem(map));
     engine.addSystem(new MovementSystem(map));
-    engine.addSystem(new MeleeSystem(engine, logger, map));
+    engine.addSystem(new MeleeSystem(engine, logger));
 
     // Setup input
-    Gdx.input.setInputProcessor(new PlayerInput(game, map, player));
+    Gdx.input.setInputProcessor(new PlayerInput(game, map, entityHelpers));
 
     // Setup renderers
     worldRenderer = new WorldRenderer(game, engine, batch, map, player);

@@ -9,20 +9,17 @@ import me.dannytatom.xibalba.ActionLog;
 import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.SkillsComponent;
 import me.dannytatom.xibalba.components.actions.MeleeComponent;
-import me.dannytatom.xibalba.map.Map;
 import me.dannytatom.xibalba.utils.ComponentMappers;
 
 public class MeleeSystem extends IteratingSystem {
   private final ActionLog logger;
   private final Engine engine;
-  private final Map map;
 
-  public MeleeSystem(Engine engine, ActionLog logger, Map map) {
+  public MeleeSystem(Engine engine, ActionLog logger) {
     super(Family.all(MeleeComponent.class).get());
 
     this.engine = engine;
     this.logger = logger;
-    this.map = map;
   }
 
   /**
@@ -43,11 +40,10 @@ public class MeleeSystem extends IteratingSystem {
   protected void processEntity(Entity entity, float deltaTime) {
     MeleeComponent melee = ComponentMappers.melee.get(entity);
     AttributesComponent attributes = ComponentMappers.attributes.get(entity);
-    Entity target = map.getEntityAt(melee.target);
 
-    if (target != null) {
+    if (melee.target != null) {
       SkillsComponent skills = ComponentMappers.skills.get(entity);
-      AttributesComponent targetAttributes = ComponentMappers.attributes.get(target);
+      AttributesComponent targetAttributes = ComponentMappers.attributes.get(melee.target);
 
       int skillRoll = MathUtils.random(1, skills.unarmedCombat);
       int sixRoll = MathUtils.random(1, 6);
@@ -93,7 +89,7 @@ public class MeleeSystem extends IteratingSystem {
       if (targetAttributes.health <= 0) {
         skills.unarmedCombatCounter += 10;
 
-        engine.removeEntity(target);
+        engine.removeEntity(melee.target);
         logger.add(attributes.name + " killed " + targetAttributes.name + "!");
       }
 

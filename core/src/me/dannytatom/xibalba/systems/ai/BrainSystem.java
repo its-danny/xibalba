@@ -14,8 +14,10 @@ import me.dannytatom.xibalba.components.ai.TargetComponent;
 import me.dannytatom.xibalba.components.ai.WanderComponent;
 import me.dannytatom.xibalba.map.Map;
 import me.dannytatom.xibalba.utils.ComponentMappers;
+import me.dannytatom.xibalba.utils.EntityHelpers;
 
 public class BrainSystem extends IteratingSystem {
+  private final EntityHelpers entityHelpers;
   private final Map map;
 
   /**
@@ -23,9 +25,10 @@ public class BrainSystem extends IteratingSystem {
    *
    * @param map The map we're currently on
    */
-  public BrainSystem(Map map) {
+  public BrainSystem(EntityHelpers entityHelpers, Map map) {
     super(Family.all(BrainComponent.class).get());
 
+    this.entityHelpers = entityHelpers;
     this.map = map;
   }
 
@@ -129,7 +132,7 @@ public class BrainSystem extends IteratingSystem {
 
     if (map.isNearPlayer(position.pos)) {
       if (attributes.energy >= MeleeComponent.COST) {
-        entity.add(new MeleeComponent(map.getPlayerPosition()));
+        entity.add(new MeleeComponent(entityHelpers.getPlayer()));
       } else if (attributes.energy >= MovementComponent.COST) {
         switchToWander(entity);
       }

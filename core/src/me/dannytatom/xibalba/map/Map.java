@@ -6,15 +6,16 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.utils.ComponentMappers;
+import me.dannytatom.xibalba.utils.EntityHelpers;
 import org.xguzm.pathfinding.grid.GridCell;
 
 public class Map {
   public final int width;
   public final int height;
   private final Engine engine;
+  private final EntityHelpers entityHelpers;
   private final Cell[][] map;
 
   /**
@@ -23,8 +24,9 @@ public class Map {
    * @param engine The Ashley engine
    * @param map    The actual map
    */
-  public Map(Engine engine, Cell[][] map) {
+  public Map(Engine engine, EntityHelpers entityHelpers, Cell[][] map) {
     this.engine = engine;
+    this.entityHelpers = entityHelpers;
     this.map = map;
 
     this.width = this.map.length;
@@ -88,10 +90,7 @@ public class Map {
    * @return Vector2 of player pos
    */
   public Vector2 getPlayerPosition() {
-    Entity player = engine.getEntitiesFor(Family.one(PlayerComponent.class).get()).first();
-    PositionComponent position = ComponentMappers.position.get(player);
-
-    return position.pos;
+    return entityHelpers.getPlayer().getComponent(PositionComponent.class).pos;
   }
 
   /**

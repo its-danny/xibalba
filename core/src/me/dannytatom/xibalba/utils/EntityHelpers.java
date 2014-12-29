@@ -1,6 +1,8 @@
 package me.dannytatom.xibalba.utils;
 
+import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.math.MathUtils;
@@ -9,10 +11,12 @@ import com.badlogic.gdx.utils.Json;
 import me.dannytatom.xibalba.components.*;
 import me.dannytatom.xibalba.components.ai.BrainComponent;
 
-public class EntityFactory {
+public class EntityHelpers {
+  private final Engine engine;
   private final AssetManager assets;
 
-  public EntityFactory(AssetManager assets) {
+  public EntityHelpers(Engine engine, AssetManager assets) {
+    this.engine = engine;
     this.assets = assets;
   }
 
@@ -28,12 +32,13 @@ public class EntityFactory {
     return player;
   }
 
-  public Entity spawnMob(String type, Vector2 position) {
-    JSONToMob json = (new Json()).fromJson(JSONToMob.class,
-        Gdx.files.internal("data/mobs/" + type + ".json"));
+  public Entity spawnEnemy(String type, Vector2 position) {
+    JSONToEnemy json = (new Json()).fromJson(JSONToEnemy.class,
+        Gdx.files.internal("data/enemies/" + type + ".json"));
 
     Entity entity = new Entity();
 
+    entity.add(new EnemyComponent());
     entity.add(new BrainComponent());
     entity.add(new PositionComponent(position));
     entity.add(new VisualComponent(assets.get(json.visual.get("spritePath"))));
@@ -50,10 +55,12 @@ public class EntityFactory {
     return entity;
   }
 
-  public Entity spawnItem(String type) {
+  public Entity spawnItem(String type, Vector2 position) {
     Entity entity = new Entity();
-    entity.add((new Json()).fromJson(ItemComponent.class,
-        Gdx.files.internal("data/items/" + type + ".json")));
+
+    entity.add((new Json()).fromJson(ItemComponent.class, Gdx.files.internal("data/items/" + type + ".json")));
+    entity.add(new PositionComponent(position));
+    entity.add(new VisualComponent(assets.get("sprites/" + type + ".png")));
 
     ItemComponent item = entity.getComponent(ItemComponent.class);
 
@@ -61,5 +68,17 @@ public class EntityFactory {
         MathUtils.random(item.attributes.get("damage"), item.attributes.get("damage") + 10));
 
     return entity;
+  }
+
+  public Entity getPlayer() {
+    return engine.getEntitiesFor(Family.all(PlayerComponent.class).get()).first();
+  }
+
+  public boolean isEnemy(Entity entity) {
+    return entity != null && entity.getComponent(EnemyComponent.class) != null;
+  }
+
+  public boolean isItem(Entity entity) {
+    return entity != null && entity.getComponent(ItemComponent.class) != null;
   }
 }

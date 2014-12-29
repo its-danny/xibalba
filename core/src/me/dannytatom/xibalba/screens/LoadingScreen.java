@@ -29,6 +29,7 @@ public class LoadingScreen implements Screen {
     game.assets.load("sprites/cave.atlas", TextureAtlas.class);
     game.assets.load("sprites/player.png", Texture.class);
     game.assets.load("sprites/spiderMonkey.png", Texture.class);
+    game.assets.load("sprites/dagger.png", Texture.class);
   }
 
   @Override
