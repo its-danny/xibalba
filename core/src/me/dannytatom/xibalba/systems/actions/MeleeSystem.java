@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
 import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.SkillsComponent;
@@ -79,7 +80,15 @@ public class MeleeSystem extends IteratingSystem {
       }
 
       if (targetAttributes.health <= 0) {
+        skills.unarmedCombatCounter += 10;
+
         engine.removeEntity(target);
+      }
+
+      if (skills.unarmedCombatCounter >= (skills.unarmedCombat * 10) && skills.unarmedCombat < 12) {
+        skills.unarmedCombat += 2;
+
+        Gdx.app.log("Unarmed Combat", "" + skills.unarmedCombat);
       }
 
       attributes.energy -= MeleeComponent.COST;
