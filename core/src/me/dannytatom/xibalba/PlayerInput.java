@@ -4,8 +4,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector2;
-import me.dannytatom.xibalba.components.AttributesComponent;
-import me.dannytatom.xibalba.components.PositionComponent;
+import me.dannytatom.xibalba.components.*;
 import me.dannytatom.xibalba.components.actions.MeleeComponent;
 import me.dannytatom.xibalba.components.actions.MovementComponent;
 import me.dannytatom.xibalba.map.Map;
@@ -13,12 +12,14 @@ import me.dannytatom.xibalba.utils.EntityHelpers;
 
 public class PlayerInput implements InputProcessor {
   private final Main game;
+  private final ActionLog actionLog;
   private final Map map;
   private final EntityHelpers entityHelpers;
   private final Entity player;
 
-  public PlayerInput(Main game, Map map, EntityHelpers entityHelpers) {
+  public PlayerInput(Main game, ActionLog actionLog, Map map, EntityHelpers entityHelpers) {
     this.game = game;
+    this.actionLog = actionLog;
     this.map = map;
     this.entityHelpers = entityHelpers;
 
@@ -38,28 +39,28 @@ public class PlayerInput implements InputProcessor {
         game.executeTurn = true;
         break;
       case Keys.K:
-        moveOrAttack(attributes.energy, new Vector2(position.pos.x, position.pos.y + 1));
+        doWhatNow(attributes.energy, new Vector2(position.pos.x, position.pos.y + 1));
         break;
       case Keys.U:
-        moveOrAttack(attributes.energy, new Vector2(position.pos.x + 1, position.pos.y + 1));
+        doWhatNow(attributes.energy, new Vector2(position.pos.x + 1, position.pos.y + 1));
         break;
       case Keys.L:
-        moveOrAttack(attributes.energy, new Vector2(position.pos.x + 1, position.pos.y));
+        doWhatNow(attributes.energy, new Vector2(position.pos.x + 1, position.pos.y));
         break;
       case Keys.N:
-        moveOrAttack(attributes.energy, new Vector2(position.pos.x + 1, position.pos.y - 1));
+        doWhatNow(attributes.energy, new Vector2(position.pos.x + 1, position.pos.y - 1));
         break;
       case Keys.J:
-        moveOrAttack(attributes.energy, new Vector2(position.pos.x, position.pos.y - 1));
+        doWhatNow(attributes.energy, new Vector2(position.pos.x, position.pos.y - 1));
         break;
       case Keys.B:
-        moveOrAttack(attributes.energy, new Vector2(position.pos.x - 1, position.pos.y - 1));
+        doWhatNow(attributes.energy, new Vector2(position.pos.x - 1, position.pos.y - 1));
         break;
       case Keys.H:
-        moveOrAttack(attributes.energy, new Vector2(position.pos.x - 1, position.pos.y));
+        doWhatNow(attributes.energy, new Vector2(position.pos.x - 1, position.pos.y));
         break;
       case Keys.Y:
-        moveOrAttack(attributes.energy, new Vector2(position.pos.x - 1, position.pos.y + 1));
+        doWhatNow(attributes.energy, new Vector2(position.pos.x - 1, position.pos.y + 1));
         break;
       default:
     }
@@ -102,13 +103,36 @@ public class PlayerInput implements InputProcessor {
     return false;
   }
 
-  private void moveOrAttack(int energy, Vector2 pos) {
-    if (map.isWalkable(pos) && energy >= MovementComponent.COST) {
-      player.add(new MovementComponent(pos));
-      game.executeTurn = true;
-    } else if (entityHelpers.isEnemy(map.getEntityAt(pos)) && energy >= MeleeComponent.COST) {
-      player.add(new MeleeComponent(map.getEntityAt(pos)));
-      game.executeTurn = true;
+  private void doWhatNow(int energy, Vector2 pos) {
+    if (map.isWalkable(pos)) {
+      if (energy >= MovementComponent.COST) {
+        player.add(new MovementComponent(pos));
+
+        game.executeTurn = true;
+      }
+    } else {
+      Entity thing = map.getEntityAt(pos);
+
+      if (entityHelpers.isItem(thing) && energy >= MovementComponent.COST) {
+        thing.remove(VisualComponent.class);
+        thing.remove(PositionComponent.class);
+
+
+        if (thing.getComponent(ItemComponent.class).actions.get("canWield")) {
+          entityHelpers.wieldItem(player, thing);
+        }
+
+        player.getComponent(InventoryComponent.class).items.add(thing);
+        player.add(new MovementComponent(pos));
+
+        actionLog.add("You pick up a " + thing.getComponent(ItemComponent.class).name);
+
+        game.executeTurn = true;
+      } else if (entityHelpers.isEnemy(thing) && energy >= MeleeComponent.COST) {
+        player.add(new MeleeComponent(thing));
+
+        game.executeTurn = true;
+      }
     }
   }
 }

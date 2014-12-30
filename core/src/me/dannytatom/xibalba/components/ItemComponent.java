@@ -9,7 +9,10 @@ import java.util.HashMap;
 public class ItemComponent extends Component {
   public String name;
   public String skill;
+  public String type;
   public ArrayList<String> verbs;
   public HashMap<String, Integer> attributes;
   public HashMap<String, Boolean> actions;
+
+  public boolean equipped = false;
 }

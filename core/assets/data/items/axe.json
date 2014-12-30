@@ -1,12 +1,12 @@
 {
-  "name": "Dagger",
-  "skill": "fencing",
+  "name": "Axe",
+  "skill": "bashing",
   "type": "weapon",
   "verbs": [
-    "cut", "slashed", "stabbed"
+    "slammed", "crushed", "slashed"
   ],
   "attributes": {
-    "damage": 10
+    "damage": 20
   },
   "actions": {
     "canWield": true,

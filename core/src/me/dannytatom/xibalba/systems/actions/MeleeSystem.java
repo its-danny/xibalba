@@ -10,16 +10,19 @@ import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.SkillsComponent;
 import me.dannytatom.xibalba.components.actions.MeleeComponent;
 import me.dannytatom.xibalba.utils.ComponentMappers;
+import me.dannytatom.xibalba.utils.EntityHelpers;
 
 public class MeleeSystem extends IteratingSystem {
-  private final ActionLog logger;
+  private final ActionLog actionLog;
   private final Engine engine;
+  private final EntityHelpers entityHelpers;
 
-  public MeleeSystem(Engine engine, ActionLog logger) {
+  public MeleeSystem(Engine engine, ActionLog actionLog, EntityHelpers entityHelpers) {
     super(Family.all(MeleeComponent.class).get());
 
     this.engine = engine;
-    this.logger = logger;
+    this.actionLog = actionLog;
+    this.entityHelpers = entityHelpers;
   }
 
   /**
@@ -45,10 +48,13 @@ public class MeleeSystem extends IteratingSystem {
       SkillsComponent skills = ComponentMappers.skills.get(entity);
       AttributesComponent targetAttributes = ComponentMappers.attributes.get(melee.target);
 
+      String name = entityHelpers.isPlayer(entity) ? "You" : attributes.name;
+      String targetName = entityHelpers.isPlayer(melee.target) ? "You" : targetAttributes.name;
+      String action = name + " ";
+
       int skillRoll = MathUtils.random(1, skills.unarmedCombat);
       int sixRoll = MathUtils.random(1, 6);
       int result;
-      String action;
 
       if (skillRoll > sixRoll) {
         if (skillRoll == skills.unarmedCombat) {
@@ -71,26 +77,26 @@ public class MeleeSystem extends IteratingSystem {
           critical = MathUtils.random(1, 6);
         }
 
-        int damage = attributes.damage + critical;
+        int damage = entityHelpers.getDamage(entity) + critical;
 
         if (damage > targetAttributes.toughness) {
           targetAttributes.health -= damage - targetAttributes.toughness;
 
-          action = "hit " + targetAttributes.name + " for " + damage + " damage";
+          action += "hit " + targetName + " for " + damage + " damage";
         } else {
-          action = "hit " + targetAttributes.name + " but did no damage";
+          action += "hit " + targetName + " but did no damage";
         }
       } else {
-        action = "missed " + targetAttributes.name;
+        action += "missed " + targetName;
       }
 
-      logger.add(attributes.name + " " + action);
+      actionLog.add(action);
 
       if (targetAttributes.health <= 0) {
         skills.unarmedCombatCounter += 10;
 
         engine.removeEntity(melee.target);
-        logger.add(attributes.name + " killed " + targetAttributes.name + "!");
+        actionLog.add(name + " killed " + targetName + "!");
       }
 
       if (skills.unarmedCombatCounter >= (skills.unarmedCombat * 10) && skills.unarmedCombat < 12) {

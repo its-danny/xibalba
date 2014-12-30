@@ -53,13 +53,16 @@ class PlayScreen implements Screen {
       engine.addEntity(entityHelpers.spawnEnemy("spiderMonkey", map.getRandomOpenPosition()));
     }
 
-    // Add an item
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 5; i++) {
       engine.addEntity(entityHelpers.spawnItem("dagger", map.getRandomOpenPosition()));
     }
 
+    for (int i = 0; i < 5; i++) {
+      engine.addEntity(entityHelpers.spawnItem("axe", map.getRandomOpenPosition()));
+    }
+
     // Setup action log
-    ActionLog logger = new ActionLog();
+    ActionLog actionLog = new ActionLog();
 
     // Setup engine (they're run in order added)
     engine.addSystem(new AttributesSystem());
@@ -68,14 +71,14 @@ class PlayScreen implements Screen {
     engine.addSystem(new WanderSystem(map));
     engine.addSystem(new TargetSystem(map));
     engine.addSystem(new MovementSystem(map));
-    engine.addSystem(new MeleeSystem(engine, logger));
+    engine.addSystem(new MeleeSystem(engine, actionLog, entityHelpers));
 
     // Setup input
-    Gdx.input.setInputProcessor(new PlayerInput(game, map, entityHelpers));
+    Gdx.input.setInputProcessor(new PlayerInput(game, actionLog, map, entityHelpers));
 
     // Setup renderers
     worldRenderer = new WorldRenderer(game, engine, batch, map, player);
-    uiRenderer = new UIRenderer(logger);
+    uiRenderer = new UIRenderer(actionLog, player);
   }
 
   @Override

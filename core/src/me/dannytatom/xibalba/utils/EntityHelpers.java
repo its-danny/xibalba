@@ -11,6 +11,8 @@ import com.badlogic.gdx.utils.Json;
 import me.dannytatom.xibalba.components.*;
 import me.dannytatom.xibalba.components.ai.BrainComponent;
 
+import java.util.Objects;
+
 public class EntityHelpers {
   private final Engine engine;
   private final AssetManager assets;
@@ -27,7 +29,8 @@ public class EntityHelpers {
     player.add(new PositionComponent(position));
     player.add(new VisualComponent(assets.get("sprites/player.png")));
     player.add(new SkillsComponent());
-    player.add(new AttributesComponent("Necahual", 100, 10, 50, 5, 15));
+    player.add(new AttributesComponent("Necahual", 100, 10, 50, 5, 5));
+    player.add(new InventoryComponent());
 
     return player;
   }
@@ -74,11 +77,49 @@ public class EntityHelpers {
     return engine.getEntitiesFor(Family.all(PlayerComponent.class).get()).first();
   }
 
+  public boolean isPlayer(Entity entity) {
+    return entity != null && entity.getComponent(PlayerComponent.class) != null;
+  }
+
   public boolean isEnemy(Entity entity) {
     return entity != null && entity.getComponent(EnemyComponent.class) != null;
   }
 
   public boolean isItem(Entity entity) {
     return entity != null && entity.getComponent(ItemComponent.class) != null;
+  }
+
+  public void wieldItem(Entity entity, Entity thing) {
+    InventoryComponent inventory = entity.getComponent(InventoryComponent.class);
+    ItemComponent item = thing.getComponent(ItemComponent.class);
+
+    for (int i = 0; i < inventory.items.size(); i++) {
+      ItemComponent other = inventory.items.get(i).getComponent(ItemComponent.class);
+
+      if (Objects.equals(item.type, other.type) && other.equipped) {
+        other.equipped = false;
+      }
+    }
+
+    item.equipped = true;
+  }
+
+  public int getDamage(Entity entity) {
+    InventoryComponent inventory = entity.getComponent(InventoryComponent.class);
+    int damage = 0;
+
+    damage += entity.getComponent(AttributesComponent.class).damage;
+
+    if (inventory != null) {
+      for (int i = 0; i < inventory.items.size(); i++) {
+        ItemComponent it = inventory.items.get(i).getComponent(ItemComponent.class);
+
+        if (it.equipped) {
+          damage += it.attributes.get("damage");
+        }
+      }
+    }
+
+    return damage;
   }
 }
