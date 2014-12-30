@@ -2,6 +2,7 @@ package me.dannytatom.xibalba;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -13,6 +14,7 @@ import me.dannytatom.xibalba.components.ItemComponent;
 public class UIRenderer {
   private final Stage stage;
   private final Skin skin;
+  private final FPSLogger fpsLogger;
   private final ActionLog actionLog;
   private final Entity player;
   private final VerticalGroup actionList;
@@ -24,6 +26,7 @@ public class UIRenderer {
 
     stage = new Stage(new ScreenViewport());
     skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
+    fpsLogger = new FPSLogger();
 
     actionList = new VerticalGroup();
     actionList.setWidth(300);
@@ -45,6 +48,8 @@ public class UIRenderer {
   public void render(float delta) {
     InventoryComponent inventory = player.getComponent(InventoryComponent.class);
     float alpha = 1;
+
+    fpsLogger.log();
 
     actionList.clearChildren();
 
