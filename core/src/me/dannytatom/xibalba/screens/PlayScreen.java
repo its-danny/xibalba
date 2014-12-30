@@ -11,7 +11,6 @@ import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.map.CaveGenerator;
 import me.dannytatom.xibalba.map.Map;
 import me.dannytatom.xibalba.systems.AttributesSystem;
-import me.dannytatom.xibalba.systems.PlayerSystem;
 import me.dannytatom.xibalba.systems.actions.MeleeSystem;
 import me.dannytatom.xibalba.systems.actions.MovementSystem;
 import me.dannytatom.xibalba.systems.ai.BrainSystem;
@@ -26,6 +25,7 @@ class PlayScreen implements Screen {
   private final SpriteBatch batch;
   private final Engine engine;
   private final Entity player;
+  private final ActionLog actionLog;
 
   /**
    * Play Screen.
@@ -62,11 +62,10 @@ class PlayScreen implements Screen {
     }
 
     // Setup action log
-    ActionLog actionLog = new ActionLog();
+    actionLog = new ActionLog();
 
     // Setup engine (they're run in order added)
     engine.addSystem(new AttributesSystem());
-    engine.addSystem(new PlayerSystem());
     engine.addSystem(new BrainSystem(entityHelpers, map));
     engine.addSystem(new WanderSystem(map));
     engine.addSystem(new TargetSystem(map));
@@ -87,6 +86,7 @@ class PlayScreen implements Screen {
       engine.update(delta);
 
       game.executeTurn = false;
+      actionLog.add("- turn over");
     }
 
     worldRenderer.render();
