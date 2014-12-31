@@ -7,8 +7,4 @@ import java.util.ArrayList;
 
 public class InventoryComponent extends Component {
   public final ArrayList<Entity> items = new ArrayList<>();
-
-  public InventoryComponent() {
-
-  }
 }

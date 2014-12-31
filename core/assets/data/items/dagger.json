@@ -1,5 +1,6 @@
 {
   "name": "Dagger",
+  "description": "A silly dagger",
   "skill": "fencing",
   "type": "weapon",
   "verbs": [
@@ -9,8 +10,9 @@
     "damage": 10
   },
   "actions": {
-    "canWield": true,
+    "canThrow": true,
     "canWear": false,
+    "canWield": true,
     "canUse": false
   }
 }

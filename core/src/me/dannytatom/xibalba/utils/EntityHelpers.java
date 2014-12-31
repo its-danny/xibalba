@@ -11,8 +11,6 @@ import com.badlogic.gdx.utils.Json;
 import me.dannytatom.xibalba.components.*;
 import me.dannytatom.xibalba.components.ai.BrainComponent;
 
-import java.util.Objects;
-
 public class EntityHelpers {
   private final Engine engine;
   private final AssetManager assets;
@@ -87,21 +85,6 @@ public class EntityHelpers {
 
   public boolean isItem(Entity entity) {
     return entity != null && entity.getComponent(ItemComponent.class) != null;
-  }
-
-  public void wieldItem(Entity entity, Entity thing) {
-    InventoryComponent inventory = entity.getComponent(InventoryComponent.class);
-    ItemComponent item = thing.getComponent(ItemComponent.class);
-
-    for (int i = 0; i < inventory.items.size(); i++) {
-      ItemComponent other = inventory.items.get(i).getComponent(ItemComponent.class);
-
-      if (Objects.equals(item.type, other.type) && other.equipped) {
-        other.equipped = false;
-      }
-    }
-
-    item.equipped = true;
   }
 
   public int getDamage(Entity entity) {

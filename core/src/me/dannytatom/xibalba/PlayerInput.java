@@ -4,24 +4,29 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector2;
-import me.dannytatom.xibalba.components.*;
+import me.dannytatom.xibalba.components.AttributesComponent;
+import me.dannytatom.xibalba.components.ItemComponent;
+import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.actions.MeleeComponent;
 import me.dannytatom.xibalba.components.actions.MovementComponent;
 import me.dannytatom.xibalba.map.Map;
 import me.dannytatom.xibalba.utils.EntityHelpers;
+import me.dannytatom.xibalba.utils.InventoryHelpers;
 
 public class PlayerInput implements InputProcessor {
   private final Main game;
   private final ActionLog actionLog;
   private final Map map;
   private final EntityHelpers entityHelpers;
+  private final InventoryHelpers inventoryHelpers;
   private final Entity player;
 
-  public PlayerInput(Main game, ActionLog actionLog, Map map, EntityHelpers entityHelpers) {
+  public PlayerInput(Main game, ActionLog actionLog, Map map, EntityHelpers entityHelpers, InventoryHelpers inventoryHelpers) {
     this.game = game;
     this.actionLog = actionLog;
     this.map = map;
     this.entityHelpers = entityHelpers;
+    this.inventoryHelpers = inventoryHelpers;
 
     this.player = entityHelpers.getPlayer();
   }
@@ -62,7 +67,13 @@ public class PlayerInput implements InputProcessor {
       case Keys.Y:
         doWhatNow(attributes.energy, new Vector2(position.pos.x - 1, position.pos.y + 1));
         break;
+      case Keys.E:
+        inventoryHelpers.wieldItem();
+        break;
       default:
+        if (inventoryHelpers.findItem(keycode) != null) {
+          inventoryHelpers.toggleShowItem(inventoryHelpers.findItem(keycode));
+        }
     }
 
     return true;
@@ -114,15 +125,7 @@ public class PlayerInput implements InputProcessor {
       Entity thing = map.getEntityAt(pos);
 
       if (entityHelpers.isItem(thing) && energy >= MovementComponent.COST) {
-        thing.remove(VisualComponent.class);
-        thing.remove(PositionComponent.class);
-
-
-        if (thing.getComponent(ItemComponent.class).actions.get("canWield")) {
-          entityHelpers.wieldItem(player, thing);
-        }
-
-        player.getComponent(InventoryComponent.class).items.add(thing);
+        inventoryHelpers.addItem(thing);
         player.add(new MovementComponent(pos));
 
         actionLog.add("You pick up a " + thing.getComponent(ItemComponent.class).name);

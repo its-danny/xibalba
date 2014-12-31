@@ -1,5 +1,6 @@
 {
   "name": "Axe",
+  "description": "FUCK, THIS IS BIG",
   "skill": "bashing",
   "type": "weapon",
   "verbs": [
@@ -9,8 +10,9 @@
     "damage": 20
   },
   "actions": {
-    "canWield": true,
+    "canThrow": true,
     "canWear": false,
+    "canWield": true,
     "canUse": false
   }
 }

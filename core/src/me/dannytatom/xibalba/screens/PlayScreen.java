@@ -17,6 +17,7 @@ import me.dannytatom.xibalba.systems.ai.BrainSystem;
 import me.dannytatom.xibalba.systems.ai.TargetSystem;
 import me.dannytatom.xibalba.systems.ai.WanderSystem;
 import me.dannytatom.xibalba.utils.EntityHelpers;
+import me.dannytatom.xibalba.utils.InventoryHelpers;
 
 class PlayScreen implements Screen {
   private final Main game;
@@ -48,6 +49,8 @@ class PlayScreen implements Screen {
     player = entityHelpers.spawnPlayer(map.findPlayerStart());
     engine.addEntity(player);
 
+    InventoryHelpers inventoryHelpers = new InventoryHelpers(player);
+
     // Spawn some spider monkeys
     for (int i = 0; i < 5; i++) {
       engine.addEntity(entityHelpers.spawnEnemy("spiderMonkey", map.getRandomOpenPosition()));
@@ -73,7 +76,7 @@ class PlayScreen implements Screen {
     engine.addSystem(new MeleeSystem(engine, actionLog, entityHelpers));
 
     // Setup input
-    Gdx.input.setInputProcessor(new PlayerInput(game, actionLog, map, entityHelpers));
+    Gdx.input.setInputProcessor(new PlayerInput(game, actionLog, map, entityHelpers, inventoryHelpers));
 
     // Setup renderers
     worldRenderer = new WorldRenderer(game, engine, batch, map, player);
@@ -86,7 +89,6 @@ class PlayScreen implements Screen {
       engine.update(delta);
 
       game.executeTurn = false;
-      actionLog.add("- turn over");
     }
 
     worldRenderer.render();
