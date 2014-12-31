@@ -79,11 +79,11 @@ public class UIRenderer {
 
     for (int i = 0; i < inventory.items.size(); i++) {
       ItemComponent item = inventory.items.get(i).getComponent(ItemComponent.class);
-      String name = "[CYAN]" + item.identifier + "[] " + item.name + (item.equipped ? " (equipped) " : " ")
-          + "+" + item.attributes.get("damage");
+      String name = "[CYAN]" + item.identifier + "[]   "
+          + (item.lookingAt ? "[CYAN]" : "") + item.name + (item.lookingAt ? "[]" : "")
+          + (item.equipped ? " [LIGHT_GRAY](wielding)[] " : " ");
 
       Label nameLabel = new Label(name, skin);
-      nameLabel.setScale(.75f);
       characterPanel.addActor(nameLabel);
 
       Label descLabel = new Label(item.description, skin);
@@ -92,6 +92,11 @@ public class UIRenderer {
       characterPanel.addActor(descLabel);
 
       if (item.lookingAt) {
+        String stats = "[RED]+" + item.attributes.get("damage");
+        Label statsLabel = new Label(stats, skin);
+        statsLabel.setScale(.5f);
+        characterPanel.addActor(statsLabel);
+
         String actions = "";
 
         if (item.actions.get("canThrow")) {

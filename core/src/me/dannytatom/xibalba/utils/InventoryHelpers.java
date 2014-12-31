@@ -14,7 +14,7 @@ import java.util.Objects;
 
 public class InventoryHelpers {
   public static ArrayList<String> letters = new ArrayList<>(
-      Arrays.asList("a", "c", "d", "f", "g", "i", "m", "o", "p", "q", "r", "s", "t", "v", "w", "x")
+      Arrays.asList("a", "c", "d", "f", "g", "i", "m", "o", "p", "r", "s", "t", "v", "w", "x")
   );
   private Entity player;
 
@@ -43,17 +43,12 @@ public class InventoryHelpers {
     return null;
   }
 
-  public void toggleShowItem(Entity entity) {
-    if (entity.getComponent(ItemComponent.class).lookingAt) {
-      entity.getComponent(ItemComponent.class).lookingAt = false;
-    } else {
-
-      for (Entity item : player.getComponent(InventoryComponent.class).items) {
-        item.getComponent(ItemComponent.class).lookingAt = false;
-      }
-
-      entity.getComponent(ItemComponent.class).lookingAt = true;
+  public void showItem(Entity entity) {
+    for (Entity item : player.getComponent(InventoryComponent.class).items) {
+      item.getComponent(ItemComponent.class).lookingAt = false;
     }
+
+    entity.getComponent(ItemComponent.class).lookingAt = true;
   }
 
   public void wieldItem() {
@@ -80,6 +75,13 @@ public class InventoryHelpers {
 
     if (showing != null) {
       showing.getComponent(ItemComponent.class).equipped = true;
+      showing.getComponent(ItemComponent.class).lookingAt = false;
+    }
+  }
+
+  public void closeInventory() {
+    for (Entity item : player.getComponent(InventoryComponent.class).items) {
+      item.getComponent(ItemComponent.class).lookingAt = false;
     }
   }
 }
