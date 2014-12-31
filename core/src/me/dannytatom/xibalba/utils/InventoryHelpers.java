@@ -22,7 +22,11 @@ public class InventoryHelpers {
     this.player = player;
   }
 
-  public void addItem(Entity thing) {
+  public boolean addItem(Entity thing) {
+    if (player.getComponent(InventoryComponent.class).items.size() == 10) {
+      return false;
+    }
+
     int rand = MathUtils.random(0, letters.size() - 1);
 
     thing.remove(VisualComponent.class);
@@ -31,6 +35,8 @@ public class InventoryHelpers {
     player.getComponent(InventoryComponent.class).items.add(thing);
     thing.getComponent(ItemComponent.class).identifier = letters.get(rand);
     letters.remove(rand);
+
+    return true;
   }
 
   public Entity findItem(int keycode) {

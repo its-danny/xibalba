@@ -128,10 +128,11 @@ public class PlayerInput implements InputProcessor {
       Entity thing = map.getEntityAt(pos);
 
       if (entityHelpers.isItem(thing) && energy >= MovementComponent.COST) {
-        inventoryHelpers.addItem(thing);
-        player.add(new MovementComponent(pos));
+        if (inventoryHelpers.addItem(thing)) {
+          actionLog.add("You pick up a " + thing.getComponent(ItemComponent.class).name);
+        }
 
-        actionLog.add("You pick up a " + thing.getComponent(ItemComponent.class).name);
+        player.add(new MovementComponent(pos));
 
         game.executeTurn = true;
       } else if (entityHelpers.isEnemy(thing) && energy >= MeleeComponent.COST) {
