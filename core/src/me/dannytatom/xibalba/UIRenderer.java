@@ -35,7 +35,7 @@ public class UIRenderer {
     actionList.setWidth(300);
     actionList.pad(10);
     actionList.left();
-    actionList.reverse();
+    actionList.setPosition(0, Gdx.graphics.getHeight());
 
     characterPanel = new VerticalGroup();
     characterPanel.setWidth(300);
