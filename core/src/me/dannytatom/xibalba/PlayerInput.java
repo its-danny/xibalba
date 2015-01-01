@@ -73,6 +73,9 @@ public class PlayerInput implements InputProcessor {
       case Keys.E:
         inventoryHelpers.wieldItem();
         break;
+      case Keys.D:
+        inventoryHelpers.dropItem();
+        break;
       default:
         if (inventoryHelpers.findItem(keycode) != null) {
           inventoryHelpers.showItem(inventoryHelpers.findItem(keycode));

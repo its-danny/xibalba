@@ -10,10 +10,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import me.dannytatom.xibalba.components.AttributesComponent;
-import me.dannytatom.xibalba.components.PlayerComponent;
-import me.dannytatom.xibalba.components.PositionComponent;
-import me.dannytatom.xibalba.components.VisualComponent;
+import me.dannytatom.xibalba.components.*;
 import me.dannytatom.xibalba.map.Cell;
 import me.dannytatom.xibalba.map.Map;
 import me.dannytatom.xibalba.map.ShadowCaster;
@@ -70,7 +67,7 @@ public class WorldRenderer {
     batch.setProjectionMatrix(camera.combined);
     batch.begin();
 
-    float[][] lightMap = caster.calculateFOV(map.createResistanceMap(),
+    float[][] lightMap = caster.calculateFOV(map.createFOVMap(),
         (int) playerPosition.pos.x, (int) playerPosition.pos.y,
         playerAttributes.vision);
 
@@ -90,50 +87,101 @@ public class WorldRenderer {
       }
     }
 
-    ImmutableArray<Entity> entities = engine.getEntitiesFor(Family.all(PositionComponent.class,
-        VisualComponent.class).get());
+    renderHealth(lightMap);
+    renderItems(lightMap);
+    renderPlayer(lightMap);
+    renderEnemies(lightMap);
+
+    batch.end();
+  }
+
+  private void renderHealth(float[][] lightMap) {
+    ImmutableArray<Entity> entities =
+        engine.getEntitiesFor(Family.all(AttributesComponent.class, PositionComponent.class).get());
 
     for (Entity entity : entities) {
       PositionComponent position = ComponentMappers.position.get(entity);
-      VisualComponent visual = ComponentMappers.visual.get(entity);
-      AttributesComponent attributes = ComponentMappers.attributes.get(entity);
 
       if (!map.getCell(position.pos).hidden) {
-        batch.setColor(1f, 1f, 1f, lightMap[(int) position.pos.x][(int) position.pos.y]);
+        AttributesComponent attributes = ComponentMappers.attributes.get(entity);
 
-        if (attributes != null) {
-          TextureAtlas atlas = game.assets.get("sprites/ui.atlas");
-          Sprite sprite;
+        TextureAtlas atlas = game.assets.get("sprites/ui.atlas");
+        Sprite sprite;
 
-          int which;
-          int fourth = (attributes.maxHealth / 4) - (attributes.health / 4);
+        int which;
+        int fourth = (attributes.maxHealth / 4) - (attributes.health / 4);
 
-          if (fourth <= 2.5) {
-            which = 1;
-          } else if (fourth <= 5) {
-            which = 2;
-          } else if (fourth <= 7.5) {
-            which = 3;
-          } else {
-            which = 4;
-          }
-
-          if (entity.getComponent(PlayerComponent.class) != null) {
-            sprite = atlas.createSprite("player-health-" + which);
-          } else {
-            sprite = atlas.createSprite("enemy-health-" + which);
-          }
-
-          batch.draw(sprite, position.pos.x * SPRITE_WIDTH, position.pos.y * SPRITE_HEIGHT);
+        if (fourth <= 2.5) {
+          which = 1;
+        } else if (fourth <= 5) {
+          which = 2;
+        } else if (fourth <= 7.5) {
+          which = 3;
+        } else {
+          which = 4;
         }
 
-        batch.draw(visual.sprite, position.pos.x * SPRITE_WIDTH,
-            (position.pos.y * SPRITE_HEIGHT) + (SPRITE_HEIGHT / 2));
+        if (entity.getComponent(PlayerComponent.class) != null) {
+          sprite = atlas.createSprite("player-health-" + which);
+        } else {
+          sprite = atlas.createSprite("enemy-health-" + which);
+        }
 
+        batch.setColor(1f, 1f, 1f, lightMap[(int) position.pos.x][(int) position.pos.y]);
+        batch.draw(sprite, position.pos.x * SPRITE_WIDTH, position.pos.y * SPRITE_HEIGHT);
         batch.setColor(1f, 1f, 1f, 1f);
       }
     }
+  }
 
-    batch.end();
+  private void renderItems(float[][] lightMap) {
+    ImmutableArray<Entity> entities =
+        engine.getEntitiesFor(Family.all(ItemComponent.class, PositionComponent.class, VisualComponent.class).get());
+
+    for (Entity entity : entities) {
+      PositionComponent position = ComponentMappers.position.get(entity);
+
+      if (!map.getCell(position.pos).hidden) {
+        VisualComponent visual = ComponentMappers.visual.get(entity);
+
+        batch.setColor(1f, 1f, 1f, lightMap[(int) position.pos.x][(int) position.pos.y]);
+        batch.draw(visual.sprite, position.pos.x * SPRITE_WIDTH, (position.pos.y * SPRITE_HEIGHT) + (SPRITE_HEIGHT / 2));
+        batch.setColor(1f, 1f, 1f, 1f);
+      }
+    }
+  }
+
+  private void renderPlayer(float[][] lightMap) {
+    ImmutableArray<Entity> entities =
+        engine.getEntitiesFor(Family.all(PlayerComponent.class).get());
+
+    for (Entity entity : entities) {
+      PositionComponent position = ComponentMappers.position.get(entity);
+
+      if (!map.getCell(position.pos).hidden) {
+        VisualComponent visual = ComponentMappers.visual.get(entity);
+
+        batch.setColor(1f, 1f, 1f, lightMap[(int) position.pos.x][(int) position.pos.y]);
+        batch.draw(visual.sprite, position.pos.x * SPRITE_WIDTH, (position.pos.y * SPRITE_HEIGHT) + (SPRITE_HEIGHT / 2));
+        batch.setColor(1f, 1f, 1f, 1f);
+      }
+    }
+  }
+
+  private void renderEnemies(float[][] lightMap) {
+    ImmutableArray<Entity> entities =
+        engine.getEntitiesFor(Family.all(EnemyComponent.class).get());
+
+    for (Entity entity : entities) {
+      PositionComponent position = ComponentMappers.position.get(entity);
+
+      if (!map.getCell(position.pos).hidden) {
+        VisualComponent visual = ComponentMappers.visual.get(entity);
+
+        batch.setColor(1f, 1f, 1f, lightMap[(int) position.pos.x][(int) position.pos.y]);
+        batch.draw(visual.sprite, position.pos.x * SPRITE_WIDTH, (position.pos.y * SPRITE_HEIGHT) + (SPRITE_HEIGHT / 2));
+        batch.setColor(1f, 1f, 1f, 1f);
+      }
+    }
   }
 }

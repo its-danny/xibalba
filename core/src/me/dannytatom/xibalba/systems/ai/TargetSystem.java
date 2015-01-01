@@ -43,7 +43,7 @@ public class TargetSystem extends SortedIteratingSystem {
     if (brain.path == null || brain.path.isEmpty()) {
       PositionComponent position = ComponentMappers.position.get(entity);
 
-      NavigationGrid<GridCell> grid = new NavigationGrid<>(map.createGridCells());
+      NavigationGrid<GridCell> grid = new NavigationGrid<>(map.createPathfindingMap());
       AStarGridFinder<GridCell> finder = new AStarGridFinder<>(GridCell.class);
 
       brain.path = finder.findPath((int) position.pos.x, (int) position.pos.y,

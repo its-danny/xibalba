@@ -26,7 +26,6 @@ class PlayScreen implements Screen {
   private final SpriteBatch batch;
   private final Engine engine;
   private final Entity player;
-  private final ActionLog actionLog;
 
   /**
    * Play Screen.
@@ -65,7 +64,7 @@ class PlayScreen implements Screen {
     }
 
     // Setup action log
-    actionLog = new ActionLog();
+    ActionLog actionLog = new ActionLog();
 
     // Setup engine (they're run in order added)
     engine.addSystem(new AttributesSystem());

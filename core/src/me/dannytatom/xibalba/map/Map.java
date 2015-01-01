@@ -38,7 +38,7 @@ public class Map {
    *
    * @return 2d array of GridCells
    */
-  public GridCell[][] createGridCells() {
+  public GridCell[][] createPathfindingMap() {
     GridCell[][] cells = new GridCell[width][height];
 
     for (int x = 0; x < map.length; x++) {
@@ -57,7 +57,7 @@ public class Map {
    *
    * @return Resistance map
    */
-  public float[][] createResistanceMap() {
+  public float[][] createFOVMap() {
     float[][] resistanceMap = new float[width][height];
 
     for (int x = 0; x < width; x++) {
@@ -192,7 +192,7 @@ public class Map {
    */
   public boolean canSeePlayer(Vector2 position, int distance) {
     ShadowCaster caster = new ShadowCaster();
-    float[][] lightMap = caster.calculateFOV(createResistanceMap(),
+    float[][] lightMap = caster.calculateFOV(createFOVMap(),
         (int) position.x, (int) position.y, distance);
     Vector2 playerPosition = getPlayerPosition();
 

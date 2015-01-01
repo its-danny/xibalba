@@ -115,6 +115,8 @@ public class UIRenderer {
           actions += "[WHITE]u[LIGHT_GRAY]se   ";
         }
 
+        actions += "[WHITE]d[LIGHT_GRAY]rop   ";
+
         Label actionsLabel = new Label(actions, skin);
         actionsLabel.setScale(.5f);
         characterPanel.addActor(actionsLabel);
