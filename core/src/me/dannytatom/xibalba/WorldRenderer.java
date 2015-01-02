@@ -145,7 +145,7 @@ public class WorldRenderer {
         VisualComponent visual = ComponentMappers.visual.get(entity);
 
         batch.setColor(1f, 1f, 1f, lightMap[(int) position.pos.x][(int) position.pos.y]);
-        batch.draw(visual.sprite, position.pos.x * SPRITE_WIDTH, (position.pos.y * SPRITE_HEIGHT) + (SPRITE_HEIGHT / 2));
+        batch.draw(visual.sprite, position.pos.x * SPRITE_WIDTH, position.pos.y * SPRITE_HEIGHT);
         batch.setColor(1f, 1f, 1f, 1f);
       }
     }

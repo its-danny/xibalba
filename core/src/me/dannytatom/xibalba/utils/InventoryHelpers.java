@@ -52,16 +52,8 @@ public class InventoryHelpers {
     for (Entity entity : items) {
       ItemComponent item = entity.getComponent(ItemComponent.class);
 
-      if (item.lookingAt && item.actions.get("canWield")) {
+      if (item.lookingAt) {
         showing = entity;
-
-        for (Entity other : player.getComponent(InventoryComponent.class).items) {
-          ItemComponent otherItem = other.getComponent(ItemComponent.class);
-
-          if (Objects.equals(item.type, otherItem.type) && otherItem.equipped) {
-            otherItem.equipped = false;
-          }
-        }
 
         break;
       }
@@ -102,11 +94,21 @@ public class InventoryHelpers {
   }
 
   public void wieldItem() {
-    Entity item = getShowing();
+    Entity entity = getShowing();
 
-    if (item != null) {
-      item.getComponent(ItemComponent.class).equipped = true;
-      item.getComponent(ItemComponent.class).lookingAt = false;
+    if (entity != null) {
+      ItemComponent item = entity.getComponent(ItemComponent.class);
+
+      if (item.actions.get("canWield")) {
+        ArrayList<Entity> others = player.getComponent(InventoryComponent.class).items;
+
+        for (Entity other : others) {
+          other.getComponent(ItemComponent.class).equipped = false;
+        }
+
+        item.equipped = true;
+        item.lookingAt = false;
+      }
     }
   }
 }
