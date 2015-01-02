@@ -68,7 +68,7 @@ public class PlayerInput implements InputProcessor {
         doWhatNow(attributes.energy, new Vector2(position.pos.x - 1, position.pos.y + 1));
         break;
       case Keys.Q:
-        inventoryHelpers.closeInventory();
+        inventoryHelpers.hideItems();
         break;
       case Keys.E:
         inventoryHelpers.wieldItem();

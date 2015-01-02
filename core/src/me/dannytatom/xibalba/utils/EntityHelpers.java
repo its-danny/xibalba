@@ -27,7 +27,7 @@ public class EntityHelpers {
     player.add(new PositionComponent(position));
     player.add(new VisualComponent(assets.get("sprites/player.png")));
     player.add(new SkillsComponent());
-    player.add(new AttributesComponent("Necahual", 100, 10, 50, 5, 5));
+    player.add(new AttributesComponent("Necahual", 100, 15, 50, 5, 5));
     player.add(new InventoryComponent());
 
     return player;

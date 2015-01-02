@@ -39,27 +39,10 @@ public class InventoryHelpers {
     entity.getComponent(ItemComponent.class).lookingAt = true;
   }
 
-  public void closeInventory() {
+  public void hideItems() {
     for (Entity item : player.getComponent(InventoryComponent.class).items) {
       item.getComponent(ItemComponent.class).lookingAt = false;
     }
-  }
-
-  Entity getShowing() {
-    ArrayList<Entity> items = player.getComponent(InventoryComponent.class).items;
-    Entity showing = null;
-
-    for (Entity entity : items) {
-      ItemComponent item = entity.getComponent(ItemComponent.class);
-
-      if (item.lookingAt) {
-        showing = entity;
-
-        break;
-      }
-    }
-
-    return showing;
   }
 
   public boolean addItem(Entity thing) {
@@ -110,5 +93,22 @@ public class InventoryHelpers {
         item.lookingAt = false;
       }
     }
+  }
+
+  Entity getShowing() {
+    ArrayList<Entity> items = player.getComponent(InventoryComponent.class).items;
+    Entity showing = null;
+
+    for (Entity entity : items) {
+      ItemComponent item = entity.getComponent(ItemComponent.class);
+
+      if (item.lookingAt) {
+        showing = entity;
+
+        break;
+      }
+    }
+
+    return showing;
   }
 }
