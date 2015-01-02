@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import me.dannytatom.xibalba.components.InventoryComponent;
 import me.dannytatom.xibalba.components.ItemComponent;
+import me.dannytatom.xibalba.components.SkillsComponent;
 
 public class UIRenderer {
   private final Stage stage;
@@ -73,9 +74,30 @@ public class UIRenderer {
   }
 
   private void renderCharacterPanel() {
+    characterPanel.clearChildren();
+
+    characterPanel.addActor(renderSkills());
+    characterPanel.addActor(renderInventory());
+  }
+
+  private VerticalGroup renderSkills() {
+    SkillsComponent skills = player.getComponent(SkillsComponent.class);
+
+    VerticalGroup group = new VerticalGroup();
+    group.padBottom(10);
+    group.left();
+
+    group.addActor(skillLine("Unarmed Combat", skills.unarmedCombat));
+
+    return group;
+  }
+
+  private VerticalGroup renderInventory() {
     InventoryComponent inventory = player.getComponent(InventoryComponent.class);
 
-    characterPanel.clearChildren();
+    VerticalGroup group = new VerticalGroup();
+    group.padBottom(10);
+    group.left();
 
     for (int i = 0; i < inventory.items.size(); i++) {
       ItemComponent item = inventory.items.get(i).getComponent(ItemComponent.class);
@@ -84,18 +106,18 @@ public class UIRenderer {
           + (item.equipped ? " [LIGHT_GRAY](wielding)[] " : " ");
 
       Label nameLabel = new Label(name, skin);
-      characterPanel.addActor(nameLabel);
+      group.addActor(nameLabel);
 
       Label descLabel = new Label(item.description, skin);
       descLabel.setScale(.5f);
       descLabel.setColor(Color.DARK_GRAY);
-      characterPanel.addActor(descLabel);
+      group.addActor(descLabel);
 
       if (item.lookingAt) {
         String stats = "[RED]+" + item.attributes.get("damage");
         Label statsLabel = new Label(stats, skin);
         statsLabel.setScale(.5f);
-        characterPanel.addActor(statsLabel);
+        group.addActor(statsLabel);
 
         String actions = "";
 
@@ -119,9 +141,38 @@ public class UIRenderer {
 
         Label actionsLabel = new Label(actions, skin);
         actionsLabel.setScale(.5f);
-        characterPanel.addActor(actionsLabel);
+        group.addActor(actionsLabel);
       }
     }
+
+    return group;
+  }
+
+  private Label skillLine(String skill, int level) {
+    String str = "[DARK_GRAY][[";
+
+    switch (level) {
+      case 4:
+        str += "[WHITE]x[DARK_GRAY]xxxx";
+        break;
+      case 6:
+        str += "[WHITE]xx[DARK_GRAY]xxx";
+        break;
+      case 8:
+        str += "[WHITE]xxx[DARK_GRAY]xx";
+        break;
+      case 10:
+        str += "[WHITE]xxxx[DARK_GRAY]x";
+        break;
+      case 12:
+        str += "[WHITE]xxxxx[DARK_GRAY]";
+        break;
+      default:
+    }
+
+    str += "[DARK_GRAY]]";
+
+    return new Label(str + " [WHITE]" + skill, skin);
   }
 
   public void resize(int width, int height) {

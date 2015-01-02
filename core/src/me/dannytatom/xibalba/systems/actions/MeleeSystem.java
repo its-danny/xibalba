@@ -95,14 +95,17 @@ public class MeleeSystem extends SortedIteratingSystem {
       actionLog.add(action);
 
       if (targetAttributes.health <= 0) {
-        skills.unarmedCombatCounter += 10;
+        skills.unarmedCombatCounter += 20;
 
         engine.removeEntity(melee.target);
         actionLog.add(name + " killed " + targetName + "!");
       }
 
-      if (skills.unarmedCombatCounter >= (skills.unarmedCombat * 10) && skills.unarmedCombat < 12) {
+      if (skills.unarmedCombatCounter == ((skills.unarmedCombat + 2) * 10) && skills.unarmedCombat < 12) {
+        skills.unarmedCombatCounter = 0;
         skills.unarmedCombat += 2;
+
+        actionLog.add("You feel better at unarmed combat");
       }
 
       attributes.energy -= MeleeComponent.COST;
