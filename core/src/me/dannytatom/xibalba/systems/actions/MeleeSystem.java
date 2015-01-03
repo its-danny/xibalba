@@ -7,24 +7,31 @@ import com.badlogic.ashley.systems.SortedIteratingSystem;
 import com.badlogic.gdx.math.MathUtils;
 import me.dannytatom.xibalba.ActionLog;
 import me.dannytatom.xibalba.components.AttributesComponent;
-import me.dannytatom.xibalba.components.SkillsComponent;
+import me.dannytatom.xibalba.components.ItemComponent;
 import me.dannytatom.xibalba.components.actions.MeleeComponent;
 import me.dannytatom.xibalba.utils.ComponentMappers;
 import me.dannytatom.xibalba.utils.EntityHelpers;
+import me.dannytatom.xibalba.utils.InventoryHelpers;
+import me.dannytatom.xibalba.utils.SkillHelpers;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 
 public class MeleeSystem extends SortedIteratingSystem {
   private final ActionLog actionLog;
   private final Engine engine;
   private final EntityHelpers entityHelpers;
+  private final InventoryHelpers inventoryHelpers;
+  private final SkillHelpers skillHelpers;
 
-  public MeleeSystem(Engine engine, ActionLog actionLog, EntityHelpers entityHelpers) {
+  public MeleeSystem(Engine engine, ActionLog actionLog, EntityHelpers entityHelpers, InventoryHelpers inventoryHelpers, SkillHelpers skillHelpers) {
     super(Family.all(MeleeComponent.class).get(), new EnergyComparator());
 
     this.engine = engine;
     this.actionLog = actionLog;
     this.entityHelpers = entityHelpers;
+    this.inventoryHelpers = inventoryHelpers;
+    this.skillHelpers = skillHelpers;
   }
 
   /**
@@ -47,20 +54,29 @@ public class MeleeSystem extends SortedIteratingSystem {
     AttributesComponent attributes = ComponentMappers.attributes.get(entity);
 
     if (melee.target != null) {
-      SkillsComponent skills = ComponentMappers.skills.get(entity);
+      Entity wielded = inventoryHelpers.getWieldedItem();
       AttributesComponent targetAttributes = ComponentMappers.attributes.get(melee.target);
+      String skillName;
+
+      if (wielded != null) {
+        skillName = wielded.getComponent(ItemComponent.class).skill;
+      } else {
+        skillName = "unarmed";
+      }
+
+      int skillLevel = skillHelpers.getSkill(entity, skillName);
 
       String name = entityHelpers.isPlayer(entity) ? "You" : attributes.name;
       String targetName = entityHelpers.isPlayer(melee.target) ? "You" : targetAttributes.name;
       String action = name + " ";
 
-      int skillRoll = skills.unarmedCombat == 0 ? 0 : MathUtils.random(1, skills.unarmedCombat);
+      int skillRoll = skillLevel == 0 ? 0 : MathUtils.random(1, skillLevel);
       int sixRoll = MathUtils.random(1, 6);
       int result;
 
       if (skillRoll > sixRoll) {
-        if (skillRoll == skills.unarmedCombat) {
-          result = skillRoll + MathUtils.random(1, skills.unarmedCombat);
+        if (skillRoll == skillLevel) {
+          result = skillRoll + MathUtils.random(1, skillLevel);
         } else {
           result = skillRoll;
         }
@@ -73,6 +89,13 @@ public class MeleeSystem extends SortedIteratingSystem {
       }
 
       if (result >= 4) {
+        String verb = "hit";
+
+        if (entityHelpers.isPlayer(entity) && wielded != null) {
+          ArrayList<String> verbs = wielded.getComponent(ItemComponent.class).verbs;
+          verb = verbs.get(MathUtils.random(0, verbs.size() - 1));
+        }
+
         int critical = 0;
 
         if (result >= 8) {
@@ -86,7 +109,7 @@ public class MeleeSystem extends SortedIteratingSystem {
 
           action += " " + targetName + " for " + damage + " damage";
         } else {
-          action += "hit " + targetName + " but did no damage";
+          action += verb + " " + targetName + " but did no damage";
         }
       } else {
         action += "missed " + targetName;
@@ -95,17 +118,9 @@ public class MeleeSystem extends SortedIteratingSystem {
       actionLog.add(action);
 
       if (targetAttributes.health <= 0) {
-        skills.unarmedCombatCounter += 20;
-
         engine.removeEntity(melee.target);
         actionLog.add(name + " killed " + targetName + "!");
-      }
-
-      if (skills.unarmedCombatCounter == ((skills.unarmedCombat + 2) * 10) && skills.unarmedCombat < 12) {
-        skills.unarmedCombatCounter = 0;
-        skills.unarmedCombat += 2;
-
-        actionLog.add("You feel better at unarmed combat");
+        skillHelpers.levelSkill(entity, skillName, 10);
       }
 
       attributes.energy -= MeleeComponent.COST;

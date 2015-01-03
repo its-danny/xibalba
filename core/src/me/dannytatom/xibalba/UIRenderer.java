@@ -87,7 +87,10 @@ public class UIRenderer {
     group.padBottom(10);
     group.left();
 
-    group.addActor(skillLine("Unarmed Combat", skills.unarmedCombat));
+    group.addActor(skillLine("Unarmed", skills.unarmed));
+    group.addActor(skillLine("Throwing", skills.throwing));
+    group.addActor(skillLine("Slashing", skills.slashing));
+    group.addActor(skillLine("Stabbing", skills.stabbing));
 
     return group;
   }
@@ -152,6 +155,9 @@ public class UIRenderer {
     String str = "[DARK_GRAY][[";
 
     switch (level) {
+      case 0:
+        str += "[DARK_GRAY]xxxxx";
+        break;
       case 4:
         str += "[WHITE]x[DARK_GRAY]xxxx";
         break;

@@ -95,6 +95,23 @@ public class InventoryHelpers {
     }
   }
 
+  public Entity getWieldedItem() {
+    ArrayList<Entity> items = player.getComponent(InventoryComponent.class).items;
+    Entity wielded = null;
+
+    for (Entity entity : items) {
+      ItemComponent item = entity.getComponent(ItemComponent.class);
+
+      if (item.actions.get("canWield") && item.equipped) {
+        wielded = entity;
+
+        break;
+      }
+    }
+
+    return wielded;
+  }
+
   Entity getShowing() {
     ArrayList<Entity> items = player.getComponent(InventoryComponent.class).items;
     Entity showing = null;

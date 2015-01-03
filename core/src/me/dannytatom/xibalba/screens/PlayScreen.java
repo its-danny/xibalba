@@ -18,6 +18,7 @@ import me.dannytatom.xibalba.systems.ai.TargetSystem;
 import me.dannytatom.xibalba.systems.ai.WanderSystem;
 import me.dannytatom.xibalba.utils.EntityHelpers;
 import me.dannytatom.xibalba.utils.InventoryHelpers;
+import me.dannytatom.xibalba.utils.SkillHelpers;
 
 class PlayScreen implements Screen {
   private final Main game;
@@ -37,6 +38,9 @@ class PlayScreen implements Screen {
     engine = new Engine();
     batch = new SpriteBatch();
 
+    // Setup action log
+    ActionLog actionLog = new ActionLog();
+
     EntityHelpers entityHelpers = new EntityHelpers(engine, game.assets);
 
     // Generate cave & initialize map
@@ -49,6 +53,7 @@ class PlayScreen implements Screen {
     engine.addEntity(player);
 
     InventoryHelpers inventoryHelpers = new InventoryHelpers(player);
+    SkillHelpers skillHelpers = new SkillHelpers(actionLog);
 
     // Spawn some spider monkeys
     for (int i = 0; i < 5; i++) {
@@ -56,15 +61,8 @@ class PlayScreen implements Screen {
     }
 
     for (int i = 0; i < 5; i++) {
-      engine.addEntity(entityHelpers.spawnItem("dagger", map.getRandomOpenPosition()));
+      engine.addEntity(entityHelpers.spawnItem("chippedFlint", map.getRandomOpenPosition()));
     }
-
-    for (int i = 0; i < 5; i++) {
-      engine.addEntity(entityHelpers.spawnItem("axe", map.getRandomOpenPosition()));
-    }
-
-    // Setup action log
-    ActionLog actionLog = new ActionLog();
 
     // Setup engine (they're run in order added)
     engine.addSystem(new AttributesSystem());
@@ -72,7 +70,7 @@ class PlayScreen implements Screen {
     engine.addSystem(new WanderSystem(map));
     engine.addSystem(new TargetSystem(map));
     engine.addSystem(new MovementSystem(map));
-    engine.addSystem(new MeleeSystem(engine, actionLog, entityHelpers));
+    engine.addSystem(new MeleeSystem(engine, actionLog, entityHelpers, inventoryHelpers, skillHelpers));
 
     // Setup input
     Gdx.input.setInputProcessor(new PlayerInput(game, actionLog, map, entityHelpers, inventoryHelpers));
