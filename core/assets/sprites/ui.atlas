@@ -58,3 +58,10 @@ player-health-4
   orig: 24, 24
   offset: 0, 0
   index: -1
+range
+  rotate: false
+  xy: 210, 2
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: -1

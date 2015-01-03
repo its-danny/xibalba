@@ -44,28 +44,28 @@ public class PlayerInput implements InputProcessor {
         game.executeTurn = true;
         break;
       case Keys.K:
-        doWhatNow(attributes.energy, new Vector2(position.pos.x, position.pos.y + 1));
+        handleMovement(attributes.energy, new Vector2(position.pos.x, position.pos.y + 1));
         break;
       case Keys.U:
-        doWhatNow(attributes.energy, new Vector2(position.pos.x + 1, position.pos.y + 1));
+        handleMovement(attributes.energy, new Vector2(position.pos.x + 1, position.pos.y + 1));
         break;
       case Keys.L:
-        doWhatNow(attributes.energy, new Vector2(position.pos.x + 1, position.pos.y));
+        handleMovement(attributes.energy, new Vector2(position.pos.x + 1, position.pos.y));
         break;
       case Keys.N:
-        doWhatNow(attributes.energy, new Vector2(position.pos.x + 1, position.pos.y - 1));
+        handleMovement(attributes.energy, new Vector2(position.pos.x + 1, position.pos.y - 1));
         break;
       case Keys.J:
-        doWhatNow(attributes.energy, new Vector2(position.pos.x, position.pos.y - 1));
+        handleMovement(attributes.energy, new Vector2(position.pos.x, position.pos.y - 1));
         break;
       case Keys.B:
-        doWhatNow(attributes.energy, new Vector2(position.pos.x - 1, position.pos.y - 1));
+        handleMovement(attributes.energy, new Vector2(position.pos.x - 1, position.pos.y - 1));
         break;
       case Keys.H:
-        doWhatNow(attributes.energy, new Vector2(position.pos.x - 1, position.pos.y));
+        handleMovement(attributes.energy, new Vector2(position.pos.x - 1, position.pos.y));
         break;
       case Keys.Y:
-        doWhatNow(attributes.energy, new Vector2(position.pos.x - 1, position.pos.y + 1));
+        handleMovement(attributes.energy, new Vector2(position.pos.x - 1, position.pos.y + 1));
         break;
       case Keys.Q:
         inventoryHelpers.hideItems();
@@ -120,7 +120,7 @@ public class PlayerInput implements InputProcessor {
     return false;
   }
 
-  private void doWhatNow(int energy, Vector2 pos) {
+  private void handleMovement(int energy, Vector2 pos) {
     if (map.isWalkable(pos)) {
       if (energy >= MovementComponent.COST) {
         player.add(new MovementComponent(pos));

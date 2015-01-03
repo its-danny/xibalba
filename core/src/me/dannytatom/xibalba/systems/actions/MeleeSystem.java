@@ -3,21 +3,20 @@ package me.dannytatom.xibalba.systems.actions;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
-import com.badlogic.ashley.systems.SortedIteratingSystem;
 import com.badlogic.gdx.math.MathUtils;
 import me.dannytatom.xibalba.ActionLog;
 import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.ItemComponent;
 import me.dannytatom.xibalba.components.actions.MeleeComponent;
+import me.dannytatom.xibalba.systems.ActionSystem;
 import me.dannytatom.xibalba.utils.ComponentMappers;
 import me.dannytatom.xibalba.utils.EntityHelpers;
 import me.dannytatom.xibalba.utils.InventoryHelpers;
 import me.dannytatom.xibalba.utils.SkillHelpers;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 
-public class MeleeSystem extends SortedIteratingSystem {
+public class MeleeSystem extends ActionSystem {
   private final ActionLog actionLog;
   private final Engine engine;
   private final EntityHelpers entityHelpers;
@@ -25,7 +24,7 @@ public class MeleeSystem extends SortedIteratingSystem {
   private final SkillHelpers skillHelpers;
 
   public MeleeSystem(Engine engine, ActionLog actionLog, EntityHelpers entityHelpers, InventoryHelpers inventoryHelpers, SkillHelpers skillHelpers) {
-    super(Family.all(MeleeComponent.class).get(), new EnergyComparator());
+    super(Family.all(MeleeComponent.class).get());
 
     this.engine = engine;
     this.actionLog = actionLog;
@@ -107,7 +106,7 @@ public class MeleeSystem extends SortedIteratingSystem {
         if (damage > targetAttributes.toughness) {
           targetAttributes.health -= damage - targetAttributes.toughness;
 
-          action += verb +  " " + targetName + " for " + damage + " damage";
+          action += verb + " " + targetName + " for " + damage + " damage";
         } else {
           action += "hit " + targetName + " but did no damage";
         }
@@ -128,21 +127,5 @@ public class MeleeSystem extends SortedIteratingSystem {
     }
 
     entity.remove(MeleeComponent.class);
-  }
-
-  private static class EnergyComparator implements Comparator<Entity> {
-    @Override
-    public int compare(Entity e1, Entity e2) {
-      AttributesComponent a1 = e1.getComponent(AttributesComponent.class);
-      AttributesComponent a2 = e2.getComponent(AttributesComponent.class);
-
-      if (a2.energy > a1.energy) {
-        return 1;
-      } else if (a1.energy > a2.energy) {
-        return -1;
-      } else {
-        return 0;
-      }
-    }
   }
 }

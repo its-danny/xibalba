@@ -196,6 +196,7 @@
             <filename>ui/player-health-2.png</filename>
             <filename>ui/player-health-3.png</filename>
             <filename>ui/player-health-4.png</filename>
+            <filename>ui/range.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>
