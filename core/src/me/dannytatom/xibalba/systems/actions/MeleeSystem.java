@@ -111,6 +111,8 @@ public class MeleeSystem extends SortedIteratingSystem {
         } else {
           action += "hit " + targetName + " but did no damage";
         }
+
+        skillHelpers.levelSkill(entity, skillName, 4);
       } else {
         action += "missed " + targetName;
       }
@@ -120,7 +122,6 @@ public class MeleeSystem extends SortedIteratingSystem {
       if (targetAttributes.health <= 0) {
         engine.removeEntity(melee.target);
         actionLog.add(name + " killed " + targetName + "!");
-        skillHelpers.levelSkill(entity, skillName, 10);
       }
 
       attributes.energy -= MeleeComponent.COST;
