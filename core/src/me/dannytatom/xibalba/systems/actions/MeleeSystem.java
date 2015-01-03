@@ -54,7 +54,7 @@ public class MeleeSystem extends SortedIteratingSystem {
       String targetName = entityHelpers.isPlayer(melee.target) ? "You" : targetAttributes.name;
       String action = name + " ";
 
-      int skillRoll = MathUtils.random(1, skills.unarmedCombat);
+      int skillRoll = skills.unarmedCombat == 0 ? 0 : MathUtils.random(1, skills.unarmedCombat);
       int sixRoll = MathUtils.random(1, 6);
       int result;
 
@@ -84,7 +84,7 @@ public class MeleeSystem extends SortedIteratingSystem {
         if (damage > targetAttributes.toughness) {
           targetAttributes.health -= damage - targetAttributes.toughness;
 
-          action += "hit " + targetName + " for " + damage + " damage";
+          action += " " + targetName + " for " + damage + " damage";
         } else {
           action += "hit " + targetName + " but did no damage";
         }
