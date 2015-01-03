@@ -87,10 +87,21 @@ public class UIRenderer {
     group.padBottom(10);
     group.left();
 
-    group.addActor(skillLine("Unarmed", skills.unarmed));
-    group.addActor(skillLine("Throwing", skills.throwing));
-    group.addActor(skillLine("Slashing", skills.slashing));
-    group.addActor(skillLine("Stabbing", skills.stabbing));
+    if (skills.unarmed > 0) {
+      group.addActor(skillLine("Unarmed", skills.unarmed));
+    }
+
+    if (skills.throwing > 0) {
+      group.addActor(skillLine("Throwing", skills.throwing));
+    }
+
+    if (skills.slashing > 0) {
+      group.addActor(skillLine("Slashing", skills.slashing));
+    }
+
+    if (skills.stabbing > 0) {
+      group.addActor(skillLine("Stabbing", skills.stabbing));
+    }
 
     return group;
   }
