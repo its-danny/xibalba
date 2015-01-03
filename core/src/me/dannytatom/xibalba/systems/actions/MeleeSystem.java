@@ -107,9 +107,9 @@ public class MeleeSystem extends SortedIteratingSystem {
         if (damage > targetAttributes.toughness) {
           targetAttributes.health -= damage - targetAttributes.toughness;
 
-          action += " " + targetName + " for " + damage + " damage";
+          action += verb +  " " + targetName + " for " + damage + " damage";
         } else {
-          action += verb + " " + targetName + " but did no damage";
+          action += "hit " + targetName + " but did no damage";
         }
       } else {
         action += "missed " + targetName;
