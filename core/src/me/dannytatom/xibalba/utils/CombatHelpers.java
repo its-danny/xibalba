@@ -76,7 +76,7 @@ public class CombatHelpers {
     if (result >= 4) {
       String verb = "hit";
 
-      if (entityHelpers.isPlayer(entity) && wielded != null) {
+      if (!thrown && entityHelpers.isPlayer(entity) && wielded != null) {
         ArrayList<String> verbs = wielded.getComponent(ItemComponent.class).verbs;
         verb = verbs.get(MathUtils.random(0, verbs.size() - 1));
       }
