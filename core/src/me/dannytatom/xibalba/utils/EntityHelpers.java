@@ -10,6 +10,9 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Json;
 import me.dannytatom.xibalba.components.*;
 import me.dannytatom.xibalba.components.ai.BrainComponent;
+import me.dannytatom.xibalba.components.effects.DamageEffectComponent;
+
+import java.util.Objects;
 
 public class EntityHelpers {
   private final Engine engine;
@@ -65,10 +68,30 @@ public class EntityHelpers {
 
     ItemComponent item = entity.getComponent(ItemComponent.class);
 
-    item.attributes.put("damage",
-        MathUtils.random(item.attributes.get("damage"), item.attributes.get("damage") + 10));
+    if (item.attributes != null) {
+      item.attributes.put("damage",
+          MathUtils.random(item.attributes.get("damage"), item.attributes.get("damage") + 10));
+    }
 
     return entity;
+  }
+
+  public void spawnEffect(Entity starter, Vector2 position, Entity item) {
+    ItemComponent ic = item.getComponent(ItemComponent.class);
+
+    for (int x = (int) position.x - ic.effectRange; x < position.x + ic.effectRange; x++) {
+      for (int y = (int) position.y - ic.effectRange; y < position.y + ic.effectRange; y++) {
+        Entity projectile = new Entity();
+        projectile.add(new PositionComponent(new Vector2(x, y)));
+        projectile.add(new VisualComponent(assets.get("sprites/poison.png")));
+
+        if (Objects.equals(ic.effect, "poison")) {
+          projectile.add(new DamageEffectComponent(starter, item));
+        }
+
+        engine.addEntity(projectile);
+      }
+    }
   }
 
   public Entity getPlayer() {

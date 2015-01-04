@@ -128,10 +128,12 @@ public class UIRenderer {
       group.addActor(descLabel);
 
       if (item.lookingAt) {
-        String stats = "[RED]+" + item.attributes.get("damage");
-        Label statsLabel = new Label(stats, skin);
-        statsLabel.setScale(.5f);
-        group.addActor(statsLabel);
+        if (item.attributes != null) {
+          String stats = "[RED]+" + item.attributes.get("damage");
+          Label statsLabel = new Label(stats, skin);
+          statsLabel.setScale(.5f);
+          group.addActor(statsLabel);
+        }
 
         String actions = "";
 

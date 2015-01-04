@@ -11,6 +11,7 @@ import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.map.CaveGenerator;
 import me.dannytatom.xibalba.map.Map;
 import me.dannytatom.xibalba.systems.AttributesSystem;
+import me.dannytatom.xibalba.systems.EffectSystem;
 import me.dannytatom.xibalba.systems.actions.MeleeSystem;
 import me.dannytatom.xibalba.systems.actions.MovementSystem;
 import me.dannytatom.xibalba.systems.actions.RangeSystem;
@@ -63,8 +64,12 @@ class PlayScreen implements Screen {
       engine.addEntity(entityHelpers.spawnEnemy("spiderMonkey", map.getRandomOpenPosition()));
     }
 
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < 2; i++) {
       engine.addEntity(entityHelpers.spawnItem("chippedFlint", map.getRandomOpenPosition()));
+    }
+
+    for (int i = 0; i < 3; i++) {
+      engine.addEntity(entityHelpers.spawnItem("bomb", map.getRandomOpenPosition()));
     }
 
     // Setup engine (they're run in order added)
@@ -72,9 +77,10 @@ class PlayScreen implements Screen {
     engine.addSystem(new BrainSystem(entityHelpers, map));
     engine.addSystem(new WanderSystem(map));
     engine.addSystem(new TargetSystem(map));
-    engine.addSystem(new MovementSystem(map));
     engine.addSystem(new MeleeSystem(combatHelpers));
-    engine.addSystem(new RangeSystem(entityHelpers, combatHelpers, inventoryHelpers));
+    engine.addSystem(new RangeSystem(engine, map, entityHelpers, combatHelpers, inventoryHelpers));
+    engine.addSystem(new EffectSystem(engine, map, combatHelpers));
+    engine.addSystem(new MovementSystem(map));
 
     // Setup input
     Gdx.input.setInputProcessor(new PlayerInput(game, actionLog, map, entityHelpers, inventoryHelpers));

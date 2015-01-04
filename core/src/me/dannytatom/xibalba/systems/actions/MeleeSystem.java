@@ -23,7 +23,7 @@ public class MeleeSystem extends ActionSystem {
     AttributesComponent attributes = ComponentMappers.attributes.get(entity);
 
     if (melee.target != null) {
-      combatHelpers.fight(entity, melee.target, false);
+      combatHelpers.melee(entity, melee.target);
       attributes.energy -= MeleeComponent.COST;
     }
 

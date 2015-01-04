@@ -6,7 +6,10 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import me.dannytatom.xibalba.components.EnemyComponent;
+import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
+import me.dannytatom.xibalba.components.effects.DamageEffectComponent;
 import me.dannytatom.xibalba.utils.ComponentMappers;
 import me.dannytatom.xibalba.utils.EntityHelpers;
 import org.xguzm.pathfinding.grid.GridCell;
@@ -144,7 +147,32 @@ public class Map {
    */
   public Entity getEntityAt(Vector2 position) {
     ImmutableArray<Entity> entities =
-        engine.getEntitiesFor(Family.all(PositionComponent.class).get());
+        engine.getEntitiesFor(Family.all(PositionComponent.class).exclude(DamageEffectComponent.class).get());
+
+    for (Entity entity : entities) {
+      if (entity.getComponent(PositionComponent.class).pos.epsilonEquals(position, 0.00001f)) {
+        return entity;
+      }
+    }
+
+    return null;
+  }
+
+  public Entity getMobAt(Vector2 position) {
+    ImmutableArray<Entity> entities =
+        engine.getEntitiesFor(Family.all(PlayerComponent.class).all(EnemyComponent.class).get());
+
+    for (Entity entity : entities) {
+      if (entity.getComponent(PositionComponent.class).pos.epsilonEquals(position, 0.00001f)) {
+        return entity;
+      }
+    }
+
+    return null;
+  }
+
+  public Entity getEnemyAt(Vector2 position) {
+    ImmutableArray<Entity> entities = engine.getEntitiesFor(Family.all(EnemyComponent.class).get());
 
     for (Entity entity : entities) {
       if (entity.getComponent(PositionComponent.class).pos.epsilonEquals(position, 0.00001f)) {
@@ -191,7 +219,7 @@ public class Map {
 
     if (!blocked) {
       ImmutableArray<Entity> entities =
-          engine.getEntitiesFor(Family.all(PositionComponent.class).get());
+          engine.getEntitiesFor(Family.all(PositionComponent.class).exclude(DamageEffectComponent.class).get());
 
       for (Entity entity : entities) {
         PositionComponent ep = ComponentMappers.position.get(entity);
