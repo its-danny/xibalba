@@ -101,7 +101,8 @@ public class Map {
 
     targetingPath = finder.findPath((int) start.x, (int) start.y, (int) target.x, (int) target.y, grid);
 
-    if (targetingPath == null) {
+    // TODO: Instead of 5, range should be determined by strength
+    if (targetingPath == null || targetingPath.size() > 5) {
       target = oldTarget;
 
       if (target != null) {
