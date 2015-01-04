@@ -115,7 +115,7 @@ public class WorldRenderer {
       PositionComponent position = ComponentMappers.position.get(entity);
       VisualComponent visual = ComponentMappers.visual.get(entity);
 
-      if (!map.getCell(position.pos).hidden) {
+      if (map.getCell(position.pos) != null && !map.getCell(position.pos).hidden) {
         batch.setColor(1f, 1f, 1f, lightMap[(int) position.pos.x][(int) position.pos.y]);
         batch.draw(visual.sprite, position.pos.x * SPRITE_WIDTH, position.pos.y * SPRITE_HEIGHT);
         batch.setColor(1f, 1f, 1f, 1f);

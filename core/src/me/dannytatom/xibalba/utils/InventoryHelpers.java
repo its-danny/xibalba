@@ -86,7 +86,7 @@ public class InventoryHelpers {
       item.getComponent(ItemComponent.class).identifier = null;
       item.add(new PositionComponent(pos));
 
-      removeItem();
+      player.getComponent(InventoryComponent.class).items.remove(item);
     }
   }
 

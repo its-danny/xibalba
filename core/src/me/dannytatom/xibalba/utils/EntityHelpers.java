@@ -86,7 +86,7 @@ public class EntityHelpers {
         projectile.add(new VisualComponent(assets.get("sprites/poison.png")));
 
         if (Objects.equals(ic.effect, "poison")) {
-          projectile.add(new DamageEffectComponent(starter, ic.effectRange, ic.effectTurns, ic.attributes.get("damage")));
+          projectile.add(new DamageEffectComponent(starter, "poison", ic.effectTurns, ic.attributes.get("damage")));
         }
 
         engine.addEntity(projectile);
