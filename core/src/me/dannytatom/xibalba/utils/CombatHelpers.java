@@ -102,9 +102,7 @@ public class CombatHelpers {
     AttributesComponent starterAttributes = ComponentMappers.attributes.get(starter);
     AttributesComponent targetAttributes = ComponentMappers.attributes.get(target);
 
-    String name = entityHelpers.isPlayer(starter) ? "You" : starterAttributes.name;
-    String targetName = entityHelpers.isPlayer(target) ? "You" : targetAttributes.name;
-    String action = name + " ";
+    String action = starterAttributes.name + " ";
 
     if (result >= 4) {
       int critical = 0;
@@ -118,25 +116,25 @@ public class CombatHelpers {
       if (damage > targetAttributes.toughness) {
         targetAttributes.health -= damage - targetAttributes.toughness;
 
-        action += verb + " " + targetName + " for " + damage + " damage";
+        action += verb + " " + targetAttributes.name + " for " + damage + " damage";
       } else {
-        action += "hit " + targetName + " but did no damage";
+        action += "hit " + targetAttributes.name + " but did no damage";
       }
 
       skillHelpers.levelSkill(starter, skill, 20);
     } else {
-      action += "missed " + targetName;
+      action += "missed " + targetAttributes.name;
     }
 
     if (Objects.equals(verb, "poison")) {
-      action = targetName + " was hurt by the cloud of poison";
+      action = targetAttributes.name + " was hurt by the cloud of poison";
     }
 
     actionLog.add(action);
 
     if (targetAttributes.health <= 0) {
       engine.removeEntity(target);
-      actionLog.add(name + " killed " + targetName + "!");
+      actionLog.add(starterAttributes.name + " killed " + targetAttributes.name + "!");
     }
   }
 }
