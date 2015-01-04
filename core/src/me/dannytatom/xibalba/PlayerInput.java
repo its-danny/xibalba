@@ -9,6 +9,7 @@ import me.dannytatom.xibalba.components.ItemComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.actions.MeleeComponent;
 import me.dannytatom.xibalba.components.actions.MovementComponent;
+import me.dannytatom.xibalba.components.actions.RangeComponent;
 import me.dannytatom.xibalba.map.Map;
 import me.dannytatom.xibalba.utils.EntityHelpers;
 import me.dannytatom.xibalba.utils.InventoryHelpers;
@@ -20,6 +21,7 @@ public class PlayerInput implements InputProcessor {
   private final EntityHelpers entityHelpers;
   private final InventoryHelpers inventoryHelpers;
   private final Entity player;
+  private State state = State.PLAYING;
 
   public PlayerInput(Main game, ActionLog actionLog, Map map, EntityHelpers entityHelpers, InventoryHelpers inventoryHelpers) {
     this.game = game;
@@ -44,40 +46,110 @@ public class PlayerInput implements InputProcessor {
         game.executeTurn = true;
         break;
       case Keys.K:
-        handleMovement(attributes.energy, new Vector2(position.pos.x, position.pos.y + 1));
+        if (state == State.PLAYING) {
+          handleMovement(attributes.energy, new Vector2(position.pos.x, position.pos.y + 1));
+        } else if (state == State.TARGETING) {
+          handleTargeting(new Vector2(0, 1));
+        }
         break;
       case Keys.U:
-        handleMovement(attributes.energy, new Vector2(position.pos.x + 1, position.pos.y + 1));
+        if (state == State.PLAYING) {
+          handleMovement(attributes.energy, new Vector2(position.pos.x + 1, position.pos.y + 1));
+        } else if (state == State.TARGETING) {
+          handleTargeting(new Vector2(1, 1));
+        }
         break;
       case Keys.L:
-        handleMovement(attributes.energy, new Vector2(position.pos.x + 1, position.pos.y));
+        if (state == State.PLAYING) {
+          handleMovement(attributes.energy, new Vector2(position.pos.x + 1, position.pos.y));
+        } else if (state == State.TARGETING) {
+          handleTargeting(new Vector2(1, 0));
+        }
         break;
       case Keys.N:
-        handleMovement(attributes.energy, new Vector2(position.pos.x + 1, position.pos.y - 1));
+        if (state == State.PLAYING) {
+          handleMovement(attributes.energy, new Vector2(position.pos.x + 1, position.pos.y - 1));
+        } else if (state == State.TARGETING) {
+          handleTargeting(new Vector2(1, -1));
+        }
         break;
       case Keys.J:
-        handleMovement(attributes.energy, new Vector2(position.pos.x, position.pos.y - 1));
+        if (state == State.PLAYING) {
+          handleMovement(attributes.energy, new Vector2(position.pos.x, position.pos.y - 1));
+        } else if (state == State.TARGETING) {
+          handleTargeting(new Vector2(0, -1));
+        }
         break;
       case Keys.B:
-        handleMovement(attributes.energy, new Vector2(position.pos.x - 1, position.pos.y - 1));
+        if (state == State.PLAYING) {
+          handleMovement(attributes.energy, new Vector2(position.pos.x - 1, position.pos.y - 1));
+        } else if (state == State.TARGETING) {
+          handleTargeting(new Vector2(-1, -1));
+        }
         break;
       case Keys.H:
-        handleMovement(attributes.energy, new Vector2(position.pos.x - 1, position.pos.y));
+        if (state == State.PLAYING) {
+          handleMovement(attributes.energy, new Vector2(position.pos.x - 1, position.pos.y));
+        } else if (state == State.TARGETING) {
+          handleTargeting(new Vector2(-1, 0));
+        }
         break;
       case Keys.Y:
-        handleMovement(attributes.energy, new Vector2(position.pos.x - 1, position.pos.y + 1));
+        if (state == State.PLAYING) {
+          handleMovement(attributes.energy, new Vector2(position.pos.x - 1, position.pos.y + 1));
+        } else if (state == State.TARGETING) {
+          handleTargeting(new Vector2(-1, 1));
+        }
         break;
-      case Keys.Q:
-        inventoryHelpers.hideItems();
+      case Keys.T:
+        if (state == State.PLAYING) {
+          Entity item = inventoryHelpers.getShowing();
+
+          if (item != null && item.getComponent(ItemComponent.class).actions.get("canThrow")) {
+            state = State.TARGETING;
+          }
+        }
         break;
       case Keys.E:
-        inventoryHelpers.wieldItem();
+        if (state == State.PLAYING) {
+          inventoryHelpers.wieldItem();
+        }
         break;
       case Keys.D:
-        inventoryHelpers.dropItem();
+        if (state == State.PLAYING) {
+          inventoryHelpers.dropItem(null);
+        }
+        break;
+      case Keys.Q:
+        if (state == State.PLAYING) {
+          inventoryHelpers.hideItems();
+        } else if (state == State.TARGETING) {
+          map.target = null;
+          map.targetingPath = null;
+
+          state = State.PLAYING;
+        }
+        break;
+      case Keys.ENTER:
+        if (state == State.TARGETING) {
+          if (map.targetingPath != null && attributes.energy >= RangeComponent.COST) {
+            if (map.getEntityAt(map.target) != null) {
+              player.add(new RangeComponent(map.getEntityAt(map.target)));
+            } else {
+              inventoryHelpers.dropItem(map.target);
+            }
+
+            game.executeTurn = true;
+          }
+
+          map.target = null;
+          map.targetingPath = null;
+
+          state = State.PLAYING;
+        }
         break;
       default:
-        if (inventoryHelpers.findItem(keycode) != null) {
+        if (state == State.PLAYING && inventoryHelpers.findItem(keycode) != null) {
           inventoryHelpers.showItem(inventoryHelpers.findItem(keycode));
         }
     }
@@ -120,6 +192,17 @@ public class PlayerInput implements InputProcessor {
     return false;
   }
 
+  /**
+   * Handles player movement.
+   * <p>
+   * One of these 3 happens when attempting to move into a cell:
+   * - Actually move
+   * - Pick up item on the cell, then move
+   * - Melee attack enemy in cell
+   *
+   * @param energy How much energy the player has
+   * @param pos    The position we're attempting to move to
+   */
   private void handleMovement(int energy, Vector2 pos) {
     if (map.isWalkable(pos)) {
       if (energy >= MovementComponent.COST) {
@@ -144,5 +227,13 @@ public class PlayerInput implements InputProcessor {
         game.executeTurn = true;
       }
     }
+  }
+
+  private void handleTargeting(Vector2 pos) {
+    map.createTargetingPath(player.getComponent(PositionComponent.class).pos, pos);
+  }
+
+  private enum State {
+    PLAYING, TARGETING
   }
 }

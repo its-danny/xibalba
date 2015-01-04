@@ -13,9 +13,11 @@ import me.dannytatom.xibalba.map.Map;
 import me.dannytatom.xibalba.systems.AttributesSystem;
 import me.dannytatom.xibalba.systems.actions.MeleeSystem;
 import me.dannytatom.xibalba.systems.actions.MovementSystem;
+import me.dannytatom.xibalba.systems.actions.RangeSystem;
 import me.dannytatom.xibalba.systems.ai.BrainSystem;
 import me.dannytatom.xibalba.systems.ai.TargetSystem;
 import me.dannytatom.xibalba.systems.ai.WanderSystem;
+import me.dannytatom.xibalba.utils.CombatHelpers;
 import me.dannytatom.xibalba.utils.EntityHelpers;
 import me.dannytatom.xibalba.utils.InventoryHelpers;
 import me.dannytatom.xibalba.utils.SkillHelpers;
@@ -54,6 +56,7 @@ class PlayScreen implements Screen {
 
     InventoryHelpers inventoryHelpers = new InventoryHelpers(player);
     SkillHelpers skillHelpers = new SkillHelpers(actionLog);
+    CombatHelpers combatHelpers = new CombatHelpers(engine, actionLog, entityHelpers, inventoryHelpers, skillHelpers);
 
     // Spawn some spider monkeys
     for (int i = 0; i < 5; i++) {
@@ -70,7 +73,8 @@ class PlayScreen implements Screen {
     engine.addSystem(new WanderSystem(map));
     engine.addSystem(new TargetSystem(map));
     engine.addSystem(new MovementSystem(map));
-    engine.addSystem(new MeleeSystem(engine, actionLog, entityHelpers, inventoryHelpers, skillHelpers));
+    engine.addSystem(new MeleeSystem(combatHelpers));
+    engine.addSystem(new RangeSystem(entityHelpers, combatHelpers, inventoryHelpers));
 
     // Setup input
     Gdx.input.setInputProcessor(new PlayerInput(game, actionLog, map, entityHelpers, inventoryHelpers));

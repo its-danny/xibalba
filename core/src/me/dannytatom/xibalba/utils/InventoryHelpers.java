@@ -3,6 +3,7 @@ package me.dannytatom.xibalba.utils;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import me.dannytatom.xibalba.components.InventoryComponent;
 import me.dannytatom.xibalba.components.ItemComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
@@ -13,7 +14,7 @@ import java.util.Objects;
 
 public class InventoryHelpers {
   private static final ArrayList<String> letters = new ArrayList<>(
-      Arrays.asList("a", "c", "f", "g", "i", "m", "o", "p", "r", "s", "t", "v", "w", "x")
+      Arrays.asList("a", "c", "f", "g", "i", "m", "o", "p", "r", "s", "v", "w", "x")
   );
   private final Entity player;
 
@@ -61,8 +62,13 @@ public class InventoryHelpers {
     return true;
   }
 
-  public void dropItem() {
+  public void dropItem(Vector2 position) {
+    Vector2 pos = position;
     Entity item = getShowing();
+
+    if (pos == null) {
+      pos = player.getComponent(PositionComponent.class).pos;
+    }
 
     if (item != null) {
       letters.add(item.getComponent(ItemComponent.class).identifier);
@@ -70,7 +76,7 @@ public class InventoryHelpers {
       item.getComponent(ItemComponent.class).equipped = false;
       item.getComponent(ItemComponent.class).lookingAt = false;
       item.getComponent(ItemComponent.class).identifier = null;
-      item.add(new PositionComponent(player.getComponent(PositionComponent.class).pos));
+      item.add(new PositionComponent(pos));
 
       player.getComponent(InventoryComponent.class).items.remove(item);
     }
@@ -112,7 +118,7 @@ public class InventoryHelpers {
     return wielded;
   }
 
-  Entity getShowing() {
+  public Entity getShowing() {
     ArrayList<Entity> items = player.getComponent(InventoryComponent.class).items;
     Entity showing = null;
 

@@ -7,6 +7,7 @@ import me.dannytatom.xibalba.components.SkillsComponent;
 import me.dannytatom.xibalba.components.VisualComponent;
 import me.dannytatom.xibalba.components.actions.MeleeComponent;
 import me.dannytatom.xibalba.components.actions.MovementComponent;
+import me.dannytatom.xibalba.components.actions.RangeComponent;
 import me.dannytatom.xibalba.components.ai.BrainComponent;
 import me.dannytatom.xibalba.components.ai.TargetComponent;
 
@@ -34,4 +35,7 @@ public final class ComponentMappers {
 
   public static final ComponentMapper<MeleeComponent> melee =
       ComponentMapper.getFor(MeleeComponent.class);
+
+  public static final ComponentMapper<RangeComponent> range =
+      ComponentMapper.getFor(RangeComponent.class);
 }

@@ -10,6 +10,10 @@ import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.utils.ComponentMappers;
 import me.dannytatom.xibalba.utils.EntityHelpers;
 import org.xguzm.pathfinding.grid.GridCell;
+import org.xguzm.pathfinding.grid.NavigationGrid;
+import org.xguzm.pathfinding.grid.finders.AStarGridFinder;
+
+import java.util.List;
 
 public class Map {
   public final int width;
@@ -17,6 +21,8 @@ public class Map {
   private final Engine engine;
   private final EntityHelpers entityHelpers;
   private final Cell[][] map;
+  public List<GridCell> targetingPath = null;
+  public Vector2 target = null;
 
   /**
    * Holds logic for dealing with maps.
@@ -67,6 +73,41 @@ public class Map {
     }
 
     return resistanceMap;
+  }
+
+  public void createTargetingPath(Vector2 start, Vector2 end) {
+    Vector2 oldTarget;
+
+    GridCell[][] cells = new GridCell[width][height];
+
+    for (int x = 0; x < map.length; x++) {
+      for (int y = 0; y < map[x].length; y++) {
+        boolean canTarget = !getCell(new Vector2(x, y)).isWall && !getCell(new Vector2(x, y)).hidden;
+
+        cells[x][y] = new GridCell(x, y, canTarget);
+      }
+    }
+
+    NavigationGrid<GridCell> grid = new NavigationGrid<>(cells);
+    AStarGridFinder<GridCell> finder = new AStarGridFinder<>(GridCell.class);
+
+    if (target == null) {
+      oldTarget = null;
+      target = start.cpy().add(end);
+    } else {
+      oldTarget = target.cpy();
+      target = target.add(end);
+    }
+
+    targetingPath = finder.findPath((int) start.x, (int) start.y, (int) target.x, (int) target.y, grid);
+
+    if (targetingPath == null) {
+      target = oldTarget;
+
+      if (target != null) {
+        targetingPath = finder.findPath((int) start.x, (int) start.y, (int) target.x, (int) target.y, grid);
+      }
+    }
   }
 
   /**
