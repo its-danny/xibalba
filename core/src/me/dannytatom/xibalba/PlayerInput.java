@@ -133,7 +133,7 @@ public class PlayerInput implements InputProcessor {
       case Keys.ENTER:
         if (state == State.TARGETING) {
           if (map.targetingPath != null && attributes.energy >= RangeComponent.COST) {
-            player.add(new RangeComponent(map.target, inventoryHelpers.getShowing()));
+            player.add(new RangeComponent(map.target));
 
             game.executeTurn = true;
           }

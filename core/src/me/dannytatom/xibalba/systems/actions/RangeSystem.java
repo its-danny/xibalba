@@ -36,22 +36,24 @@ public class RangeSystem extends ActionSystem {
   protected void processEntity(Entity entity, float deltaTime) {
     RangeComponent range = ComponentMappers.range.get(entity);
     AttributesComponent attributes = ComponentMappers.attributes.get(entity);
+    Entity item = inventoryHelpers.getShowing();
 
-    if (range.target != null) {
-      ItemComponent item = range.item.getComponent(ItemComponent.class);
+    if (item != null) {
+      ItemComponent ic = item.getComponent(ItemComponent.class);
 
-      if (Objects.equals(item.type, "weapon")) {
+      if (Objects.equals(ic.type, "weapon")) {
         Entity enemy = map.getEnemyAt(range.target);
 
         if (enemy != null) {
-          combatHelpers.range(entity, enemy, range.item);
+          combatHelpers.range(entity, enemy, item);
         }
 
         inventoryHelpers.dropItem(range.target);
-      } else if (Objects.equals(item.type, "projectile")) {
-        entityHelpers.spawnEffect(entity, range.target, range.item);
+      } else if (Objects.equals(ic.type, "projectile")) {
+        entityHelpers.spawnEffect(entity, range.target, item);
 
-        engine.removeEntity(range.item);
+        inventoryHelpers.removeItem();
+        engine.removeEntity(item);
       }
 
       attributes.energy -= RangeComponent.COST;

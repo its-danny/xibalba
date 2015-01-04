@@ -4,7 +4,6 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
-import me.dannytatom.xibalba.components.ItemComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.effects.DamageEffectComponent;
 import me.dannytatom.xibalba.map.Map;
@@ -36,7 +35,7 @@ public class EffectSystem extends IteratingSystem {
 
     effect.currentTurn += 1;
 
-    if (effect.currentTurn == effect.item.getComponent(ItemComponent.class).effectTurns + 1) {
+    if (effect.currentTurn == effect.turns + 1) {
       engine.removeEntity(entity);
     }
   }

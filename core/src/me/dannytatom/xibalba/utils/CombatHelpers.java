@@ -208,7 +208,7 @@ public class CombatHelpers {
         critical = MathUtils.random(1, 6);
       }
 
-      int damage = damageEffectComponent.item.getComponent(ItemComponent.class).attributes.get("damage") + critical;
+      int damage = damageEffectComponent.damage + critical;
 
       if (damage > targetAttributes.toughness) {
         targetAttributes.health -= damage - targetAttributes.toughness;

@@ -62,6 +62,14 @@ public class InventoryHelpers {
     return true;
   }
 
+  public void removeItem() {
+    Entity item = getShowing();
+
+    if (item != null) {
+      player.getComponent(InventoryComponent.class).items.remove(item);
+    }
+  }
+
   public void dropItem(Vector2 position) {
     Vector2 pos = position;
     Entity item = getShowing();
@@ -78,7 +86,7 @@ public class InventoryHelpers {
       item.getComponent(ItemComponent.class).identifier = null;
       item.add(new PositionComponent(pos));
 
-      player.getComponent(InventoryComponent.class).items.remove(item);
+      removeItem();
     }
   }
 
@@ -103,35 +111,29 @@ public class InventoryHelpers {
 
   public Entity getWieldedItem() {
     ArrayList<Entity> items = player.getComponent(InventoryComponent.class).items;
-    Entity wielded = null;
 
     for (Entity entity : items) {
       ItemComponent item = entity.getComponent(ItemComponent.class);
 
       if (item.actions.get("canWield") && item.equipped) {
-        wielded = entity;
-
-        break;
+        return entity;
       }
     }
 
-    return wielded;
+    return null;
   }
 
   public Entity getShowing() {
     ArrayList<Entity> items = player.getComponent(InventoryComponent.class).items;
-    Entity showing = null;
 
     for (Entity entity : items) {
       ItemComponent item = entity.getComponent(ItemComponent.class);
 
       if (item.lookingAt) {
-        showing = entity;
-
-        break;
+        return entity;
       }
     }
 
-    return showing;
+    return null;
   }
 }
