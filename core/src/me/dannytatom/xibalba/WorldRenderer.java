@@ -45,7 +45,6 @@ public class WorldRenderer {
     this.player = player;
 
     camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-    camera.zoom = .5f;
     camera.update();
 
     caster = new ShadowCaster();
@@ -83,7 +82,7 @@ public class WorldRenderer {
         }
 
         if (!cell.hidden) {
-          batch.setColor(1f, 1f, 1f, lightMap[x][y] <= 0.35f ? 0.35f : lightMap[x][y]);
+          batch.setColor(1f, 1f, 1f, lightMap[x][y] <= 0.25f ? 0.25f : lightMap[x][y]);
           batch.draw(cell.sprite, x * SPRITE_WIDTH, y * SPRITE_HEIGHT);
           batch.setColor(1f, 1f, 1f, 1f);
         }
