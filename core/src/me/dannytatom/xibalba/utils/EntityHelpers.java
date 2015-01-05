@@ -5,6 +5,8 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Json;
@@ -28,9 +30,9 @@ public class EntityHelpers {
 
     player.add(new PlayerComponent());
     player.add(new PositionComponent(position));
-    player.add(new VisualComponent(assets.get("sprites/player.png")));
+    player.add(new VisualComponent(null, assets.get("sprites/player.atlas")));
     player.add(new SkillsComponent());
-    player.add(new AttributesComponent("Necahual", 100, 15, 50, 5, 5));
+    player.add(new AttributesComponent("Necahual", 100, 10, 50, 5, 5));
     player.add(new InventoryComponent());
 
     return player;
@@ -45,7 +47,7 @@ public class EntityHelpers {
     entity.add(new EnemyComponent());
     entity.add(new BrainComponent());
     entity.add(new PositionComponent(position));
-    entity.add(new VisualComponent(assets.get(json.visual.get("spritePath"))));
+    entity.add(new VisualComponent(null, assets.get("sprites/" + type + ".atlas")));
     entity.add(new SkillsComponent());
     entity.add(new AttributesComponent(
         json.name,
@@ -64,7 +66,7 @@ public class EntityHelpers {
 
     entity.add((new Json()).fromJson(ItemComponent.class, Gdx.files.internal("data/items/" + type + ".json")));
     entity.add(new PositionComponent(position));
-    entity.add(new VisualComponent(assets.get("sprites/" + type + ".png")));
+    entity.add(new VisualComponent(new Sprite((Texture) assets.get("sprites/" + type + ".png")), null));
 
     ItemComponent item = entity.getComponent(ItemComponent.class);
 
@@ -83,7 +85,7 @@ public class EntityHelpers {
       for (int y = (int) position.y - ic.effectRange; y < position.y + ic.effectRange; y++) {
         Entity projectile = new Entity();
         projectile.add(new PositionComponent(new Vector2(x, y)));
-        projectile.add(new VisualComponent(assets.get("sprites/poison.png")));
+        projectile.add(new VisualComponent(new Sprite((Texture) assets.get("sprites/poison.png")), null));
 
         if (Objects.equals(ic.effect, "poison")) {
           projectile.add(new DamageEffectComponent(starter, "poison", ic.effectTurns, ic.attributes.get("damage")));

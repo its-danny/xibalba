@@ -57,7 +57,7 @@ class PlayScreen implements Screen {
 
     InventoryHelpers inventoryHelpers = new InventoryHelpers(player);
     SkillHelpers skillHelpers = new SkillHelpers(actionLog);
-    CombatHelpers combatHelpers = new CombatHelpers(engine, actionLog, entityHelpers, inventoryHelpers, skillHelpers);
+    CombatHelpers combatHelpers = new CombatHelpers(engine, actionLog, inventoryHelpers, skillHelpers);
 
     // Spawn some spider monkeys
     for (int i = 0; i < 5; i++) {
@@ -98,7 +98,7 @@ class PlayScreen implements Screen {
       game.executeTurn = false;
     }
 
-    worldRenderer.render();
+    worldRenderer.render(delta);
     uiRenderer.render(delta);
 
     if (player.getComponent(AttributesComponent.class).health <= 0) {

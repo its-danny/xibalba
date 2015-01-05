@@ -1,18 +1,20 @@
 package me.dannytatom.xibalba.components;
 
 import com.badlogic.ashley.core.Component;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 
 public class VisualComponent extends Component {
-  public final Sprite sprite;
+  public Sprite sprite = null;
+  public Animation animation = null;
+  public float elapsedTime = 0;
 
-  /**
-   * Holds entity's sprite.
-   *
-   * @param texture Texture to draw
-   */
-  public VisualComponent(Texture texture) {
-    sprite = new Sprite(texture);
+  public VisualComponent(Sprite sprite, TextureAtlas textureAtlas) {
+    if (sprite != null) {
+      this.sprite = sprite;
+    } else {
+      this.animation = new Animation(.5f, textureAtlas.getRegions());
+    }
   }
 }

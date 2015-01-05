@@ -1,193 +1,151 @@
 cave.png
 format: RGBA8888
-filter: Linear,Linear
+filter: Linear,Nearest
 repeat: none
 caveFloor-1
   rotate: false
   xy: 2, 2
-  size: 24, 24
-  orig: 24, 24
+  size: 36, 36
+  orig: 36, 36
   offset: 0, 0
   index: -1
 caveFloor-10
   rotate: false
-  xy: 28, 2
-  size: 24, 24
-  orig: 24, 24
+  xy: 40, 2
+  size: 36, 36
+  orig: 36, 36
   offset: 0, 0
   index: -1
 caveFloor-11
   rotate: false
-  xy: 54, 2
-  size: 24, 24
-  orig: 24, 24
+  xy: 78, 2
+  size: 36, 36
+  orig: 36, 36
   offset: 0, 0
   index: -1
 caveFloor-12
   rotate: false
-  xy: 80, 2
-  size: 24, 24
-  orig: 24, 24
+  xy: 116, 2
+  size: 36, 36
+  orig: 36, 36
   offset: 0, 0
   index: -1
 caveFloor-13
   rotate: false
-  xy: 106, 2
-  size: 24, 24
-  orig: 24, 24
+  xy: 154, 2
+  size: 36, 36
+  orig: 36, 36
   offset: 0, 0
   index: -1
 caveFloor-14
   rotate: false
-  xy: 132, 2
-  size: 24, 24
-  orig: 24, 24
+  xy: 192, 2
+  size: 36, 36
+  orig: 36, 36
   offset: 0, 0
   index: -1
 caveFloor-15
   rotate: false
-  xy: 158, 2
-  size: 24, 24
-  orig: 24, 24
+  xy: 230, 2
+  size: 36, 36
+  orig: 36, 36
   offset: 0, 0
   index: -1
 caveFloor-16
   rotate: false
-  xy: 184, 2
-  size: 24, 24
-  orig: 24, 24
+  xy: 268, 2
+  size: 36, 36
+  orig: 36, 36
   offset: 0, 0
   index: -1
 caveFloor-2
   rotate: false
-  xy: 210, 2
-  size: 24, 24
-  orig: 24, 24
+  xy: 306, 2
+  size: 36, 36
+  orig: 36, 36
   offset: 0, 0
   index: -1
 caveFloor-3
   rotate: false
-  xy: 236, 2
-  size: 24, 24
-  orig: 24, 24
+  xy: 344, 2
+  size: 36, 36
+  orig: 36, 36
   offset: 0, 0
   index: -1
 caveFloor-4
   rotate: false
-  xy: 262, 2
-  size: 24, 24
-  orig: 24, 24
+  xy: 382, 2
+  size: 36, 36
+  orig: 36, 36
   offset: 0, 0
   index: -1
 caveFloor-5
   rotate: false
-  xy: 288, 2
-  size: 24, 24
-  orig: 24, 24
+  xy: 420, 2
+  size: 36, 36
+  orig: 36, 36
   offset: 0, 0
   index: -1
 caveFloor-6
   rotate: false
-  xy: 314, 2
-  size: 24, 24
-  orig: 24, 24
+  xy: 458, 2
+  size: 36, 36
+  orig: 36, 36
   offset: 0, 0
   index: -1
 caveFloor-7
   rotate: false
-  xy: 340, 2
-  size: 24, 24
-  orig: 24, 24
+  xy: 496, 2
+  size: 36, 36
+  orig: 36, 36
   offset: 0, 0
   index: -1
 caveFloor-8
   rotate: false
-  xy: 366, 2
-  size: 24, 24
-  orig: 24, 24
+  xy: 534, 2
+  size: 36, 36
+  orig: 36, 36
   offset: 0, 0
   index: -1
 caveFloor-9
   rotate: false
-  xy: 392, 2
-  size: 24, 24
-  orig: 24, 24
+  xy: 572, 2
+  size: 36, 36
+  orig: 36, 36
   offset: 0, 0
   index: -1
 caveWall-1
   rotate: false
-  xy: 418, 2
-  size: 24, 24
-  orig: 24, 24
+  xy: 610, 2
+  size: 36, 36
+  orig: 36, 36
   offset: 0, 0
   index: -1
 caveWall-2
   rotate: false
-  xy: 444, 2
-  size: 24, 24
-  orig: 24, 24
+  xy: 648, 2
+  size: 36, 36
+  orig: 36, 36
   offset: 0, 0
   index: -1
 caveWall-3
   rotate: false
-  xy: 470, 2
-  size: 24, 24
-  orig: 24, 24
+  xy: 686, 2
+  size: 36, 36
+  orig: 36, 36
   offset: 0, 0
   index: -1
 caveWall-4
   rotate: false
-  xy: 496, 2
-  size: 24, 24
-  orig: 24, 24
-  offset: 0, 0
-  index: -1
-caveWallBack-1
-  rotate: false
-  xy: 522, 2
-  size: 24, 24
-  orig: 24, 24
-  offset: 0, 0
-  index: -1
-caveWallBack-2
-  rotate: false
-  xy: 548, 2
-  size: 24, 24
-  orig: 24, 24
-  offset: 0, 0
-  index: -1
-caveWallBack-3
-  rotate: false
-  xy: 574, 2
-  size: 24, 24
-  orig: 24, 24
-  offset: 0, 0
-  index: -1
-caveWallTop-1
-  rotate: false
-  xy: 626, 2
-  size: 3, 24
-  orig: 24, 24
-  offset: 21, 0
-  index: -1
-caveWallTop-2
-  rotate: false
-  xy: 631, 2
-  size: 3, 24
-  orig: 24, 24
-  offset: 0, 0
-  index: -1
-caveWallTop-3
-  rotate: true
-  xy: 636, 2
-  size: 24, 3
-  orig: 24, 24
+  xy: 724, 2
+  size: 36, 36
+  orig: 36, 36
   offset: 0, 0
   index: -1
 nothing
   rotate: false
-  xy: 600, 2
-  size: 24, 24
-  orig: 24, 24
+  xy: 762, 2
+  size: 36, 36
+  orig: 36, 36
   offset: 0, 0
   index: -1

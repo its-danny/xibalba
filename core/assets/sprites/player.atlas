@@ -1,0 +1,18 @@
+player.png
+format: RGBA8888
+filter: Linear,Nearest
+repeat: none
+playerIdle-1
+  rotate: false
+  xy: 2, 2
+  size: 36, 36
+  orig: 36, 36
+  offset: 0, 0
+  index: -1
+playerIdle-2
+  rotate: false
+  xy: 40, 2
+  size: 36, 36
+  orig: 36, 36
+  offset: 0, 0
+  index: -1

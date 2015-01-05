@@ -6,7 +6,7 @@
         <key>texturePackerVersion</key>
         <string>3.6.0</string>
         <key>fileName</key>
-        <string>/Users/danny/Development/xibalba/core/assets/sprites/cave.tps</string>
+        <string>/Users/danny/Development/xibalba/core/assets/sprites/spiderMonkey.tps</string>
         <key>autoSDSettings</key>
         <array>
             <struct type="AutoSDSettings">
@@ -38,7 +38,7 @@
         <key>dataFormat</key>
         <string>libgdx</string>
         <key>textureFileName</key>
-        <filename>cave.png</filename>
+        <filename>spiderMonkey.png</filename>
         <key>flipPVR</key>
         <false/>
         <key>pvrCompressionQuality</key>
@@ -145,7 +145,7 @@
             <key>data</key>
             <struct type="DataFile">
                 <key>name</key>
-                <filename>cave.atlas</filename>
+                <filename>spiderMonkey.atlas</filename>
             </struct>
         </map>
         <key>multiPack</key>
@@ -188,36 +188,15 @@
         </struct>
         <key>fileList</key>
         <array>
-            <filename>cave/caveFloor-1.png</filename>
-            <filename>cave/caveFloor-2.png</filename>
-            <filename>cave/caveFloor-3.png</filename>
-            <filename>cave/caveFloor-4.png</filename>
-            <filename>cave/caveFloor-5.png</filename>
-            <filename>cave/caveFloor-6.png</filename>
-            <filename>cave/caveFloor-7.png</filename>
-            <filename>cave/caveFloor-8.png</filename>
-            <filename>cave/caveFloor-9.png</filename>
-            <filename>cave/caveFloor-10.png</filename>
-            <filename>cave/caveFloor-11.png</filename>
-            <filename>cave/caveFloor-12.png</filename>
-            <filename>cave/caveFloor-13.png</filename>
-            <filename>cave/caveFloor-14.png</filename>
-            <filename>cave/caveFloor-15.png</filename>
-            <filename>cave/caveFloor-16.png</filename>
-            <filename>cave/caveWall-1.png</filename>
-            <filename>cave/caveWall-2.png</filename>
-            <filename>cave/caveWall-3.png</filename>
-            <filename>cave/caveWall-4.png</filename>
-            <filename>cave/nothing.png</filename>
+            <filename>spiderMonkey/spidermonkeyIdle-1.png</filename>
+            <filename>spiderMonkey/spidermonkeyIdle-2.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>
         <key>replaceList</key>
         <array/>
         <key>ignoredWarnings</key>
-        <array>
-            <string>data-file-name-extension</string>
-        </array>
+        <array/>
         <key>commonDivisorX</key>
         <uint>1</uint>
         <key>commonDivisorY</key>

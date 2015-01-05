@@ -25,14 +25,12 @@ import java.util.Objects;
 public class CombatHelpers {
   private final Engine engine;
   private final ActionLog actionLog;
-  private final EntityHelpers entityHelpers;
   private final InventoryHelpers inventoryHelpers;
   private final SkillHelpers skillHelpers;
 
-  public CombatHelpers(Engine engine, ActionLog actionLog, EntityHelpers entityHelpers, InventoryHelpers inventoryHelpers, SkillHelpers skillHelpers) {
+  public CombatHelpers(Engine engine, ActionLog actionLog, InventoryHelpers inventoryHelpers, SkillHelpers skillHelpers) {
     this.engine = engine;
     this.actionLog = actionLog;
-    this.entityHelpers = entityHelpers;
     this.inventoryHelpers = inventoryHelpers;
     this.skillHelpers = skillHelpers;
   }

@@ -1,6 +1,6 @@
 ui.png
 format: RGBA8888
-filter: Linear,Linear
+filter: Linear,Nearest
 repeat: none
 enemy-health-1
   rotate: false
