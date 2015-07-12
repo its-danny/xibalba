@@ -100,7 +100,7 @@ public class WorldRenderer {
     }
 
     renderEffects(lightMap);
-//    renderHealth(lightMap);
+    renderHealth(lightMap);
     renderItems(lightMap);
     renderPlayer(delta, lightMap);
     renderEnemies(delta, lightMap);
@@ -156,7 +156,7 @@ public class WorldRenderer {
         }
 
         batch.setColor(1f, 1f, 1f, lightMap[(int) position.pos.x][(int) position.pos.y]);
-        batch.draw(sprite, position.pos.x * SPRITE_WIDTH + 4, position.pos.y * SPRITE_HEIGHT + 4);
+        batch.draw(sprite, position.pos.x * SPRITE_WIDTH + 6, position.pos.y * SPRITE_HEIGHT + 0);
         batch.setColor(1f, 1f, 1f, 1f);
       }
     }
