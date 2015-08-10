@@ -30,7 +30,7 @@ public class UIRenderer {
     skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
     fpsLogger = new FPSLogger();
 
-    skin.getFont("default-font").setMarkupEnabled(true);
+    skin.getFont("default-font").getData().markupEnabled = true;
 
     actionList = new VerticalGroup();
     actionList.setWidth(300);

@@ -5,7 +5,7 @@ import org.xguzm.pathfinding.grid.GridCell;
 
 import java.util.List;
 
-public class BrainComponent extends Component {
+public class BrainComponent implements Component {
   public State state;
   public List<GridCell> path = null;
 

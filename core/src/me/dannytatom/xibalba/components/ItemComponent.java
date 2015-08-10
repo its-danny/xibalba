@@ -5,7 +5,7 @@ import com.badlogic.ashley.core.Component;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class ItemComponent extends Component {
+public class ItemComponent implements Component {
   public String name;
   public String description;
   public String skill;

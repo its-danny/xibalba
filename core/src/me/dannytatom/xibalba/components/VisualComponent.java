@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 
-public class VisualComponent extends Component {
+public class VisualComponent implements Component {
   public Sprite sprite = null;
   public Animation animation = null;
   public float elapsedTime = 0;

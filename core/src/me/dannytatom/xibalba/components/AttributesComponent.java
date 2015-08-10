@@ -2,7 +2,7 @@ package me.dannytatom.xibalba.components;
 
 import com.badlogic.ashley.core.Component;
 
-public class AttributesComponent extends Component {
+public class AttributesComponent implements Component {
   public final int speed;
   public final int vision;
   public final int maxHealth;
