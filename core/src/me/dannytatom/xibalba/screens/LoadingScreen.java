@@ -2,17 +2,19 @@ package me.dannytatom.xibalba.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import me.dannytatom.xibalba.Main;
 
 public class LoadingScreen implements Screen {
   private final Main game;
 
-  private final SpriteBatch batch;
-  private final BitmapFont font;
+  private Stage stage;
 
   /**
    * Loading Screen.
@@ -22,8 +24,14 @@ public class LoadingScreen implements Screen {
   public LoadingScreen(Main main) {
     game = main;
 
-    font = new BitmapFont();
-    batch = new SpriteBatch();
+    Skin skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
+    stage = new Stage();
+
+    Table table = new Table();
+    table.setFillParent(true);
+    stage.addActor(table);
+
+    table.add(new Label("Loading assets", skin));
 
     game.assets.load("sprites/ui.atlas", TextureAtlas.class);
     game.assets.load("sprites/cave.atlas", TextureAtlas.class);
@@ -37,12 +45,16 @@ public class LoadingScreen implements Screen {
 
   @Override
   public void render(float delta) {
-    batch.begin();
-    font.draw(batch, "Loading...", Gdx.graphics.getWidth() / 2 - 24, Gdx.graphics.getHeight() / 2);
-    batch.end();
+    Gdx.gl.glClearColor(0, 0, 0, 1);
+    Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+    stage.act(Gdx.graphics.getDeltaTime());
+    stage.draw();
 
     if (game.assets.update()) {
       game.setScreen(new PlayScreen(game));
+
+      dispose();
     }
   }
 
@@ -73,7 +85,6 @@ public class LoadingScreen implements Screen {
 
   @Override
   public void dispose() {
-    batch.dispose();
-    font.dispose();
+    stage.dispose();
   }
 }

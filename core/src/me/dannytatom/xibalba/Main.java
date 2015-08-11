@@ -4,7 +4,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Colors;
-import me.dannytatom.xibalba.screens.LoadingScreen;
+import me.dannytatom.xibalba.screens.MainMenuScreen;
 
 public class Main extends Game {
   public AssetManager assets;
@@ -23,7 +23,7 @@ public class Main extends Game {
     Colors.put("LIGHT_GRAY", parseColor("999999"));
     Colors.put("DARK_GRAY", parseColor("666666"));
 
-    setScreen(new LoadingScreen(this));
+    setScreen(new MainMenuScreen(this));
   }
 
   private Color parseColor(String hex) {

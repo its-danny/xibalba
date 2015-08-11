@@ -102,7 +102,9 @@ class PlayScreen implements Screen {
     uiRenderer.render(delta);
 
     if (player.getComponent(AttributesComponent.class).health <= 0) {
-      game.setScreen(new LoadingScreen(game));
+      game.setScreen(new MainMenuScreen(game));
+
+      dispose();
     }
   }
 
