@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -23,9 +24,12 @@ public class LoadingScreen implements Screen {
    */
   public LoadingScreen(Main main) {
     game = main;
-
-    Skin skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
     stage = new Stage();
+
+    Skin skin = new Skin();
+    skin.add("Inconsolata", game.font, BitmapFont.class);
+    skin.addRegions(new TextureAtlas(Gdx.files.internal("ui/uiskin.atlas")));
+    skin.load(Gdx.files.internal("ui/uiskin.json"));
 
     Table table = new Table();
     table.setFillParent(true);
@@ -53,14 +57,12 @@ public class LoadingScreen implements Screen {
 
     if (game.assets.update()) {
       game.setScreen(new PlayScreen(game));
-
-      dispose();
     }
   }
 
   @Override
   public void resize(int width, int height) {
-
+    stage.getViewport().update(width, height, true);
   }
 
   @Override
@@ -70,7 +72,7 @@ public class LoadingScreen implements Screen {
 
   @Override
   public void hide() {
-
+    dispose();
   }
 
   @Override

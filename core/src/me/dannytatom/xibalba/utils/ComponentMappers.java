@@ -3,7 +3,6 @@ package me.dannytatom.xibalba.utils;
 import com.badlogic.ashley.core.ComponentMapper;
 import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
-import me.dannytatom.xibalba.components.SkillsComponent;
 import me.dannytatom.xibalba.components.VisualComponent;
 import me.dannytatom.xibalba.components.actions.MeleeComponent;
 import me.dannytatom.xibalba.components.actions.MovementComponent;
@@ -26,9 +25,6 @@ public final class ComponentMappers {
 
   public static final ComponentMapper<AttributesComponent> attributes =
       ComponentMapper.getFor(AttributesComponent.class);
-
-  public static final ComponentMapper<SkillsComponent> skills =
-      ComponentMapper.getFor(SkillsComponent.class);
 
   public static final ComponentMapper<TargetComponent> target =
       ComponentMapper.getFor(TargetComponent.class);

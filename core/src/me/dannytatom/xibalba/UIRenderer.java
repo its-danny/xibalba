@@ -4,11 +4,14 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.FPSLogger;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.InventoryComponent;
 import me.dannytatom.xibalba.components.ItemComponent;
 import me.dannytatom.xibalba.components.SkillsComponent;
@@ -22,14 +25,19 @@ public class UIRenderer {
   private final VerticalGroup actionList;
   private final VerticalGroup characterPanel;
 
-  public UIRenderer(ActionLog actionLog, Entity player) {
+  public UIRenderer(Main main, ActionLog actionLog, Entity player) {
+    Main game = main;
+
     this.actionLog = actionLog;
     this.player = player;
 
     stage = new Stage(new ScreenViewport());
-    skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
     fpsLogger = new FPSLogger();
 
+    skin = new Skin();
+    skin.add("Inconsolata", game.font, BitmapFont.class);
+    skin.addRegions(new TextureAtlas(Gdx.files.internal("ui/uiskin.atlas")));
+    skin.load(Gdx.files.internal("ui/uiskin.json"));
     skin.getFont("default-font").getData().markupEnabled = true;
 
     actionList = new VerticalGroup();
@@ -76,6 +84,7 @@ public class UIRenderer {
   private void renderCharacterPanel() {
     characterPanel.clearChildren();
 
+    characterPanel.addActor(new Label(player.getComponent(AttributesComponent.class).name, skin));
     characterPanel.addActor(renderSkills());
     characterPanel.addActor(renderInventory());
   }
@@ -84,7 +93,7 @@ public class UIRenderer {
     SkillsComponent skills = player.getComponent(SkillsComponent.class);
 
     VerticalGroup group = new VerticalGroup();
-    group.padBottom(10);
+    group.pad(10, 0, 10, 0);
     group.left();
 
     if (skills.unarmed > 0) {

@@ -52,7 +52,7 @@ class PlayScreen implements Screen {
     Map map = new Map(engine, entityHelpers, cave.map);
 
     // Add player entity
-    player = entityHelpers.spawnPlayer(map.findPlayerStart());
+    player = entityHelpers.spawnPlayer(game.player, map.findPlayerStart());
     engine.addEntity(player);
 
     InventoryHelpers inventoryHelpers = new InventoryHelpers(player);
@@ -87,7 +87,7 @@ class PlayScreen implements Screen {
 
     // Setup renderers
     worldRenderer = new WorldRenderer(game, engine, batch, map, player);
-    uiRenderer = new UIRenderer(actionLog, player);
+    uiRenderer = new UIRenderer(game, actionLog, player);
   }
 
   @Override
@@ -103,8 +103,6 @@ class PlayScreen implements Screen {
 
     if (player.getComponent(AttributesComponent.class).health <= 0) {
       game.setScreen(new MainMenuScreen(game));
-
-      dispose();
     }
   }
 
@@ -120,7 +118,7 @@ class PlayScreen implements Screen {
 
   @Override
   public void hide() {
-
+    dispose();
   }
 
   @Override

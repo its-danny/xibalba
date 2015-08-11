@@ -25,14 +25,11 @@ public class EntityHelpers {
     this.assets = assets;
   }
 
-  public Entity spawnPlayer(Vector2 position) {
-    Entity player = new Entity();
-
+  public Entity spawnPlayer(Entity player, Vector2 position) {
     player.add(new PlayerComponent());
     player.add(new PositionComponent(position));
     player.add(new VisualComponent(null, assets.get("sprites/player.atlas")));
     player.add(new SkillsComponent());
-    player.add(new AttributesComponent("Necahual", 100, 10, 50, 5, 5));
     player.add(new InventoryComponent());
 
     return player;
