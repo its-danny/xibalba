@@ -11,53 +11,40 @@ import me.dannytatom.xibalba.components.actions.MeleeComponent;
 import me.dannytatom.xibalba.components.actions.MovementComponent;
 import me.dannytatom.xibalba.components.actions.RangeComponent;
 import me.dannytatom.xibalba.map.Map;
+import me.dannytatom.xibalba.screens.MainMenuScreen;
 import me.dannytatom.xibalba.screens.SkillsScreen;
-import me.dannytatom.xibalba.utils.EntityHelpers;
-import me.dannytatom.xibalba.utils.InventoryHelpers;
 
 public class PlayerInput implements InputProcessor {
-  private final Main game;
-  private final ActionLog actionLog;
+  private final Main main;
   private final Map map;
-  private final EntityHelpers entityHelpers;
-  private final InventoryHelpers inventoryHelpers;
-  private final Entity player;
 
   private State state = State.PLAYING;
 
   /**
    * Handle player input.
    *
-   * @param game             Instance of the main class
-   * @param actionLog        Action log
-   * @param map              Map
-   * @param entityHelpers    Helpers for handling entities
-   * @param inventoryHelpers Helpers for managing inventory
+   * @param main Instance of the main class
+   * @param map  Map
    */
-  public PlayerInput(Main game, ActionLog actionLog, Map map, EntityHelpers entityHelpers, InventoryHelpers inventoryHelpers) {
-    this.game = game;
-    this.actionLog = actionLog;
+  public PlayerInput(Main main, Map map) {
+    this.main = main;
     this.map = map;
-    this.entityHelpers = entityHelpers;
-    this.inventoryHelpers = inventoryHelpers;
-
-    this.player = entityHelpers.getPlayer();
   }
 
   @Override
   public boolean keyDown(int keycode) {
-    AttributesComponent attributes = player.getComponent(AttributesComponent.class);
-    PositionComponent position = player.getComponent(PositionComponent.class);
+    AttributesComponent attributes = main.player.getComponent(AttributesComponent.class);
+    PositionComponent position = main.player.getComponent(PositionComponent.class);
 
     switch (keycode) {
       case Keys.BACKSLASH:
-        game.debug ^= true;
+        main.debug ^= true;
         break;
       case Keys.Z:
-        game.executeTurn = true;
+        main.executeTurn = true;
         break;
       case Keys.S:
-        game.setScreen(new SkillsScreen(game));
+        main.setScreen(new SkillsScreen(main));
         break;
       case Keys.K:
         if (state == State.PLAYING) {
@@ -117,7 +104,7 @@ public class PlayerInput implements InputProcessor {
         break;
       case Keys.T:
         if (state == State.PLAYING) {
-          Entity item = inventoryHelpers.getShowing();
+          Entity item = main.inventoryHelpers.getShowing();
 
           if (item != null && item.getComponent(ItemComponent.class).actions.get("canThrow")) {
             state = State.TARGETING;
@@ -126,17 +113,18 @@ public class PlayerInput implements InputProcessor {
         break;
       case Keys.E:
         if (state == State.PLAYING) {
-          inventoryHelpers.wieldItem();
+          main.inventoryHelpers.wieldItem();
         }
         break;
       case Keys.D:
         if (state == State.PLAYING) {
-          inventoryHelpers.dropItem(null);
+          main.inventoryHelpers.dropItem(null);
         }
         break;
       case Keys.Q:
         if (state == State.PLAYING) {
-          inventoryHelpers.hideItems();
+          main.getScreen().dispose();
+          main.setScreen(new MainMenuScreen(main));
         } else if (state == State.TARGETING) {
           map.target = null;
           map.targetingPath = null;
@@ -147,9 +135,9 @@ public class PlayerInput implements InputProcessor {
       case Keys.ENTER:
         if (state == State.TARGETING) {
           if (map.targetingPath != null && attributes.energy >= RangeComponent.COST) {
-            player.add(new RangeComponent(map.target));
+            main.player.add(new RangeComponent(map.target));
 
-            game.executeTurn = true;
+            main.executeTurn = true;
           }
 
           map.target = null;
@@ -159,8 +147,8 @@ public class PlayerInput implements InputProcessor {
         }
         break;
       default:
-        if (state == State.PLAYING && inventoryHelpers.findItem(keycode) != null) {
-          inventoryHelpers.showItem(inventoryHelpers.findItem(keycode));
+        if (state == State.PLAYING && main.inventoryHelpers.findItem(keycode) != null) {
+          main.inventoryHelpers.toggleItem(main.inventoryHelpers.findItem(keycode));
         }
     }
 
@@ -216,31 +204,31 @@ public class PlayerInput implements InputProcessor {
   private void handleMovement(int energy, Vector2 pos) {
     if (map.isWalkable(pos)) {
       if (energy >= MovementComponent.COST) {
-        player.add(new MovementComponent(pos));
+        main.player.add(new MovementComponent(pos));
 
-        game.executeTurn = true;
+        main.executeTurn = true;
       }
     } else {
       Entity thing = map.getEntityAt(pos);
 
-      if (entityHelpers.isItem(thing) && energy >= MovementComponent.COST) {
-        if (inventoryHelpers.addItem(thing)) {
-          actionLog.add("You pick up a " + thing.getComponent(ItemComponent.class).name);
+      if (main.entityHelpers.isItem(thing) && energy >= MovementComponent.COST) {
+        if (main.inventoryHelpers.addItem(thing)) {
+          main.log.add("You pick up a " + thing.getComponent(ItemComponent.class).name);
         }
 
-        player.add(new MovementComponent(pos));
+        main.player.add(new MovementComponent(pos));
 
-        game.executeTurn = true;
-      } else if (entityHelpers.isEnemy(thing) && energy >= MeleeComponent.COST) {
-        player.add(new MeleeComponent(thing));
+        main.executeTurn = true;
+      } else if (main.entityHelpers.isEnemy(thing) && energy >= MeleeComponent.COST) {
+        main.player.add(new MeleeComponent(thing));
 
-        game.executeTurn = true;
+        main.executeTurn = true;
       }
     }
   }
 
   private void handleTargeting(Vector2 pos) {
-    map.createTargetingPath(player.getComponent(PositionComponent.class).pos, pos);
+    map.createTargetingPath(main.player.getComponent(PositionComponent.class).pos, pos);
   }
 
   private enum State {

@@ -3,49 +3,41 @@ package me.dannytatom.xibalba.systems.actions;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
+import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.ItemComponent;
 import me.dannytatom.xibalba.components.actions.RangeComponent;
 import me.dannytatom.xibalba.map.Map;
 import me.dannytatom.xibalba.systems.ActionSystem;
-import me.dannytatom.xibalba.utils.CombatHelpers;
 import me.dannytatom.xibalba.utils.ComponentMappers;
-import me.dannytatom.xibalba.utils.EntityHelpers;
-import me.dannytatom.xibalba.utils.InventoryHelpers;
 
 import java.util.Objects;
 
 public class RangeSystem extends ActionSystem {
+  private final Main main;
   private final Engine engine;
   private final Map map;
-  private final EntityHelpers entityHelpers;
-  private final CombatHelpers combatHelpers;
-  private final InventoryHelpers inventoryHelpers;
 
   /**
    * Handles range combat.
    *
-   * @param engine           Ashley engine
-   * @param map              Map we're on
-   * @param entityHelpers    Entity helpers
-   * @param combatHelpers    Combat helpers
-   * @param inventoryHelpers Inventory helpers
+   * @param main   Instance of the main class, needed for helpers*
+   * @param engine Ashley engine
+   * @param map    Map we're on
    */
-  public RangeSystem(Engine engine, Map map, EntityHelpers entityHelpers, CombatHelpers combatHelpers, InventoryHelpers inventoryHelpers) {
+  public RangeSystem(Main main, Engine engine, Map map) {
     super(Family.all(RangeComponent.class).get());
 
+    this.main = main;
     this.engine = engine;
     this.map = map;
-    this.entityHelpers = entityHelpers;
-    this.combatHelpers = combatHelpers;
-    this.inventoryHelpers = inventoryHelpers;
   }
 
   @Override
   protected void processEntity(Entity entity, float deltaTime) {
     RangeComponent range = ComponentMappers.range.get(entity);
     AttributesComponent attributes = ComponentMappers.attributes.get(entity);
-    Entity item = inventoryHelpers.getShowing();
+    Entity item = main.inventoryHelpers.getShowing();
 
     if (item != null) {
       ItemComponent ic = item.getComponent(ItemComponent.class);
@@ -54,14 +46,14 @@ public class RangeSystem extends ActionSystem {
         Entity enemy = map.getEnemyAt(range.target);
 
         if (enemy != null) {
-          combatHelpers.range(entity, enemy, item);
+          main.combatHelpers.range(entity, enemy, item);
         }
 
-        inventoryHelpers.dropItem(range.target);
+        main.inventoryHelpers.dropItem(range.target);
       } else if (Objects.equals(ic.type, "projectile")) {
-        entityHelpers.spawnEffect(entity, range.target, item);
+        main.entityHelpers.spawnEffect(entity, range.target, item);
 
-        inventoryHelpers.removeItem();
+        main.inventoryHelpers.removeItem();
         engine.removeEntity(item);
       }
 

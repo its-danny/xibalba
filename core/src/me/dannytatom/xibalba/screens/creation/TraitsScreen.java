@@ -23,7 +23,7 @@ import me.dannytatom.xibalba.components.TraitsComponent;
 import me.dannytatom.xibalba.screens.MainMenuScreen;
 
 public class TraitsScreen implements Screen {
-  private final Main game;
+  private final Main main;
 
   private Skin skin;
   private Stage stage;
@@ -46,11 +46,11 @@ public class TraitsScreen implements Screen {
    * @param main Instance of main class
    */
   public TraitsScreen(Main main) {
-    game = main;
+    this.main = main;
     stage = new Stage();
 
     skin = new Skin();
-    skin.add("Inconsolata", game.font, BitmapFont.class);
+    skin.add("Inconsolata", this.main.font, BitmapFont.class);
     skin.addRegions(new TextureAtlas(Gdx.files.internal("ui/uiskin.atlas")));
     skin.load(Gdx.files.internal("ui/uiskin.json"));
     skin.getFont("default-font").getData().markupEnabled = true;
@@ -231,7 +231,7 @@ public class TraitsScreen implements Screen {
     // Continue to next step of character creation
     if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
       // Create player entity
-      game.player = new Entity();
+      main.player = new Entity();
 
       TraitsComponent traitsComponent = new TraitsComponent();
       DefectsComponent defectsComponent = new DefectsComponent();
@@ -252,15 +252,15 @@ public class TraitsScreen implements Screen {
         defectsComponent.defects.add(entity);
       }
 
-      game.player.add(traitsComponent);
-      game.player.add(defectsComponent);
+      main.player.add(traitsComponent);
+      main.player.add(defectsComponent);
 
       // Continue on
-      game.setScreen(new NameScreen(game));
+      main.setScreen(new NameScreen(main));
     }
 
     if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
-      game.setScreen(new MainMenuScreen(game));
+      main.setScreen(new MainMenuScreen(main));
     }
   }
 

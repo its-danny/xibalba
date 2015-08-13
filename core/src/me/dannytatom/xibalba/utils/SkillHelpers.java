@@ -1,16 +1,16 @@
 package me.dannytatom.xibalba.utils;
 
 import com.badlogic.ashley.core.Entity;
-import me.dannytatom.xibalba.ActionLog;
+import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.components.SkillsComponent;
 
 import java.lang.reflect.Field;
 
 public class SkillHelpers {
-  private final ActionLog actionLog;
+  private final Main main;
 
-  public SkillHelpers(ActionLog actionLog) {
-    this.actionLog = actionLog;
+  public SkillHelpers(Main main) {
+    this.main = main;
   }
 
   /**
@@ -61,7 +61,7 @@ public class SkillHelpers {
         skillField.set(skills, skillLevel == 0 ? 4 : skillLevel + 2);
         counterField.set(skills, 0);
 
-        actionLog.add("You feel better at " + skill);
+        main.log.add("You feel better at " + skill);
       }
     } catch (NoSuchFieldException | IllegalAccessException e) {
       e.printStackTrace();

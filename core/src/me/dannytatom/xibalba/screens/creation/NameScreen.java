@@ -18,11 +18,9 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class NameScreen implements Screen {
-  private final Main game;
+  private final Main main;
 
-  private Skin skin;
   private Stage stage;
-
   private TextField nameField;
 
   /**
@@ -31,12 +29,12 @@ public class NameScreen implements Screen {
    * @param main Instance of main class
    */
   public NameScreen(Main main) {
-    game = main;
+    this.main = main;
 
     stage = new Stage();
 
-    skin = new Skin();
-    skin.add("Inconsolata", game.font, BitmapFont.class);
+    Skin skin = new Skin();
+    skin.add("Inconsolata", this.main.font, BitmapFont.class);
     skin.addRegions(new TextureAtlas(Gdx.files.internal("ui/uiskin.atlas")));
     skin.load(Gdx.files.internal("ui/uiskin.json"));
     skin.getFont("default-font").getData().markupEnabled = true;
@@ -50,8 +48,8 @@ public class NameScreen implements Screen {
     stage.setKeyboardFocus(nameField);
 
     VerticalGroup traitsGroup = new VerticalGroup().left();
-    ArrayList<Entity> traits = game.player.getComponent(TraitsComponent.class).traits;
-    ArrayList<Entity> defects = game.player.getComponent(DefectsComponent.class).defects;
+    ArrayList<Entity> traits = this.main.player.getComponent(TraitsComponent.class).traits;
+    ArrayList<Entity> defects = this.main.player.getComponent(DefectsComponent.class).defects;
 
     for (Entity entity : traits) {
       TraitComponent trait = entity.getComponent(TraitComponent.class);
@@ -66,7 +64,7 @@ public class NameScreen implements Screen {
     table.add(
         new Label(
             "[LIGHT_GRAY]After reviewing, enter a name then [WHITE]ENTER[LIGHT_GRAY] to begin",
-        skin)
+            skin)
     ).pad(10).width(Gdx.graphics.getWidth() / 2 - 20);
     table.add(new Label("Traits & Defects", skin)).pad(10).width(Gdx.graphics.getWidth() / 2 - 20);
     table.row();
@@ -93,13 +91,13 @@ public class NameScreen implements Screen {
       String name = nameField.getText();
 
       if (!Objects.equals(name, "")) {
-        game.player.add(new AttributesComponent(nameField.getText(), 100, 10, 50, 5, 5));
-        game.setScreen(new LoadingScreen(game));
+        main.player.add(new AttributesComponent(nameField.getText(), 100, 10, 50, 5, 5));
+        main.setScreen(new LoadingScreen(main));
       }
     }
 
     if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
-      game.setScreen(new MainMenuScreen(game));
+      main.setScreen(new MainMenuScreen(main));
     }
   }
 

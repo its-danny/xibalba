@@ -4,12 +4,12 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Json;
+import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.components.*;
 import me.dannytatom.xibalba.components.ai.BrainComponent;
 import me.dannytatom.xibalba.components.effects.DamageEffectComponent;
@@ -17,12 +17,12 @@ import me.dannytatom.xibalba.components.effects.DamageEffectComponent;
 import java.util.Objects;
 
 public class EntityHelpers {
+  private final Main main;
   private final Engine engine;
-  private final AssetManager assets;
 
-  public EntityHelpers(Engine engine, AssetManager assets) {
+  public EntityHelpers(Main main, Engine engine) {
+    this.main = main;
     this.engine = engine;
-    this.assets = assets;
   }
 
   /**
@@ -35,7 +35,7 @@ public class EntityHelpers {
   public Entity spawnPlayer(Entity player, Vector2 position) {
     player.add(new PlayerComponent());
     player.add(new PositionComponent(position));
-    player.add(new VisualComponent(null, assets.get("sprites/player.atlas")));
+    player.add(new VisualComponent(null, main.assets.get("sprites/player.atlas")));
     player.add(new SkillsComponent());
     player.add(new InventoryComponent());
 
@@ -58,7 +58,7 @@ public class EntityHelpers {
     entity.add(new EnemyComponent());
     entity.add(new BrainComponent());
     entity.add(new PositionComponent(position));
-    entity.add(new VisualComponent(null, assets.get("sprites/" + type + ".atlas")));
+    entity.add(new VisualComponent(null, main.assets.get("sprites/" + type + ".atlas")));
     entity.add(new SkillsComponent());
     entity.add(new AttributesComponent(
         json.name,
@@ -88,7 +88,7 @@ public class EntityHelpers {
     );
     entity.add(new PositionComponent(position));
     entity.add(new VisualComponent(new Sprite(
-            (Texture) assets.get("sprites/" + type + ".png")), null)
+            (Texture) main.assets.get("sprites/" + type + ".png")), null)
     );
 
     ItemComponent item = entity.getComponent(ItemComponent.class);
@@ -116,7 +116,7 @@ public class EntityHelpers {
         Entity projectile = new Entity();
         projectile.add(new PositionComponent(new Vector2(x, y)));
         projectile.add(
-            new VisualComponent(new Sprite((Texture) assets.get("sprites/poison.png")), null)
+            new VisualComponent(new Sprite((Texture) main.assets.get("sprites/poison.png")), null)
         );
 
         if (Objects.equals(ic.effect, "poison")) {

@@ -1,6 +1,5 @@
 package me.dannytatom.xibalba;
 
-import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.FPSLogger;
@@ -16,24 +15,20 @@ import me.dannytatom.xibalba.components.InventoryComponent;
 import me.dannytatom.xibalba.components.ItemComponent;
 
 public class InterfaceRenderer {
+  private final Main main;
   private final Stage stage;
   private final Skin skin;
   private final FPSLogger fpsLogger;
-  private final ActionLog actionLog;
-  private final Entity player;
   private final VerticalGroup actionList;
   private final VerticalGroup characterPanel;
 
   /**
    * Renders the UI.
    *
-   * @param main      Instance of the main class
-   * @param actionLog Action log
-   * @param player    The player
+   * @param main Instance of the main class
    */
-  public InterfaceRenderer(Main main, ActionLog actionLog, Entity player) {
-    this.actionLog = actionLog;
-    this.player = player;
+  public InterfaceRenderer(Main main) {
+    this.main = main;
 
     stage = new Stage(new ScreenViewport());
     fpsLogger = new FPSLogger();
@@ -80,8 +75,8 @@ public class InterfaceRenderer {
 
     actionList.clearChildren();
 
-    for (int i = 0; i < actionLog.items.size(); i++) {
-      Label label = new Label(actionLog.items.get(i), skin);
+    for (int i = 0; i < main.log.items.size(); i++) {
+      Label label = new Label(main.log.items.get(i), skin);
       label.setColor(1, 1, 1, alpha);
 
       actionList.addActor(label);
@@ -93,12 +88,14 @@ public class InterfaceRenderer {
   private void renderCharacterPanel() {
     characterPanel.clearChildren();
 
-    characterPanel.addActor(new Label(player.getComponent(AttributesComponent.class).name, skin));
+    characterPanel.addActor(
+        new Label(main.player.getComponent(AttributesComponent.class).name, skin)
+    );
     characterPanel.addActor(renderInventory());
   }
 
   private VerticalGroup renderInventory() {
-    InventoryComponent inventory = player.getComponent(InventoryComponent.class);
+    InventoryComponent inventory = main.player.getComponent(InventoryComponent.class);
 
     VerticalGroup group = new VerticalGroup();
     group.padBottom(10);

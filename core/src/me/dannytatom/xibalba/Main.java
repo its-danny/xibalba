@@ -10,20 +10,32 @@ import com.badlogic.gdx.graphics.Colors;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import me.dannytatom.xibalba.screens.MainMenuScreen;
+import me.dannytatom.xibalba.utils.CombatHelpers;
+import me.dannytatom.xibalba.utils.EntityHelpers;
+import me.dannytatom.xibalba.utils.InventoryHelpers;
+import me.dannytatom.xibalba.utils.SkillHelpers;
 
 public class Main extends Game {
-  public BitmapFont font;
   public AssetManager assets;
+  public BitmapFont font;
+
+  public CombatHelpers combatHelpers;
+  public EntityHelpers entityHelpers;
+  public InventoryHelpers inventoryHelpers;
+  public SkillHelpers skillHelpers;
   public Screen playScreen;
   public Entity player;
+  public ActionLog log;
 
-  public boolean debug = true;
+  public boolean debug = false;
   public boolean executeTurn = false;
 
   /**
-   * Initialize the asset manager and start the loading screen.
+   * Setup & load the main menu.
    */
   public void create() {
+    // Load custom font
+    assets = new AssetManager();
     FreeTypeFontGenerator generator =
         new FreeTypeFontGenerator(Gdx.files.internal("ui/Inconsolata.ttf"));
     FreeTypeFontGenerator.FreeTypeFontParameter parameter =
@@ -32,18 +44,24 @@ public class Main extends Game {
     font = generator.generateFont(parameter);
     generator.dispose();
 
-    assets = new AssetManager();
-    playScreen = null;
-    player = null;
-
-    Colors.put("CYAN", parseColor("5bb9c7"));
-    Colors.put("RED", parseColor("cc4141"));
+    // Setup text colors
     Colors.put("LIGHT_GRAY", parseColor("999999"));
     Colors.put("DARK_GRAY", parseColor("666666"));
+    Colors.put("CYAN", parseColor("5bb9c7"));
+    Colors.put("RED", parseColor("cc4141"));
+    Colors.put("DARK_PURPLE", parseColor("241d26"));
+    Colors.put("LIGHT_PURPLE", parseColor("706274"));
 
+    // Start the main menu
     setScreen(new MainMenuScreen(this));
   }
 
+  /**
+   * Hex to RGBA.
+   *
+   * @param hex The color to parse
+   * @return A new Color object
+   */
   private Color parseColor(String hex) {
     String s1 = hex.substring(0, 2);
     int v1 = Integer.parseInt(s1, 16);

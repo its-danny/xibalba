@@ -22,11 +22,10 @@ public class WorldRenderer {
   private static final int SPRITE_WIDTH = 36;
   private static final int SPRITE_HEIGHT = 36;
 
-  private final Main game;
+  private final Main main;
   private final Engine engine;
   private final SpriteBatch batch;
   private final Map map;
-  private final Entity player;
   private final OrthographicCamera camera;
   private final ShadowCaster caster;
 
@@ -37,13 +36,11 @@ public class WorldRenderer {
    * @param batch  The sprite batch to use (set in PlayScreen)
    * @param map    The map we're on
    */
-  public WorldRenderer(Main main, Engine engine, SpriteBatch batch, Map map, Entity player) {
-    game = main;
-
+  public WorldRenderer(Main main, Engine engine, SpriteBatch batch, Map map) {
+    this.main = main;
     this.engine = engine;
     this.batch = batch;
     this.map = map;
-    this.player = player;
 
     camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     camera.update();
@@ -59,7 +56,7 @@ public class WorldRenderer {
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
     // Get player pos & attributes
-    PositionComponent playerPosition = player.getComponent(PositionComponent.class);
+    PositionComponent playerPosition = main.player.getComponent(PositionComponent.class);
 
     // Update worldCamera
     camera.position.set(playerPosition.pos.x * SPRITE_WIDTH,
@@ -69,7 +66,7 @@ public class WorldRenderer {
     batch.setProjectionMatrix(camera.combined);
     batch.begin();
 
-    AttributesComponent playerAttributes = player.getComponent(AttributesComponent.class);
+    AttributesComponent playerAttributes = main.player.getComponent(AttributesComponent.class);
 
     float[][] lightMap = caster.calculateFov(map.createFovMap(),
         (int) playerPosition.pos.x, (int) playerPosition.pos.y,
@@ -93,7 +90,7 @@ public class WorldRenderer {
 
     if (map.targetingPath != null) {
       for (GridCell cell : map.targetingPath) {
-        TextureAtlas atlas = game.assets.get("sprites/ui.atlas");
+        TextureAtlas atlas = main.assets.get("sprites/ui.atlas");
 
         batch.setColor(1f, 1f, 1f,
             lightMap[cell.x][cell.y] <= 0.35f ? 0.35f : lightMap[cell.x][cell.y]);
@@ -137,7 +134,7 @@ public class WorldRenderer {
       if (!map.getCell(position.pos).hidden) {
         AttributesComponent attributes = ComponentMappers.attributes.get(entity);
 
-        TextureAtlas atlas = game.assets.get("sprites/ui.atlas");
+        TextureAtlas atlas = main.assets.get("sprites/ui.atlas");
         Sprite sprite;
 
         int which;

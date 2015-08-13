@@ -13,7 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import me.dannytatom.xibalba.Main;
 
 public class LoadingScreen implements Screen {
-  private final Main game;
+  private final Main main;
 
   private Stage stage;
 
@@ -23,11 +23,11 @@ public class LoadingScreen implements Screen {
    * @param main Instance of main class
    */
   public LoadingScreen(Main main) {
-    game = main;
+    this.main = main;
     stage = new Stage();
 
     Skin skin = new Skin();
-    skin.add("Inconsolata", game.font, BitmapFont.class);
+    skin.add("Inconsolata", this.main.font, BitmapFont.class);
     skin.addRegions(new TextureAtlas(Gdx.files.internal("ui/uiskin.atlas")));
     skin.load(Gdx.files.internal("ui/uiskin.json"));
 
@@ -37,14 +37,14 @@ public class LoadingScreen implements Screen {
 
     table.add(new Label("Loading assets", skin));
 
-    game.assets.load("sprites/ui.atlas", TextureAtlas.class);
-    game.assets.load("sprites/cave.atlas", TextureAtlas.class);
-    game.assets.load("sprites/player.atlas", TextureAtlas.class);
-    game.assets.load("sprites/spiderMonkey.atlas", TextureAtlas.class);
+    this.main.assets.load("sprites/ui.atlas", TextureAtlas.class);
+    this.main.assets.load("sprites/cave.atlas", TextureAtlas.class);
+    this.main.assets.load("sprites/player.atlas", TextureAtlas.class);
+    this.main.assets.load("sprites/spiderMonkey.atlas", TextureAtlas.class);
 
-    game.assets.load("sprites/chippedFlint.png", Texture.class);
-    game.assets.load("sprites/bomb.png", Texture.class);
-    game.assets.load("sprites/poison.png", Texture.class);
+    this.main.assets.load("sprites/chippedFlint.png", Texture.class);
+    this.main.assets.load("sprites/bomb.png", Texture.class);
+    this.main.assets.load("sprites/poison.png", Texture.class);
   }
 
   @Override
@@ -55,9 +55,9 @@ public class LoadingScreen implements Screen {
     stage.act(Gdx.graphics.getDeltaTime());
     stage.draw();
 
-    if (game.assets.update()) {
-      game.playScreen = new PlayScreen(game);
-      game.setScreen(game.playScreen);
+    if (main.assets.update()) {
+      main.playScreen = new PlayScreen(main);
+      main.setScreen(main.playScreen);
     }
   }
 

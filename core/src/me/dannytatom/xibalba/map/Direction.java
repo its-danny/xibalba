@@ -9,7 +9,7 @@ public enum Direction {
   public final int deltaX;
   public final int deltaY;
 
-  private Direction(int x, int y) {
+  Direction(int x, int y) {
     this.deltaX = x;
     this.deltaY = y;
   }

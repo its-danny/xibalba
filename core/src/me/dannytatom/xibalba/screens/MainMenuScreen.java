@@ -14,7 +14,7 @@ import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.screens.creation.TraitsScreen;
 
 public class MainMenuScreen implements Screen {
-  private final Main game;
+  private final Main main;
 
   private Stage stage;
 
@@ -24,11 +24,11 @@ public class MainMenuScreen implements Screen {
    * @param main Instance of main class
    */
   public MainMenuScreen(Main main) {
-    game = main;
+    this.main = main;
     stage = new Stage();
 
     Skin skin = new Skin();
-    skin.add("Inconsolata", game.font, BitmapFont.class);
+    skin.add("Inconsolata", this.main.font, BitmapFont.class);
     skin.addRegions(new TextureAtlas(Gdx.files.internal("ui/uiskin.atlas")));
     skin.load(Gdx.files.internal("ui/uiskin.json"));
     skin.getFont("default-font").getData().markupEnabled = true;
@@ -58,7 +58,7 @@ public class MainMenuScreen implements Screen {
     stage.draw();
 
     if (Gdx.input.isKeyJustPressed(Input.Keys.N)) {
-      game.setScreen(new TraitsScreen(game));
+      main.setScreen(new TraitsScreen(main));
     }
 
     if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {

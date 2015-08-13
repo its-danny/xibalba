@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.components.InventoryComponent;
 import me.dannytatom.xibalba.components.ItemComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
@@ -16,10 +17,11 @@ public class InventoryHelpers {
   private static final ArrayList<String> letters = new ArrayList<>(
       Arrays.asList("a", "c", "f", "g", "i", "m", "o", "p", "r", "v", "w", "x")
   );
-  private final Entity player;
 
-  public InventoryHelpers(Entity player) {
-    this.player = player;
+  private final Main main;
+
+  public InventoryHelpers(Main main) {
+    this.main = main;
   }
 
   /**
@@ -29,7 +31,7 @@ public class InventoryHelpers {
    * @return Either the item or null
    */
   public Entity findItem(int keycode) {
-    for (Entity item : player.getComponent(InventoryComponent.class).items) {
+    for (Entity item : main.player.getComponent(InventoryComponent.class).items) {
       if (Objects.equals(item.getComponent(ItemComponent.class).identifier.toUpperCase(),
           Input.Keys.toString(keycode))) {
         return item;
@@ -45,7 +47,7 @@ public class InventoryHelpers {
    * @param entity The item
    */
   public void showItem(Entity entity) {
-    for (Entity item : player.getComponent(InventoryComponent.class).items) {
+    for (Entity item : main.player.getComponent(InventoryComponent.class).items) {
       item.getComponent(ItemComponent.class).lookingAt = false;
     }
 
@@ -56,8 +58,21 @@ public class InventoryHelpers {
    * Hide all items by setting their lookingAt attributes to false.
    */
   public void hideItems() {
-    for (Entity item : player.getComponent(InventoryComponent.class).items) {
+    for (Entity item : main.player.getComponent(InventoryComponent.class).items) {
       item.getComponent(ItemComponent.class).lookingAt = false;
+    }
+  }
+
+  /**
+   * Toggle item visibility.
+   *
+   * @param entity The item to toggle
+   */
+  public void toggleItem(Entity entity) {
+    if (entity.getComponent(ItemComponent.class).lookingAt) {
+      hideItems();
+    } else {
+      showItem(entity);
     }
   }
 
@@ -69,7 +84,7 @@ public class InventoryHelpers {
    * @return True if added, false if inventory full
    */
   public boolean addItem(Entity thing) {
-    if (player.getComponent(InventoryComponent.class).items.size() == 10) {
+    if (main.player.getComponent(InventoryComponent.class).items.size() == 10) {
       return false;
     }
 
@@ -77,7 +92,7 @@ public class InventoryHelpers {
 
     thing.remove(PositionComponent.class);
 
-    player.getComponent(InventoryComponent.class).items.add(thing);
+    main.player.getComponent(InventoryComponent.class).items.add(thing);
     thing.getComponent(ItemComponent.class).identifier = letters.get(rand);
     letters.remove(rand);
 
@@ -91,7 +106,7 @@ public class InventoryHelpers {
     Entity item = getShowing();
 
     if (item != null) {
-      player.getComponent(InventoryComponent.class).items.remove(item);
+      main.player.getComponent(InventoryComponent.class).items.remove(item);
     }
   }
 
@@ -105,7 +120,7 @@ public class InventoryHelpers {
     Entity item = getShowing();
 
     if (pos == null) {
-      pos = player.getComponent(PositionComponent.class).pos;
+      pos = main.player.getComponent(PositionComponent.class).pos;
     }
 
     if (item != null) {
@@ -116,7 +131,7 @@ public class InventoryHelpers {
       item.getComponent(ItemComponent.class).identifier = null;
       item.add(new PositionComponent(pos));
 
-      player.getComponent(InventoryComponent.class).items.remove(item);
+      main.player.getComponent(InventoryComponent.class).items.remove(item);
     }
   }
 
@@ -130,7 +145,7 @@ public class InventoryHelpers {
       ItemComponent item = entity.getComponent(ItemComponent.class);
 
       if (item.actions.get("canWield")) {
-        ArrayList<Entity> others = player.getComponent(InventoryComponent.class).items;
+        ArrayList<Entity> others = main.player.getComponent(InventoryComponent.class).items;
 
         for (Entity other : others) {
           other.getComponent(ItemComponent.class).equipped = false;
@@ -148,7 +163,7 @@ public class InventoryHelpers {
    * @return Array of items or null if nothing is wielded.
    */
   public Entity getWieldedItem() {
-    ArrayList<Entity> items = player.getComponent(InventoryComponent.class).items;
+    ArrayList<Entity> items = main.player.getComponent(InventoryComponent.class).items;
 
     for (Entity entity : items) {
       ItemComponent item = entity.getComponent(ItemComponent.class);
@@ -167,7 +182,7 @@ public class InventoryHelpers {
    * @return The item they're looking at, null if nothing
    */
   public Entity getShowing() {
-    ArrayList<Entity> items = player.getComponent(InventoryComponent.class).items;
+    ArrayList<Entity> items = main.player.getComponent(InventoryComponent.class).items;
 
     for (Entity entity : items) {
       ItemComponent item = entity.getComponent(ItemComponent.class);

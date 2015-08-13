@@ -23,15 +23,12 @@ import me.dannytatom.xibalba.utils.InventoryHelpers;
 import me.dannytatom.xibalba.utils.SkillHelpers;
 
 class PlayScreen implements Screen {
-  private final Main game;
+  private final Main main;
   private final WorldRenderer worldRenderer;
   private final InterfaceRenderer interfaceRenderer;
   private final SpriteBatch batch;
   private final Engine engine;
-  private ActionLog actionLog;
-  private EntityHelpers entityHelpers;
   private Map map;
-  private InventoryHelpers inventoryHelpers;
 
   /**
    * Play Screen.
@@ -39,71 +36,72 @@ class PlayScreen implements Screen {
    * @param main Instance of Main class
    */
   public PlayScreen(Main main) {
-    game = main;
+    this.main = main;
+
     engine = new Engine();
     batch = new SpriteBatch();
 
-    // Setup action log
-    actionLog = new ActionLog();
+    // Setup helpers
+    main.entityHelpers = new EntityHelpers(main, engine);
+    main.inventoryHelpers = new InventoryHelpers(main);
+    main.skillHelpers = new SkillHelpers(main);
+    main.combatHelpers = new CombatHelpers(main, engine);
 
-    entityHelpers = new EntityHelpers(engine, game.assets);
+    // Setup action log
+    main.log = new ActionLog();
 
     // Generate cave & initialize map
-    CaveGenerator cave = new CaveGenerator(game.assets.get("sprites/cave.atlas"),
-        MathUtils.random(50, 80), MathUtils.random(30, 60));
-    map = new Map(engine, entityHelpers, cave.map);
+    CaveGenerator cave = new CaveGenerator(
+        main.assets.get("sprites/cave.atlas"),
+        MathUtils.random(50, 80), MathUtils.random(30, 60)
+    );
+    map = new Map(engine, main.entityHelpers, cave.map);
 
     // Add player entity
-    entityHelpers.spawnPlayer(game.player, map.findPlayerStart());
-    engine.addEntity(game.player);
-
-    inventoryHelpers = new InventoryHelpers(game.player);
+    main.entityHelpers.spawnPlayer(main.player, map.findPlayerStart());
+    engine.addEntity(main.player);
 
     // Spawn some spider monkeys
     for (int i = 0; i < 5; i++) {
-      engine.addEntity(entityHelpers.spawnEnemy("spiderMonkey", map.getRandomOpenPosition()));
+      engine.addEntity(main.entityHelpers.spawnEnemy("spiderMonkey", map.getRandomOpenPosition()));
     }
 
     for (int i = 0; i < 2; i++) {
-      engine.addEntity(entityHelpers.spawnItem("chippedFlint", map.getRandomOpenPosition()));
+      engine.addEntity(main.entityHelpers.spawnItem("chippedFlint", map.getRandomOpenPosition()));
     }
 
     for (int i = 0; i < 3; i++) {
-      engine.addEntity(entityHelpers.spawnItem("bomb", map.getRandomOpenPosition()));
+      engine.addEntity(main.entityHelpers.spawnItem("bomb", map.getRandomOpenPosition()));
     }
-
-    CombatHelpers combatHelpers = new CombatHelpers(
-        engine, actionLog, inventoryHelpers, new SkillHelpers(actionLog)
-    );
 
     // Setup engine (they're run in order added)
     engine.addSystem(new AttributesSystem());
-    engine.addSystem(new BrainSystem(entityHelpers, map));
+    engine.addSystem(new BrainSystem(main.entityHelpers, map));
     engine.addSystem(new WanderSystem(map));
     engine.addSystem(new TargetSystem(map));
-    engine.addSystem(new MeleeSystem(combatHelpers));
-    engine.addSystem(new RangeSystem(engine, map, entityHelpers, combatHelpers, inventoryHelpers));
-    engine.addSystem(new EffectSystem(engine, map, combatHelpers));
+    engine.addSystem(new MeleeSystem(main.combatHelpers));
+    engine.addSystem(new RangeSystem(main, engine, map));
+    engine.addSystem(new EffectSystem(engine, map, main.combatHelpers));
     engine.addSystem(new MovementSystem(map));
 
     // Setup renderers
-    worldRenderer = new WorldRenderer(game, engine, batch, map, game.player);
-    interfaceRenderer = new InterfaceRenderer(game, actionLog, game.player);
+    worldRenderer = new WorldRenderer(main, engine, batch, map);
+    interfaceRenderer = new InterfaceRenderer(main);
   }
 
   @Override
   public void render(float delta) {
-    if (game.executeTurn) {
+    if (main.executeTurn) {
       engine.update(delta);
 
-      game.executeTurn = false;
+      main.executeTurn = false;
     }
 
     worldRenderer.render(delta);
     interfaceRenderer.render(delta);
 
-    if (game.player.getComponent(AttributesComponent.class).health <= 0) {
-      game.setScreen(new MainMenuScreen(game));
+    if (main.player.getComponent(AttributesComponent.class).health <= 0) {
+      main.setScreen(new MainMenuScreen(main));
     }
   }
 
@@ -114,9 +112,7 @@ class PlayScreen implements Screen {
 
   @Override
   public void show() {
-    Gdx.input.setInputProcessor(
-        new PlayerInput(game, actionLog, map, entityHelpers, inventoryHelpers)
-    );
+    Gdx.input.setInputProcessor(new PlayerInput(main, map));
   }
 
   @Override

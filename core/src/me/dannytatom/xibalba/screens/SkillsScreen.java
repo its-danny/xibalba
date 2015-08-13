@@ -15,7 +15,7 @@ import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.components.SkillsComponent;
 
 public class SkillsScreen implements Screen {
-  private final Main game;
+  private final Main main;
 
   private Skin skin;
   private Stage stage;
@@ -26,12 +26,12 @@ public class SkillsScreen implements Screen {
    * @param main Instance of the main class
    */
   public SkillsScreen(Main main) {
-    game = main;
+    this.main = main;
 
     stage = new Stage();
 
     skin = new Skin();
-    skin.add("Inconsolata", game.font, BitmapFont.class);
+    skin.add("Inconsolata", this.main.font, BitmapFont.class);
     skin.addRegions(new TextureAtlas(Gdx.files.internal("ui/uiskin.atlas")));
     skin.load(Gdx.files.internal("ui/uiskin.json"));
     skin.getFont("default-font").getData().markupEnabled = true;
@@ -41,7 +41,7 @@ public class SkillsScreen implements Screen {
     table.left().top();
     stage.addActor(table);
 
-    SkillsComponent skills = game.player.getComponent(SkillsComponent.class);
+    SkillsComponent skills = this.main.player.getComponent(SkillsComponent.class);
     VerticalGroup group = new VerticalGroup().left();
 
     if (skills.unarmed > 0) {
@@ -74,14 +74,14 @@ public class SkillsScreen implements Screen {
 
   @Override
   public void render(float delta) {
-    Gdx.gl.glClearColor(0, 0, 0, 1);
+    Gdx.gl.glClearColor(36 / 255f, 29 / 255f, 38 / 255f, 1);
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
     stage.act(Gdx.graphics.getDeltaTime());
     stage.draw();
 
     if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
-      game.setScreen(game.playScreen);
+      main.setScreen(main.playScreen);
     }
   }
 
@@ -111,31 +111,31 @@ public class SkillsScreen implements Screen {
   }
 
   private Label skillLine(String skill, int level) {
-    String str = "[DARK_GRAY][[";
+    String str = "[LIGHT_PURPLE][[";
 
     switch (level) {
       case 0:
-        str += "[DARK_GRAY]xxxxx";
+        str += "[LIGHT_PURPLE]xxxxx";
         break;
       case 4:
-        str += "[WHITE]x[DARK_GRAY]xxxx";
+        str += "[WHITE]x[LIGHT_PURPLE]xxxx";
         break;
       case 6:
-        str += "[WHITE]xx[DARK_GRAY]xxx";
+        str += "[WHITE]xx[LIGHT_PURPLE]xxx";
         break;
       case 8:
-        str += "[WHITE]xxx[DARK_GRAY]xx";
+        str += "[WHITE]xxx[LIGHT_PURPLE]xx";
         break;
       case 10:
-        str += "[WHITE]xxxx[DARK_GRAY]x";
+        str += "[WHITE]xxxx[LIGHT_PURPLE]x";
         break;
       case 12:
-        str += "[WHITE]xxxxx[DARK_GRAY]";
+        str += "[WHITE]xxxxx[LIGHT_PURPLE]";
         break;
       default:
     }
 
-    str += "[DARK_GRAY]]";
+    str += "[LIGHT_PURPLE]]";
 
     return new Label(str + " [WHITE]" + skill, skin);
   }

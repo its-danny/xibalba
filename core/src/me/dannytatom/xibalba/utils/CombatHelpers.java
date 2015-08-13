@@ -3,7 +3,7 @@ package me.dannytatom.xibalba.utils;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.MathUtils;
-import me.dannytatom.xibalba.ActionLog;
+import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.ItemComponent;
 import me.dannytatom.xibalba.components.effects.DamageEffectComponent;
@@ -21,24 +21,18 @@ import java.util.Objects;
 // - Roll that, add together, they take damage equal to result - their toughness
 
 public class CombatHelpers {
+  private final Main main;
   private final Engine engine;
-  private final ActionLog actionLog;
-  private final InventoryHelpers inventoryHelpers;
-  private final SkillHelpers skillHelpers;
 
   /**
    * Initialize action log.
    *
-   * @param engine           Ashley engine
-   * @param actionLog        The action log (combat is logged to it)
-   * @param inventoryHelpers Helpers for getting wielded item stats
-   * @param skillHelpers     Helpers for getting combat skills
+   * @param main   Instance of the main class
+   * @param engine Ashley engine
    */
-  public CombatHelpers(Engine engine, ActionLog actionLog, InventoryHelpers inventoryHelpers, SkillHelpers skillHelpers) {
+  public CombatHelpers(Main main, Engine engine) {
+    this.main = main;
     this.engine = engine;
-    this.actionLog = actionLog;
-    this.inventoryHelpers = inventoryHelpers;
-    this.skillHelpers = skillHelpers;
   }
 
   /**
@@ -48,7 +42,7 @@ public class CombatHelpers {
    * @param target  Who's getting fought
    */
   public void melee(Entity starter, Entity target) {
-    Entity wielded = inventoryHelpers.getWieldedItem();
+    Entity wielded = main.inventoryHelpers.getWieldedItem();
     String skill;
     String verb;
     int damage = starter.getComponent(AttributesComponent.class).damage;
@@ -64,7 +58,7 @@ public class CombatHelpers {
       verb = ic.verbs.get(MathUtils.random(0, ic.verbs.size() - 1));
     }
 
-    int result = rollHit(skillHelpers.getSkill(starter, skill));
+    int result = rollHit(main.skillHelpers.getSkill(starter, skill));
 
     applyDamage(result, damage, skill, starter, target, verb);
   }
@@ -79,7 +73,7 @@ public class CombatHelpers {
   public void range(Entity starter, Entity target, Entity item) {
     ItemComponent itemComponent = item.getComponent(ItemComponent.class);
 
-    int result = rollHit(skillHelpers.getSkill(starter, "throwing"));
+    int result = rollHit(main.skillHelpers.getSkill(starter, "throwing"));
 
     applyDamage(result, itemComponent.attributes.get("damage"), "throwing", starter, target, "hit");
   }
@@ -94,7 +88,7 @@ public class CombatHelpers {
     DamageEffectComponent damageEffectComponent = effect.getComponent(DamageEffectComponent.class);
     Entity starter = damageEffectComponent.starter;
 
-    int result = rollHit(skillHelpers.getSkill(starter, "throwing"));
+    int result = rollHit(main.skillHelpers.getSkill(starter, "throwing"));
 
     applyDamage(result, damageEffectComponent.damage, "throwing",
         starter, target, damageEffectComponent.type);
@@ -145,7 +139,7 @@ public class CombatHelpers {
         action += "hit " + targetAttributes.name + " but did no damage";
       }
 
-      skillHelpers.levelSkill(starter, skill, 20);
+      main.skillHelpers.levelSkill(starter, skill, 20);
     } else {
       action += "missed " + targetAttributes.name;
     }
@@ -154,11 +148,11 @@ public class CombatHelpers {
       action = targetAttributes.name + " was hurt by the cloud of poison";
     }
 
-    actionLog.add(action);
+    main.log.add(action);
 
     if (targetAttributes.health <= 0) {
       engine.removeEntity(target);
-      actionLog.add(starterAttributes.name + " killed " + targetAttributes.name + "!");
+      main.log.add(starterAttributes.name + " killed " + targetAttributes.name + "!");
     }
   }
 }
