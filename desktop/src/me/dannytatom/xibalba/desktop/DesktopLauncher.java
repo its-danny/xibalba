@@ -5,6 +5,11 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import me.dannytatom.xibalba.Main;
 
 public class DesktopLauncher {
+  /**
+   * Start desktop launcher.
+   *
+   * @param arg Arguments
+   */
   public static void main(String[] arg) {
     LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 

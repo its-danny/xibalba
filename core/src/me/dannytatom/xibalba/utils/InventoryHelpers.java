@@ -14,7 +14,7 @@ import java.util.Objects;
 
 public class InventoryHelpers {
   private static final ArrayList<String> letters = new ArrayList<>(
-      Arrays.asList("a", "c", "f", "g", "i", "m", "o", "p", "r", "s", "v", "w", "x")
+      Arrays.asList("a", "c", "f", "g", "i", "m", "o", "p", "r", "v", "w", "x")
   );
   private final Entity player;
 
@@ -22,9 +22,16 @@ public class InventoryHelpers {
     this.player = player;
   }
 
+  /**
+   * Find item from keyCode.
+   *
+   * @param keycode They key pressed
+   * @return Either the item or null
+   */
   public Entity findItem(int keycode) {
     for (Entity item : player.getComponent(InventoryComponent.class).items) {
-      if (Objects.equals(item.getComponent(ItemComponent.class).identifier.toUpperCase(), Input.Keys.toString(keycode))) {
+      if (Objects.equals(item.getComponent(ItemComponent.class).identifier.toUpperCase(),
+          Input.Keys.toString(keycode))) {
         return item;
       }
     }
@@ -32,6 +39,11 @@ public class InventoryHelpers {
     return null;
   }
 
+  /**
+   * Set the item's lookingAt property to true.
+   *
+   * @param entity The item
+   */
   public void showItem(Entity entity) {
     for (Entity item : player.getComponent(InventoryComponent.class).items) {
       item.getComponent(ItemComponent.class).lookingAt = false;
@@ -40,12 +52,22 @@ public class InventoryHelpers {
     entity.getComponent(ItemComponent.class).lookingAt = true;
   }
 
+  /**
+   * Hide all items by setting their lookingAt attributes to false.
+   */
   public void hideItems() {
     for (Entity item : player.getComponent(InventoryComponent.class).items) {
       item.getComponent(ItemComponent.class).lookingAt = false;
     }
   }
 
+  /**
+   * If inventory not full, assign the item a letter,
+   * remove it's visual components, and attach it.
+   *
+   * @param thing The item to add
+   * @return True if added, false if inventory full
+   */
   public boolean addItem(Entity thing) {
     if (player.getComponent(InventoryComponent.class).items.size() == 10) {
       return false;
@@ -62,6 +84,9 @@ public class InventoryHelpers {
     return true;
   }
 
+  /**
+   * Remove an item from inventory.
+   */
   public void removeItem() {
     Entity item = getShowing();
 
@@ -70,6 +95,11 @@ public class InventoryHelpers {
     }
   }
 
+  /**
+   * Drop an item at the given location (usually entity position).
+   *
+   * @param position The cell to drop it to
+   */
   public void dropItem(Vector2 position) {
     Vector2 pos = position;
     Entity item = getShowing();
@@ -90,6 +120,9 @@ public class InventoryHelpers {
     }
   }
 
+  /**
+   * Wield an item then stop looking at it.
+   */
   public void wieldItem() {
     Entity entity = getShowing();
 
@@ -109,6 +142,11 @@ public class InventoryHelpers {
     }
   }
 
+  /**
+   * Get a list of wielded items.
+   *
+   * @return Array of items or null if nothing is wielded.
+   */
   public Entity getWieldedItem() {
     ArrayList<Entity> items = player.getComponent(InventoryComponent.class).items;
 
@@ -123,6 +161,11 @@ public class InventoryHelpers {
     return null;
   }
 
+  /**
+   * Get showing item.
+   *
+   * @return The item they're looking at, null if nothing
+   */
   public Entity getShowing() {
     ArrayList<Entity> items = player.getComponent(InventoryComponent.class).items;
 

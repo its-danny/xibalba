@@ -56,7 +56,8 @@ public class LoadingScreen implements Screen {
     stage.draw();
 
     if (game.assets.update()) {
-      game.setScreen(new PlayScreen(game));
+      game.playScreen = new PlayScreen(game);
+      game.setScreen(game.playScreen);
     }
   }
 

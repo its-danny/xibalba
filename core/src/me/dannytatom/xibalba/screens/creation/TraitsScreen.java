@@ -66,7 +66,10 @@ public class TraitsScreen implements Screen {
     FileHandle traitsHandle = Gdx.files.internal("data/traits/");
 
     for (FileHandle entry : traitsHandle.list()) {
-      TraitComponent trait = (new Json()).fromJson(TraitComponent.class, Gdx.files.internal("data/traits/" + entry.name()));
+      TraitComponent trait =
+          (new Json()).fromJson(
+              TraitComponent.class, Gdx.files.internal("data/traits/" + entry.name())
+          );
       traits.add(trait);
     }
 
@@ -76,12 +79,13 @@ public class TraitsScreen implements Screen {
     FileHandle defectsHandle = Gdx.files.internal("data/defects/");
 
     for (FileHandle entry : defectsHandle.list()) {
-      DefectComponent defect = (new Json()).fromJson(DefectComponent.class, Gdx.files.internal("data/defects/" + entry.name()));
+      DefectComponent defect =
+          (new Json()).fromJson(
+              DefectComponent.class, Gdx.files.internal("data/defects/" + entry.name())
+          );
       defects.add(defect);
     }
 
-    Label traitsLabel = new Label("Traits", skin);
-    Label defectsLabel = new Label("Defects", skin);
 
     infoLabel = new Label(null, skin);
     currentGroup = traitsGroup;
@@ -90,7 +94,9 @@ public class TraitsScreen implements Screen {
     table.add(infoLabel).left().pad(10);
     table.add(new Label("[LIGHT_GRAY]Take defects for more trait points", skin)).left().pad(10);
     table.row();
+    Label traitsLabel = new Label("Traits", skin);
     table.add(traitsLabel).pad(0, 10, 10, 10).width(Gdx.graphics.getWidth() / 2 - 20);
+    Label defectsLabel = new Label("Defects", skin);
     table.add(defectsLabel).pad(0, 10, 10, 10).width(Gdx.graphics.getWidth() / 2 - 20);
     table.row();
     table.add(traitsGroup).pad(0, 10, 10, 10).width(Gdx.graphics.getWidth() / 2 - 20);
@@ -104,7 +110,10 @@ public class TraitsScreen implements Screen {
     Gdx.gl.glClearColor(0, 0, 0, 1);
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-    infoLabel.setText("[WHITE]SPACE[LIGHT_GRAY] to select, [WHITE]ENTER[LIGHT_GRAY] when done / [CYAN]" + Integer.toString(points) + "[LIGHT_GRAY] points left");
+    infoLabel.setText(
+        "[WHITE]SPACE[LIGHT_GRAY] to select, [WHITE]ENTER[LIGHT_GRAY] when done / [CYAN]"
+            + Integer.toString(points) + "[LIGHT_GRAY] points left"
+    );
 
     traitsGroup.clear();
 
@@ -117,9 +126,23 @@ public class TraitsScreen implements Screen {
       }
 
       if (currentGroup == traitsGroup && currentIndex == i) {
-        traitsGroup.addActor(new Label("[WHITE]" + selected + " [CYAN][" + trait.cost + "][WHITE] " + trait.name + " [LIGHT_GRAY]" + trait.description + "[]", skin));
+        traitsGroup.addActor(
+            new Label(
+                "[WHITE]" + selected
+                    + " [CYAN][" + trait.cost + "][WHITE] "
+                    + trait.name + " [LIGHT_GRAY]"
+                    + trait.description + "[]",
+                skin)
+        );
       } else {
-        traitsGroup.addActor(new Label("[LIGHT_GRAY]" + selected + " [CYAN][" + trait.cost + "][LIGHT_GRAY] " + trait.name + " [DARK_GRAY]" + trait.description + "[]", skin));
+        traitsGroup.addActor(
+            new Label(
+                "[LIGHT_GRAY]" + selected
+                    + " [CYAN][" + trait.cost + "][LIGHT_GRAY] "
+                    + trait.name + " [DARK_GRAY]"
+                    + trait.description + "[]",
+                skin)
+        );
       }
     }
 
@@ -134,9 +157,23 @@ public class TraitsScreen implements Screen {
       }
 
       if (currentGroup == defectsGroup && currentIndex == i) {
-        defectsGroup.addActor(new Label("[WHITE]" + selected + " [RED][" + defect.prize + "][WHITE] " + defect.name + " [LIGHT_GRAY]" + defect.description + "[]", skin));
+        defectsGroup.addActor(
+            new Label(
+                "[WHITE]" + selected
+                    + " [RED][" + defect.prize + "][WHITE] "
+                    + defect.name + " [LIGHT_GRAY]"
+                    + defect.description + "[]",
+                skin)
+        );
       } else {
-        defectsGroup.addActor(new Label("[LIGHT_GRAY]" + selected + " [RED][" + defect.prize + "][LIGHT_GRAY] " + defect.name + " [DARK_GRAY]" + defect.description + "[]", skin));
+        defectsGroup.addActor(
+            new Label(
+                "[LIGHT_GRAY]" + selected
+                    + " [RED][" + defect.prize + "][LIGHT_GRAY] "
+                    + defect.name + " [DARK_GRAY]"
+                    + defect.description + "[]",
+                skin)
+        );
       }
     }
 

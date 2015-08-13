@@ -11,6 +11,7 @@ import me.dannytatom.xibalba.components.actions.MeleeComponent;
 import me.dannytatom.xibalba.components.actions.MovementComponent;
 import me.dannytatom.xibalba.components.actions.RangeComponent;
 import me.dannytatom.xibalba.map.Map;
+import me.dannytatom.xibalba.screens.SkillsScreen;
 import me.dannytatom.xibalba.utils.EntityHelpers;
 import me.dannytatom.xibalba.utils.InventoryHelpers;
 
@@ -21,8 +22,18 @@ public class PlayerInput implements InputProcessor {
   private final EntityHelpers entityHelpers;
   private final InventoryHelpers inventoryHelpers;
   private final Entity player;
+
   private State state = State.PLAYING;
 
+  /**
+   * Handle player input.
+   *
+   * @param game             Instance of the main class
+   * @param actionLog        Action log
+   * @param map              Map
+   * @param entityHelpers    Helpers for handling entities
+   * @param inventoryHelpers Helpers for managing inventory
+   */
   public PlayerInput(Main game, ActionLog actionLog, Map map, EntityHelpers entityHelpers, InventoryHelpers inventoryHelpers) {
     this.game = game;
     this.actionLog = actionLog;
@@ -44,6 +55,9 @@ public class PlayerInput implements InputProcessor {
         break;
       case Keys.Z:
         game.executeTurn = true;
+        break;
+      case Keys.S:
+        game.setScreen(new SkillsScreen(game));
         break;
       case Keys.K:
         if (state == State.PLAYING) {
@@ -190,8 +204,8 @@ public class PlayerInput implements InputProcessor {
 
   /**
    * Handles player movement.
-   * <p>
-   * One of these 3 happens when attempting to move into a cell:
+   *
+   * <p>One of these 3 happens when attempting to move into a cell:
    * - Actually move
    * - Pick up item on the cell, then move
    * - Melee attack enemy in cell

@@ -10,17 +10,15 @@ import me.dannytatom.xibalba.components.effects.DamageEffectComponent;
 
 import java.util.Objects;
 
-/**
- * How combat works:
- * <p>
- * - Each skill is 4, 6, 8, 10, or 12
- * - You roll your skill and a 6, highest result is used
- * - If the result is the highest it can be, roll that number again and add to it
- * - If result is 4 or over, you hit
- * - If result is 8 or over (critical), add a 6 roll to the damage
- * - Damage is a static number + the 6 roll if you have it
- * - Roll that, add together, they take damage equal to result - their toughness
- */
+// How combat works.
+//
+// - Each skill is 4, 6, 8, 10, or 12
+// - You roll your skill and a 6, highest result is used
+// - If the result is the highest it can be, roll that number again and add to it
+// - If result is 4 or over, you hit
+// - If result is 8 or over (critical), add a 6 roll to the damage
+// - Damage is a static number + the 6 roll if you have it
+// - Roll that, add together, they take damage equal to result - their toughness
 
 public class CombatHelpers {
   private final Engine engine;
@@ -28,6 +26,14 @@ public class CombatHelpers {
   private final InventoryHelpers inventoryHelpers;
   private final SkillHelpers skillHelpers;
 
+  /**
+   * Initialize action log.
+   *
+   * @param engine           Ashley engine
+   * @param actionLog        The action log (combat is logged to it)
+   * @param inventoryHelpers Helpers for getting wielded item stats
+   * @param skillHelpers     Helpers for getting combat skills
+   */
   public CombatHelpers(Engine engine, ActionLog actionLog, InventoryHelpers inventoryHelpers, SkillHelpers skillHelpers) {
     this.engine = engine;
     this.actionLog = actionLog;
@@ -35,6 +41,12 @@ public class CombatHelpers {
     this.skillHelpers = skillHelpers;
   }
 
+  /**
+   * Melee combat logic.
+   *
+   * @param starter Who started the fight
+   * @param target  Who's getting fought
+   */
   public void melee(Entity starter, Entity target) {
     Entity wielded = inventoryHelpers.getWieldedItem();
     String skill;
@@ -57,6 +69,13 @@ public class CombatHelpers {
     applyDamage(result, damage, skill, starter, target, verb);
   }
 
+  /**
+   * Ranged combat logic.
+   *
+   * @param starter Who started the fight
+   * @param target  Who's getting fought
+   * @param item    What they're being hit with
+   */
   public void range(Entity starter, Entity target, Entity item) {
     ItemComponent itemComponent = item.getComponent(ItemComponent.class);
 
@@ -65,13 +84,20 @@ public class CombatHelpers {
     applyDamage(result, itemComponent.attributes.get("damage"), "throwing", starter, target, "hit");
   }
 
+  /**
+   * Effect logic.
+   *
+   * @param effect The effect, so we know what to do
+   * @param target Who's getting hit by it
+   */
   public void effect(Entity effect, Entity target) {
     DamageEffectComponent damageEffectComponent = effect.getComponent(DamageEffectComponent.class);
     Entity starter = damageEffectComponent.starter;
 
     int result = rollHit(skillHelpers.getSkill(starter, "throwing"));
 
-    applyDamage(result, damageEffectComponent.damage, "throwing", starter, target, damageEffectComponent.type);
+    applyDamage(result, damageEffectComponent.damage, "throwing",
+        starter, target, damageEffectComponent.type);
   }
 
   private int rollHit(int skillLevel) {

@@ -143,17 +143,17 @@ public class CaveGenerator {
    * the amount of space given.
    *
    * @param amount How many neighboring cells to check
-   * @param x      x of cell to search from
-   * @param y      y of cell to search from
+   * @param cellX  cellX of cell to search from
+   * @param cellY  cellY of cell to search from
    * @return number of empty neighbors
    */
-  private int emptyNeighbours(int amount, int x, int y) {
+  private int emptyNeighbours(int amount, int cellX, int cellY) {
     int count = 0;
 
     for (int i = -amount; i < amount + 1; i++) {
       for (int j = -amount; j < amount + 1; j++) {
-        int nx = x + i;
-        int ny = y + j;
+        int nx = cellX + i;
+        int ny = cellY + j;
 
         if (i != 0 || j != 0) {
           if (nx < 0 || ny < 0 || nx >= geometry.length || ny >= geometry[0].length) {
@@ -171,17 +171,17 @@ public class CaveGenerator {
   /**
    * Get number of ground cells around a cell.
    *
-   * @param x x of cell to search from
-   * @param y y of cell to search from
+   * @param cellX cellX of cell to search from
+   * @param cellY cellY of cell to search from
    * @return number of ground neighbors
    */
-  private int groundNeighbours(int x, int y) {
+  private int groundNeighbours(int cellX, int cellY) {
     int count = 0;
 
     for (int i = -1; i < 2; i++) {
       for (int j = -1; j < 2; j++) {
-        int nx = x + i;
-        int ny = y + j;
+        int nx = cellX + i;
+        int ny = cellY + j;
 
         if (i != 0 || j != 0) {
           if (nx >= 0 && ny >= 0 && nx < geometry.length && ny < geometry[0].length) {

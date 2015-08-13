@@ -10,6 +10,11 @@ public class ActionLog {
     items.add("Make it to Xibalba, Necahual, and kill the 10 Lords of Xibalba");
   }
 
+  /**
+   * Add an item to the action log.
+   *
+   * @param str The string to add
+   */
   public void add(String str) {
     if (items.size() == 6) {
       items.remove(5);

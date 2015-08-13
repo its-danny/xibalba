@@ -3,6 +3,7 @@ package me.dannytatom.xibalba;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Colors;
@@ -13,6 +14,7 @@ import me.dannytatom.xibalba.screens.MainMenuScreen;
 public class Main extends Game {
   public BitmapFont font;
   public AssetManager assets;
+  public Screen playScreen;
   public Entity player;
 
   public boolean debug = true;
@@ -22,13 +24,16 @@ public class Main extends Game {
    * Initialize the asset manager and start the loading screen.
    */
   public void create() {
-    FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("ui/Inconsolata.ttf"));
-    FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+    FreeTypeFontGenerator generator =
+        new FreeTypeFontGenerator(Gdx.files.internal("ui/Inconsolata.ttf"));
+    FreeTypeFontGenerator.FreeTypeFontParameter parameter =
+        new FreeTypeFontGenerator.FreeTypeFontParameter();
     parameter.size = 16;
     font = generator.generateFont(parameter);
     generator.dispose();
 
     assets = new AssetManager();
+    playScreen = null;
     player = null;
 
     Colors.put("CYAN", parseColor("5bb9c7"));

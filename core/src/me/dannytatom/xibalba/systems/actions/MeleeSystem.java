@@ -11,6 +11,11 @@ import me.dannytatom.xibalba.utils.ComponentMappers;
 public class MeleeSystem extends ActionSystem {
   private final CombatHelpers combatHelpers;
 
+  /**
+   * Handles melee combat.
+   *
+   * @param combatHelpers Instance of CombatHelpers
+   */
   public MeleeSystem(CombatHelpers combatHelpers) {
     super(Family.all(MeleeComponent.class).get());
 

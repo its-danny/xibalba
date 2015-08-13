@@ -14,6 +14,13 @@ public class EffectSystem extends IteratingSystem {
   private final Map map;
   private final CombatHelpers combatHelpers;
 
+  /**
+   * Handles effects.
+   *
+   * @param engine        Ashley engine
+   * @param map           The map we're on
+   * @param combatHelpers Combat helpers
+   */
   public EffectSystem(Engine engine, Map map, CombatHelpers combatHelpers) {
     super(Family.all(DamageEffectComponent.class).get());
 

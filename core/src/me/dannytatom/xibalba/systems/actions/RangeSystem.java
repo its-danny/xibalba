@@ -22,6 +22,15 @@ public class RangeSystem extends ActionSystem {
   private final CombatHelpers combatHelpers;
   private final InventoryHelpers inventoryHelpers;
 
+  /**
+   * Handles range combat.
+   *
+   * @param engine           Ashley engine
+   * @param map              Map we're on
+   * @param entityHelpers    Entity helpers
+   * @param combatHelpers    Combat helpers
+   * @param inventoryHelpers Inventory helpers
+   */
   public RangeSystem(Engine engine, Map map, EntityHelpers entityHelpers, CombatHelpers combatHelpers, InventoryHelpers inventoryHelpers) {
     super(Family.all(RangeComponent.class).get());
 

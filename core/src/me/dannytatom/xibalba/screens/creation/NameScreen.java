@@ -15,6 +15,7 @@ import me.dannytatom.xibalba.screens.LoadingScreen;
 import me.dannytatom.xibalba.screens.MainMenuScreen;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class NameScreen implements Screen {
   private final Main game;
@@ -62,7 +63,11 @@ public class NameScreen implements Screen {
       traitsGroup.addActor(new Label(defect.name + " [LIGHT_GRAY]" + defect.description, skin));
     }
 
-    table.add(new Label("[LIGHT_GRAY]After reviewing, enter a name then [WHITE]ENTER[LIGHT_GRAY] to begin", skin)).pad(10).width(Gdx.graphics.getWidth() / 2 - 20);
+    table.add(
+        new Label(
+            "[LIGHT_GRAY]After reviewing, enter a name then [WHITE]ENTER[LIGHT_GRAY] to begin",
+        skin)
+    ).pad(10).width(Gdx.graphics.getWidth() / 2 - 20);
     table.add(new Label("Traits & Defects", skin)).pad(10).width(Gdx.graphics.getWidth() / 2 - 20);
     table.row();
     table.add(nameField).top().pad(0, 10, 10, 10).width(Gdx.graphics.getWidth() / 2 - 20);
@@ -85,8 +90,12 @@ public class NameScreen implements Screen {
     stage.draw();
 
     if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
-      game.player.add(new AttributesComponent(nameField.getText(), 100, 10, 50, 5, 5));
-      game.setScreen(new LoadingScreen(game));
+      String name = nameField.getText();
+
+      if (!Objects.equals(name, "")) {
+        game.player.add(new AttributesComponent(nameField.getText(), 100, 10, 50, 5, 5));
+        game.setScreen(new LoadingScreen(game));
+      }
     }
 
     if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {

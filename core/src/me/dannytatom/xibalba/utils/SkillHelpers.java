@@ -13,6 +13,14 @@ public class SkillHelpers {
     this.actionLog = actionLog;
   }
 
+  /**
+   * Get skill value.
+   * TODO: Rename to getSkillValue
+   *
+   * @param entity Entity who's skill we care about
+   * @param skill  The skill itself
+   * @return The skill value
+   */
   public int getSkill(Entity entity, String skill) {
     SkillsComponent skills = entity.getComponent(SkillsComponent.class);
     Field field;
@@ -28,6 +36,13 @@ public class SkillHelpers {
     return value;
   }
 
+  /**
+   * Level an entity's skill.
+   *
+   * @param entity Who we're leveling
+   * @param skill  The skill we're leveling
+   * @param amount How much we're giving 'em
+   */
   public void levelSkill(Entity entity, String skill, int amount) {
     SkillsComponent skills = entity.getComponent(SkillsComponent.class);
     Field skillField;

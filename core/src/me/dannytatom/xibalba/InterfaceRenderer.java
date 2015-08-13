@@ -14,9 +14,8 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.InventoryComponent;
 import me.dannytatom.xibalba.components.ItemComponent;
-import me.dannytatom.xibalba.components.SkillsComponent;
 
-public class UIRenderer {
+public class InterfaceRenderer {
   private final Stage stage;
   private final Skin skin;
   private final FPSLogger fpsLogger;
@@ -25,9 +24,14 @@ public class UIRenderer {
   private final VerticalGroup actionList;
   private final VerticalGroup characterPanel;
 
-  public UIRenderer(Main main, ActionLog actionLog, Entity player) {
-    Main game = main;
-
+  /**
+   * Renders the UI.
+   *
+   * @param main      Instance of the main class
+   * @param actionLog Action log
+   * @param player    The player
+   */
+  public InterfaceRenderer(Main main, ActionLog actionLog, Entity player) {
     this.actionLog = actionLog;
     this.player = player;
 
@@ -35,7 +39,7 @@ public class UIRenderer {
     fpsLogger = new FPSLogger();
 
     skin = new Skin();
-    skin.add("Inconsolata", game.font, BitmapFont.class);
+    skin.add("Inconsolata", main.font, BitmapFont.class);
     skin.addRegions(new TextureAtlas(Gdx.files.internal("ui/uiskin.atlas")));
     skin.load(Gdx.files.internal("ui/uiskin.json"));
     skin.getFont("default-font").getData().markupEnabled = true;
@@ -56,6 +60,11 @@ public class UIRenderer {
     stage.addActor(characterPanel);
   }
 
+  /**
+   * Render shit.
+   *
+   * @param delta AIRLINES
+   */
   public void render(float delta) {
     fpsLogger.log();
 
@@ -85,34 +94,7 @@ public class UIRenderer {
     characterPanel.clearChildren();
 
     characterPanel.addActor(new Label(player.getComponent(AttributesComponent.class).name, skin));
-    characterPanel.addActor(renderSkills());
     characterPanel.addActor(renderInventory());
-  }
-
-  private VerticalGroup renderSkills() {
-    SkillsComponent skills = player.getComponent(SkillsComponent.class);
-
-    VerticalGroup group = new VerticalGroup();
-    group.pad(10, 0, 10, 0);
-    group.left();
-
-    if (skills.unarmed > 0) {
-      group.addActor(skillLine("Unarmed", skills.unarmed));
-    }
-
-    if (skills.throwing > 0) {
-      group.addActor(skillLine("Throwing", skills.throwing));
-    }
-
-    if (skills.slashing > 0) {
-      group.addActor(skillLine("Slashing", skills.slashing));
-    }
-
-    if (skills.stabbing > 0) {
-      group.addActor(skillLine("Stabbing", skills.stabbing));
-    }
-
-    return group;
   }
 
   private VerticalGroup renderInventory() {
@@ -124,8 +106,8 @@ public class UIRenderer {
 
     for (int i = 0; i < inventory.items.size(); i++) {
       ItemComponent item = inventory.items.get(i).getComponent(ItemComponent.class);
-      String name = "[CYAN]" + item.identifier + "[]   "
-          + (item.lookingAt ? "[CYAN]" : "") + item.name + (item.lookingAt ? "[]" : "")
+      String name = "[CYAN]" + item.identifier + "[] "
+          + (item.lookingAt ? "[WHITE]" : "[LIGHT_GRAY]") + item.name + (item.lookingAt ? "[]" : "")
           + (item.equipped ? " [LIGHT_GRAY](wielding)[] " : " ");
 
       Label nameLabel = new Label(name, skin);
@@ -147,22 +129,22 @@ public class UIRenderer {
         String actions = "";
 
         if (item.actions.get("canThrow")) {
-          actions += "[WHITE]t[LIGHT_GRAY]hrow   ";
+          actions += "[WHITE]t[LIGHT_GRAY]hrow ";
         }
 
         if (item.actions.get("canWear")) {
-          actions += "[WHITE]w[LIGHT_GRAY]ear   ";
+          actions += "[WHITE]w[LIGHT_GRAY]ear ";
         }
 
         if (item.actions.get("canWield")) {
-          actions += "wi[WHITE]e[LIGHT_GRAY]ld   ";
+          actions += "wi[WHITE]e[LIGHT_GRAY]ld ";
         }
 
         if (item.actions.get("canUse")) {
-          actions += "[WHITE]u[LIGHT_GRAY]se   ";
+          actions += "[WHITE]u[LIGHT_GRAY]se ";
         }
 
-        actions += "[WHITE]d[LIGHT_GRAY]rop   ";
+        actions += "[WHITE]d[LIGHT_GRAY]rop";
 
         Label actionsLabel = new Label(actions, skin);
         actionsLabel.setScale(.5f);
@@ -171,36 +153,6 @@ public class UIRenderer {
     }
 
     return group;
-  }
-
-  private Label skillLine(String skill, int level) {
-    String str = "[DARK_GRAY][[";
-
-    switch (level) {
-      case 0:
-        str += "[DARK_GRAY]xxxxx";
-        break;
-      case 4:
-        str += "[WHITE]x[DARK_GRAY]xxxx";
-        break;
-      case 6:
-        str += "[WHITE]xx[DARK_GRAY]xxx";
-        break;
-      case 8:
-        str += "[WHITE]xxx[DARK_GRAY]xx";
-        break;
-      case 10:
-        str += "[WHITE]xxxx[DARK_GRAY]x";
-        break;
-      case 12:
-        str += "[WHITE]xxxxx[DARK_GRAY]";
-        break;
-      default:
-    }
-
-    str += "[DARK_GRAY]]";
-
-    return new Label(str + " [WHITE]" + skill, skin);
   }
 
   public void resize(int width, int height) {

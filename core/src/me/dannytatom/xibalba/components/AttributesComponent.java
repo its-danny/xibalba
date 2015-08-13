@@ -15,7 +15,12 @@ public class AttributesComponent implements Component {
   /**
    * Holds entity attributes.
    *
-   * @param speed The entity's speed
+   * @param name      Name
+   * @param speed     How much energy is gotten back each turn
+   * @param vision    How many cells they see around them
+   * @param maxHealth Max health
+   * @param toughness How much damage they can soak up
+   * @param damage    How much damage they do
    */
   public AttributesComponent(String name, int speed, int vision, int maxHealth, int toughness, int damage) {
     this.energy = speed;

@@ -1,19 +1,22 @@
 package me.dannytatom.xibalba.map;
 
 public class ShadowCaster {
-  private int width, height, startX, startY;
+  private int width;
+  private int height;
+  private int startX;
+  private int startY;
   private float[][] lightMap;
   private float[][] resistanceMap;
   private float radius;
 
   /**
    * http://www.roguebasin.com/index.php?title=Improved_Shadowcasting_in_Java
-   * <p>
-   * Calculates the Field Of View for the provided map from the given x, y
+   *
+   * <p>Calculates the Field Of View for the provided map from the given x, y
    * coordinates. Returns a lightmap for a result where the values represent a
    * percentage of fully lit.
-   * <p>
-   * A value equal to or below 0 means that cell is not in the
+   *
+   * <p>A value equal to or below 0 means that cell is not in the
    * field of view, whereas a value equal to or above 1 means that cell is
    * in the field of view.
    *
@@ -23,18 +26,19 @@ public class ShadowCaster {
    * @param radius        the maximum distance to draw the FOV
    * @return the computed light grid
    */
-  public float[][] calculateFOV(float[][] resistanceMap, int startX, int startY, float radius) {
+  public float[][] calculateFov(float[][] resistanceMap, int startX, int startY, float radius) {
     this.startX = startX;
     this.startY = startY;
     this.radius = radius;
     this.resistanceMap = resistanceMap;
-    float force = 1;
 
     width = resistanceMap.length;
     height = resistanceMap[0].length;
     lightMap = new float[width][height];
 
-    lightMap[startX][startY] = force;//light the starting cell
+    float force = 1;
+    lightMap[startX][startY] = force; //light the starting cell
+
     for (Direction d : Direction.DIAGONALS) {
       castLight(1, 1.0f, 0.0f, 0, d.deltaX, d.deltaY, 0);
       castLight(1, 1.0f, 0.0f, d.deltaX, 0, 0, d.deltaY);
@@ -57,7 +61,10 @@ public class ShadowCaster {
         float leftSlope = (deltaX - 0.5f) / (deltaY + 0.5f);
         float rightSlope = (deltaX + 0.5f) / (deltaY - 0.5f);
 
-        if (!(currentX >= 0 && currentY >= 0 && currentX < this.width && currentY < this.height) || start < rightSlope) {
+        if (
+            !(currentX >= 0 && currentY >= 0 && currentX < this.width && currentY < this.height)
+                || start < rightSlope
+            ) {
           continue;
         } else if (end > leftSlope) {
           break;
@@ -69,15 +76,21 @@ public class ShadowCaster {
           lightMap[currentX][currentY] = bright;
         }
 
-        if (blocked) { //previous cell was a blocking one
-          if (resistanceMap[currentX][currentY] >= 1) {//hit a wall
+        if (blocked) {
+          // Previous cell was a blocking one
+
+          if (resistanceMap[currentX][currentY] >= 1) {
+            // Hit a wall
+
             newStart = rightSlope;
           } else {
             blocked = false;
             start = newStart;
           }
         } else {
-          if (resistanceMap[currentX][currentY] >= 1 && distance < radius) {//hit a wall within sight line
+          if (resistanceMap[currentX][currentY] >= 1 && distance < radius) {
+            // Hit a wall within sight line
+
             blocked = true;
             castLight(distance + 1, start, leftSlope, xx, xy, yx, yy);
             newStart = rightSlope;

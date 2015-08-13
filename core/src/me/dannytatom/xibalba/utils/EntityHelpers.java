@@ -25,6 +25,13 @@ public class EntityHelpers {
     this.assets = assets;
   }
 
+  /**
+   * Spawn the player somewhere.
+   *
+   * @param player   The player
+   * @param position Vector2 of where to spawn them
+   * @return The player
+   */
   public Entity spawnPlayer(Entity player, Vector2 position) {
     player.add(new PlayerComponent());
     player.add(new PositionComponent(position));
@@ -35,8 +42,15 @@ public class EntityHelpers {
     return player;
   }
 
+  /**
+   * Spawn an enemy somewhere.
+   *
+   * @param type     What type of enemy to spawn
+   * @param position Vector2 of where to spawn them
+   * @return The enemy
+   */
   public Entity spawnEnemy(String type, Vector2 position) {
-    JSONToEnemy json = (new Json()).fromJson(JSONToEnemy.class,
+    JsonToEnemy json = (new Json()).fromJson(JsonToEnemy.class,
         Gdx.files.internal("data/enemies/" + type + ".json"));
 
     Entity entity = new Entity();
@@ -58,12 +72,24 @@ public class EntityHelpers {
     return entity;
   }
 
+  /**
+   * Spawn an item somewhere.
+   *
+   * @param type     What type of item to spawn
+   * @param position Vector2 of where to spawn it
+   * @return The item
+   */
   public Entity spawnItem(String type, Vector2 position) {
     Entity entity = new Entity();
 
-    entity.add((new Json()).fromJson(ItemComponent.class, Gdx.files.internal("data/items/" + type + ".json")));
+    entity.add(
+        (new Json()).fromJson(ItemComponent.class,
+            Gdx.files.internal("data/items/" + type + ".json"))
+    );
     entity.add(new PositionComponent(position));
-    entity.add(new VisualComponent(new Sprite((Texture) assets.get("sprites/" + type + ".png")), null));
+    entity.add(new VisualComponent(new Sprite(
+            (Texture) assets.get("sprites/" + type + ".png")), null)
+    );
 
     ItemComponent item = entity.getComponent(ItemComponent.class);
 
@@ -75,6 +101,13 @@ public class EntityHelpers {
     return entity;
   }
 
+  /**
+   * Spawn an effect somewhere.
+   *
+   * @param starter  Who set off the effect
+   * @param position Vector2 of where to spawn the effect
+   * @param item     The item that caused the effect
+   */
   public void spawnEffect(Entity starter, Vector2 position, Entity item) {
     ItemComponent ic = item.getComponent(ItemComponent.class);
 
@@ -82,10 +115,15 @@ public class EntityHelpers {
       for (int y = (int) position.y - ic.effectRange; y < position.y + ic.effectRange; y++) {
         Entity projectile = new Entity();
         projectile.add(new PositionComponent(new Vector2(x, y)));
-        projectile.add(new VisualComponent(new Sprite((Texture) assets.get("sprites/poison.png")), null));
+        projectile.add(
+            new VisualComponent(new Sprite((Texture) assets.get("sprites/poison.png")), null)
+        );
 
         if (Objects.equals(ic.effect, "poison")) {
-          projectile.add(new DamageEffectComponent(starter, "poison", ic.effectTurns, ic.attributes.get("damage")));
+          projectile.add(
+              new DamageEffectComponent(starter, "poison",
+                  ic.effectTurns, ic.attributes.get("damage"))
+          );
         }
 
         engine.addEntity(projectile);
@@ -109,6 +147,12 @@ public class EntityHelpers {
     return entity != null && entity.getComponent(ItemComponent.class) != null;
   }
 
+  /**
+   * Add up damage.
+   *
+   * @param entity The entity that's doing damage
+   * @return The amount of damage done
+   */
   public int getDamage(Entity entity) {
     InventoryComponent inventory = entity.getComponent(InventoryComponent.class);
     int damage = 0;

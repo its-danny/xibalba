@@ -39,6 +39,7 @@ public class WorldRenderer {
    */
   public WorldRenderer(Main main, Engine engine, SpriteBatch batch, Map map, Entity player) {
     game = main;
+
     this.engine = engine;
     this.batch = batch;
     this.map = map;
@@ -59,7 +60,6 @@ public class WorldRenderer {
 
     // Get player pos & attributes
     PositionComponent playerPosition = player.getComponent(PositionComponent.class);
-    AttributesComponent playerAttributes = player.getComponent(AttributesComponent.class);
 
     // Update worldCamera
     camera.position.set(playerPosition.pos.x * SPRITE_WIDTH,
@@ -69,7 +69,9 @@ public class WorldRenderer {
     batch.setProjectionMatrix(camera.combined);
     batch.begin();
 
-    float[][] lightMap = caster.calculateFOV(map.createFOVMap(),
+    AttributesComponent playerAttributes = player.getComponent(AttributesComponent.class);
+
+    float[][] lightMap = caster.calculateFov(map.createFovMap(),
         (int) playerPosition.pos.x, (int) playerPosition.pos.y,
         playerAttributes.vision);
 
@@ -93,7 +95,8 @@ public class WorldRenderer {
       for (GridCell cell : map.targetingPath) {
         TextureAtlas atlas = game.assets.get("sprites/ui.atlas");
 
-        batch.setColor(1f, 1f, 1f, lightMap[cell.x][cell.y] <= 0.35f ? 0.35f : lightMap[cell.x][cell.y]);
+        batch.setColor(1f, 1f, 1f,
+            lightMap[cell.x][cell.y] <= 0.35f ? 0.35f : lightMap[cell.x][cell.y]);
         batch.draw(atlas.createSprite("range"), cell.x * SPRITE_WIDTH, cell.y * SPRITE_HEIGHT);
         batch.setColor(1f, 1f, 1f, 1f);
       }
@@ -109,7 +112,8 @@ public class WorldRenderer {
   }
 
   private void renderEffects(float[][] lightMap) {
-    ImmutableArray<Entity> entities = engine.getEntitiesFor(Family.all(DamageEffectComponent.class).get());
+    ImmutableArray<Entity> entities =
+        engine.getEntitiesFor(Family.all(DamageEffectComponent.class).get());
 
     for (Entity entity : entities) {
       PositionComponent position = ComponentMappers.position.get(entity);
@@ -164,7 +168,9 @@ public class WorldRenderer {
 
   private void renderItems(float[][] lightMap) {
     ImmutableArray<Entity> entities =
-        engine.getEntitiesFor(Family.all(ItemComponent.class, PositionComponent.class, VisualComponent.class).get());
+        engine.getEntitiesFor(
+            Family.all(ItemComponent.class, PositionComponent.class, VisualComponent.class).get()
+        );
 
     for (Entity entity : entities) {
       PositionComponent position = ComponentMappers.position.get(entity);
@@ -192,7 +198,10 @@ public class WorldRenderer {
         visual.elapsedTime += delta;
 
         batch.setColor(1f, 1f, 1f, lightMap[(int) position.pos.x][(int) position.pos.y]);
-        batch.draw(visual.animation.getKeyFrame(visual.elapsedTime, true), position.pos.x * SPRITE_WIDTH, position.pos.y * SPRITE_HEIGHT);
+        batch.draw(
+            visual.animation.getKeyFrame(visual.elapsedTime, true),
+            position.pos.x * SPRITE_WIDTH, position.pos.y * SPRITE_HEIGHT
+        );
         batch.setColor(1f, 1f, 1f, 1f);
       }
     }
@@ -211,7 +220,10 @@ public class WorldRenderer {
         visual.elapsedTime += delta;
 
         batch.setColor(1f, 1f, 1f, lightMap[(int) position.pos.x][(int) position.pos.y]);
-        batch.draw(visual.animation.getKeyFrame(visual.elapsedTime, true), position.pos.x * SPRITE_WIDTH, position.pos.y * SPRITE_HEIGHT);
+        batch.draw(
+            visual.animation.getKeyFrame(visual.elapsedTime, true),
+            position.pos.x * SPRITE_WIDTH, position.pos.y * SPRITE_HEIGHT
+        );
         batch.setColor(1f, 1f, 1f, 1f);
       }
     }

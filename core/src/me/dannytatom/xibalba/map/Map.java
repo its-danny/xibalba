@@ -61,12 +61,12 @@ public class Map {
 
   /**
    * Get starting light map.
-   * <p>
-   * 1 is blocked, 0 is not
+   *
+   * <p>1 is blocked, 0 is not
    *
    * @return Resistance map
    */
-  public float[][] createFOVMap() {
+  public float[][] createFovMap() {
     float[][] resistanceMap = new float[width][height];
 
     for (int x = 0; x < width; x++) {
@@ -78,6 +78,12 @@ public class Map {
     return resistanceMap;
   }
 
+  /**
+   * Create path for targeting (used for throwing weapons).
+   *
+   * @param start Starting cell
+   * @param end   Where they're throwing to
+   */
   public void createTargetingPath(Vector2 start, Vector2 end) {
     Vector2 oldTarget;
 
@@ -85,7 +91,9 @@ public class Map {
 
     for (int x = 0; x < map.length; x++) {
       for (int y = 0; y < map[x].length; y++) {
-        boolean canTarget = !getCell(new Vector2(x, y)).isWall && !getCell(new Vector2(x, y)).hidden;
+        boolean canTarget = !getCell(
+            new Vector2(x, y)).isWall && !getCell(new Vector2(x, y)
+        ).hidden;
 
         cells[x][y] = new GridCell(x, y, canTarget);
       }
@@ -102,14 +110,18 @@ public class Map {
       target = target.add(end);
     }
 
-    targetingPath = finder.findPath((int) start.x, (int) start.y, (int) target.x, (int) target.y, grid);
+    targetingPath = finder.findPath(
+        (int) start.x, (int) start.y, (int) target.x, (int) target.y, grid
+    );
 
     // TODO: Instead of 5, range should be determined by strength
     if (targetingPath == null || targetingPath.size() > 5) {
       target = oldTarget;
 
       if (target != null) {
-        targetingPath = finder.findPath((int) start.x, (int) start.y, (int) target.x, (int) target.y, grid);
+        targetingPath = finder.findPath(
+            (int) start.x, (int) start.y, (int) target.x, (int) target.y, grid
+        );
       }
     }
   }
@@ -117,12 +129,12 @@ public class Map {
   /**
    * Get the cell for this position.
    *
-   * @param x x pos of cell
-   * @param y y pos of cell
+   * @param cellX cellX pos of cell
+   * @param cellY cellY pos of cell
    * @return The Cell instance at this pos
    */
-  public Cell getCell(int x, int y) {
-    return map[x][y];
+  public Cell getCell(int cellX, int cellY) {
+    return map[cellX][cellY];
   }
 
   public Cell getCell(Vector2 position) {
@@ -147,7 +159,9 @@ public class Map {
    */
   public Entity getEntityAt(Vector2 position) {
     ImmutableArray<Entity> entities =
-        engine.getEntitiesFor(Family.all(PositionComponent.class).exclude(DamageEffectComponent.class).get());
+        engine.getEntitiesFor(
+            Family.all(PositionComponent.class).exclude(DamageEffectComponent.class).get()
+        );
 
     for (Entity entity : entities) {
       if (entity.getComponent(PositionComponent.class).pos.epsilonEquals(position, 0.00001f)) {
@@ -158,6 +172,13 @@ public class Map {
     return null;
   }
 
+  /**
+   * Get mob from a location.
+   * TODO: Rename to getPersonAt or something?
+   *
+   * @param position Where the mob is
+   * @return The mob
+   */
   public Entity getMobAt(Vector2 position) {
     ImmutableArray<Entity> entities =
         engine.getEntitiesFor(Family.all(PlayerComponent.class).all(EnemyComponent.class).get());
@@ -171,6 +192,12 @@ public class Map {
     return null;
   }
 
+  /**
+   * Get enemy from a location.
+   *
+   * @param position Where the enemy is
+   * @return The enemy
+   */
   public Entity getEnemyAt(Vector2 position) {
     ImmutableArray<Entity> entities = engine.getEntitiesFor(Family.all(EnemyComponent.class).get());
 
@@ -219,7 +246,9 @@ public class Map {
 
     if (!blocked) {
       ImmutableArray<Entity> entities =
-          engine.getEntitiesFor(Family.all(PositionComponent.class).exclude(DamageEffectComponent.class).get());
+          engine.getEntitiesFor(
+              Family.all(PositionComponent.class).exclude(DamageEffectComponent.class).get()
+          );
 
       for (Entity entity : entities) {
         PositionComponent ep = ComponentMappers.position.get(entity);
@@ -262,7 +291,7 @@ public class Map {
    */
   public boolean canSeePlayer(Vector2 position, int distance) {
     ShadowCaster caster = new ShadowCaster();
-    float[][] lightMap = caster.calculateFOV(createFOVMap(),
+    float[][] lightMap = caster.calculateFov(createFovMap(),
         (int) position.x, (int) position.y, distance);
     Vector2 playerPosition = getPlayerPosition();
 
@@ -275,15 +304,15 @@ public class Map {
    * @return Random open cell
    */
   public Vector2 getRandomOpenPosition() {
-    int x;
-    int y;
+    int cellX;
+    int cellY;
 
     do {
-      x = MathUtils.random(0, map.length - 1);
-      y = MathUtils.random(0, map[x].length - 1);
-    } while (isBlocked(new Vector2(x, y)));
+      cellX = MathUtils.random(0, map.length - 1);
+      cellY = MathUtils.random(0, map[cellX].length - 1);
+    } while (isBlocked(new Vector2(cellX, cellY)));
 
-    return new Vector2(x, y);
+    return new Vector2(cellX, cellY);
   }
 
   /**
