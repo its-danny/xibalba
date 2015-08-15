@@ -14,8 +14,8 @@ public class DesktopLauncher {
     LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 
     config.title = "Xibalba";
-    config.width = 1280;
-    config.height = 1024;
+    config.width = 1366;
+    config.height = 768;
 
     new LwjglApplication(new Main(), config);
   }

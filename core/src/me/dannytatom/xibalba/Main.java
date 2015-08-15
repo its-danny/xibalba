@@ -52,6 +52,9 @@ public class Main extends Game {
     Colors.put("DARK_PURPLE", parseColor("241d26"));
     Colors.put("LIGHT_PURPLE", parseColor("706274"));
 
+    // Hide mouse cursor
+    Gdx.input.setCursorCatched(true);
+
     // Start the main menu
     setScreen(new MainMenuScreen(this));
   }
