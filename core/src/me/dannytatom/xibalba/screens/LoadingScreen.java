@@ -6,16 +6,20 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import me.dannytatom.xibalba.Main;
+import me.dannytatom.xibalba.map.CaveGenerator;
+import me.dannytatom.xibalba.map.Cell;
 
 public class LoadingScreen implements Screen {
   private final Main main;
 
   private Stage stage;
+  private Label label;
 
   /**
    * Loading Screen.
@@ -35,16 +39,10 @@ public class LoadingScreen implements Screen {
     table.setFillParent(true);
     stage.addActor(table);
 
-    table.add(new Label("Loading assets", skin));
+    label = new Label(null, skin);
+    table.add(label);
 
-    this.main.assets.load("sprites/ui.atlas", TextureAtlas.class);
-    this.main.assets.load("sprites/cave.atlas", TextureAtlas.class);
-    this.main.assets.load("sprites/player.atlas", TextureAtlas.class);
-    this.main.assets.load("sprites/spiderMonkey.atlas", TextureAtlas.class);
-
-    this.main.assets.load("sprites/chippedFlint.png", Texture.class);
-    this.main.assets.load("sprites/bomb.png", Texture.class);
-    this.main.assets.load("sprites/poison.png", Texture.class);
+    loadAssets();
   }
 
   @Override
@@ -56,7 +54,9 @@ public class LoadingScreen implements Screen {
     stage.draw();
 
     if (main.assets.update()) {
-      main.playScreen = new PlayScreen(main);
+      Cell[][] map = generateMap();
+
+      main.playScreen = new PlayScreen(main, map);
       main.setScreen(main.playScreen);
     }
   }
@@ -89,5 +89,27 @@ public class LoadingScreen implements Screen {
   @Override
   public void dispose() {
     stage.dispose();
+  }
+
+  private void loadAssets() {
+    label.setText("Loading assets");
+
+    main.assets.load("sprites/ui.atlas", TextureAtlas.class);
+    main.assets.load("sprites/cave.atlas", TextureAtlas.class);
+    main.assets.load("sprites/player.atlas", TextureAtlas.class);
+    main.assets.load("sprites/spiderMonkey.atlas", TextureAtlas.class);
+
+    main.assets.load("sprites/chippedFlint.png", Texture.class);
+    main.assets.load("sprites/bomb.png", Texture.class);
+    main.assets.load("sprites/poison.png", Texture.class);
+  }
+
+  private Cell[][] generateMap() {
+    label.setText("Generating map");
+
+    return new CaveGenerator(
+        main.assets.get("sprites/cave.atlas"),
+        MathUtils.random(50, 80), MathUtils.random(30, 60)
+    ).map;
   }
 }

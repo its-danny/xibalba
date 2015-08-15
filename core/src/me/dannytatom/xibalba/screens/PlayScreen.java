@@ -4,10 +4,9 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.MathUtils;
 import me.dannytatom.xibalba.*;
 import me.dannytatom.xibalba.components.AttributesComponent;
-import me.dannytatom.xibalba.map.CaveGenerator;
+import me.dannytatom.xibalba.map.Cell;
 import me.dannytatom.xibalba.map.Map;
 import me.dannytatom.xibalba.systems.AttributesSystem;
 import me.dannytatom.xibalba.systems.EffectSystem;
@@ -35,7 +34,7 @@ class PlayScreen implements Screen {
    *
    * @param main Instance of Main class
    */
-  public PlayScreen(Main main) {
+  public PlayScreen(Main main, Cell[][] cellMap) {
     this.main = main;
 
     engine = new Engine();
@@ -50,12 +49,8 @@ class PlayScreen implements Screen {
     // Setup action log
     main.log = new ActionLog();
 
-    // Generate cave & initialize map
-    CaveGenerator cave = new CaveGenerator(
-        main.assets.get("sprites/cave.atlas"),
-        MathUtils.random(50, 80), MathUtils.random(30, 60)
-    );
-    map = new Map(engine, main.entityHelpers, cave.map);
+    // Initialize map
+    map = new Map(engine, main.entityHelpers, cellMap);
 
     // Add player entity
     main.entityHelpers.spawnPlayer(main.player, map.findPlayerStart());
