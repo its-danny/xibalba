@@ -3,6 +3,7 @@ package me.dannytatom.xibalba.screens;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import me.dannytatom.xibalba.*;
 import me.dannytatom.xibalba.components.AttributesComponent;
@@ -23,8 +24,10 @@ import me.dannytatom.xibalba.utils.SkillHelpers;
 
 class PlayScreen implements Screen {
   private final Main main;
+
   private final WorldRenderer worldRenderer;
-  private final InterfaceRenderer interfaceRenderer;
+  private final UiRenderer uiRenderer;
+
   private final SpriteBatch batch;
   private final Engine engine;
   private Map map;
@@ -37,17 +40,17 @@ class PlayScreen implements Screen {
   public PlayScreen(Main main, Cell[][] cellMap) {
     this.main = main;
 
-    engine = new Engine();
     batch = new SpriteBatch();
+    engine = new Engine();
+
+    // Setup action log
+    main.log = new ActionLog();
 
     // Setup helpers
     main.entityHelpers = new EntityHelpers(main, engine);
     main.inventoryHelpers = new InventoryHelpers(main);
     main.skillHelpers = new SkillHelpers(main);
     main.combatHelpers = new CombatHelpers(main, engine);
-
-    // Setup action log
-    main.log = new ActionLog();
 
     // Initialize map
     map = new Map(engine, main.entityHelpers, cellMap);
@@ -81,11 +84,17 @@ class PlayScreen implements Screen {
 
     // Setup renderers
     worldRenderer = new WorldRenderer(main, engine, batch, map);
-    interfaceRenderer = new InterfaceRenderer(main);
+    uiRenderer = new UiRenderer(main, engine);
+
+    // Change state to playing
+    main.state = Main.State.PLAYING;
   }
 
   @Override
   public void render(float delta) {
+    Gdx.gl.glClearColor(0, 0, 0, 1);
+    Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
     if (main.executeTurn) {
       engine.update(delta);
 
@@ -93,16 +102,18 @@ class PlayScreen implements Screen {
     }
 
     worldRenderer.render(delta);
-    interfaceRenderer.render(delta);
+    uiRenderer.render(delta);
 
     if (main.player.getComponent(AttributesComponent.class).health <= 0) {
+      main.getScreen().dispose();
       main.setScreen(new MainMenuScreen(main));
     }
   }
 
   @Override
   public void resize(int width, int height) {
-    interfaceRenderer.resize(width, height);
+    worldRenderer.resize(width, height);
+    uiRenderer.resize(width, height);
   }
 
   @Override
@@ -127,7 +138,10 @@ class PlayScreen implements Screen {
 
   @Override
   public void dispose() {
+    uiRenderer.dispose();
     batch.dispose();
-    interfaceRenderer.dispose();
+
+    main.log = null;
+    main.state = null;
   }
 }

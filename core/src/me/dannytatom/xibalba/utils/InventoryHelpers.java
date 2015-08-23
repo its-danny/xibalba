@@ -42,43 +42,7 @@ public class InventoryHelpers {
   }
 
   /**
-   * Set the item's lookingAt property to true.
-   *
-   * @param entity The item
-   */
-  public void showItem(Entity entity) {
-    for (Entity item : main.player.getComponent(InventoryComponent.class).items) {
-      item.getComponent(ItemComponent.class).lookingAt = false;
-    }
-
-    entity.getComponent(ItemComponent.class).lookingAt = true;
-  }
-
-  /**
-   * Hide all items by setting their lookingAt attributes to false.
-   */
-  public void hideItems() {
-    for (Entity item : main.player.getComponent(InventoryComponent.class).items) {
-      item.getComponent(ItemComponent.class).lookingAt = false;
-    }
-  }
-
-  /**
-   * Toggle item visibility.
-   *
-   * @param entity The item to toggle
-   */
-  public void toggleItem(Entity entity) {
-    if (entity.getComponent(ItemComponent.class).lookingAt) {
-      hideItems();
-    } else {
-      showItem(entity);
-    }
-  }
-
-  /**
-   * If inventory not full, assign the item a letter,
-   * remove it's visual components, and attach it.
+   * If inventory not full, assign the item a letter, remove it's visual components, and attach it.
    *
    * @param thing The item to add
    * @return True if added, false if inventory full
@@ -102,9 +66,7 @@ public class InventoryHelpers {
   /**
    * Remove an item from inventory.
    */
-  public void removeItem() {
-    Entity item = getShowing();
-
+  public void removeItem(Entity item) {
     if (item != null) {
       main.player.getComponent(InventoryComponent.class).items.remove(item);
     }
@@ -115,52 +77,45 @@ public class InventoryHelpers {
    *
    * @param position The cell to drop it to
    */
-  public void dropItem(Vector2 position) {
-    Vector2 pos = position;
-    Entity item = getShowing();
+  public void dropItem(Entity item, Vector2 position) {
+    letters.add(item.getComponent(ItemComponent.class).identifier);
 
-    if (pos == null) {
-      pos = main.player.getComponent(PositionComponent.class).pos;
-    }
+    item.getComponent(ItemComponent.class).equipped = false;
+    item.getComponent(ItemComponent.class).identifier = null;
+    item.add(new PositionComponent(position));
 
-    if (item != null) {
-      letters.add(item.getComponent(ItemComponent.class).identifier);
+    main.player.getComponent(InventoryComponent.class).items.remove(item);
+  }
 
-      item.getComponent(ItemComponent.class).equipped = false;
-      item.getComponent(ItemComponent.class).lookingAt = false;
-      item.getComponent(ItemComponent.class).identifier = null;
-      item.add(new PositionComponent(pos));
-
-      main.player.getComponent(InventoryComponent.class).items.remove(item);
-    }
+  public void dropItem(Entity item) {
+    dropItem(item, main.player.getComponent(PositionComponent.class).pos);
   }
 
   /**
    * Wield an item then stop looking at it.
    */
-  public void wieldItem() {
-    Entity entity = getShowing();
+  public void wieldItem(Entity entity) {
+    ItemComponent item = entity.getComponent(ItemComponent.class);
 
-    if (entity != null) {
-      ItemComponent item = entity.getComponent(ItemComponent.class);
+    if (item.actions.get("canWield")) {
+      ArrayList<Entity> others = main.player.getComponent(InventoryComponent.class).items;
 
-      if (item.actions.get("canWield")) {
-        ArrayList<Entity> others = main.player.getComponent(InventoryComponent.class).items;
-
-        for (Entity other : others) {
-          other.getComponent(ItemComponent.class).equipped = false;
-        }
-
-        item.equipped = true;
-        item.lookingAt = false;
+      for (Entity other : others) {
+        other.getComponent(ItemComponent.class).equipped = false;
       }
+
+      item.equipped = true;
     }
   }
 
+  public void unwieldItem(Entity entity) {
+    entity.getComponent(ItemComponent.class).equipped = false;
+  }
+
   /**
-   * Get a list of wielded items.
+   * Get wielded item.
    *
-   * @return Array of items or null if nothing is wielded.
+   * @return Wielded items or null if nothing is wielded.
    */
   public Entity getWieldedItem() {
     ArrayList<Entity> items = main.player.getComponent(InventoryComponent.class).items;
@@ -177,17 +132,17 @@ public class InventoryHelpers {
   }
 
   /**
-   * Get showing item.
+   * Get item the player is currently throwing.
    *
-   * @return The item they're looking at, null if nothing
+   * @return The entity
    */
-  public Entity getShowing() {
+  public Entity getThrowingItem() {
     ArrayList<Entity> items = main.player.getComponent(InventoryComponent.class).items;
 
     for (Entity entity : items) {
       ItemComponent item = entity.getComponent(ItemComponent.class);
 
-      if (item.lookingAt) {
+      if (item.throwing) {
         return entity;
       }
     }

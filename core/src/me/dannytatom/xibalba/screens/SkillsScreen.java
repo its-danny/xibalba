@@ -60,9 +60,7 @@ public class SkillsScreen implements Screen {
       group.addActor(skillLine("Stabbing", skills.stabbing));
     }
 
-    table.add(new Label("Skills", skin)).left().pad(10);
-    table.row();
-    table.add(group).pad(0, 10, 10, 10).width(Gdx.graphics.getWidth() / 2 - 20);
+    table.add(group).pad(10, 10, 10, 10).width(Gdx.graphics.getWidth() / 2 - 20);
 
     Gdx.input.setInputProcessor(stage);
   }
@@ -74,10 +72,10 @@ public class SkillsScreen implements Screen {
 
   @Override
   public void render(float delta) {
-    Gdx.gl.glClearColor(36 / 255f, 29 / 255f, 38 / 255f, 1);
+    Gdx.gl.glClearColor(0, 0, 0, 1);
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-    stage.act(Gdx.graphics.getDeltaTime());
+    stage.act(delta);
     stage.draw();
 
     if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
@@ -111,31 +109,31 @@ public class SkillsScreen implements Screen {
   }
 
   private Label skillLine(String skill, int level) {
-    String str = "[LIGHT_PURPLE][[";
+    String str = "[LIGHT_GRAY][[";
 
     switch (level) {
       case 0:
-        str += "[LIGHT_PURPLE]xxxxx";
+        str += "[LIGHT_GRAY]xxxxx";
         break;
       case 4:
-        str += "[WHITE]x[LIGHT_PURPLE]xxxx";
+        str += "[WHITE]x[LIGHT_GRAY]xxxx";
         break;
       case 6:
-        str += "[WHITE]xx[LIGHT_PURPLE]xxx";
+        str += "[WHITE]xx[LIGHT_GRAY]xxx";
         break;
       case 8:
-        str += "[WHITE]xxx[LIGHT_PURPLE]xx";
+        str += "[WHITE]xxx[LIGHT_GRAY]xx";
         break;
       case 10:
-        str += "[WHITE]xxxx[LIGHT_PURPLE]x";
+        str += "[WHITE]xxxx[LIGHT_GRAY]x";
         break;
       case 12:
-        str += "[WHITE]xxxxx[LIGHT_PURPLE]";
+        str += "[WHITE]xxxxx[LIGHT_GRAY]";
         break;
       default:
     }
 
-    str += "[LIGHT_PURPLE]]";
+    str += "[LIGHT_GRAY]]";
 
     return new Label(str + " [WHITE]" + skill, skin);
   }

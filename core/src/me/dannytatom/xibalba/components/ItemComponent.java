@@ -18,6 +18,6 @@ public class ItemComponent implements Component {
   public HashMap<String, Boolean> actions;
   public String identifier;
 
-  public boolean lookingAt = false;
   public boolean equipped = false;
+  public boolean throwing = false;
 }

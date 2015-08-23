@@ -16,17 +16,16 @@ import me.dannytatom.xibalba.utils.InventoryHelpers;
 import me.dannytatom.xibalba.utils.SkillHelpers;
 
 public class Main extends Game {
+  public State state;
   public AssetManager assets;
   public BitmapFont font;
-
+  public ActionLog log;
   public CombatHelpers combatHelpers;
   public EntityHelpers entityHelpers;
   public InventoryHelpers inventoryHelpers;
   public SkillHelpers skillHelpers;
   public Screen playScreen;
   public Entity player;
-  public ActionLog log;
-
   public boolean debug = false;
   public boolean executeTurn = false;
 
@@ -76,5 +75,9 @@ public class Main extends Game {
     int v3 = Integer.parseInt(s3, 16);
     float f3 = (float) v3 / 255f;
     return new Color(f1, f2, f3, 1);
+  }
+
+  public enum State {
+    PLAYING, TARGETING
   }
 }

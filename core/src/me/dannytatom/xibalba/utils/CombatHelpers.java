@@ -45,6 +45,7 @@ public class CombatHelpers {
     Entity wielded = main.inventoryHelpers.getWieldedItem();
     String skill;
     String verb;
+
     int damage = starter.getComponent(AttributesComponent.class).damage;
 
     if (wielded == null) {
@@ -90,8 +91,10 @@ public class CombatHelpers {
 
     int result = rollHit(main.skillHelpers.getSkill(starter, "throwing"));
 
-    applyDamage(result, damageEffectComponent.damage, "throwing",
-        starter, target, damageEffectComponent.type);
+    applyDamage(
+        result, damageEffectComponent.damage, "throwing",
+        starter, target, damageEffectComponent.type
+    );
   }
 
   private int rollHit(int skillLevel) {
@@ -144,6 +147,10 @@ public class CombatHelpers {
       action += "missed " + targetAttributes.name;
     }
 
+    // If we're using bombs or something that doesn't have verbs,
+    // we use the type as an indicator of what to log.
+    //
+    // TODO: Pretty hacky, change this
     if (Objects.equals(verb, "poison")) {
       action = targetAttributes.name + " was hurt by the cloud of poison";
     }

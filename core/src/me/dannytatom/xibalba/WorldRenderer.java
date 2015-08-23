@@ -4,12 +4,12 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import me.dannytatom.xibalba.components.*;
 import me.dannytatom.xibalba.components.effects.DamageEffectComponent;
 import me.dannytatom.xibalba.map.Cell;
@@ -26,11 +26,12 @@ public class WorldRenderer {
   private final Engine engine;
   private final SpriteBatch batch;
   private final Map map;
-  private final OrthographicCamera camera;
   private final ShadowCaster caster;
+  private Viewport viewport;
+  private OrthographicCamera camera;
 
   /**
-   * WorldRenderer constructor.
+   * Renders the game world.
    *
    * @param engine Ashely engine
    * @param batch  The sprite batch to use (set in PlayScreen)
@@ -42,25 +43,27 @@ public class WorldRenderer {
     this.batch = batch;
     this.map = map;
 
-    camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-    camera.update();
+    camera = new OrthographicCamera();
+    viewport = new FitViewport(1366, 768, camera);
 
     caster = new ShadowCaster();
   }
 
   /**
    * Render shit.
+   *
+   * @param delta Elapsed time
    */
   public void render(float delta) {
-    Gdx.gl.glClearColor(0, 0, 0, 1);
-    Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-    // Get player pos & attributes
+    // Get player position
     PositionComponent playerPosition = main.player.getComponent(PositionComponent.class);
 
-    // Update worldCamera
-    camera.position.set(playerPosition.pos.x * SPRITE_WIDTH,
-        playerPosition.pos.y * SPRITE_HEIGHT, 0);
+    // Set camera to follow player
+    camera.position.set(
+        playerPosition.pos.x * SPRITE_WIDTH,
+        playerPosition.pos.y * SPRITE_HEIGHT, 0
+    );
+
     camera.update();
 
     batch.setProjectionMatrix(camera.combined);
@@ -68,9 +71,11 @@ public class WorldRenderer {
 
     AttributesComponent playerAttributes = main.player.getComponent(AttributesComponent.class);
 
-    float[][] lightMap = caster.calculateFov(map.createFovMap(),
+    float[][] lightMap = caster.calculateFov(
+        map.createFovMap(),
         (int) playerPosition.pos.x, (int) playerPosition.pos.y,
-        playerAttributes.vision);
+        playerAttributes.vision
+    );
 
     for (int x = 0; x < map.width; x++) {
       for (int y = 0; y < map.height; y++) {
@@ -224,5 +229,9 @@ public class WorldRenderer {
         batch.setColor(1f, 1f, 1f, 1f);
       }
     }
+  }
+
+  public void resize(int width, int height) {
+    viewport.update(width, height);
   }
 }

@@ -3,23 +3,24 @@ package me.dannytatom.xibalba;
 import java.util.ArrayList;
 
 public class ActionLog {
-  public final ArrayList<String> items;
+  public final ArrayList<String> things;
 
   public ActionLog() {
-    items = new ArrayList<>();
-    items.add("Make it to Xibalba, Necahual, and kill the 10 Lords of Xibalba");
+    things = new ArrayList<>();
+    things.add("Make it to Xibalba and kill the 10 Lords of Xibalba");
   }
 
   /**
-   * Add an item to the action log.
+   * Add to the action log.
    *
-   * @param str The string to add
+   * @param thing The string to add
    */
-  public void add(String str) {
-    if (items.size() == 6) {
-      items.remove(5);
+  public void add(String thing) {
+    if (things.size() == 6) {
+      things.remove(5);
     }
 
-    items.add(0, str);
+    things.add(0, thing);
   }
 }
+

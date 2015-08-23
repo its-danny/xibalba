@@ -24,9 +24,7 @@ public class MovementSystem extends ActionSystem {
   }
 
   /**
-   * If the entities have a move action in queue,
-   * and can move where they're wanting to,
-   * move 'em.
+   * If the entities have a move action in queue, and can move where they're wanting to, move 'em.
    *
    * @param entity    The entity to process
    * @param deltaTime Time since last frame

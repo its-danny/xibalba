@@ -177,7 +177,7 @@ public class TraitsScreen implements Screen {
       }
     }
 
-    stage.act(Gdx.graphics.getDeltaTime());
+    stage.act(delta);
     stage.draw();
 
     if (Gdx.input.isKeyJustPressed(Input.Keys.J)) {

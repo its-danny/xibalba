@@ -151,8 +151,7 @@ public class Map {
   }
 
   /**
-   * Attempt to get the entity at the given position,
-   * returns null if nobody is there.
+   * Attempt to get the entity at the given position, returns null if nobody is there.
    *
    * @param position The entity's position
    * @return The entity
@@ -173,8 +172,7 @@ public class Map {
   }
 
   /**
-   * Get mob from a location.
-   * TODO: Rename to getPersonAt or something?
+   * Get mob from a location. TODO: Rename to getPersonAt or something?
    *
    * @param position Where the mob is
    * @return The mob
@@ -211,8 +209,7 @@ public class Map {
   }
 
   /**
-   * Returns an open position near the player.
-   * TODO: Make this less retarded.
+   * Returns an open position near the player. TODO: Make this less retarded.
    *
    * @return Player position
    */

@@ -139,8 +139,7 @@ public class CaveGenerator {
   }
 
   /**
-   * Returns number of empty neighbors around cell within
-   * the amount of space given.
+   * Returns number of empty neighbors around cell within the amount of space given.
    *
    * @param amount How many neighboring cells to check
    * @param cellX  cellX of cell to search from

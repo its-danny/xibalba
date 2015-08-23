@@ -14,8 +14,7 @@ public class SkillHelpers {
   }
 
   /**
-   * Get skill value.
-   * TODO: Rename to getSkillValue
+   * Get skill value. TODO: Rename to getSkillValue
    *
    * @param entity Entity who's skill we care about
    * @param skill  The skill itself
