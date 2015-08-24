@@ -38,6 +38,7 @@ public class EntityHelpers {
     player.add(new VisualComponent(null, main.assets.get("sprites/player.atlas")));
     player.add(new SkillsComponent());
     player.add(new InventoryComponent());
+    player.add(new EquipmentComponent());
 
     return player;
   }
@@ -135,40 +136,11 @@ public class EntityHelpers {
     return engine.getEntitiesFor(Family.all(PlayerComponent.class).get()).first();
   }
 
-  public boolean isPlayer(Entity entity) {
-    return entity != null && entity.getComponent(PlayerComponent.class) != null;
-  }
-
   public boolean isEnemy(Entity entity) {
     return entity != null && entity.getComponent(EnemyComponent.class) != null;
   }
 
   public boolean isItem(Entity entity) {
     return entity != null && entity.getComponent(ItemComponent.class) != null;
-  }
-
-  /**
-   * Add up damage.
-   *
-   * @param entity The entity that's doing damage
-   * @return The amount of damage done
-   */
-  public int getDamage(Entity entity) {
-    InventoryComponent inventory = entity.getComponent(InventoryComponent.class);
-    int damage = 0;
-
-    damage += entity.getComponent(AttributesComponent.class).damage;
-
-    if (inventory != null) {
-      for (int i = 0; i < inventory.items.size(); i++) {
-        ItemComponent it = inventory.items.get(i).getComponent(ItemComponent.class);
-
-        if (it.equipped) {
-          damage += it.attributes.get("damage");
-        }
-      }
-    }
-
-    return damage;
   }
 }

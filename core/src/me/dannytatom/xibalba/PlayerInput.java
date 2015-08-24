@@ -11,9 +11,9 @@ import me.dannytatom.xibalba.components.actions.MeleeComponent;
 import me.dannytatom.xibalba.components.actions.MovementComponent;
 import me.dannytatom.xibalba.components.actions.RangeComponent;
 import me.dannytatom.xibalba.map.Map;
+import me.dannytatom.xibalba.screens.CharacterScreen;
 import me.dannytatom.xibalba.screens.InventoryScreen;
 import me.dannytatom.xibalba.screens.MainMenuScreen;
-import me.dannytatom.xibalba.screens.SkillsScreen;
 
 public class PlayerInput implements InputProcessor {
   private final Main main;
@@ -42,8 +42,8 @@ public class PlayerInput implements InputProcessor {
       case Keys.Z:
         main.executeTurn = true;
         break;
-      case Keys.S:
-        main.setScreen(new SkillsScreen(main));
+      case Keys.C:
+        main.setScreen(new CharacterScreen(main));
         break;
       case Keys.I:
         main.setScreen(new InventoryScreen(main));

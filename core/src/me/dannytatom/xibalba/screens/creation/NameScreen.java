@@ -64,8 +64,10 @@ public class NameScreen implements Screen {
     table.add(
         new Label(
             "[LIGHT_GRAY]After reviewing, enter a name then [WHITE]ENTER[LIGHT_GRAY] to begin",
-            skin)
+            skin
+        )
     ).pad(10).width(Gdx.graphics.getWidth() / 2 - 20);
+
     table.add(new Label("Traits & Defects", skin)).pad(10).width(Gdx.graphics.getWidth() / 2 - 20);
     table.row();
     table.add(nameField).top().pad(0, 10, 10, 10).width(Gdx.graphics.getWidth() / 2 - 20);

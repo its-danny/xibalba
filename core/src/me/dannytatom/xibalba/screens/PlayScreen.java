@@ -17,10 +17,7 @@ import me.dannytatom.xibalba.systems.actions.RangeSystem;
 import me.dannytatom.xibalba.systems.ai.BrainSystem;
 import me.dannytatom.xibalba.systems.ai.TargetSystem;
 import me.dannytatom.xibalba.systems.ai.WanderSystem;
-import me.dannytatom.xibalba.utils.CombatHelpers;
-import me.dannytatom.xibalba.utils.EntityHelpers;
-import me.dannytatom.xibalba.utils.InventoryHelpers;
-import me.dannytatom.xibalba.utils.SkillHelpers;
+import me.dannytatom.xibalba.utils.*;
 
 class PlayScreen implements Screen {
   private final Main main;
@@ -49,6 +46,7 @@ class PlayScreen implements Screen {
     // Setup helpers
     main.entityHelpers = new EntityHelpers(main, engine);
     main.inventoryHelpers = new InventoryHelpers(main);
+    main.equipmentHelpers = new EquipmentHelpers(main);
     main.skillHelpers = new SkillHelpers(main);
     main.combatHelpers = new CombatHelpers(main, engine);
 

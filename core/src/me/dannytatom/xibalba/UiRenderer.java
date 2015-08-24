@@ -119,7 +119,7 @@ public class UiRenderer {
 
     // Toughness & damage
     int damage = attrs.damage;
-    Entity wielded = main.inventoryHelpers.getWieldedItem();
+    Entity wielded = main.equipmentHelpers.getWeapon();
 
     if (wielded != null) {
       ItemComponent ic = wielded.getComponent(ItemComponent.class);
@@ -137,7 +137,7 @@ public class UiRenderer {
   private void renderEquipment() {
     inventory.clear();
 
-    Entity wielded = this.main.inventoryHelpers.getWieldedItem();
+    Entity wielded = main.equipmentHelpers.getWeapon();
 
     if (wielded != null) {
       ItemComponent item = wielded.getComponent(ItemComponent.class);

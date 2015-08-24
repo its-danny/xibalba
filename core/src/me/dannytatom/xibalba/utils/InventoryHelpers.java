@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import me.dannytatom.xibalba.Main;
+import me.dannytatom.xibalba.components.EquipmentComponent;
 import me.dannytatom.xibalba.components.InventoryComponent;
 import me.dannytatom.xibalba.components.ItemComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
@@ -15,7 +16,7 @@ import java.util.Objects;
 
 public class InventoryHelpers {
   private static final ArrayList<String> letters = new ArrayList<>(
-      Arrays.asList("a", "c", "f", "g", "i", "m", "o", "p", "r", "v", "w", "x")
+      Arrays.asList("a", "c", "d", "e", "f", "g", "i", "m", "o", "p", "r", "s", "v", "w", "x")
   );
 
   private final Main main;
@@ -80,7 +81,6 @@ public class InventoryHelpers {
   public void dropItem(Entity item, Vector2 position) {
     letters.add(item.getComponent(ItemComponent.class).identifier);
 
-    item.getComponent(ItemComponent.class).equipped = false;
     item.getComponent(ItemComponent.class).identifier = null;
     item.add(new PositionComponent(position));
 
@@ -92,43 +92,25 @@ public class InventoryHelpers {
   }
 
   /**
-   * Wield an item then stop looking at it.
+   * Wield an item.
+   *
+   * @param entity The item to unwield
    */
   public void wieldItem(Entity entity) {
-    ItemComponent item = entity.getComponent(ItemComponent.class);
+    main.player.getComponent(EquipmentComponent.class).rightHand = entity;
 
-    if (item.actions.get("canWield")) {
-      ArrayList<Entity> others = main.player.getComponent(InventoryComponent.class).items;
-
-      for (Entity other : others) {
-        other.getComponent(ItemComponent.class).equipped = false;
-      }
-
-      item.equipped = true;
-    }
-  }
-
-  public void unwieldItem(Entity entity) {
-    entity.getComponent(ItemComponent.class).equipped = false;
+    removeItem(entity);
   }
 
   /**
-   * Get wielded item.
+   * Unwield an item.
    *
-   * @return Wielded items or null if nothing is wielded.
+   * @param entity The item to unwield
    */
-  public Entity getWieldedItem() {
-    ArrayList<Entity> items = main.player.getComponent(InventoryComponent.class).items;
+  public void unwieldItem(Entity entity) {
+    main.player.getComponent(EquipmentComponent.class).rightHand = null;
 
-    for (Entity entity : items) {
-      ItemComponent item = entity.getComponent(ItemComponent.class);
-
-      if (item.actions.get("canWield") && item.equipped) {
-        return entity;
-      }
-    }
-
-    return null;
+    addItem(entity);
   }
 
   /**

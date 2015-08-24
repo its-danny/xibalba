@@ -94,10 +94,8 @@ public class TraitsScreen implements Screen {
     table.add(infoLabel).left().pad(10);
     table.add(new Label("[LIGHT_GRAY]Take defects for more trait points", skin)).left().pad(10);
     table.row();
-    Label traitsLabel = new Label("Traits", skin);
-    table.add(traitsLabel).pad(0, 10, 10, 10).width(Gdx.graphics.getWidth() / 2 - 20);
-    Label defectsLabel = new Label("Defects", skin);
-    table.add(defectsLabel).pad(0, 10, 10, 10).width(Gdx.graphics.getWidth() / 2 - 20);
+    table.add(new Label("Traits", skin)).pad(0, 10, 10, 10).width(Gdx.graphics.getWidth() / 2 - 20);
+    table.add(new Label("Defects", skin)).pad(0, 10, 10, 10).width(Gdx.graphics.getWidth() / 2 - 20);
     table.row();
     table.add(traitsGroup).pad(0, 10, 10, 10).width(Gdx.graphics.getWidth() / 2 - 20);
     table.add(defectsGroup).pad(0, 10, 10, 10).width(Gdx.graphics.getWidth() / 2 - 20);

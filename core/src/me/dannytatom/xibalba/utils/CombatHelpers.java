@@ -42,7 +42,7 @@ public class CombatHelpers {
    * @param target  Who's getting fought
    */
   public void melee(Entity starter, Entity target) {
-    Entity wielded = main.inventoryHelpers.getWieldedItem();
+    Entity wielded = main.equipmentHelpers.getWeapon();
     String skill;
     String verb;
 
@@ -132,7 +132,7 @@ public class CombatHelpers {
         critical = MathUtils.random(1, 6);
       }
 
-      int damage = baseDamage + critical;
+      int damage = baseDamage + critical + main.equipmentHelpers.getWeaponDamage();
 
       if (damage > targetAttributes.toughness) {
         targetAttributes.health -= damage - targetAttributes.toughness;

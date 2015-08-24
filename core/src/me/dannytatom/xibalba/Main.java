@@ -10,10 +10,7 @@ import com.badlogic.gdx.graphics.Colors;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import me.dannytatom.xibalba.screens.MainMenuScreen;
-import me.dannytatom.xibalba.utils.CombatHelpers;
-import me.dannytatom.xibalba.utils.EntityHelpers;
-import me.dannytatom.xibalba.utils.InventoryHelpers;
-import me.dannytatom.xibalba.utils.SkillHelpers;
+import me.dannytatom.xibalba.utils.*;
 
 public class Main extends Game {
   public State state;
@@ -23,6 +20,7 @@ public class Main extends Game {
   public CombatHelpers combatHelpers;
   public EntityHelpers entityHelpers;
   public InventoryHelpers inventoryHelpers;
+  public EquipmentHelpers equipmentHelpers;
   public SkillHelpers skillHelpers;
   public Screen playScreen;
   public Entity player;
@@ -44,7 +42,7 @@ public class Main extends Game {
     generator.dispose();
 
     // Setup text colors
-    Colors.put("LIGHT_GRAY", parseColor("999999"));
+    Colors.put("LIGHT_GRAY", parseColor("c2c2c2"));
     Colors.put("DARK_GRAY", parseColor("666666"));
     Colors.put("CYAN", parseColor("5bb9c7"));
     Colors.put("RED", parseColor("cc4141"));
