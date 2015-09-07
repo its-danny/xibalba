@@ -1,6 +1,6 @@
 # Xibalba
 
-A roguelike. You’re goal is to make it to the bottom of Xibalba, kill the 10 Lords of Xibalba, resurrect your family member,and take them back to the world of the living. To do this, you must progress from the jungle to the caves, and from the caves to the dungeons of Xibalba.
+A roguelike. Your goal is to make it to the bottom of Xibalba, kill the 10 Lords of Xibalba, resurrect your family member,and take them back to the world of the living. To do this, you must progress from the jungle to the caves, and from the caves to the dungeons of Xibalba.
 
 During character creation you can choose a god to pledge to, obeying their requirements during your attempt will grant you access to their abilities. You can also bring offerings for items and temporary bonuses.
 
