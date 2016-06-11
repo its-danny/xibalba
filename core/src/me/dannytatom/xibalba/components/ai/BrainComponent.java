@@ -6,14 +6,14 @@ import org.xguzm.pathfinding.grid.GridCell;
 import java.util.List;
 
 public class BrainComponent implements Component {
-  public State state;
-  public List<GridCell> path = null;
+    public State state;
+    public List<GridCell> path = null;
 
-  public BrainComponent() {
-    this.state = State.WAITING;
-  }
+    public BrainComponent() {
+        this.state = State.WAITING;
+    }
 
-  public enum State {
-    WAITING, WANDERING, TARGETING, ATTACKING
-  }
+    public enum State {
+        WAITING, WANDERING, TARGETING, ATTACKING
+    }
 }
