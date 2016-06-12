@@ -7,7 +7,7 @@ public class ActionLog {
 
     public ActionLog() {
         things = new ArrayList<>();
-        things.add("Make it to Xibalba and kill the 10 Lords of Xibalba");
+        things.add("Make it to Xibalba and kill the 10 Lords");
     }
 
     /**
@@ -16,8 +16,8 @@ public class ActionLog {
      * @param thing The string to add
      */
     public void add(String thing) {
-        if (things.size() == 6) {
-            things.remove(5);
+        if (things.size() == 5) {
+            things.remove(4);
         }
 
         things.add(0, thing);

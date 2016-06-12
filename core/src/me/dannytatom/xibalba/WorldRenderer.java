@@ -44,7 +44,7 @@ public class WorldRenderer {
         this.map = map;
 
         camera = new OrthographicCamera();
-        viewport = new FitViewport(1366, 768, camera);
+        viewport = new FitViewport(960, 540, camera);
 
         caster = new ShadowCaster();
     }

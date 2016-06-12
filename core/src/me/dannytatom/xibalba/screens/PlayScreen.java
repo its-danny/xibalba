@@ -6,10 +6,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import me.dannytatom.xibalba.ActionLog;
-import me.dannytatom.xibalba.Main;
-import me.dannytatom.xibalba.PlayerInput;
-import me.dannytatom.xibalba.WorldRenderer;
+import me.dannytatom.xibalba.*;
 import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.map.Cell;
 import me.dannytatom.xibalba.map.Map;
@@ -28,6 +25,7 @@ class PlayScreen implements Screen {
 
     private final FPSLogger fps;
     private final WorldRenderer worldRenderer;
+    private final HUDRenderer hudRenderer;
 
     private final SpriteBatch batch;
     private final Engine engine;
@@ -87,6 +85,7 @@ class PlayScreen implements Screen {
 
         // Setup renderers
         worldRenderer = new WorldRenderer(main, engine, batch, map);
+        hudRenderer = new HUDRenderer(main, batch);
 
         // Change state to playing
         main.state = Main.State.PLAYING;
@@ -106,6 +105,7 @@ class PlayScreen implements Screen {
         }
 
         worldRenderer.render(delta);
+        hudRenderer.render(delta);
 
         if (main.player.getComponent(AttributesComponent.class).health <= 0) {
             main.getScreen().dispose();
