@@ -6,5 +6,5 @@ import com.badlogic.ashley.core.Entity;
 import java.util.ArrayList;
 
 public class DefectsComponent implements Component {
-    public final ArrayList<Entity> defects = new ArrayList<>();
+  public final ArrayList<Entity> defects = new ArrayList<>();
 }

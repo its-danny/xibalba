@@ -10,40 +10,40 @@ import me.dannytatom.xibalba.map.Map;
 import me.dannytatom.xibalba.utils.CombatHelpers;
 
 public class EffectSystem extends IteratingSystem {
-    private final Engine engine;
-    private final Map map;
-    private final CombatHelpers combatHelpers;
+  private final Engine engine;
+  private final Map map;
+  private final CombatHelpers combatHelpers;
 
-    /**
-     * Handles effects.
-     *
-     * @param engine        Ashley engine
-     * @param map           The map we're on
-     * @param combatHelpers Combat helpers
-     */
-    public EffectSystem(Engine engine, Map map, CombatHelpers combatHelpers) {
-        super(Family.all(DamageEffectComponent.class).get());
+  /**
+   * Handles effects.
+   *
+   * @param engine        Ashley engine
+   * @param map           The map we're on
+   * @param combatHelpers Combat helpers
+   */
+  public EffectSystem(Engine engine, Map map, CombatHelpers combatHelpers) {
+    super(Family.all(DamageEffectComponent.class).get());
 
-        this.engine = engine;
-        this.map = map;
-        this.combatHelpers = combatHelpers;
+    this.engine = engine;
+    this.map = map;
+    this.combatHelpers = combatHelpers;
+  }
+
+  @Override
+  protected void processEntity(Entity entity, float deltaTime) {
+    DamageEffectComponent effect = entity.getComponent(DamageEffectComponent.class);
+    Entity other = map.getMobAt(entity.getComponent(PositionComponent.class).pos);
+
+    if (other != null) {
+      if (effect.getClass() == DamageEffectComponent.class) {
+        combatHelpers.effect(entity, other);
+      }
     }
 
-    @Override
-    protected void processEntity(Entity entity, float deltaTime) {
-        DamageEffectComponent effect = entity.getComponent(DamageEffectComponent.class);
-        Entity other = map.getMobAt(entity.getComponent(PositionComponent.class).pos);
+    effect.currentTurn += 1;
 
-        if (other != null) {
-            if (effect.getClass() == DamageEffectComponent.class) {
-                combatHelpers.effect(entity, other);
-            }
-        }
-
-        effect.currentTurn += 1;
-
-        if (effect.currentTurn == effect.turns + 1) {
-            engine.removeEntity(entity);
-        }
+    if (effect.currentTurn == effect.turns + 1) {
+      engine.removeEntity(entity);
     }
+  }
 }

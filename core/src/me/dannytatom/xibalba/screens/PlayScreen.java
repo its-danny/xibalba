@@ -6,7 +6,11 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import me.dannytatom.xibalba.*;
+import me.dannytatom.xibalba.ActionLog;
+import me.dannytatom.xibalba.HudRenderer;
+import me.dannytatom.xibalba.Main;
+import me.dannytatom.xibalba.PlayerInput;
+import me.dannytatom.xibalba.WorldRenderer;
 import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.map.Cell;
 import me.dannytatom.xibalba.map.Map;
@@ -18,131 +22,135 @@ import me.dannytatom.xibalba.systems.actions.RangeSystem;
 import me.dannytatom.xibalba.systems.ai.BrainSystem;
 import me.dannytatom.xibalba.systems.ai.TargetSystem;
 import me.dannytatom.xibalba.systems.ai.WanderSystem;
-import me.dannytatom.xibalba.utils.*;
+import me.dannytatom.xibalba.utils.CombatHelpers;
+import me.dannytatom.xibalba.utils.EntityHelpers;
+import me.dannytatom.xibalba.utils.EquipmentHelpers;
+import me.dannytatom.xibalba.utils.InventoryHelpers;
+import me.dannytatom.xibalba.utils.SkillHelpers;
 
 class PlayScreen implements Screen {
-    private final Main main;
+  private final Main main;
 
-    private final FPSLogger fps;
-    private final WorldRenderer worldRenderer;
-    private final HUDRenderer hudRenderer;
+  private final FPSLogger fps;
+  private final WorldRenderer worldRenderer;
+  private final HudRenderer hudRenderer;
 
-    private final SpriteBatch batch;
-    private final Engine engine;
-    private Map map;
+  private final SpriteBatch batch;
+  private final Engine engine;
+  private Map map;
 
-    /**
-     * Play Screen.
-     *
-     * @param main Instance of Main class
-     */
-    public PlayScreen(Main main, Cell[][] cellMap) {
-        this.main = main;
+  /**
+   * Play Screen.
+   *
+   * @param main Instance of Main class
+   */
+  public PlayScreen(Main main, Cell[][] cellMap) {
+    this.main = main;
 
-        fps = new FPSLogger();
-        batch = new SpriteBatch();
-        engine = new Engine();
+    fps = new FPSLogger();
+    batch = new SpriteBatch();
+    engine = new Engine();
 
-        // Setup action log
-        main.log = new ActionLog();
+    // Setup action log
+    main.log = new ActionLog();
 
-        // Setup helpers
-        main.entityHelpers = new EntityHelpers(main, engine);
-        main.inventoryHelpers = new InventoryHelpers(main);
-        main.equipmentHelpers = new EquipmentHelpers(main);
-        main.skillHelpers = new SkillHelpers(main);
-        main.combatHelpers = new CombatHelpers(main, engine);
+    // Setup helpers
+    main.entityHelpers = new EntityHelpers(main, engine);
+    main.inventoryHelpers = new InventoryHelpers(main);
+    main.equipmentHelpers = new EquipmentHelpers(main);
+    main.skillHelpers = new SkillHelpers(main);
+    main.combatHelpers = new CombatHelpers(main, engine);
 
-        // Initialize map
-        map = new Map(engine, main.entityHelpers, cellMap);
+    // Initialize map
+    map = new Map(engine, main.entityHelpers, cellMap);
 
-        // Add player entity
-        main.entityHelpers.spawnPlayer(main.player, map.findPlayerStart());
-        engine.addEntity(main.player);
+    // Add player entity
+    main.entityHelpers.spawnPlayer(main.player, map.findPlayerStart());
+    engine.addEntity(main.player);
 
-        // Spawn some spider monkeys
-        for (int i = 0; i < 5; i++) {
-            engine.addEntity(main.entityHelpers.spawnEnemy("spiderMonkey", map.getRandomOpenPosition()));
-        }
-
-        for (int i = 0; i < 2; i++) {
-            engine.addEntity(main.entityHelpers.spawnItem("chippedFlint", map.getRandomOpenPosition()));
-        }
-
-        for (int i = 0; i < 3; i++) {
-            engine.addEntity(main.entityHelpers.spawnItem("bomb", map.getRandomOpenPosition()));
-        }
-
-        // Setup engine (they're run in order added)
-        engine.addSystem(new AttributesSystem());
-        engine.addSystem(new BrainSystem(main.entityHelpers, map));
-        engine.addSystem(new WanderSystem(map));
-        engine.addSystem(new TargetSystem(map));
-        engine.addSystem(new MeleeSystem(main.combatHelpers));
-        engine.addSystem(new RangeSystem(main, engine, map));
-        engine.addSystem(new EffectSystem(engine, map, main.combatHelpers));
-        engine.addSystem(new MovementSystem(map));
-
-        // Setup renderers
-        worldRenderer = new WorldRenderer(main, engine, batch, map);
-        hudRenderer = new HUDRenderer(main, batch);
-
-        // Change state to playing
-        main.state = Main.State.PLAYING;
+    // Spawn some spider monkeys
+    for (int i = 0; i < 5; i++) {
+      engine.addEntity(main.entityHelpers.spawnEnemy("spiderMonkey", map.getRandomOpenPosition()));
     }
 
-    @Override
-    public void render(float delta) {
-        Gdx.gl.glClearColor(0, 0, 0, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-        fps.log();
-
-        if (main.executeTurn) {
-            engine.update(delta);
-
-            main.executeTurn = false;
-        }
-
-        worldRenderer.render(delta);
-        hudRenderer.render(delta);
-
-        if (main.player.getComponent(AttributesComponent.class).health <= 0) {
-            main.getScreen().dispose();
-            main.setScreen(new MainMenuScreen(main));
-        }
+    for (int i = 0; i < 2; i++) {
+      engine.addEntity(main.entityHelpers.spawnItem("chippedFlint", map.getRandomOpenPosition()));
     }
 
-    @Override
-    public void resize(int width, int height) {
-        worldRenderer.resize(width, height);
+    for (int i = 0; i < 3; i++) {
+      engine.addEntity(main.entityHelpers.spawnItem("bomb", map.getRandomOpenPosition()));
     }
 
-    @Override
-    public void show() {
-        Gdx.input.setInputProcessor(new PlayerInput(main, map));
+    // Setup engine (they're run in order added)
+    engine.addSystem(new AttributesSystem());
+    engine.addSystem(new BrainSystem(main.entityHelpers, map));
+    engine.addSystem(new WanderSystem(map));
+    engine.addSystem(new TargetSystem(map));
+    engine.addSystem(new MeleeSystem(main.combatHelpers));
+    engine.addSystem(new RangeSystem(main, engine, map));
+    engine.addSystem(new EffectSystem(engine, map, main.combatHelpers));
+    engine.addSystem(new MovementSystem(map));
+
+    // Setup renderers
+    worldRenderer = new WorldRenderer(main, engine, batch, map);
+    hudRenderer = new HudRenderer(main, batch);
+
+    // Change state to playing
+    main.state = Main.State.PLAYING;
+  }
+
+  @Override
+  public void render(float delta) {
+    Gdx.gl.glClearColor(0, 0, 0, 1);
+    Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+    fps.log();
+
+    if (main.executeTurn) {
+      engine.update(delta);
+
+      main.executeTurn = false;
     }
 
-    @Override
-    public void hide() {
+    worldRenderer.render(delta);
+    hudRenderer.render(delta);
 
+    if (main.player.getComponent(AttributesComponent.class).health <= 0) {
+      main.getScreen().dispose();
+      main.setScreen(new MainMenuScreen(main));
     }
+  }
 
-    @Override
-    public void pause() {
+  @Override
+  public void resize(int width, int height) {
+    worldRenderer.resize(width, height);
+  }
 
-    }
+  @Override
+  public void show() {
+    Gdx.input.setInputProcessor(new PlayerInput(main, map));
+  }
 
-    @Override
-    public void resume() {
+  @Override
+  public void hide() {
 
-    }
+  }
 
-    @Override
-    public void dispose() {
-        batch.dispose();
+  @Override
+  public void pause() {
 
-        main.log = null;
-        main.state = null;
-    }
+  }
+
+  @Override
+  public void resume() {
+
+  }
+
+  @Override
+  public void dispose() {
+    batch.dispose();
+
+    main.log = null;
+    main.state = null;
+  }
 }

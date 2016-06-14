@@ -11,27 +11,27 @@ import me.dannytatom.xibalba.components.ai.BrainComponent;
 import me.dannytatom.xibalba.components.ai.TargetComponent;
 
 public final class ComponentMappers {
-    public static final ComponentMapper<BrainComponent> brain =
-            ComponentMapper.getFor(BrainComponent.class);
+  public static final ComponentMapper<BrainComponent> brain =
+      ComponentMapper.getFor(BrainComponent.class);
 
-    public static final ComponentMapper<PositionComponent> position =
-            ComponentMapper.getFor(PositionComponent.class);
+  public static final ComponentMapper<PositionComponent> position =
+      ComponentMapper.getFor(PositionComponent.class);
 
-    public static final ComponentMapper<MovementComponent> movement =
-            ComponentMapper.getFor(MovementComponent.class);
+  public static final ComponentMapper<MovementComponent> movement =
+      ComponentMapper.getFor(MovementComponent.class);
 
-    public static final ComponentMapper<VisualComponent> visual =
-            ComponentMapper.getFor(VisualComponent.class);
+  public static final ComponentMapper<VisualComponent> visual =
+      ComponentMapper.getFor(VisualComponent.class);
 
-    public static final ComponentMapper<AttributesComponent> attributes =
-            ComponentMapper.getFor(AttributesComponent.class);
+  public static final ComponentMapper<AttributesComponent> attributes =
+      ComponentMapper.getFor(AttributesComponent.class);
 
-    public static final ComponentMapper<TargetComponent> target =
-            ComponentMapper.getFor(TargetComponent.class);
+  public static final ComponentMapper<TargetComponent> target =
+      ComponentMapper.getFor(TargetComponent.class);
 
-    public static final ComponentMapper<MeleeComponent> melee =
-            ComponentMapper.getFor(MeleeComponent.class);
+  public static final ComponentMapper<MeleeComponent> melee =
+      ComponentMapper.getFor(MeleeComponent.class);
 
-    public static final ComponentMapper<RangeComponent> range =
-            ComponentMapper.getFor(RangeComponent.class);
+  public static final ComponentMapper<RangeComponent> range =
+      ComponentMapper.getFor(RangeComponent.class);
 }

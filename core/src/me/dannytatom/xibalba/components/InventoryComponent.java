@@ -6,5 +6,5 @@ import com.badlogic.ashley.core.Entity;
 import java.util.ArrayList;
 
 public class InventoryComponent implements Component {
-    public ArrayList<Entity> items = new ArrayList<>();
+  public ArrayList<Entity> items = new ArrayList<>();
 }
