@@ -221,7 +221,7 @@ public class WorldRenderer {
     for (Entity entity : entities) {
       PositionComponent position = ComponentMappers.position.get(entity);
 
-      if (!map.getCell(position.pos).hidden) {
+      if (main.entityHelpers.isVisible(entity, map)) {
         VisualComponent visual = ComponentMappers.visual.get(entity);
 
         visual.elapsedTime += delta;

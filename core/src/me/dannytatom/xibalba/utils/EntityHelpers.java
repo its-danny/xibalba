@@ -10,17 +10,11 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Json;
 import me.dannytatom.xibalba.Main;
-import me.dannytatom.xibalba.components.AttributesComponent;
-import me.dannytatom.xibalba.components.EnemyComponent;
-import me.dannytatom.xibalba.components.EquipmentComponent;
-import me.dannytatom.xibalba.components.InventoryComponent;
-import me.dannytatom.xibalba.components.ItemComponent;
-import me.dannytatom.xibalba.components.PlayerComponent;
-import me.dannytatom.xibalba.components.PositionComponent;
-import me.dannytatom.xibalba.components.SkillsComponent;
-import me.dannytatom.xibalba.components.VisualComponent;
+import me.dannytatom.xibalba.components.*;
 import me.dannytatom.xibalba.components.ai.BrainComponent;
 import me.dannytatom.xibalba.components.effects.DamageEffectComponent;
+import me.dannytatom.xibalba.map.Map;
+import me.dannytatom.xibalba.map.ShadowCaster;
 
 import java.util.Objects;
 
@@ -28,9 +22,13 @@ public class EntityHelpers {
   private final Main main;
   private final Engine engine;
 
+  private ShadowCaster caster;
+
   public EntityHelpers(Main main, Engine engine) {
     this.main = main;
     this.engine = engine;
+
+    caster = new ShadowCaster();
   }
 
   /**
@@ -150,5 +148,26 @@ public class EntityHelpers {
 
   public boolean isItem(Entity entity) {
     return entity != null && entity.getComponent(ItemComponent.class) != null;
+  }
+
+  public boolean isVisible(Entity entity, Map map) {
+    PositionComponent positionComponent = entity.getComponent(PositionComponent.class);
+
+    return positionComponent != null
+        && !map.getCell(entity.getComponent(PositionComponent.class).pos).hidden;
+  }
+
+  public boolean isVisibleToPlayer(Entity entity, Map map) {
+    PositionComponent enemyPosition = entity.getComponent(PositionComponent.class);
+    PositionComponent playerPosition = getPlayer().getComponent(PositionComponent.class);
+    AttributesComponent playerAttributes = getPlayer().getComponent(AttributesComponent.class);
+
+    float[][] lightMap = caster.calculateFov(
+        map.createFovMap(),
+        (int) playerPosition.pos.x, (int) playerPosition.pos.y,
+        playerAttributes.vision
+    );
+
+    return lightMap[(int) enemyPosition.pos.x][(int) enemyPosition.pos.y] > 0;
   }
 }

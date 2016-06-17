@@ -93,7 +93,7 @@ class PlayScreen implements Screen {
 
     // Setup renderers
     worldRenderer = new WorldRenderer(main, engine, batch, map);
-    hudRenderer = new HudRenderer(main, batch);
+    hudRenderer = new HudRenderer(main, engine, batch, map);
 
     // Change state to playing
     main.state = Main.State.PLAYING;
