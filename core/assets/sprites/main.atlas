@@ -1,0 +1,278 @@
+main.png
+size: 312, 8
+format: RGBA8888
+filter: Linear,Nearest
+repeat: none
+Levels/Forest/Enemies/Monkey/Enemy-Forest-Monkey-1
+  rotate: false
+  xy: 0, 0
+  size: 8, 8
+  orig: 8, 8
+  offset: 0, 0
+  index: -1
+Levels/Forest/Environment/Floors/Floor-Forest-1
+  rotate: false
+  xy: 8, 0
+  size: 8, 8
+  orig: 8, 8
+  offset: 0, 0
+  index: -1
+Levels/Forest/Environment/Floors/Floor-Forest-2
+  rotate: false
+  xy: 16, 0
+  size: 8, 8
+  orig: 8, 8
+  offset: 0, 0
+  index: -1
+Levels/Forest/Environment/Floors/Floor-Forest-3
+  rotate: false
+  xy: 24, 0
+  size: 8, 8
+  orig: 8, 8
+  offset: 0, 0
+  index: -1
+Levels/Forest/Environment/Floors/Floor-Forest-4
+  rotate: false
+  xy: 32, 0
+  size: 8, 8
+  orig: 8, 8
+  offset: 0, 0
+  index: -1
+Levels/Forest/Environment/Floors/Floor-Forest-5
+  rotate: false
+  xy: 40, 0
+  size: 8, 8
+  orig: 8, 8
+  offset: 0, 0
+  index: -1
+Levels/Forest/Environment/Floors/Floor-Forest-6
+  rotate: false
+  xy: 48, 0
+  size: 8, 8
+  orig: 8, 8
+  offset: 0, 0
+  index: -1
+Levels/Forest/Environment/Floors/Floor-Forest-7
+  rotate: false
+  xy: 56, 0
+  size: 8, 8
+  orig: 8, 8
+  offset: 0, 0
+  index: -1
+Levels/Forest/Environment/Floors/Floor-Forest-8
+  rotate: false
+  xy: 64, 0
+  size: 8, 8
+  orig: 8, 8
+  offset: 0, 0
+  index: -1
+Levels/Forest/Environment/Walls/Wall-Forest-1
+  rotate: false
+  xy: 72, 0
+  size: 8, 8
+  orig: 8, 8
+  offset: 0, 0
+  index: -1
+Levels/Forest/Environment/Walls/Wall-Forest-2
+  rotate: false
+  xy: 80, 0
+  size: 8, 8
+  orig: 8, 8
+  offset: 0, 0
+  index: -1
+Levels/Forest/Environment/Walls/Wall-Forest-3
+  rotate: false
+  xy: 88, 0
+  size: 8, 8
+  orig: 8, 8
+  offset: 0, 0
+  index: -1
+Levels/Forest/Environment/Walls/Wall-Forest-4
+  rotate: false
+  xy: 96, 0
+  size: 8, 8
+  orig: 8, 8
+  offset: 0, 0
+  index: -1
+Levels/Forest/Environment/Walls/Wall-Forest-5
+  rotate: false
+  xy: 104, 0
+  size: 8, 8
+  orig: 8, 8
+  offset: 0, 0
+  index: -1
+Levels/Forest/Environment/Walls/Wall-Forest-6
+  rotate: false
+  xy: 112, 0
+  size: 8, 8
+  orig: 8, 8
+  offset: 0, 0
+  index: -1
+Levels/Forest/Environment/Walls/Wall-Forest-7
+  rotate: false
+  xy: 120, 0
+  size: 8, 8
+  orig: 8, 8
+  offset: 0, 0
+  index: -1
+Levels/Forest/Environment/Walls/Wall-Forest-8
+  rotate: false
+  xy: 128, 0
+  size: 8, 8
+  orig: 8, 8
+  offset: 0, 0
+  index: -1
+Levels/Village/Environment/Floors/Floor-Village-1
+  rotate: false
+  xy: 136, 0
+  size: 8, 8
+  orig: 8, 8
+  offset: 0, 0
+  index: -1
+Levels/Village/Environment/Walls/Wall-Village-1
+  rotate: false
+  xy: 144, 0
+  size: 8, 8
+  orig: 8, 8
+  offset: 0, 0
+  index: -1
+Universal/Health Bar/Health-Bar-1
+  rotate: false
+  xy: 152, 0
+  size: 8, 8
+  orig: 8, 8
+  offset: 0, 0
+  index: -1
+Universal/Health Bar/Health-Bar-2
+  rotate: false
+  xy: 160, 0
+  size: 8, 8
+  orig: 8, 8
+  offset: 0, 0
+  index: -1
+Universal/Health Bar/Health-Bar-3.
+  rotate: false
+  xy: 168, 0
+  size: 8, 8
+  orig: 8, 8
+  offset: 0, 0
+  index: -1
+Universal/Health Bar/Health-Bar-4
+  rotate: false
+  xy: 176, 0
+  size: 8, 8
+  orig: 8, 8
+  offset: 0, 0
+  index: -1
+Universal/Health Bar/Health-Bar-5
+  rotate: false
+  xy: 184, 0
+  size: 8, 8
+  orig: 8, 8
+  offset: 0, 0
+  index: -1
+Universal/Health Bar/Health-Bar-6
+  rotate: false
+  xy: 192, 0
+  size: 8, 8
+  orig: 8, 8
+  offset: 0, 0
+  index: -1
+Universal/Health Bar/Health-Bar-7
+  rotate: false
+  xy: 200, 0
+  size: 8, 8
+  orig: 8, 8
+  offset: 0, 0
+  index: -1
+Universal/Health Bar/Health-Bar-8
+  rotate: false
+  xy: 208, 0
+  size: 8, 8
+  orig: 8, 8
+  offset: 0, 0
+  index: -1
+Universal/Health Bar/Health-Bar-9
+  rotate: false
+  xy: 216, 0
+  size: 8, 8
+  orig: 8, 8
+  offset: 0, 0
+  index: -1
+Universal/Items/Shields/Item-Shield-1
+  rotate: false
+  xy: 224, 0
+  size: 8, 8
+  orig: 8, 8
+  offset: 0, 0
+  index: -1
+Universal/Items/Tools/Chipped Flint/Item-Tool-ChippledFlint-1
+  rotate: false
+  xy: 232, 0
+  size: 8, 8
+  orig: 8, 8
+  offset: 0, 0
+  index: -1
+Universal/Items/Tools/Chipped Flint/Item-Tool-ChippledFlint-2
+  rotate: false
+  xy: 240, 0
+  size: 8, 8
+  orig: 8, 8
+  offset: 0, 0
+  index: -1
+Universal/Items/Weapons/Bow & Arrow/Item-Weapon-Arrow-1
+  rotate: false
+  xy: 248, 0
+  size: 8, 8
+  orig: 8, 8
+  offset: 0, 0
+  index: -1
+Universal/Items/Weapons/Bow & Arrow/Item-Weapon-Bow-1
+  rotate: false
+  xy: 256, 0
+  size: 8, 8
+  orig: 8, 8
+  offset: 0, 0
+  index: -1
+Universal/Items/Weapons/Macuahuitl/Item-Weapon-Macuahuitl-1
+  rotate: false
+  xy: 264, 0
+  size: 8, 8
+  orig: 8, 8
+  offset: 0, 0
+  index: -1
+Universal/Player/Player-Cloth/Player-Cloth-1
+  rotate: false
+  xy: 272, 0
+  size: 8, 8
+  orig: 8, 8
+  offset: 0, 0
+  index: -1
+Universal/Player/Player-Robe/Player-Robe-1
+  rotate: false
+  xy: 280, 0
+  size: 8, 8
+  orig: 8, 8
+  offset: 0, 0
+  index: -1
+Universal/UI/Effects/Poison/Effect-Tile-Poison-1
+  rotate: false
+  xy: 288, 0
+  size: 8, 8
+  orig: 8, 8
+  offset: 0, 0
+  index: -1
+Universal/UI/Nothing/Nothing
+  rotate: false
+  xy: 296, 0
+  size: 8, 8
+  orig: 8, 8
+  offset: 0, 0
+  index: -1
+Universal/UI/Target/UI-Target-1
+  rotate: false
+  xy: 304, 0
+  size: 8, 8
+  orig: 8, 8
+  offset: 0, 0
+  index: -1

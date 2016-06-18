@@ -3,6 +3,7 @@ package me.dannytatom.xibalba.screens;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Colors;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -73,12 +74,12 @@ class PlayScreen implements Screen {
       engine.addEntity(main.entityHelpers.spawnEnemy("spiderMonkey", map.getRandomOpenPosition()));
     }
 
-    for (int i = 0; i < 2; i++) {
+    for (int i = 0; i < 5; i++) {
       engine.addEntity(main.entityHelpers.spawnItem("chippedFlint", map.getRandomOpenPosition()));
     }
 
-    for (int i = 0; i < 3; i++) {
-      engine.addEntity(main.entityHelpers.spawnItem("bomb", map.getRandomOpenPosition()));
+    for (int i = 0; i < 5; i++) {
+      engine.addEntity(main.entityHelpers.spawnItem("macuahuitl", map.getRandomOpenPosition()));
     }
 
     // Setup engine (they're run in order added)
@@ -101,7 +102,13 @@ class PlayScreen implements Screen {
 
   @Override
   public void render(float delta) {
-    Gdx.gl.glClearColor(0, 0, 0, 1);
+    Gdx.gl.glClearColor(
+        Colors.get("FOREST_BACKGROUND").r,
+        Colors.get("FOREST_BACKGROUND").g,
+        Colors.get("FOREST_BACKGROUND").b,
+        Colors.get("FOREST_BACKGROUND").a
+    );
+
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
     fps.log();
@@ -112,12 +119,12 @@ class PlayScreen implements Screen {
       main.executeTurn = false;
     }
 
-    worldRenderer.render(delta);
-    hudRenderer.render(delta);
-
     if (main.player.getComponent(AttributesComponent.class).health <= 0) {
       main.getScreen().dispose();
       main.setScreen(new MainMenuScreen(main));
+    } else {
+      worldRenderer.render(delta);
+      hudRenderer.render(delta);
     }
   }
 

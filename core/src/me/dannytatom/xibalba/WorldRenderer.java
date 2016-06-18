@@ -5,17 +5,11 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import me.dannytatom.xibalba.components.AttributesComponent;
-import me.dannytatom.xibalba.components.EnemyComponent;
-import me.dannytatom.xibalba.components.ItemComponent;
-import me.dannytatom.xibalba.components.PlayerComponent;
-import me.dannytatom.xibalba.components.PositionComponent;
-import me.dannytatom.xibalba.components.VisualComponent;
+import me.dannytatom.xibalba.components.*;
 import me.dannytatom.xibalba.components.effects.DamageEffectComponent;
 import me.dannytatom.xibalba.map.Cell;
 import me.dannytatom.xibalba.map.Map;
@@ -24,8 +18,8 @@ import me.dannytatom.xibalba.utils.ComponentMappers;
 import org.xguzm.pathfinding.grid.GridCell;
 
 public class WorldRenderer {
-  private static final int SPRITE_WIDTH = 36;
-  private static final int SPRITE_HEIGHT = 36;
+  private static final int SPRITE_WIDTH = 8;
+  private static final int SPRITE_HEIGHT = 8;
 
   private final Main main;
   private final Engine engine;
@@ -49,7 +43,7 @@ public class WorldRenderer {
     this.map = map;
 
     camera = new OrthographicCamera();
-    viewport = new FitViewport(960, 540, camera);
+    viewport = new FitViewport(960 / 2, 540 / 2, camera);
 
     caster = new ShadowCaster();
   }
@@ -100,17 +94,16 @@ public class WorldRenderer {
 
     if (map.targetingPath != null) {
       for (GridCell cell : map.targetingPath) {
-        TextureAtlas atlas = main.assets.get("sprites/ui.atlas");
+        TextureAtlas atlas = main.assets.get("sprites/main.atlas");
 
         batch.setColor(1f, 1f, 1f,
             lightMap[cell.x][cell.y] <= 0.35f ? 0.35f : lightMap[cell.x][cell.y]);
-        batch.draw(atlas.createSprite("range"), cell.x * SPRITE_WIDTH, cell.y * SPRITE_HEIGHT);
+        batch.draw(atlas.createSprite("Universal/UI/Target/UI-Target-1"), cell.x * SPRITE_WIDTH, cell.y * SPRITE_HEIGHT);
         batch.setColor(1f, 1f, 1f, 1f);
       }
     }
 
     renderEffects(lightMap);
-    renderHealth(lightMap);
     renderItems(lightMap);
     renderPlayer(delta, lightMap);
     renderEnemies(delta, lightMap);
@@ -129,45 +122,6 @@ public class WorldRenderer {
       if (map.getCell(position.pos) != null && !map.getCell(position.pos).hidden) {
         batch.setColor(1f, 1f, 1f, lightMap[(int) position.pos.x][(int) position.pos.y]);
         batch.draw(visual.sprite, position.pos.x * SPRITE_WIDTH, position.pos.y * SPRITE_HEIGHT);
-        batch.setColor(1f, 1f, 1f, 1f);
-      }
-    }
-  }
-
-  private void renderHealth(float[][] lightMap) {
-    ImmutableArray<Entity> entities =
-        engine.getEntitiesFor(Family.all(AttributesComponent.class, PositionComponent.class).get());
-
-    for (Entity entity : entities) {
-      PositionComponent position = ComponentMappers.position.get(entity);
-
-      if (!map.getCell(position.pos).hidden) {
-        AttributesComponent attributes = ComponentMappers.attributes.get(entity);
-
-        TextureAtlas atlas = main.assets.get("sprites/ui.atlas");
-        Sprite sprite;
-
-        int which;
-        int fourth = (attributes.maxHealth / 4) - (attributes.health / 4);
-
-        if (fourth <= 2.5) {
-          which = 1;
-        } else if (fourth <= 5) {
-          which = 2;
-        } else if (fourth <= 7.5) {
-          which = 3;
-        } else {
-          which = 4;
-        }
-
-        if (entity.getComponent(PlayerComponent.class) != null) {
-          sprite = atlas.createSprite("player-health-" + which);
-        } else {
-          sprite = atlas.createSprite("enemy-health-" + which);
-        }
-
-        batch.setColor(1f, 1f, 1f, lightMap[(int) position.pos.x][(int) position.pos.y]);
-        batch.draw(sprite, position.pos.x * SPRITE_WIDTH + 6, position.pos.y * SPRITE_HEIGHT + 0);
         batch.setColor(1f, 1f, 1f, 1f);
       }
     }
@@ -206,8 +160,7 @@ public class WorldRenderer {
 
         batch.setColor(1f, 1f, 1f, lightMap[(int) position.pos.x][(int) position.pos.y]);
         batch.draw(
-            visual.animation.getKeyFrame(visual.elapsedTime, true),
-            position.pos.x * SPRITE_WIDTH, position.pos.y * SPRITE_HEIGHT
+            visual.sprite, position.pos.x * SPRITE_WIDTH, position.pos.y * SPRITE_HEIGHT
         );
         batch.setColor(1f, 1f, 1f, 1f);
       }
@@ -228,8 +181,7 @@ public class WorldRenderer {
 
         batch.setColor(1f, 1f, 1f, lightMap[(int) position.pos.x][(int) position.pos.y]);
         batch.draw(
-            visual.animation.getKeyFrame(visual.elapsedTime, true),
-            position.pos.x * SPRITE_WIDTH, position.pos.y * SPRITE_HEIGHT
+            visual.sprite, position.pos.x * SPRITE_WIDTH, position.pos.y * SPRITE_HEIGHT
         );
         batch.setColor(1f, 1f, 1f, 1f);
       }

@@ -8,9 +8,8 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import me.dannytatom.xibalba.Main;
-import me.dannytatom.xibalba.screens.creation.TraitsScreen;
 
-public class MainMenuScreen implements Screen {
+public class PauseScreen implements Screen {
   private final Main main;
 
   private Stage stage;
@@ -20,7 +19,7 @@ public class MainMenuScreen implements Screen {
    *
    * @param main Instance of main class
    */
-  public MainMenuScreen(Main main) {
+  public PauseScreen(Main main) {
     this.main = main;
     stage = new Stage();
 
@@ -28,7 +27,7 @@ public class MainMenuScreen implements Screen {
     table.setFillParent(true);
     stage.addActor(table);
 
-    table.add(new Label("[CYAN]N[]ew Game", main.skin));
+    table.add(new Label("[CYAN]R[]eturn to Game", main.skin));
     table.row();
     table.add(new Label("[CYAN]Q[]uit", main.skin));
 
@@ -48,8 +47,8 @@ public class MainMenuScreen implements Screen {
     stage.act(delta);
     stage.draw();
 
-    if (Gdx.input.isKeyJustPressed(Input.Keys.N)) {
-      main.setScreen(new TraitsScreen(main));
+    if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
+      main.setScreen(main.playScreen);
     }
 
     if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {

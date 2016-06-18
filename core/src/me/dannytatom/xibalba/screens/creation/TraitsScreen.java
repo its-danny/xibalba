@@ -6,11 +6,8 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.utils.Array;
@@ -25,7 +22,6 @@ import me.dannytatom.xibalba.screens.MainMenuScreen;
 public class TraitsScreen implements Screen {
   private final Main main;
 
-  private Skin skin;
   private Stage stage;
 
   private int points = 10;
@@ -48,12 +44,6 @@ public class TraitsScreen implements Screen {
   public TraitsScreen(Main main) {
     this.main = main;
     stage = new Stage();
-
-    skin = new Skin();
-    skin.add("Inconsolata", this.main.font, BitmapFont.class);
-    skin.addRegions(new TextureAtlas(Gdx.files.internal("ui/uiskin.atlas")));
-    skin.load(Gdx.files.internal("ui/uiskin.json"));
-    skin.getFont("default-font").getData().markupEnabled = true;
 
     Table table = new Table();
     table.setFillParent(true);
@@ -87,17 +77,17 @@ public class TraitsScreen implements Screen {
     }
 
 
-    infoLabel = new Label(null, skin);
+    infoLabel = new Label(null, main.skin);
     currentGroup = traitsGroup;
     currentIndex = 0;
 
     table.add(infoLabel).left().pad(10);
-    table.add(new Label("[LIGHT_GRAY]Take defects for more trait points", skin)).left().pad(10);
+    table.add(new Label("[LIGHT_GRAY]Take defects for more trait points", main.skin)).left().pad(10);
     table.row();
 
-    table.add(new Label("Traits", skin))
+    table.add(new Label("Traits", main.skin))
         .pad(0, 10, 10, 10).width(Gdx.graphics.getWidth() / 2 - 20);
-    table.add(new Label("Defects", skin))
+    table.add(new Label("Defects", main.skin))
         .pad(0, 10, 10, 10).width(Gdx.graphics.getWidth() / 2 - 20);
 
     table.row();
@@ -134,7 +124,7 @@ public class TraitsScreen implements Screen {
                     + " [CYAN][" + trait.cost + "][WHITE] "
                     + trait.name + " [LIGHT_GRAY]"
                     + trait.description + "[]",
-                skin)
+                main.skin)
         );
       } else {
         traitsGroup.addActor(
@@ -143,7 +133,7 @@ public class TraitsScreen implements Screen {
                     + " [CYAN][" + trait.cost + "][LIGHT_GRAY] "
                     + trait.name + " [DARK_GRAY]"
                     + trait.description + "[]",
-                skin)
+                main.skin)
         );
       }
     }
@@ -165,7 +155,7 @@ public class TraitsScreen implements Screen {
                     + " [RED][" + defect.prize + "][WHITE] "
                     + defect.name + " [LIGHT_GRAY]"
                     + defect.description + "[]",
-                skin)
+                main.skin)
         );
       } else {
         defectsGroup.addActor(
@@ -174,7 +164,7 @@ public class TraitsScreen implements Screen {
                     + " [RED][" + defect.prize + "][LIGHT_GRAY] "
                     + defect.name + " [DARK_GRAY]"
                     + defect.description + "[]",
-                skin)
+                main.skin)
         );
       }
     }

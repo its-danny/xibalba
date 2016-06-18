@@ -5,11 +5,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import me.dannytatom.xibalba.Main;
@@ -22,7 +19,6 @@ import java.util.ArrayList;
 public class InventoryScreen implements Screen {
   private final Main main;
 
-  private Skin skin;
   private Stage stage;
 
   private ArrayList<Entity> items;
@@ -40,12 +36,6 @@ public class InventoryScreen implements Screen {
     items = main.player.getComponent(InventoryComponent.class).items;
 
     stage = new Stage();
-
-    skin = new Skin();
-    skin.add("Inconsolata", this.main.font, BitmapFont.class);
-    skin.addRegions(new TextureAtlas(Gdx.files.internal("ui/uiskin.atlas")));
-    skin.load(Gdx.files.internal("ui/uiskin.json"));
-    skin.getFont("default-font").getData().markupEnabled = true;
 
     Table table = new Table();
     table.setFillParent(true);
@@ -118,7 +108,7 @@ public class InventoryScreen implements Screen {
     header += "[DARK_GRAY] ]";
 
     VerticalGroup group = new VerticalGroup().center();
-    group.addActor(new Label(header, skin));
+    group.addActor(new Label(header, main.skin));
 
     return group;
   }
@@ -131,12 +121,12 @@ public class InventoryScreen implements Screen {
       ItemComponent item = entity.getComponent(ItemComponent.class);
 
       if (i == selected) {
-        inventoryGroup.addActor(new Label("[DARK_GRAY]> [WHITE]" + item.name + "[]", skin));
-        inventoryGroup.addActor(new Label("[LIGHT_GRAY]" + item.description + "[]", skin));
+        inventoryGroup.addActor(new Label("[DARK_GRAY]> [WHITE]" + item.name + "[]", main.skin));
+        inventoryGroup.addActor(new Label("[LIGHT_GRAY]" + item.description + "[]", main.skin));
         inventoryGroup.addActor(new Label(
-            "[RED]T[]hrow", skin));
+            "[RED]T[]hrow", main.skin));
       } else {
-        inventoryGroup.addActor(new Label("[DARK_GRAY]" + item.name + "[]", skin));
+        inventoryGroup.addActor(new Label("[DARK_GRAY]" + item.name + "[]", main.skin));
       }
     }
   }

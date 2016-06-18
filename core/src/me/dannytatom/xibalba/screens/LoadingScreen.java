@@ -3,13 +3,10 @@ package me.dannytatom.xibalba.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.map.CaveGenerator;
@@ -30,16 +27,11 @@ public class LoadingScreen implements Screen {
     this.main = main;
     stage = new Stage();
 
-    Skin skin = new Skin();
-    skin.add("Inconsolata", this.main.font, BitmapFont.class);
-    skin.addRegions(new TextureAtlas(Gdx.files.internal("ui/uiskin.atlas")));
-    skin.load(Gdx.files.internal("ui/uiskin.json"));
-
     Table table = new Table();
     table.setFillParent(true);
     stage.addActor(table);
 
-    label = new Label(null, skin);
+    label = new Label(null, main.skin);
     table.add(label);
 
     loadAssets();
@@ -94,21 +86,14 @@ public class LoadingScreen implements Screen {
   private void loadAssets() {
     label.setText("Loading assets");
 
-    main.assets.load("sprites/ui.atlas", TextureAtlas.class);
-    main.assets.load("sprites/cave.atlas", TextureAtlas.class);
-    main.assets.load("sprites/player.atlas", TextureAtlas.class);
-    main.assets.load("sprites/spiderMonkey.atlas", TextureAtlas.class);
-
-    main.assets.load("sprites/chippedFlint.png", Texture.class);
-    main.assets.load("sprites/bomb.png", Texture.class);
-    main.assets.load("sprites/poison.png", Texture.class);
+    main.assets.load("sprites/main.atlas", TextureAtlas.class);
   }
 
   private Cell[][] generateMap() {
     label.setText("Generating map");
 
     return new CaveGenerator(
-        main.assets.get("sprites/cave.atlas"),
+        main.assets.get("sprites/main.atlas"),
         MathUtils.random(50, 80), MathUtils.random(30, 60)
     ).map;
   }

@@ -5,28 +5,17 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import me.dannytatom.xibalba.Main;
-import me.dannytatom.xibalba.components.AttributesComponent;
-import me.dannytatom.xibalba.components.DefectComponent;
-import me.dannytatom.xibalba.components.DefectsComponent;
-import me.dannytatom.xibalba.components.ItemComponent;
-import me.dannytatom.xibalba.components.SkillsComponent;
-import me.dannytatom.xibalba.components.TraitComponent;
-import me.dannytatom.xibalba.components.TraitsComponent;
+import me.dannytatom.xibalba.components.*;
 
 import java.util.ArrayList;
 
 public class CharacterScreen implements Screen {
   private final Main main;
-
-  private Skin skin;
   private Stage stage;
 
   /**
@@ -38,12 +27,6 @@ public class CharacterScreen implements Screen {
     this.main = main;
 
     stage = new Stage();
-
-    skin = new Skin();
-    skin.add("Inconsolata", this.main.font, BitmapFont.class);
-    skin.addRegions(new TextureAtlas(Gdx.files.internal("ui/uiskin.atlas")));
-    skin.load(Gdx.files.internal("ui/uiskin.json"));
-    skin.getFont("default-font").getData().markupEnabled = true;
 
     Table table = new Table();
     table.setFillParent(true);
@@ -97,7 +80,7 @@ public class CharacterScreen implements Screen {
     header += "[DARK_GRAY] ]";
 
     VerticalGroup group = new VerticalGroup().center();
-    group.addActor(new Label(header, skin));
+    group.addActor(new Label(header, main.skin));
 
     return group;
   }
@@ -119,7 +102,7 @@ public class CharacterScreen implements Screen {
     group.addActor(
         new Label(
             "[LIGHT_GRAY]Health:[] " + color + attrs.health
-                + "[LIGHT_GRAY]/" + attrs.maxHealth, skin
+                + "[LIGHT_GRAY]/" + attrs.maxHealth, main.skin
         )
     );
 
@@ -136,7 +119,7 @@ public class CharacterScreen implements Screen {
     group.addActor(
         new Label(
             "[LIGHT_GRAY]Toughness: []" + attrs.toughness
-                + ", [LIGHT_GRAY]Damage: []" + damage, skin
+                + ", [LIGHT_GRAY]Damage: []" + damage, main.skin
         )
     );
 
@@ -175,12 +158,12 @@ public class CharacterScreen implements Screen {
 
     for (Entity entity : traits) {
       TraitComponent trait = entity.getComponent(TraitComponent.class);
-      group.addActor(new Label(trait.name + " [LIGHT_GRAY]" + trait.description, skin));
+      group.addActor(new Label(trait.name + " [LIGHT_GRAY]" + trait.description, main.skin));
     }
 
     for (Entity entity : defects) {
       DefectComponent defect = entity.getComponent(DefectComponent.class);
-      group.addActor(new Label(defect.name + " [LIGHT_GRAY]" + defect.description, skin));
+      group.addActor(new Label(defect.name + " [LIGHT_GRAY]" + defect.description, main.skin));
     }
 
     return group;
@@ -213,7 +196,7 @@ public class CharacterScreen implements Screen {
 
     str += "[LIGHT_GRAY]]";
 
-    return new Label(str + " [WHITE]" + skill, skin);
+    return new Label(str + " [WHITE]" + skill, main.skin);
   }
 
   @Override

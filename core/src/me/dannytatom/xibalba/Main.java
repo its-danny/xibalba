@@ -8,7 +8,9 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Colors;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import me.dannytatom.xibalba.screens.MainMenuScreen;
 import me.dannytatom.xibalba.utils.CombatHelpers;
 import me.dannytatom.xibalba.utils.EntityHelpers;
@@ -19,7 +21,7 @@ import me.dannytatom.xibalba.utils.SkillHelpers;
 public class Main extends Game {
   public State state;
   public AssetManager assets;
-  public BitmapFont font;
+  public Skin skin;
   public ActionLog log;
   public CombatHelpers combatHelpers;
   public EntityHelpers entityHelpers;
@@ -28,6 +30,7 @@ public class Main extends Game {
   public SkillHelpers skillHelpers;
   public Screen playScreen;
   public Entity player;
+
   public boolean debug = false;
   public boolean executeTurn = false;
 
@@ -41,9 +44,16 @@ public class Main extends Game {
         new FreeTypeFontGenerator(Gdx.files.internal("ui/Inconsolata.ttf"));
     FreeTypeFontGenerator.FreeTypeFontParameter parameter =
         new FreeTypeFontGenerator.FreeTypeFontParameter();
-    parameter.size = 16;
-    font = generator.generateFont(parameter);
+    parameter.size = 14;
+    BitmapFont font = generator.generateFont(parameter);
     generator.dispose();
+
+    // Create UI skin
+    skin = new Skin();
+    skin.add("Inconsolata", font, BitmapFont.class);
+    skin.addRegions(new TextureAtlas(Gdx.files.internal("ui/uiskin.atlas")));
+    skin.load(Gdx.files.internal("ui/uiskin.json"));
+    skin.getFont("default-font").getData().markupEnabled = true;
 
     // Setup text colors
     Colors.put("LIGHT_GRAY", parseColor("c2c2c2"));
@@ -52,6 +62,9 @@ public class Main extends Game {
     Colors.put("RED", parseColor("cc4141"));
     Colors.put("DARK_PURPLE", parseColor("241d26"));
     Colors.put("LIGHT_PURPLE", parseColor("706274"));
+
+    // Map background colors
+    Colors.put("FOREST_BACKGROUND", parseColor("1E1F1A"));
 
     // Start the main menu
     setScreen(new MainMenuScreen(this));

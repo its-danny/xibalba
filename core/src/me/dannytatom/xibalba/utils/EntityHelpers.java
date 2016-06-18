@@ -4,8 +4,7 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Json;
@@ -39,9 +38,11 @@ public class EntityHelpers {
    * @return The player
    */
   public Entity spawnPlayer(Entity player, Vector2 position) {
+    TextureAtlas atlas = main.assets.get("sprites/main.atlas");
+
     player.add(new PlayerComponent());
     player.add(new PositionComponent(position));
-    player.add(new VisualComponent(null, main.assets.get("sprites/player.atlas")));
+    player.add(new VisualComponent(atlas.createSprite("Universal/Player/Player-Cloth/Player-Cloth-1")));
     player.add(new SkillsComponent());
     player.add(new InventoryComponent());
     player.add(new EquipmentComponent());
@@ -59,13 +60,14 @@ public class EntityHelpers {
   public Entity spawnEnemy(String type, Vector2 position) {
     JsonToEnemy json = (new Json()).fromJson(JsonToEnemy.class,
         Gdx.files.internal("data/enemies/" + type + ".json"));
+    TextureAtlas atlas = main.assets.get("sprites/main.atlas");
 
     Entity entity = new Entity();
 
     entity.add(new EnemyComponent());
     entity.add(new BrainComponent());
     entity.add(new PositionComponent(position));
-    entity.add(new VisualComponent(null, main.assets.get("sprites/" + type + ".atlas")));
+    entity.add(new VisualComponent(atlas.createSprite(json.visual.get("spritePath"))));
     entity.add(new SkillsComponent());
     entity.add(new AttributesComponent(
         json.name,
@@ -85,24 +87,23 @@ public class EntityHelpers {
    * @param type     What type of item to spawn
    * @param position Vector2 of where to spawn it
    * @return The item
+   *
+   * TODO: This is terrible, fix it pls. See TODO in ItemComponent.
    */
   public Entity spawnItem(String type, Vector2 position) {
+    TextureAtlas atlas = main.assets.get("sprites/main.atlas");
+    ItemComponent itemComponent = (new Json()).fromJson(ItemComponent.class,
+        Gdx.files.internal("data/items/" + type + ".json"));
+
     Entity entity = new Entity();
 
-    entity.add(
-        (new Json()).fromJson(ItemComponent.class,
-            Gdx.files.internal("data/items/" + type + ".json"))
-    );
+    entity.add(itemComponent);
     entity.add(new PositionComponent(position));
-    entity.add(new VisualComponent(new Sprite(
-        (Texture) main.assets.get("sprites/" + type + ".png")), null)
-    );
+    entity.add(new VisualComponent(atlas.createSprite(itemComponent.visual.get("sprites").random())));
 
-    ItemComponent item = entity.getComponent(ItemComponent.class);
-
-    if (item.attributes != null) {
-      item.attributes.put("damage",
-          MathUtils.random(item.attributes.get("damage"), item.attributes.get("damage") + 10));
+    if (itemComponent.attributes != null) {
+      itemComponent.attributes.put("damage",
+          MathUtils.random(itemComponent.attributes.get("damage"), itemComponent.attributes.get("damage") + 10));
     }
 
     return entity;
@@ -117,13 +118,14 @@ public class EntityHelpers {
    */
   public void spawnEffect(Entity starter, Vector2 position, Entity item) {
     ItemComponent ic = item.getComponent(ItemComponent.class);
+    TextureAtlas atlas = main.assets.get("sprites/main.atlas");
 
     for (int x = (int) position.x - ic.effectRange; x < position.x + ic.effectRange; x++) {
       for (int y = (int) position.y - ic.effectRange; y < position.y + ic.effectRange; y++) {
         Entity projectile = new Entity();
         projectile.add(new PositionComponent(new Vector2(x, y)));
         projectile.add(
-            new VisualComponent(new Sprite((Texture) main.assets.get("sprites/poison.png")), null)
+            new VisualComponent(atlas.createSprite("Universal/UI/Effects/Poison/Effect-Tile-Poison-1"))
         );
 
         if (Objects.equals(ic.effect, "poison")) {

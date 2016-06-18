@@ -26,7 +26,6 @@ public class HudRenderer {
   private Map map;
 
   private Stage stage;
-  private Skin skin;
 
   private VerticalGroup actionLog;
   private VerticalGroup areaDetails;
@@ -39,18 +38,12 @@ public class HudRenderer {
     Viewport viewport = new FitViewport(960, 540, new OrthographicCamera());
     stage = new Stage(viewport, batch);
 
-    skin = new Skin();
-    skin.add("Inconsolata", this.main.font, BitmapFont.class);
-    skin.addRegions(new TextureAtlas(Gdx.files.internal("ui/uiskin.atlas")));
-    skin.load(Gdx.files.internal("ui/uiskin.json"));
-    skin.getFont("default-font").getData().markupEnabled = true;
-
     Table table = new Table();
     table.top().left();
     table.setFillParent(true);
 
     actionLog = new VerticalGroup().left();
-    areaDetails = new VerticalGroup().left();
+    areaDetails = new VerticalGroup().right();
 
     table.add(actionLog).pad(10, 10, 10, 10).width(Gdx.graphics.getWidth() / 4 * 3 - 20).top();
     table.add(areaDetails).pad(10, 10, 10, 10).width(Gdx.graphics.getWidth() / 4 - 20).top();
@@ -70,7 +63,7 @@ public class HudRenderer {
     actionLog.clear();
 
     for (int i = 0; i < main.log.things.size(); i++) {
-      Label label = new Label(main.log.things.get(i), skin);
+      Label label = new Label(main.log.things.get(i), main.skin);
       label.setColor(1f, 1f, 1f, (i == 0 ? 1f : 1f / (i + 1)));
       label.setWrap(true);
 
@@ -85,7 +78,7 @@ public class HudRenderer {
 
     AttributesComponent playerAttributes = main.player.getComponent(AttributesComponent.class);
 
-    areaDetails.addActor(new Label(playerAttributes.name, skin));
+    areaDetails.addActor(new Label(playerAttributes.name, main.skin));
 
     String playerHealthColor;
 
@@ -97,12 +90,12 @@ public class HudRenderer {
 
     areaDetails.addActor(
         new Label(
-            "[LIGHT_GRAY]Health:[] " + playerHealthColor + playerAttributes.health
-                + "[LIGHT_GRAY]/" + playerAttributes.maxHealth, skin
+            playerHealthColor + playerAttributes.health
+                + "[LIGHT_GRAY]/" + playerAttributes.maxHealth, main.skin
         )
     );
 
-    areaDetails.addActor(new Label("[DARK_GRAY]-----[]", skin));
+    areaDetails.addActor(new Label("[DARK_GRAY]-----[]", main.skin));
 
     // Enemies visible in area
 
@@ -112,7 +105,7 @@ public class HudRenderer {
       if (main.entityHelpers.isVisibleToPlayer(enemy, map)) {
         AttributesComponent enemyAttributes = enemy.getComponent(AttributesComponent.class);
 
-        areaDetails.addActor(new Label(enemyAttributes.name, skin));
+        areaDetails.addActor(new Label(enemyAttributes.name, main.skin));
 
         String enemyHealthColor;
 
@@ -124,8 +117,8 @@ public class HudRenderer {
 
         areaDetails.addActor(
             new Label(
-                "[LIGHT_GRAY]Health:[] " + enemyHealthColor + enemyAttributes.health
-                    + "[LIGHT_GRAY]/" + enemyAttributes.maxHealth, skin
+                enemyHealthColor + enemyAttributes.health
+                    + "[LIGHT_GRAY]/" + enemyAttributes.maxHealth, main.skin
             )
         );
       }

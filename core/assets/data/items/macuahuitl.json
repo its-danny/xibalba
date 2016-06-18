@@ -1,0 +1,23 @@
+{
+  "name": "Macuahuitl",
+  "description": "A fuckin' murder stick!",
+  "skill": "slashing",
+  "type": "weapon",
+  "visual": {
+    "sprites": [
+      "Universal/Items/Weapons/Macuahuitl/Item-Weapon-Macuahuitl-1",
+    ]
+  },
+  "verbs": [
+    "cut", "slashed", "rekt"
+  ],
+  "attributes": {
+    "damage": 50
+  },
+  "actions": {
+    "canThrow": true,
+    "canWear": false,
+    "canWield": true,
+    "canUse": false
+  }
+}

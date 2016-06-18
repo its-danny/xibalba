@@ -13,7 +13,7 @@ import me.dannytatom.xibalba.components.actions.RangeComponent;
 import me.dannytatom.xibalba.map.Map;
 import me.dannytatom.xibalba.screens.CharacterScreen;
 import me.dannytatom.xibalba.screens.InventoryScreen;
-import me.dannytatom.xibalba.screens.MainMenuScreen;
+import me.dannytatom.xibalba.screens.PauseScreen;
 
 public class PlayerInput implements InputProcessor {
   private final Main main;
@@ -104,10 +104,9 @@ public class PlayerInput implements InputProcessor {
           handleTargeting(new Vector2(-1, 1));
         }
         break;
-      case Keys.Q:
+      case Keys.ESCAPE:
         if (main.state == Main.State.PLAYING) {
-          main.getScreen().dispose();
-          main.setScreen(new MainMenuScreen(main));
+          main.setScreen(new PauseScreen(main));
         } else if (main.state == Main.State.TARGETING) {
           map.target = null;
           map.targetingPath = null;
