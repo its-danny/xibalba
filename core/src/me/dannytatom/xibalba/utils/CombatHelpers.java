@@ -5,6 +5,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.MathUtils;
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.components.AttributesComponent;
+import me.dannytatom.xibalba.components.EquipmentComponent;
 import me.dannytatom.xibalba.components.ItemComponent;
 import me.dannytatom.xibalba.components.effects.DamageEffectComponent;
 
@@ -18,7 +19,7 @@ import java.util.Objects;
 // - If result is 4 or over, you hit
 // - If result is 8 or over (critical), add a 6 roll to the damage
 // - Damage is a static number + the 6 roll if you have it
-// - Roll that, add together, they take damage equal to result - their toughness
+// - Roll that, add together, they take damage equal to result - their defense
 
 public class CombatHelpers {
   private final Main main;
@@ -42,20 +43,25 @@ public class CombatHelpers {
    * @param target  Who's getting fought
    */
   public void melee(Entity starter, Entity target) {
-    Entity wielded = main.equipmentHelpers.getWeapon();
     String skill;
     String verb;
 
     int damage = starter.getComponent(AttributesComponent.class).damage;
 
-    if (wielded == null) {
+    Entity heldWeapon = null;
+
+    if (starter.getComponent(EquipmentComponent.class) != null) {
+      heldWeapon = main.equipmentHelpers.getPrimaryWeapon(starter);
+    }
+
+    if (heldWeapon == null) {
       skill = "unarmed";
       verb = "hit";
     } else {
-      ItemComponent ic = wielded.getComponent(ItemComponent.class);
+      ItemComponent ic = heldWeapon.getComponent(ItemComponent.class);
 
       skill = ic.skill;
-      damage += ic.attributes.get("damage");
+      damage += ic.attributes.get("hitDamage");
       verb = ic.verbs.get(MathUtils.random(0, ic.verbs.size() - 1));
     }
 
@@ -76,7 +82,9 @@ public class CombatHelpers {
 
     int result = rollHit(main.skillHelpers.getSkill(starter, "throwing"));
 
-    applyDamage(result, itemComponent.attributes.get("damage"), "throwing", starter, target, "hit");
+    applyDamage(
+        result, itemComponent.attributes.get("throwDamage"), "throwing", starter, target, "hit"
+    );
   }
 
   /**
@@ -119,7 +127,8 @@ public class CombatHelpers {
     return result;
   }
 
-  private void applyDamage(int result, int baseDamage, String skill, Entity starter, Entity target, String verb) {
+  private void applyDamage(int result, int baseDamage, String skill,
+                           Entity starter, Entity target, String verb) {
     AttributesComponent starterAttributes = ComponentMappers.attributes.get(starter);
     AttributesComponent targetAttributes = ComponentMappers.attributes.get(target);
 
@@ -132,10 +141,15 @@ public class CombatHelpers {
         critical = MathUtils.random(1, 6);
       }
 
-      int damage = baseDamage + critical + main.equipmentHelpers.getWeaponDamage();
+      int damage = baseDamage + critical;
+      int defense = targetAttributes.defense;
 
-      if (damage > targetAttributes.toughness) {
-        targetAttributes.health -= damage - targetAttributes.toughness;
+      if (target.getComponent(EquipmentComponent.class) != null) {
+        defense = main.equipmentHelpers.getCombinedDefense(target);
+      }
+
+      if (damage > defense) {
+        targetAttributes.health -= damage - targetAttributes.defense;
 
         action += verb + " " + targetAttributes.name + " for " + damage + " damage";
       } else {

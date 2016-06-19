@@ -9,12 +9,14 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
+import com.badlogic.gdx.utils.Array;
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.InventoryComponent;
 import me.dannytatom.xibalba.components.ItemComponent;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class InventoryScreen implements Screen {
   private final Main main;
@@ -78,6 +80,22 @@ public class InventoryScreen implements Screen {
       }
     }
 
+    if (Gdx.input.isKeyJustPressed(Input.Keys.H)) {
+      main.equipmentHelpers.holdItem(main.player, items.get(selected));
+    }
+
+    if (Gdx.input.isKeyJustPressed(Input.Keys.W)) {
+      main.equipmentHelpers.wearItem(main.player, items.get(selected));
+    }
+
+    if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
+      main.equipmentHelpers.removeItem(main.player, items.get(selected));
+    }
+
+    if (Gdx.input.isKeyJustPressed(Input.Keys.D)) {
+      main.inventoryHelpers.dropItem(main.player, items.get(selected));
+    }
+
     if (Gdx.input.isKeyJustPressed(Input.Keys.T)) {
       items.get(selected).getComponent(ItemComponent.class).throwing = true;
 
@@ -120,13 +138,70 @@ public class InventoryScreen implements Screen {
       Entity entity = items.get(i);
       ItemComponent item = entity.getComponent(ItemComponent.class);
 
+      String name;
+
       if (i == selected) {
-        inventoryGroup.addActor(new Label("[DARK_GRAY]> [WHITE]" + item.name + "[]", main.skin));
-        inventoryGroup.addActor(new Label("[LIGHT_GRAY]" + item.description + "[]", main.skin));
-        inventoryGroup.addActor(new Label(
-            "[RED]T[]hrow", main.skin));
+        name = "[DARK_GRAY]> [WHITE]" + item.name + "[]";
       } else {
-        inventoryGroup.addActor(new Label("[DARK_GRAY]" + item.name + "[]", main.skin));
+        name = "[DARK_GRAY]" + item.name + "[]";
+      }
+
+      if (main.equipmentHelpers.isEquip(main.player, entity)) {
+        String location = main.equipmentHelpers.getLocation(main.player, entity);
+
+        if (Objects.equals(location, "right hand") || Objects.equals(location, "left hand")) {
+          name += " [YELLOW](holding in " + location + ")[]";
+        } else {
+          name += " [YELLOW](wearing on " + location + ")[]";
+        }
+      }
+
+      inventoryGroup.addActor(new Label(name, main.skin));
+
+      if (i == selected) {
+        Array<String> actions = new Array<>();
+
+        if (item.actions.get("canHold") && !main.equipmentHelpers.isEquip(main.player, entity)) {
+          actions.add("[CYAN]H[]old");
+        }
+
+        if (item.actions.get("canWear") && !main.equipmentHelpers.isEquip(main.player, entity)) {
+          actions.add("[CYAN]W[]ear");
+        }
+
+        if (item.actions.get("canThrow") && !main.equipmentHelpers.isEquip(main.player, entity)) {
+          actions.add("[CYAN]T[]hrow");
+        }
+
+        if (item.actions.get("canUse") && !main.equipmentHelpers.isEquip(main.player, entity)) {
+          actions.add("[CYAN]U[]se");
+        }
+
+        if (main.equipmentHelpers.isEquip(main.player, entity)) {
+          actions.add("[CYAN]R[]emove");
+        }
+
+        if (!main.equipmentHelpers.isEquip(main.player, entity)) {
+          actions.add("[CYAN]D[]rop");
+        }
+
+        Array<String> stats = new Array<>();
+
+        if (item.attributes.get("hitDamage") != null) {
+          stats.add("[DARK_GRAY]Hit Damage: [LIGHT_GRAY]" + item.attributes.get("hitDamage"));
+        }
+
+        if (item.attributes.get("throwDamage") != null) {
+          stats.add("[DARK_GRAY]Throw Damage: [LIGHT_GRAY]" + item.attributes.get("throwDamage"));
+        }
+
+        if (item.attributes.get("defense") != null) {
+          stats.add("[DARK_GRAY]Defense: [LIGHT_GRAY]" + item.attributes.get("defense"));
+        }
+
+        inventoryGroup.addActor(new Label("[LIGHT_GRAY]" + item.description + "[]", main.skin));
+        inventoryGroup.addActor(new Label(stats.toString(" "), main.skin));
+        inventoryGroup.addActor(new Label(actions.toString(" "), main.skin));
       }
     }
   }

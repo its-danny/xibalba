@@ -9,7 +9,15 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Json;
 import me.dannytatom.xibalba.Main;
-import me.dannytatom.xibalba.components.*;
+import me.dannytatom.xibalba.components.AttributesComponent;
+import me.dannytatom.xibalba.components.EnemyComponent;
+import me.dannytatom.xibalba.components.EquipmentComponent;
+import me.dannytatom.xibalba.components.InventoryComponent;
+import me.dannytatom.xibalba.components.ItemComponent;
+import me.dannytatom.xibalba.components.PlayerComponent;
+import me.dannytatom.xibalba.components.PositionComponent;
+import me.dannytatom.xibalba.components.SkillsComponent;
+import me.dannytatom.xibalba.components.VisualComponent;
 import me.dannytatom.xibalba.components.ai.BrainComponent;
 import me.dannytatom.xibalba.components.effects.DamageEffectComponent;
 import me.dannytatom.xibalba.map.Map;
@@ -35,19 +43,18 @@ public class EntityHelpers {
    *
    * @param player   The player
    * @param position Vector2 of where to spawn them
-   * @return The player
    */
-  public Entity spawnPlayer(Entity player, Vector2 position) {
+  public void spawnPlayer(Entity player, Vector2 position) {
     TextureAtlas atlas = main.assets.get("sprites/main.atlas");
 
     player.add(new PlayerComponent());
     player.add(new PositionComponent(position));
-    player.add(new VisualComponent(atlas.createSprite("Universal/Player/Player-Cloth/Player-Cloth-1")));
+    player.add(new VisualComponent(
+        atlas.createSprite("Universal/Player/Player-Cloth/Player-Cloth-1"))
+    );
     player.add(new SkillsComponent());
     player.add(new InventoryComponent());
     player.add(new EquipmentComponent());
-
-    return player;
   }
 
   /**
@@ -74,7 +81,7 @@ public class EntityHelpers {
         json.attributes.get("speed"),
         json.attributes.get("vision"),
         json.attributes.get("maxHealth"),
-        json.attributes.get("toughness"),
+        json.attributes.get("defense"),
         json.attributes.get("damage")
     ));
 
@@ -87,8 +94,7 @@ public class EntityHelpers {
    * @param type     What type of item to spawn
    * @param position Vector2 of where to spawn it
    * @return The item
-   *
-   * TODO: This is terrible, fix it pls. See TODO in ItemComponent.
+   * <p> TODO: This is terrible, fix it pls. See TODO in ItemComponent.
    */
   public Entity spawnItem(String type, Vector2 position) {
     TextureAtlas atlas = main.assets.get("sprites/main.atlas");
@@ -99,11 +105,17 @@ public class EntityHelpers {
 
     entity.add(itemComponent);
     entity.add(new PositionComponent(position));
-    entity.add(new VisualComponent(atlas.createSprite(itemComponent.visual.get("sprites").random())));
+    entity.add(new VisualComponent(
+        atlas.createSprite(itemComponent.visual.get("sprites").random())
+    ));
 
     if (itemComponent.attributes != null) {
-      itemComponent.attributes.put("damage",
-          MathUtils.random(itemComponent.attributes.get("damage"), itemComponent.attributes.get("damage") + 10));
+      itemComponent.attributes.put("hitDamage",
+          MathUtils.random(itemComponent.attributes.get("hitDamage"),
+              itemComponent.attributes.get("hitDamage") + 10));
+      itemComponent.attributes.put("throwDamage",
+          MathUtils.random(itemComponent.attributes.get("throwDamage"),
+              itemComponent.attributes.get("throwDamage") + 10));
     }
 
     return entity;
@@ -125,7 +137,9 @@ public class EntityHelpers {
         Entity projectile = new Entity();
         projectile.add(new PositionComponent(new Vector2(x, y)));
         projectile.add(
-            new VisualComponent(atlas.createSprite("Universal/UI/Effects/Poison/Effect-Tile-Poison-1"))
+            new VisualComponent(
+                atlas.createSprite("Universal/UI/Effects/Poison/Effect-Tile-Poison-1")
+            )
         );
 
         if (Objects.equals(ic.effect, "poison")) {

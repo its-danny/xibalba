@@ -57,8 +57,8 @@ class PlayScreen implements Screen {
 
     // Setup helpers
     main.entityHelpers = new EntityHelpers(main, engine);
-    main.inventoryHelpers = new InventoryHelpers(main);
-    main.equipmentHelpers = new EquipmentHelpers(main);
+    main.inventoryHelpers = new InventoryHelpers();
+    main.equipmentHelpers = new EquipmentHelpers();
     main.skillHelpers = new SkillHelpers(main);
     main.combatHelpers = new CombatHelpers(main, engine);
 
@@ -80,6 +80,10 @@ class PlayScreen implements Screen {
 
     for (int i = 0; i < 5; i++) {
       engine.addEntity(main.entityHelpers.spawnItem("macuahuitl", map.getRandomOpenPosition()));
+    }
+
+    for (int i = 0; i < 5; i++) {
+      engine.addEntity(main.entityHelpers.spawnItem("shield", map.getRandomOpenPosition()));
     }
 
     // Setup engine (they're run in order added)

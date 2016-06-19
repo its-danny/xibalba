@@ -3,21 +3,23 @@
   "description": "A fuckin' murder stick!",
   "skill": "slashing",
   "type": "weapon",
+  "location": "rightHand",
   "visual": {
     "sprites": [
-      "Universal/Items/Weapons/Macuahuitl/Item-Weapon-Macuahuitl-1",
+      "Universal/Items/Weapons/Macuahuitl/Item-Weapon-Macuahuitl-1"
     ]
   },
   "verbs": [
     "cut", "slashed", "rekt"
   ],
   "attributes": {
-    "damage": 50
+    "hitDamage": 50,
+    "throwDamage": 35
   },
   "actions": {
     "canThrow": true,
     "canWear": false,
-    "canWield": true,
+    "canHold": true,
     "canUse": false
   }
 }

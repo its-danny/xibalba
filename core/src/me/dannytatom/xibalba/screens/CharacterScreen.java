@@ -10,7 +10,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import me.dannytatom.xibalba.Main;
-import me.dannytatom.xibalba.components.*;
+import me.dannytatom.xibalba.components.AttributesComponent;
+import me.dannytatom.xibalba.components.DefectComponent;
+import me.dannytatom.xibalba.components.DefectsComponent;
+import me.dannytatom.xibalba.components.ItemComponent;
+import me.dannytatom.xibalba.components.SkillsComponent;
+import me.dannytatom.xibalba.components.TraitComponent;
+import me.dannytatom.xibalba.components.TraitsComponent;
 
 import java.util.ArrayList;
 
@@ -108,17 +114,19 @@ public class CharacterScreen implements Screen {
 
     // Toughness & damage
 
-    int damage = attrs.damage;
-    Entity wielded = main.equipmentHelpers.getWeapon();
+    int defense = attrs.defense + main.equipmentHelpers.getCombinedDefense(main.player);
 
-    if (wielded != null) {
-      ItemComponent ic = wielded.getComponent(ItemComponent.class);
-      damage += ic.attributes.get("damage");
+    int damage = attrs.damage;
+    Entity heldWeapon = main.equipmentHelpers.getPrimaryWeapon(main.player);
+
+    if (heldWeapon != null) {
+      ItemComponent ic = heldWeapon.getComponent(ItemComponent.class);
+      damage += ic.attributes.get("hitDamage");
     }
 
     group.addActor(
         new Label(
-            "[LIGHT_GRAY]Toughness: []" + attrs.toughness
+            "[LIGHT_GRAY]Defense: []" + defense
                 + ", [LIGHT_GRAY]Damage: []" + damage, main.skin
         )
     );

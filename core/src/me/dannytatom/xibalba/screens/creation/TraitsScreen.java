@@ -27,10 +27,10 @@ public class TraitsScreen implements Screen {
   private int points = 10;
   private Label infoLabel;
 
-  private Array traits;
-  private Array defects;
-  private Array selectedTraits;
-  private Array selectedDefects;
+  private Array<TraitComponent> traits;
+  private Array<DefectComponent> defects;
+  private Array<TraitComponent> selectedTraits;
+  private Array<DefectComponent> selectedDefects;
   private VerticalGroup traitsGroup;
   private VerticalGroup defectsGroup;
   private VerticalGroup currentGroup;
@@ -50,8 +50,8 @@ public class TraitsScreen implements Screen {
     table.left().top();
     stage.addActor(table);
 
-    traits = new Array();
-    selectedTraits = new Array();
+    traits = new Array<>();
+    selectedTraits = new Array<>();
     traitsGroup = new VerticalGroup().left();
     FileHandle traitsHandle = Gdx.files.internal("data/traits/");
 
@@ -63,8 +63,8 @@ public class TraitsScreen implements Screen {
       traits.add(trait);
     }
 
-    defects = new Array();
-    selectedDefects = new Array();
+    defects = new Array<>();
+    selectedDefects = new Array<>();
     defectsGroup = new VerticalGroup().left();
     FileHandle defectsHandle = Gdx.files.internal("data/defects/");
 
@@ -82,7 +82,9 @@ public class TraitsScreen implements Screen {
     currentIndex = 0;
 
     table.add(infoLabel).left().pad(10);
-    table.add(new Label("[LIGHT_GRAY]Take defects for more trait points", main.skin)).left().pad(10);
+    table.add(
+        new Label("[LIGHT_GRAY]Take defects for more trait points", main.skin)
+    ).left().pad(10);
     table.row();
 
     table.add(new Label("Traits", main.skin))
@@ -110,7 +112,7 @@ public class TraitsScreen implements Screen {
     traitsGroup.clear();
 
     for (int i = 0; i < traits.size; i++) {
-      TraitComponent trait = (TraitComponent) traits.get(i);
+      TraitComponent trait = traits.get(i);
       String selected = "[_]";
 
       if (selectedTraits.contains(trait, true)) {
@@ -141,7 +143,7 @@ public class TraitsScreen implements Screen {
     defectsGroup.clear();
 
     for (int i = 0; i < defects.size; i++) {
-      DefectComponent defect = (DefectComponent) defects.get(i);
+      DefectComponent defect = defects.get(i);
       String selected = "[_]";
 
       if (selectedDefects.contains(defect, true)) {
@@ -198,7 +200,7 @@ public class TraitsScreen implements Screen {
 
     if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
       if (currentGroup == traitsGroup) {
-        TraitComponent trait = (TraitComponent) traits.get(currentIndex);
+        TraitComponent trait = traits.get(currentIndex);
 
         if (selectedTraits.contains(trait, true)) {
           selectedTraits.removeValue(trait, true);
@@ -208,7 +210,7 @@ public class TraitsScreen implements Screen {
           points -= trait.cost;
         }
       } else {
-        DefectComponent defect = (DefectComponent) defects.get(currentIndex);
+        DefectComponent defect = defects.get(currentIndex);
 
         if (selectedDefects.contains(defect, true)) {
           selectedDefects.removeValue(defect, true);
@@ -230,7 +232,7 @@ public class TraitsScreen implements Screen {
 
       // Add selected traits to traitsComponent
       for (int i = 0; i < selectedTraits.size; i++) {
-        TraitComponent trait = (TraitComponent) selectedTraits.get(i);
+        TraitComponent trait = selectedTraits.get(i);
         Entity entity = new Entity();
         entity.add(trait);
         traitsComponent.traits.add(entity);
@@ -238,7 +240,7 @@ public class TraitsScreen implements Screen {
 
       // Add selected traits to traitsComponent
       for (int i = 0; i < selectedDefects.size; i++) {
-        DefectComponent defect = (DefectComponent) selectedDefects.get(i);
+        DefectComponent defect = selectedDefects.get(i);
         Entity entity = new Entity();
         entity.add(defect);
         defectsComponent.defects.add(entity);

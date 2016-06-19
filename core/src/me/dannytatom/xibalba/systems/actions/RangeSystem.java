@@ -37,7 +37,7 @@ public class RangeSystem extends ActionSystem {
   protected void processEntity(Entity entity, float deltaTime) {
     RangeComponent range = ComponentMappers.range.get(entity);
     AttributesComponent attributes = ComponentMappers.attributes.get(entity);
-    Entity item = main.inventoryHelpers.getThrowingItem();
+    Entity item = main.inventoryHelpers.getThrowingItem(entity);
 
     if (item != null) {
       ItemComponent ic = item.getComponent(ItemComponent.class);
@@ -49,11 +49,11 @@ public class RangeSystem extends ActionSystem {
           main.combatHelpers.range(entity, enemy, item);
         }
 
-        main.inventoryHelpers.dropItem(item, range.target);
+        main.inventoryHelpers.dropItem(entity, item, range.target);
       } else if (Objects.equals(ic.type, "projectile")) {
         main.entityHelpers.spawnEffect(entity, range.target, item);
 
-        main.inventoryHelpers.removeItem(item);
+        main.inventoryHelpers.removeItem(entity, item);
         engine.removeEntity(item);
       }
 

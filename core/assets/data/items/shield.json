@@ -1,0 +1,26 @@
+{
+  "name": "Wooden Shield",
+  "description": "Not great, but does the job.",
+  "skill": "bashing",
+  "type": "armor",
+  "location": "leftHand",
+  "visual": {
+    "sprites": [
+      "Universal/Items/Shields/Item-Shield-1"
+    ]
+  },
+  "verbs": [
+    "bashed", "hit"
+  ],
+  "attributes": {
+    "hitDamage": 20,
+    "throwDamage": 15,
+    "defense": 20
+  },
+  "actions": {
+    "canThrow": true,
+    "canWear": true,
+    "canHold": true,
+    "canUse": false
+  }
+}

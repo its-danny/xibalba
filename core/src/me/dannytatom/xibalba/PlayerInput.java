@@ -104,7 +104,7 @@ public class PlayerInput implements InputProcessor {
           handleTargeting(new Vector2(-1, 1));
         }
         break;
-      case Keys.ESCAPE:
+      case Keys.Q:
         if (main.state == Main.State.PLAYING) {
           main.setScreen(new PauseScreen(main));
         } else if (main.state == Main.State.TARGETING) {
@@ -191,7 +191,7 @@ public class PlayerInput implements InputProcessor {
       Entity thing = map.getEntityAt(pos);
 
       if (main.entityHelpers.isItem(thing) && energy >= MovementComponent.COST) {
-        if (main.inventoryHelpers.addItem(thing)) {
+        if (main.inventoryHelpers.addItem(main.player, thing)) {
           main.log.add("You pick up a " + thing.getComponent(ItemComponent.class).name);
         }
 

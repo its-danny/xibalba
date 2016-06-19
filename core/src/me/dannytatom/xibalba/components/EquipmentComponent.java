@@ -3,12 +3,18 @@ package me.dannytatom.xibalba.components;
 import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
 
+import java.util.HashMap;
+
 public class EquipmentComponent implements Component {
-  public Entity head = null;
-  public Entity body = null;
-  public Entity arms = null;
-  public Entity rightHand = null;
-  public Entity leftHand = null;
-  public Entity legs = null;
-  public Entity feet = null;
+  public HashMap<String, Entity> slots = new HashMap<>();
+
+  public EquipmentComponent() {
+    slots.put("head", null);
+    slots.put("body", null);
+    slots.put("arms", null);
+    slots.put("leftHand", null);
+    slots.put("rightHand", null);
+    slots.put("legs", null);
+    slots.put("feet", null);
+  }
 }

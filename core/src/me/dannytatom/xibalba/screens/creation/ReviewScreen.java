@@ -10,7 +10,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import me.dannytatom.xibalba.Main;
-import me.dannytatom.xibalba.components.*;
+import me.dannytatom.xibalba.components.AttributesComponent;
+import me.dannytatom.xibalba.components.DefectComponent;
+import me.dannytatom.xibalba.components.DefectsComponent;
+import me.dannytatom.xibalba.components.TraitComponent;
+import me.dannytatom.xibalba.components.TraitsComponent;
 import me.dannytatom.xibalba.screens.LoadingScreen;
 import me.dannytatom.xibalba.screens.MainMenuScreen;
 
@@ -47,7 +51,9 @@ class ReviewScreen implements Screen {
 
     for (Entity entity : defects) {
       DefectComponent defect = entity.getComponent(DefectComponent.class);
-      traitsGroup.addActor(new Label(defect.name + " [LIGHT_GRAY]" + defect.description, main.skin));
+      traitsGroup.addActor(
+          new Label(defect.name + " [LIGHT_GRAY]" + defect.description, main.skin)
+      );
     }
 
     table.add(

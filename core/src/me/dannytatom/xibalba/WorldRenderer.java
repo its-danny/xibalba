@@ -9,7 +9,12 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import me.dannytatom.xibalba.components.*;
+import me.dannytatom.xibalba.components.AttributesComponent;
+import me.dannytatom.xibalba.components.EnemyComponent;
+import me.dannytatom.xibalba.components.ItemComponent;
+import me.dannytatom.xibalba.components.PlayerComponent;
+import me.dannytatom.xibalba.components.PositionComponent;
+import me.dannytatom.xibalba.components.VisualComponent;
 import me.dannytatom.xibalba.components.effects.DamageEffectComponent;
 import me.dannytatom.xibalba.map.Cell;
 import me.dannytatom.xibalba.map.Map;
@@ -98,7 +103,9 @@ public class WorldRenderer {
 
         batch.setColor(1f, 1f, 1f,
             lightMap[cell.x][cell.y] <= 0.35f ? 0.35f : lightMap[cell.x][cell.y]);
-        batch.draw(atlas.createSprite("Universal/UI/Target/UI-Target-1"), cell.x * SPRITE_WIDTH, cell.y * SPRITE_HEIGHT);
+        batch.draw(
+            atlas.createSprite("Universal/UI/Target/UI-Target-1"), cell.x * SPRITE_WIDTH, cell.y * SPRITE_HEIGHT
+        );
         batch.setColor(1f, 1f, 1f, 1f);
       }
     }
