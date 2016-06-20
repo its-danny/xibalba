@@ -64,13 +64,12 @@ public class Main extends Game {
     // Setup text colors
     Colors.put("LIGHT_GRAY", parseColor("c2c2c2"));
     Colors.put("DARK_GRAY", parseColor("666666"));
-    Colors.put("CYAN", parseColor("5bb9c7"));
+    Colors.put("CYAN", parseColor("67C8CF"));
     Colors.put("RED", parseColor("B55757"));
-    Colors.put("DARK_PURPLE", parseColor("241d26"));
-    Colors.put("LIGHT_PURPLE", parseColor("706274"));
+    Colors.put("YELLOW", parseColor("E0DFB1"));
 
     // Map background colors
-    Colors.put("FOREST_BACKGROUND", parseColor("293033"));
+    Colors.put("CAVE_BACKGROUND", parseColor("293033"));
 
     // Start the main menu
     setScreen(new MainMenuScreen(this));

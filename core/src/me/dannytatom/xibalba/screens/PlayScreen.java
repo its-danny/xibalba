@@ -107,10 +107,10 @@ class PlayScreen implements Screen {
   @Override
   public void render(float delta) {
     Gdx.gl.glClearColor(
-        Colors.get("FOREST_BACKGROUND").r,
-        Colors.get("FOREST_BACKGROUND").g,
-        Colors.get("FOREST_BACKGROUND").b,
-        Colors.get("FOREST_BACKGROUND").a
+        Colors.get("CAVE_BACKGROUND").r,
+        Colors.get("CAVE_BACKGROUND").g,
+        Colors.get("CAVE_BACKGROUND").b,
+        Colors.get("CAVE_BACKGROUND").a
     );
 
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
