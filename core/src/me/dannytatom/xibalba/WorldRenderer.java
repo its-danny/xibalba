@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import me.dannytatom.xibalba.components.AttributesComponent;
+import me.dannytatom.xibalba.components.DecorationComponent;
 import me.dannytatom.xibalba.components.EnemyComponent;
 import me.dannytatom.xibalba.components.ItemComponent;
 import me.dannytatom.xibalba.components.PlayerComponent;
@@ -127,12 +128,29 @@ public class WorldRenderer {
       }
     }
 
+    renderDecorations(lightMap);
     renderEffects(lightMap);
     renderItems(lightMap);
     renderPlayer(delta, lightMap);
     renderEnemies(delta, lightMap);
 
     batch.end();
+  }
+
+  private void renderDecorations(float[][] lightMap) {
+    ImmutableArray<Entity> entities =
+        engine.getEntitiesFor(Family.all(DecorationComponent.class).get());
+
+    for (Entity entity : entities) {
+      PositionComponent position = ComponentMappers.position.get(entity);
+      VisualComponent visual = ComponentMappers.visual.get(entity);
+
+      if (map.cellExists(position.pos) && !map.getCell(position.pos).hidden) {
+        batch.setColor(1f, 1f, 1f, lightMap[(int) position.pos.x][(int) position.pos.y]);
+        batch.draw(visual.sprite, position.pos.x * SPRITE_WIDTH, position.pos.y * SPRITE_HEIGHT);
+        batch.setColor(1f, 1f, 1f, 1f);
+      }
+    }
   }
 
   private void renderEffects(float[][] lightMap) {

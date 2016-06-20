@@ -2,11 +2,15 @@ package me.dannytatom.xibalba.utils;
 
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.MathUtils;
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.components.AttributesComponent;
+import me.dannytatom.xibalba.components.DecorationComponent;
 import me.dannytatom.xibalba.components.EquipmentComponent;
 import me.dannytatom.xibalba.components.ItemComponent;
+import me.dannytatom.xibalba.components.PositionComponent;
+import me.dannytatom.xibalba.components.VisualComponent;
 import me.dannytatom.xibalba.components.effects.DamageEffectComponent;
 
 import java.util.Objects;
@@ -172,7 +176,15 @@ public class CombatHelpers {
     main.log.add(action);
 
     if (targetAttributes.health <= 0) {
+      TextureAtlas atlas = main.assets.get("sprites/main.atlas");
+      Entity remains = new Entity();
+      remains.add(new DecorationComponent());
+      remains.add(new PositionComponent(target.getComponent(PositionComponent.class).pos));
+      remains.add(new VisualComponent(atlas.createSprite("Level/Cave/Environment/Object/Remains-1")));
+
+      engine.addEntity(remains);
       engine.removeEntity(target);
+
       main.log.add(starterAttributes.name + " killed " + targetAttributes.name + "!");
     }
   }

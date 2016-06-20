@@ -6,6 +6,7 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import me.dannytatom.xibalba.components.DecorationComponent;
 import me.dannytatom.xibalba.components.EnemyComponent;
 import me.dannytatom.xibalba.components.ItemComponent;
 import me.dannytatom.xibalba.components.PlayerComponent;
@@ -167,7 +168,7 @@ public class Map {
     }
   }
 
-  private boolean cellExists(Vector2 position) {
+  public boolean cellExists(Vector2 position) {
     return position.x > 0 && position.x < map.length
         && position.y > 0 && position.y < map[0].length
         && getCell(position) != null;
@@ -309,7 +310,7 @@ public class Map {
     if (!blocked) {
       ImmutableArray<Entity> entities =
           engine.getEntitiesFor(
-              Family.all(PositionComponent.class).exclude(DamageEffectComponent.class).get()
+              Family.all(PositionComponent.class).exclude(DecorationComponent.class, DamageEffectComponent.class).get()
           );
 
       for (Entity entity : entities) {
