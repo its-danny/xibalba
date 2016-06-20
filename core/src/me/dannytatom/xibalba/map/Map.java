@@ -12,7 +12,6 @@ import me.dannytatom.xibalba.components.EnemyComponent;
 import me.dannytatom.xibalba.components.ItemComponent;
 import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
-import me.dannytatom.xibalba.components.effects.DamageEffectComponent;
 import me.dannytatom.xibalba.utils.ComponentMappers;
 import org.xguzm.pathfinding.grid.GridCell;
 import org.xguzm.pathfinding.grid.NavigationGrid;
@@ -207,7 +206,7 @@ public class Map {
   public Entity getEntityAt(Vector2 position) {
     ImmutableArray<Entity> entities =
         engine.getEntitiesFor(
-            Family.all(PositionComponent.class).exclude(DamageEffectComponent.class).get()
+            Family.all(PositionComponent.class).exclude(DecorationComponent.class).get()
         );
 
     for (Entity entity : entities) {
@@ -318,7 +317,7 @@ public class Map {
     if (!blocked) {
       ImmutableArray<Entity> entities =
           engine.getEntitiesFor(
-              Family.all(PositionComponent.class).exclude(DecorationComponent.class, DamageEffectComponent.class).get()
+              Family.all(PositionComponent.class).exclude(DecorationComponent.class).get()
           );
 
       for (Entity entity : entities) {

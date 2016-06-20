@@ -91,7 +91,7 @@ public class InventoryScreen implements Screen {
       ItemComponent item = items.get(selected).getComponent(ItemComponent.class);
 
       if (Gdx.input.isKeyJustPressed(Input.Keys.H) && item.actions.get("canHold")) {
-          main.equipmentHelpers.holdItem(main.player, items.get(selected));
+        main.equipmentHelpers.holdItem(main.player, items.get(selected));
       }
 
       if (Gdx.input.isKeyJustPressed(Input.Keys.W) && item.actions.get("canWear")) {

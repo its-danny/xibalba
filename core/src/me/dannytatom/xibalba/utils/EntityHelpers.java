@@ -20,11 +20,8 @@ import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.SkillsComponent;
 import me.dannytatom.xibalba.components.VisualComponent;
 import me.dannytatom.xibalba.components.ai.BrainComponent;
-import me.dannytatom.xibalba.components.effects.DamageEffectComponent;
 import me.dannytatom.xibalba.map.Map;
 import me.dannytatom.xibalba.map.ShadowCaster;
-
-import java.util.Objects;
 
 public class EntityHelpers {
   private final Main main;
@@ -126,39 +123,6 @@ public class EntityHelpers {
     }
 
     return entity;
-  }
-
-  /**
-   * Spawn an effect somewhere.
-   *
-   * @param starter  Who set off the effect
-   * @param position Vector2 of where to spawn the effect
-   * @param item     The item that caused the effect
-   */
-  public void spawnEffect(Entity starter, Vector2 position, Entity item) {
-    ItemComponent ic = item.getComponent(ItemComponent.class);
-    TextureAtlas atlas = main.assets.get("sprites/main.atlas");
-
-    for (int x = (int) position.x - ic.effectRange; x < position.x + ic.effectRange; x++) {
-      for (int y = (int) position.y - ic.effectRange; y < position.y + ic.effectRange; y++) {
-        Entity projectile = new Entity();
-        projectile.add(new PositionComponent(new Vector2(x, y)));
-        projectile.add(
-            new VisualComponent(
-                atlas.createSprite("Universal/UI/Effects/Poison/Effect-Tile-Poison-1")
-            )
-        );
-
-        if (Objects.equals(ic.effect, "poison")) {
-          projectile.add(
-              new DamageEffectComponent(starter, "poison",
-                  ic.effectTurns, ic.attributes.get("damage"))
-          );
-        }
-
-        engine.addEntity(projectile);
-      }
-    }
   }
 
   public Entity getPlayer() {

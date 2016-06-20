@@ -16,7 +16,6 @@ import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.map.Cell;
 import me.dannytatom.xibalba.map.Map;
 import me.dannytatom.xibalba.systems.AttributesSystem;
-import me.dannytatom.xibalba.systems.EffectSystem;
 import me.dannytatom.xibalba.systems.actions.MeleeSystem;
 import me.dannytatom.xibalba.systems.actions.MovementSystem;
 import me.dannytatom.xibalba.systems.actions.RangeSystem;
@@ -93,7 +92,6 @@ class PlayScreen implements Screen {
     engine.addSystem(new TargetSystem(map));
     engine.addSystem(new MeleeSystem(main.combatHelpers));
     engine.addSystem(new RangeSystem(main, engine, map));
-    engine.addSystem(new EffectSystem(engine, map, main.combatHelpers));
     engine.addSystem(new MovementSystem(map));
 
     // Setup renderers

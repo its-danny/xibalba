@@ -3,16 +3,12 @@ package me.dannytatom.xibalba.systems.actions;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
-import com.badlogic.gdx.Gdx;
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.components.AttributesComponent;
-import me.dannytatom.xibalba.components.ItemComponent;
 import me.dannytatom.xibalba.components.actions.RangeComponent;
 import me.dannytatom.xibalba.map.Map;
 import me.dannytatom.xibalba.systems.ActionSystem;
 import me.dannytatom.xibalba.utils.ComponentMappers;
-
-import java.util.Objects;
 
 public class RangeSystem extends ActionSystem {
   private final Main main;
@@ -41,22 +37,13 @@ public class RangeSystem extends ActionSystem {
     Entity item = main.inventoryHelpers.getThrowingItem(entity);
 
     if (item != null) {
-      ItemComponent ic = item.getComponent(ItemComponent.class);
+      Entity enemy = map.getEnemyAt(range.target);
 
-      if (Objects.equals(ic.type, "projectile")) {
-        main.entityHelpers.spawnEffect(entity, range.target, item);
-
-        main.inventoryHelpers.removeItem(entity, item);
-        engine.removeEntity(item);
-      } else {
-        Entity enemy = map.getEnemyAt(range.target);
-
-        if (enemy != null) {
-          main.combatHelpers.range(entity, enemy, item);
-        }
-
-        main.inventoryHelpers.dropItem(entity, item, range.target);
+      if (enemy != null) {
+        main.combatHelpers.range(entity, enemy, item);
       }
+
+      main.inventoryHelpers.dropItem(entity, item, range.target);
 
       attributes.energy -= RangeComponent.COST;
     }

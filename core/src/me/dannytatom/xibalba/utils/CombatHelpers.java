@@ -12,10 +12,7 @@ import me.dannytatom.xibalba.components.EquipmentComponent;
 import me.dannytatom.xibalba.components.ItemComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.VisualComponent;
-import me.dannytatom.xibalba.components.effects.DamageEffectComponent;
 import me.dannytatom.xibalba.map.Map;
-
-import java.util.Objects;
 
 // How combat works.
 //
@@ -95,24 +92,6 @@ public class CombatHelpers {
     );
   }
 
-  /**
-   * Effect logic.
-   *
-   * @param effect The effect, so we know what to do
-   * @param target Who's getting hit by it
-   */
-  public void effect(Entity effect, Entity target) {
-    DamageEffectComponent damageEffectComponent = effect.getComponent(DamageEffectComponent.class);
-    Entity starter = damageEffectComponent.starter;
-
-    int result = rollHit(main.skillHelpers.getSkill(starter, "throwing"));
-
-    applyDamage(
-        result, damageEffectComponent.damage, "throwing",
-        starter, target, damageEffectComponent.type
-    );
-  }
-
   private int rollHit(int skillLevel) {
     int skillRoll = skillLevel == 0 ? 0 : MathUtils.random(1, skillLevel);
     int sixRoll = MathUtils.random(1, 6);
@@ -168,7 +147,7 @@ public class CombatHelpers {
 
       if (critical > 0) {
         Vector2 splatterSpace = map.getEmptySpaceNearEntity(
-          target.getComponent(PositionComponent.class).pos
+            target.getComponent(PositionComponent.class).pos
         );
 
         if (splatterSpace != null) {
@@ -183,14 +162,6 @@ public class CombatHelpers {
       }
     } else {
       action += "missed " + targetAttributes.name;
-    }
-
-    // If we're using bombs or something that doesn't have verbs,
-    // we use the type as an indicator of what to log.
-    //
-    // TODO: Pretty hacky, change this
-    if (Objects.equals(verb, "poison")) {
-      action = targetAttributes.name + " was hurt by the cloud of poison";
     }
 
     main.log.add(action);

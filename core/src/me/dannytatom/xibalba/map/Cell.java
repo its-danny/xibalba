@@ -3,9 +3,9 @@ package me.dannytatom.xibalba.map;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 
 public class Cell {
-  public Sprite sprite;
-  final boolean isWall;
   public final String description;
+  final boolean isWall;
+  public Sprite sprite;
   public boolean hidden = true;
   public boolean forgotten = false;
 
