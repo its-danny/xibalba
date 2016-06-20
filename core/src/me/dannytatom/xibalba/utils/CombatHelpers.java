@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.DecorationComponent;
@@ -12,6 +13,7 @@ import me.dannytatom.xibalba.components.ItemComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.VisualComponent;
 import me.dannytatom.xibalba.components.effects.DamageEffectComponent;
+import me.dannytatom.xibalba.map.Map;
 
 import java.util.Objects;
 
@@ -28,6 +30,7 @@ import java.util.Objects;
 public class CombatHelpers {
   private final Main main;
   private final Engine engine;
+  private final Map map;
 
   /**
    * Initialize action log.
@@ -35,9 +38,10 @@ public class CombatHelpers {
    * @param main   Instance of the main class
    * @param engine Ashley engine
    */
-  public CombatHelpers(Main main, Engine engine) {
+  public CombatHelpers(Main main, Engine engine, Map map) {
     this.main = main;
     this.engine = engine;
+    this.map = map;
   }
 
   /**
@@ -161,6 +165,22 @@ public class CombatHelpers {
       }
 
       main.skillHelpers.levelSkill(starter, skill, 20);
+
+      if (critical > 0) {
+        Vector2 splatterSpace = map.getEmptySpaceNearEntity(
+          target.getComponent(PositionComponent.class).pos
+        );
+
+        if (splatterSpace != null) {
+          TextureAtlas atlas = main.assets.get("sprites/main.atlas");
+          Entity remains = new Entity();
+          remains.add(new DecorationComponent());
+          remains.add(new VisualComponent(atlas.createSprite("Level/Cave/FX/BloodSplatter-1")));
+          remains.add(new PositionComponent(splatterSpace));
+
+          engine.addEntity(remains);
+        }
+      }
     } else {
       action += "missed " + targetAttributes.name;
     }

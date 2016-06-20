@@ -6,6 +6,7 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.components.DecorationComponent;
 import me.dannytatom.xibalba.components.EnemyComponent;
 import me.dannytatom.xibalba.components.ItemComponent;
@@ -13,7 +14,6 @@ import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.effects.DamageEffectComponent;
 import me.dannytatom.xibalba.utils.ComponentMappers;
-import me.dannytatom.xibalba.utils.EntityHelpers;
 import org.xguzm.pathfinding.grid.GridCell;
 import org.xguzm.pathfinding.grid.NavigationGrid;
 import org.xguzm.pathfinding.grid.finders.AStarGridFinder;
@@ -23,8 +23,8 @@ import java.util.List;
 public class Map {
   public final int width;
   public final int height;
+  private final Main main;
   private final Engine engine;
-  private final EntityHelpers entityHelpers;
   private final Cell[][] map;
   public List<GridCell> searchingPath = null;
   public List<GridCell> targetingPath = null;
@@ -36,9 +36,9 @@ public class Map {
    * @param engine The Ashley engine
    * @param map    The actual map
    */
-  public Map(Engine engine, EntityHelpers entityHelpers, Cell[][] map) {
+  public Map(Main main, Engine engine, Cell[][] map) {
     this.engine = engine;
-    this.entityHelpers = entityHelpers;
+    this.main = main;
     this.map = map;
 
     this.width = this.map.length;
@@ -195,7 +195,7 @@ public class Map {
    * @return Vector2 of player pos
    */
   public Vector2 getPlayerPosition() {
-    return entityHelpers.getPlayer().getComponent(PositionComponent.class).pos;
+    return main.player.getComponent(PositionComponent.class).pos;
   }
 
   /**
@@ -275,22 +275,30 @@ public class Map {
   }
 
   /**
-   * Returns an open position near the player. TODO: Make this less retarded.
+   * Returns an open position near the player.
    *
    * @return Player position
    */
   public Vector2 getNearPlayer() {
-    Vector2 playerPosition = getPlayerPosition();
+    return getEmptySpaceNearEntity(getPlayerPosition());
+  }
+
+  /**
+   * Returns an open position near the given position. TODO: Make this less retarded.
+   *
+   * @return An open position
+   */
+  public Vector2 getEmptySpaceNearEntity(Vector2 pos) {
     Vector2 position;
 
-    if (isWalkable(new Vector2(playerPosition.x + 1, playerPosition.y))) {
-      position = new Vector2(playerPosition.x + 1, playerPosition.y);
-    } else if (isWalkable(new Vector2(playerPosition.x - 1, playerPosition.y))) {
-      position = new Vector2(playerPosition.x - 1, playerPosition.y);
-    } else if (isWalkable(new Vector2(playerPosition.x, playerPosition.y + 1))) {
-      position = new Vector2(playerPosition.x, playerPosition.y + 1);
-    } else if (isWalkable(new Vector2(playerPosition.x, playerPosition.y - 1))) {
-      position = new Vector2(playerPosition.x, playerPosition.y - 1);
+    if (isWalkable(new Vector2(pos.x + 1, pos.y))) {
+      position = new Vector2(pos.x + 1, pos.y);
+    } else if (isWalkable(new Vector2(pos.x - 1, pos.y))) {
+      position = new Vector2(pos.x - 1, pos.y);
+    } else if (isWalkable(new Vector2(pos.x, pos.y + 1))) {
+      position = new Vector2(pos.x, pos.y + 1);
+    } else if (isWalkable(new Vector2(pos.x, pos.y - 1))) {
+      position = new Vector2(pos.x, pos.y - 1);
     } else {
       position = null;
     }

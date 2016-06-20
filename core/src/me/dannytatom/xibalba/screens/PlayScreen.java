@@ -55,15 +55,15 @@ class PlayScreen implements Screen {
     // Setup action log
     main.log = new ActionLog();
 
+    // Initialize map
+    map = new Map(main, engine, cellMap);
+
     // Setup helpers
     main.entityHelpers = new EntityHelpers(main, engine);
     main.inventoryHelpers = new InventoryHelpers();
     main.equipmentHelpers = new EquipmentHelpers();
     main.skillHelpers = new SkillHelpers(main);
-    main.combatHelpers = new CombatHelpers(main, engine);
-
-    // Initialize map
-    map = new Map(engine, main.entityHelpers, cellMap);
+    main.combatHelpers = new CombatHelpers(main, engine, map);
 
     // Add player entity
     main.entityHelpers.spawnPlayer(main.player, map.findPlayerStart());

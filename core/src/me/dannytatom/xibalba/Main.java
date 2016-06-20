@@ -65,7 +65,7 @@ public class Main extends Game {
     Colors.put("LIGHT_GRAY", parseColor("c2c2c2"));
     Colors.put("DARK_GRAY", parseColor("666666"));
     Colors.put("CYAN", parseColor("5bb9c7"));
-    Colors.put("RED", parseColor("cc4141"));
+    Colors.put("RED", parseColor("B55757"));
     Colors.put("DARK_PURPLE", parseColor("241d26"));
     Colors.put("LIGHT_PURPLE", parseColor("706274"));
 
