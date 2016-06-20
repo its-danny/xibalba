@@ -10,7 +10,6 @@ import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.components.DecorationComponent;
 import me.dannytatom.xibalba.components.EnemyComponent;
 import me.dannytatom.xibalba.components.ItemComponent;
-import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.utils.ComponentMappers;
 import org.xguzm.pathfinding.grid.GridCell;
@@ -208,25 +207,6 @@ public class Map {
         engine.getEntitiesFor(
             Family.all(PositionComponent.class).exclude(DecorationComponent.class).get()
         );
-
-    for (Entity entity : entities) {
-      if (entity.getComponent(PositionComponent.class).pos.epsilonEquals(position, 0.00001f)) {
-        return entity;
-      }
-    }
-
-    return null;
-  }
-
-  /**
-   * Get mob from a location. TODO: Rename to getPersonAt or something?
-   *
-   * @param position Where the mob is
-   * @return The mob
-   */
-  public Entity getMobAt(Vector2 position) {
-    ImmutableArray<Entity> entities =
-        engine.getEntitiesFor(Family.all(PlayerComponent.class).all(EnemyComponent.class).get());
 
     for (Entity entity : entities) {
       if (entity.getComponent(PositionComponent.class).pos.epsilonEquals(position, 0.00001f)) {

@@ -85,6 +85,10 @@ class PlayScreen implements Screen {
       engine.addEntity(main.entityHelpers.spawnItem("shield", map.getRandomOpenPosition()));
     }
 
+    for (int i = 0; i < 50; i++) {
+      engine.addEntity(main.entityHelpers.spawnRandomDecoration(map.getRandomOpenPosition()));
+    }
+
     // Setup engine (they're run in order added)
     engine.addSystem(new AttributesSystem());
     engine.addSystem(new BrainSystem(main.entityHelpers, map));

@@ -11,6 +11,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.components.AttributesComponent;
+import me.dannytatom.xibalba.components.DecorationComponent;
 import me.dannytatom.xibalba.components.EnemyComponent;
 import me.dannytatom.xibalba.components.EquipmentComponent;
 import me.dannytatom.xibalba.components.InventoryComponent;
@@ -123,6 +124,28 @@ public class EntityHelpers {
     }
 
     return entity;
+  }
+
+  public Entity spawnRandomDecoration(Vector2 position) {
+    TextureAtlas atlas = main.assets.get("sprites/main.atlas");
+    Entity decoration = new Entity();
+
+    Array<String> types = new Array<>();
+    types.add("Level/Cave/Environment/Object/Mushroom-1");
+    types.add("Level/Cave/Environment/Object/Mushroom-2");
+    types.add("Level/Cave/Environment/Object/Rock-1");
+    types.add("Level/Cave/Environment/Object/Rock-2");
+    types.add("Level/Cave/Environment/Object/Rock-3");
+    types.add("Level/Cave/Environment/Object/Rock-4");
+    types.add("Level/Cave/Environment/Object/Vase-1");
+
+    decoration.add(new DecorationComponent());
+    decoration.add(new PositionComponent(position));
+    decoration.add(new VisualComponent(
+        atlas.createSprite(types.random())
+    ));
+
+    return decoration;
   }
 
   public Entity getPlayer() {
