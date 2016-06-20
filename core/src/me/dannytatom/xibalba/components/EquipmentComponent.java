@@ -6,7 +6,7 @@ import com.badlogic.ashley.core.Entity;
 import java.util.HashMap;
 
 public class EquipmentComponent implements Component {
-  public HashMap<String, Entity> slots = new HashMap<>();
+  public final HashMap<String, Entity> slots = new HashMap<>();
 
   public EquipmentComponent() {
     slots.put("head", null);

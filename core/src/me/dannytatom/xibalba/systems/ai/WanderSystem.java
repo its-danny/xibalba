@@ -42,7 +42,7 @@ public class WanderSystem extends SortedIteratingSystem {
     if (brain.path == null || brain.path.isEmpty()) {
       PositionComponent position = ComponentMappers.position.get(entity);
 
-      NavigationGrid<GridCell> grid = new NavigationGrid<>(map.createPathfindingMap());
+      NavigationGrid<GridCell> grid = new NavigationGrid<>(map.createPathfindingMap(), false);
       AStarGridFinder<GridCell> finder = new AStarGridFinder<>(GridCell.class);
 
       do {

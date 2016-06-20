@@ -31,8 +31,8 @@ public class WorldRenderer {
   private final SpriteBatch batch;
   private final Map map;
   private final ShadowCaster caster;
-  private Viewport viewport;
-  private OrthographicCamera camera;
+  private final Viewport viewport;
+  private final OrthographicCamera camera;
 
   /**
    * Renders the game world.
@@ -180,8 +180,6 @@ public class WorldRenderer {
       if (!map.getCell(position.pos).hidden) {
         VisualComponent visual = ComponentMappers.visual.get(entity);
 
-        visual.elapsedTime += delta;
-
         batch.setColor(1f, 1f, 1f, lightMap[(int) position.pos.x][(int) position.pos.y]);
         batch.draw(
             visual.sprite, position.pos.x * SPRITE_WIDTH, position.pos.y * SPRITE_HEIGHT
@@ -200,8 +198,6 @@ public class WorldRenderer {
 
       if (main.entityHelpers.isVisible(entity, map)) {
         VisualComponent visual = ComponentMappers.visual.get(entity);
-
-        visual.elapsedTime += delta;
 
         batch.setColor(1f, 1f, 1f, lightMap[(int) position.pos.x][(int) position.pos.y]);
         batch.draw(

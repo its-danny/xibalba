@@ -38,7 +38,7 @@ class PlayScreen implements Screen {
 
   private final SpriteBatch batch;
   private final Engine engine;
-  private Map map;
+  private final Map map;
 
   /**
    * Play Screen.

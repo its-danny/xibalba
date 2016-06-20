@@ -100,7 +100,7 @@ public class Map {
       }
     }
 
-    NavigationGrid<GridCell> grid = new NavigationGrid<>(cells);
+    NavigationGrid<GridCell> grid = new NavigationGrid<>(cells, false);
     AStarGridFinder<GridCell> finder = new AStarGridFinder<>(GridCell.class);
 
     if (target == null) {
@@ -140,7 +140,7 @@ public class Map {
       }
     }
 
-    NavigationGrid<GridCell> grid = new NavigationGrid<>(cells);
+    NavigationGrid<GridCell> grid = new NavigationGrid<>(cells, false);
     AStarGridFinder<GridCell> finder = new AStarGridFinder<>(GridCell.class);
 
     if (target == null) {
@@ -166,7 +166,7 @@ public class Map {
     }
   }
 
-  public boolean cellExists(Vector2 position) {
+  private boolean cellExists(Vector2 position) {
     return position.x > 0 && position.x < map.length
         && position.y > 0 && position.y < map[0].length
         && getCell(position) != null;

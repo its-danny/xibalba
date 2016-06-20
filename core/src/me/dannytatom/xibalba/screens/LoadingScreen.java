@@ -15,8 +15,8 @@ import me.dannytatom.xibalba.map.Cell;
 public class LoadingScreen implements Screen {
   private final Main main;
 
-  private Stage stage;
-  private Label label;
+  private final Stage stage;
+  private final Label label;
 
   /**
    * Loading Screen.

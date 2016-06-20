@@ -22,7 +22,7 @@ import java.util.ArrayList;
 
 public class CharacterScreen implements Screen {
   private final Main main;
-  private Stage stage;
+  private final Stage stage;
 
   /**
    * View and manage skills.

@@ -12,7 +12,7 @@ import me.dannytatom.xibalba.Main;
 public class PauseScreen implements Screen {
   private final Main main;
 
-  private Stage stage;
+  private final Stage stage;
 
   /**
    * Main Menu Screen.

@@ -22,17 +22,17 @@ import me.dannytatom.xibalba.screens.MainMenuScreen;
 public class TraitsScreen implements Screen {
   private final Main main;
 
-  private Stage stage;
+  private final Stage stage;
 
   private int points = 10;
-  private Label infoLabel;
+  private final Label infoLabel;
 
-  private Array<TraitComponent> traits;
-  private Array<DefectComponent> defects;
-  private Array<TraitComponent> selectedTraits;
-  private Array<DefectComponent> selectedDefects;
-  private VerticalGroup traitsGroup;
-  private VerticalGroup defectsGroup;
+  private final Array<TraitComponent> traits;
+  private final Array<DefectComponent> defects;
+  private final Array<TraitComponent> selectedTraits;
+  private final Array<DefectComponent> selectedDefects;
+  private final VerticalGroup traitsGroup;
+  private final VerticalGroup defectsGroup;
   private VerticalGroup currentGroup;
   private int currentIndex;
 

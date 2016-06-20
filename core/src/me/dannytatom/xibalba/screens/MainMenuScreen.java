@@ -13,7 +13,7 @@ import me.dannytatom.xibalba.screens.creation.TraitsScreen;
 public class MainMenuScreen implements Screen {
   private final Main main;
 
-  private Stage stage;
+  private final Stage stage;
 
   /**
    * Main Menu Screen.

@@ -21,11 +21,11 @@ import java.util.Objects;
 public class InventoryScreen implements Screen {
   private final Main main;
 
-  private Stage stage;
+  private final Stage stage;
 
-  private ArrayList<Entity> items;
+  private final VerticalGroup inventoryGroup;
+  private final ArrayList<Entity> items;
   private int selected = 0;
-  private VerticalGroup inventoryGroup;
 
   /**
    * View and manage inventory.

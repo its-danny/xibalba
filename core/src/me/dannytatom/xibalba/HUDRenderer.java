@@ -20,14 +20,14 @@ import me.dannytatom.xibalba.map.Map;
 
 public class HudRenderer {
   private final Main main;
-  private Engine engine;
-  private Map map;
+  private final Engine engine;
+  private final Map map;
 
-  private Stage stage;
+  private final Stage stage;
 
-  private VerticalGroup actionLog;
-  private VerticalGroup areaDetails;
-  private Label lookDetails;
+  private final VerticalGroup actionLog;
+  private final VerticalGroup areaDetails;
+  private final Label lookDetails;
 
   public HudRenderer(Main main, Engine engine, SpriteBatch batch, Map map) {
     this.main = main;

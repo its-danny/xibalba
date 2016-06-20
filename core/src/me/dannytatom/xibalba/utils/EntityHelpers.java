@@ -29,7 +29,7 @@ public class EntityHelpers {
   private final Main main;
   private final Engine engine;
 
-  private ShadowCaster caster;
+  private final ShadowCaster caster;
 
   public EntityHelpers(Main main, Engine engine) {
     this.main = main;

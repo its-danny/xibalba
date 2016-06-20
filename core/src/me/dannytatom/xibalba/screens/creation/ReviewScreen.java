@@ -23,7 +23,7 @@ import java.util.ArrayList;
 class ReviewScreen implements Screen {
   private final Main main;
 
-  private Stage stage;
+  private final Stage stage;
 
   /**
    * Character Creation: Review Screen.
