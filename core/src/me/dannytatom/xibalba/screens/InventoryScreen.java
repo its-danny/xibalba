@@ -80,27 +80,31 @@ public class InventoryScreen implements Screen {
       }
     }
 
-    if (Gdx.input.isKeyJustPressed(Input.Keys.H)) {
-      main.equipmentHelpers.holdItem(main.player, items.get(selected));
-    }
+    if (items.size() >= 1) {
+      ItemComponent item = items.get(selected).getComponent(ItemComponent.class);
 
-    if (Gdx.input.isKeyJustPressed(Input.Keys.W)) {
-      main.equipmentHelpers.wearItem(main.player, items.get(selected));
-    }
+      if (Gdx.input.isKeyJustPressed(Input.Keys.H) && item.actions.get("canHold")) {
+          main.equipmentHelpers.holdItem(main.player, items.get(selected));
+      }
 
-    if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
-      main.equipmentHelpers.removeItem(main.player, items.get(selected));
-    }
+      if (Gdx.input.isKeyJustPressed(Input.Keys.W) && item.actions.get("canWear")) {
+        main.equipmentHelpers.wearItem(main.player, items.get(selected));
+      }
 
-    if (Gdx.input.isKeyJustPressed(Input.Keys.D)) {
-      main.inventoryHelpers.dropItem(main.player, items.get(selected));
-    }
+      if (Gdx.input.isKeyJustPressed(Input.Keys.T) && item.actions.get("canThrow")) {
+        items.get(selected).getComponent(ItemComponent.class).throwing = true;
 
-    if (Gdx.input.isKeyJustPressed(Input.Keys.T)) {
-      items.get(selected).getComponent(ItemComponent.class).throwing = true;
+        main.state = Main.State.TARGETING;
+        main.setScreen(main.playScreen);
+      }
 
-      main.state = Main.State.TARGETING;
-      main.setScreen(main.playScreen);
+      if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
+        main.equipmentHelpers.removeItem(main.player, items.get(selected));
+      }
+
+      if (Gdx.input.isKeyJustPressed(Input.Keys.D)) {
+        main.inventoryHelpers.dropItem(main.player, items.get(selected));
+      }
     }
 
     if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)) {

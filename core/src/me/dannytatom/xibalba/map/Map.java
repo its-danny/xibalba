@@ -262,7 +262,7 @@ public class Map {
    * @return The item
    */
   public Entity getItemAt(Vector2 position) {
-    ImmutableArray<Entity> entities = engine.getEntitiesFor(Family.all(ItemComponent.class).get());
+    ImmutableArray<Entity> entities = engine.getEntitiesFor(Family.all(ItemComponent.class, PositionComponent.class).get());
 
     for (Entity entity : entities) {
       if (entity.getComponent(PositionComponent.class).pos.epsilonEquals(position, 0.00001f)) {

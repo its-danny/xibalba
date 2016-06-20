@@ -60,7 +60,7 @@ public class InventoryHelpers {
       ItemComponent itemComponent = item.getComponent(ItemComponent.class);
 
       if (itemComponent.throwing) {
-        return entity;
+        return item;
       }
     }
 
