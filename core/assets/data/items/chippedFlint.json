@@ -6,8 +6,7 @@
   "location": "rightHand",
   "visual": {
     "sprites": [
-      "Universal/Items/Tools/Chipped Flint/Item-Tool-ChippledFlint-1",
-      "Universal/Items/Tools/Chipped Flint/Item-Tool-ChippledFlint-2"
+      "Level/Cave/Item/Weapon-ChippedFlint-1"
     ]
   },
   "verbs": [

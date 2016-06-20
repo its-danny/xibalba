@@ -119,19 +119,19 @@ public class CaveGenerator {
       for (int y = 0; y < geometry[x].length; y++) {
         if (geometry[x][y]) {
           map[x][y] = new Cell(atlas.createSprite(
-              "Levels/Forest/Environment/Floors/Floor-Forest-" + MathUtils.random(1, 8)
+              "Level/Cave/Environment/Floor/" + MathUtils.random(1, 2)
           ), false, "a cave floor");
         } else {
           int neighbours = groundNeighbours(x, y);
 
           if (neighbours > 0) {
             map[x][y] = new Cell(atlas.createSprite(
-                "Levels/Forest/Environment/Walls/Wall-Forest-" + MathUtils.random(1, 8)
+                "Level/Cave/UI/Nothing"
             ), true, "a cave wall");
           } else {
             map[x][y] = new Cell(atlas.createSprite(
-                "Universal/UI/Nothing/Nothing"
-            ), true, "a cave wall");
+                "Level/Cave/UI/Nothing"
+            ), true, "nothing");
           }
         }
       }

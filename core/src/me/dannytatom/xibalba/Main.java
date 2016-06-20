@@ -7,6 +7,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Colors;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
@@ -55,6 +56,11 @@ public class Main extends Game {
     skin.load(Gdx.files.internal("ui/uiskin.json"));
     skin.getFont("default-font").getData().markupEnabled = true;
 
+    // Set cursor image
+    Pixmap pm = new Pixmap(Gdx.files.internal("ui/cursor.png"));
+    Gdx.input.setCursorImage(pm, 0, 0);
+    pm.dispose();
+
     // Setup text colors
     Colors.put("LIGHT_GRAY", parseColor("c2c2c2"));
     Colors.put("DARK_GRAY", parseColor("666666"));
@@ -64,7 +70,7 @@ public class Main extends Game {
     Colors.put("LIGHT_PURPLE", parseColor("706274"));
 
     // Map background colors
-    Colors.put("FOREST_BACKGROUND", parseColor("1E1F1A"));
+    Colors.put("FOREST_BACKGROUND", parseColor("293033"));
 
     // Start the main menu
     setScreen(new MainMenuScreen(this));

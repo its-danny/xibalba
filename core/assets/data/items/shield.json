@@ -6,7 +6,7 @@
   "location": "leftHand",
   "visual": {
     "sprites": [
-      "Universal/Items/Shields/Item-Shield-1"
+      "Level/Cave/Item/Shield-1"
     ]
   },
   "verbs": [

@@ -7,6 +7,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.components.AttributesComponent;
@@ -47,10 +48,16 @@ public class EntityHelpers {
   public void spawnPlayer(Entity player, Vector2 position) {
     TextureAtlas atlas = main.assets.get("sprites/main.atlas");
 
+    Array<String> sprites = new Array<String>();
+    sprites.addAll("Level/Cave/Character/Ikal-1");
+    sprites.addAll("Level/Cave/Character/Iktan-1");
+    sprites.addAll("Level/Cave/Character/Itzel-1");
+    sprites.addAll("Level/Cave/Character/Yatzil-1");
+
     player.add(new PlayerComponent());
     player.add(new PositionComponent(position));
     player.add(new VisualComponent(
-        atlas.createSprite("Universal/Player/Player-Cloth/Player-Cloth-1"))
+        atlas.createSprite(sprites.random()))
     );
     player.add(new SkillsComponent());
     player.add(new InventoryComponent());

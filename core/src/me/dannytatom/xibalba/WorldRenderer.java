@@ -23,8 +23,8 @@ import me.dannytatom.xibalba.utils.ComponentMappers;
 import org.xguzm.pathfinding.grid.GridCell;
 
 public class WorldRenderer {
-  private static final int SPRITE_WIDTH = 8;
-  private static final int SPRITE_HEIGHT = 8;
+  private static final int SPRITE_WIDTH = 16;
+  private static final int SPRITE_HEIGHT = 16;
 
   private final Main main;
   private final Engine engine;
@@ -106,7 +106,7 @@ public class WorldRenderer {
         batch.setColor(1f, 1f, 1f,
             lightMap[cell.x][cell.y] <= 0.35f ? 0.35f : lightMap[cell.x][cell.y]);
         batch.draw(
-            atlas.createSprite("Universal/UI/Target/UI-Target-1"),
+            atlas.createSprite("Level/Cave/UI/Target-1"),
             cell.x * SPRITE_WIDTH, cell.y * SPRITE_HEIGHT
         );
         batch.setColor(1f, 1f, 1f, 1f);
@@ -120,7 +120,7 @@ public class WorldRenderer {
         batch.setColor(1f, 1f, 1f,
             lightMap[cell.x][cell.y] <= 0.35f ? 0.35f : lightMap[cell.x][cell.y]);
         batch.draw(
-            atlas.createSprite("Universal/UI/Target/UI-Target-1"),
+            atlas.createSprite("Level/Cave/UI/Target-1"),
             cell.x * SPRITE_WIDTH, cell.y * SPRITE_HEIGHT
         );
         batch.setColor(1f, 1f, 1f, 1f);

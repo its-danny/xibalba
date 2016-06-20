@@ -1,7 +1,7 @@
 {
   "name": "Spider Monkey",
   "visual": {
-    "spritePath": "Levels/Forest/Enemies/Monkey/Enemy-Forest-Monkey-1"
+    "spritePath": "Level/Cave/Enemy/Monkey-1"
   },
   "attributes": {
     "speed": 80,

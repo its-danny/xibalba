@@ -1,278 +1,362 @@
 main.png
-size: 312, 8
+size: 128, 128
 format: RGBA8888
 filter: Linear,Nearest
 repeat: none
-Levels/Forest/Enemies/Monkey/Enemy-Forest-Monkey-1
+Level/Cave/Character/Ikal-1
   rotate: false
   xy: 0, 0
-  size: 8, 8
-  orig: 8, 8
+  size: 16, 16
+  orig: 16, 16
   offset: 0, 0
   index: -1
-Levels/Forest/Environment/Floors/Floor-Forest-1
-  rotate: false
-  xy: 8, 0
-  size: 8, 8
-  orig: 8, 8
-  offset: 0, 0
-  index: -1
-Levels/Forest/Environment/Floors/Floor-Forest-2
+Level/Cave/Character/Iktan-1
   rotate: false
   xy: 16, 0
-  size: 8, 8
-  orig: 8, 8
+  size: 16, 16
+  orig: 16, 16
   offset: 0, 0
   index: -1
-Levels/Forest/Environment/Floors/Floor-Forest-3
-  rotate: false
-  xy: 24, 0
-  size: 8, 8
-  orig: 8, 8
-  offset: 0, 0
-  index: -1
-Levels/Forest/Environment/Floors/Floor-Forest-4
+Level/Cave/Character/Itzel-1
   rotate: false
   xy: 32, 0
-  size: 8, 8
-  orig: 8, 8
+  size: 16, 16
+  orig: 16, 16
   offset: 0, 0
   index: -1
-Levels/Forest/Environment/Floors/Floor-Forest-5
-  rotate: false
-  xy: 40, 0
-  size: 8, 8
-  orig: 8, 8
-  offset: 0, 0
-  index: -1
-Levels/Forest/Environment/Floors/Floor-Forest-6
+Level/Cave/Character/Yatzil-1
   rotate: false
   xy: 48, 0
-  size: 8, 8
-  orig: 8, 8
+  size: 16, 16
+  orig: 16, 16
   offset: 0, 0
   index: -1
-Levels/Forest/Environment/Floors/Floor-Forest-7
-  rotate: false
-  xy: 56, 0
-  size: 8, 8
-  orig: 8, 8
-  offset: 0, 0
-  index: -1
-Levels/Forest/Environment/Floors/Floor-Forest-8
+Level/Cave/Enemy/Bat-1
   rotate: false
   xy: 64, 0
-  size: 8, 8
-  orig: 8, 8
+  size: 16, 16
+  orig: 16, 16
   offset: 0, 0
   index: -1
-Levels/Forest/Environment/Walls/Wall-Forest-1
-  rotate: false
-  xy: 72, 0
-  size: 8, 8
-  orig: 8, 8
-  offset: 0, 0
-  index: -1
-Levels/Forest/Environment/Walls/Wall-Forest-2
+Level/Cave/Enemy/Jaguar-1
   rotate: false
   xy: 80, 0
-  size: 8, 8
-  orig: 8, 8
+  size: 16, 16
+  orig: 16, 16
   offset: 0, 0
   index: -1
-Levels/Forest/Environment/Walls/Wall-Forest-3
-  rotate: false
-  xy: 88, 0
-  size: 8, 8
-  orig: 8, 8
-  offset: 0, 0
-  index: -1
-Levels/Forest/Environment/Walls/Wall-Forest-4
+Level/Cave/Enemy/Monkey-1
   rotate: false
   xy: 96, 0
-  size: 8, 8
-  orig: 8, 8
+  size: 16, 16
+  orig: 16, 16
   offset: 0, 0
   index: -1
-Levels/Forest/Environment/Walls/Wall-Forest-5
-  rotate: false
-  xy: 104, 0
-  size: 8, 8
-  orig: 8, 8
-  offset: 0, 0
-  index: -1
-Levels/Forest/Environment/Walls/Wall-Forest-6
+Level/Cave/Enemy/Spider-1
   rotate: false
   xy: 112, 0
-  size: 8, 8
-  orig: 8, 8
+  size: 16, 16
+  orig: 16, 16
   offset: 0, 0
   index: -1
-Levels/Forest/Environment/Walls/Wall-Forest-7
+Level/Cave/Environment/Floor/1
   rotate: false
-  xy: 120, 0
-  size: 8, 8
-  orig: 8, 8
+  xy: 0, 16
+  size: 16, 16
+  orig: 16, 16
   offset: 0, 0
   index: -1
-Levels/Forest/Environment/Walls/Wall-Forest-8
+Level/Cave/Environment/Floor/2
   rotate: false
-  xy: 128, 0
-  size: 8, 8
-  orig: 8, 8
+  xy: 16, 16
+  size: 16, 16
+  orig: 16, 16
   offset: 0, 0
   index: -1
-Levels/Village/Environment/Floors/Floor-Village-1
+Level/Cave/Environment/Object/Mushroom-1
   rotate: false
-  xy: 136, 0
-  size: 8, 8
-  orig: 8, 8
+  xy: 32, 16
+  size: 16, 16
+  orig: 16, 16
   offset: 0, 0
   index: -1
-Levels/Village/Environment/Walls/Wall-Village-1
+Level/Cave/Environment/Object/Mushroom-2
   rotate: false
-  xy: 144, 0
-  size: 8, 8
-  orig: 8, 8
+  xy: 48, 16
+  size: 16, 16
+  orig: 16, 16
   offset: 0, 0
   index: -1
-Universal/Health Bar/Health-Bar-1
+Level/Cave/Environment/Object/Remains-1
   rotate: false
-  xy: 152, 0
-  size: 8, 8
-  orig: 8, 8
+  xy: 64, 16
+  size: 16, 16
+  orig: 16, 16
   offset: 0, 0
   index: -1
-Universal/Health Bar/Health-Bar-2
+Level/Cave/Environment/Object/Rock-1
   rotate: false
-  xy: 160, 0
-  size: 8, 8
-  orig: 8, 8
+  xy: 80, 16
+  size: 16, 16
+  orig: 16, 16
   offset: 0, 0
   index: -1
-Universal/Health Bar/Health-Bar-3.
+Level/Cave/Environment/Object/Rock-2
   rotate: false
-  xy: 168, 0
-  size: 8, 8
-  orig: 8, 8
+  xy: 96, 16
+  size: 16, 16
+  orig: 16, 16
   offset: 0, 0
   index: -1
-Universal/Health Bar/Health-Bar-4
+Level/Cave/Environment/Object/Rock-3
   rotate: false
-  xy: 176, 0
-  size: 8, 8
-  orig: 8, 8
+  xy: 112, 16
+  size: 16, 16
+  orig: 16, 16
   offset: 0, 0
   index: -1
-Universal/Health Bar/Health-Bar-5
+Level/Cave/Environment/Object/Rock-4
   rotate: false
-  xy: 184, 0
-  size: 8, 8
-  orig: 8, 8
+  xy: 0, 32
+  size: 16, 16
+  orig: 16, 16
   offset: 0, 0
   index: -1
-Universal/Health Bar/Health-Bar-6
+Level/Cave/Environment/Object/Vase-1
   rotate: false
-  xy: 192, 0
-  size: 8, 8
-  orig: 8, 8
+  xy: 16, 32
+  size: 16, 16
+  orig: 16, 16
   offset: 0, 0
   index: -1
-Universal/Health Bar/Health-Bar-7
+Level/Cave/Environment/Wall/Behind-1
   rotate: false
-  xy: 200, 0
-  size: 8, 8
-  orig: 8, 8
+  xy: 32, 32
+  size: 16, 16
+  orig: 16, 16
   offset: 0, 0
   index: -1
-Universal/Health Bar/Health-Bar-8
+Level/Cave/Environment/Wall/BehindBottomLeft-1
   rotate: false
-  xy: 208, 0
-  size: 8, 8
-  orig: 8, 8
+  xy: 48, 32
+  size: 16, 16
+  orig: 16, 16
   offset: 0, 0
   index: -1
-Universal/Health Bar/Health-Bar-9
+Level/Cave/Environment/Wall/BehindBottomRight-1
   rotate: false
-  xy: 216, 0
-  size: 8, 8
-  orig: 8, 8
+  xy: 64, 32
+  size: 16, 16
+  orig: 16, 16
   offset: 0, 0
   index: -1
-Universal/Items/Shields/Item-Shield-1
+Level/Cave/Environment/Wall/BehindTopLeft-1
   rotate: false
-  xy: 224, 0
-  size: 8, 8
-  orig: 8, 8
+  xy: 80, 32
+  size: 16, 16
+  orig: 16, 16
   offset: 0, 0
   index: -1
-Universal/Items/Tools/Chipped Flint/Item-Tool-ChippledFlint-1
+Level/Cave/Environment/Wall/BehindTopRight-1
   rotate: false
-  xy: 232, 0
-  size: 8, 8
-  orig: 8, 8
+  xy: 96, 32
+  size: 16, 16
+  orig: 16, 16
   offset: 0, 0
   index: -1
-Universal/Items/Tools/Chipped Flint/Item-Tool-ChippledFlint-2
+Level/Cave/Environment/Wall/Front-1
   rotate: false
-  xy: 240, 0
-  size: 8, 8
-  orig: 8, 8
+  xy: 112, 32
+  size: 16, 16
+  orig: 16, 16
   offset: 0, 0
   index: -1
-Universal/Items/Weapons/Bow & Arrow/Item-Weapon-Arrow-1
+Level/Cave/Environment/Wall/Front-2
   rotate: false
-  xy: 248, 0
-  size: 8, 8
-  orig: 8, 8
+  xy: 0, 48
+  size: 16, 16
+  orig: 16, 16
   offset: 0, 0
   index: -1
-Universal/Items/Weapons/Bow & Arrow/Item-Weapon-Bow-1
+Level/Cave/Environment/Wall/Front-3
   rotate: false
-  xy: 256, 0
-  size: 8, 8
-  orig: 8, 8
+  xy: 16, 48
+  size: 16, 16
+  orig: 16, 16
   offset: 0, 0
   index: -1
-Universal/Items/Weapons/Macuahuitl/Item-Weapon-Macuahuitl-1
+Level/Cave/Environment/Wall/Left-1
   rotate: false
-  xy: 264, 0
-  size: 8, 8
-  orig: 8, 8
+  xy: 32, 48
+  size: 16, 16
+  orig: 16, 16
   offset: 0, 0
   index: -1
-Universal/Player/Player-Cloth/Player-Cloth-1
+Level/Cave/Environment/Wall/LeftTurpUp-1
   rotate: false
-  xy: 272, 0
-  size: 8, 8
-  orig: 8, 8
+  xy: 48, 48
+  size: 16, 16
+  orig: 16, 16
   offset: 0, 0
   index: -1
-Universal/Player/Player-Robe/Player-Robe-1
+Level/Cave/Environment/Wall/Right-1
   rotate: false
-  xy: 280, 0
-  size: 8, 8
-  orig: 8, 8
+  xy: 64, 48
+  size: 16, 16
+  orig: 16, 16
   offset: 0, 0
   index: -1
-Universal/UI/Effects/Poison/Effect-Tile-Poison-1
+Level/Cave/Environment/Wall/RightTurnUp-1
   rotate: false
-  xy: 288, 0
-  size: 8, 8
-  orig: 8, 8
+  xy: 80, 48
+  size: 16, 16
+  orig: 16, 16
   offset: 0, 0
   index: -1
-Universal/UI/Nothing/Nothing
+Level/Cave/Environment/Wall/TopLeft-1
   rotate: false
-  xy: 296, 0
-  size: 8, 8
-  orig: 8, 8
+  xy: 96, 48
+  size: 16, 16
+  orig: 16, 16
   offset: 0, 0
   index: -1
-Universal/UI/Target/UI-Target-1
+Level/Cave/Environment/Wall/TopRight-1
   rotate: false
-  xy: 304, 0
-  size: 8, 8
-  orig: 8, 8
+  xy: 112, 48
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+Level/Cave/FX/BloodSplatter-1
+  rotate: false
+  xy: 0, 64
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+Level/Cave/FX/Bolt-1
+  rotate: false
+  xy: 16, 64
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+Level/Cave/FX/Fire-1
+  rotate: false
+  xy: 32, 64
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+Level/Cave/FX/Heal-1
+  rotate: false
+  xy: 48, 64
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+Level/Cave/FX/Poison-1
+  rotate: false
+  xy: 64, 64
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+Level/Cave/Item/Shield-1
+  rotate: false
+  xy: 80, 64
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+Level/Cave/Item/Weapon-Arrow-1
+  rotate: false
+  xy: 96, 64
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+Level/Cave/Item/Weapon-Bow-1
+  rotate: false
+  xy: 112, 64
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+Level/Cave/Item/Weapon-ChippedFlint-1
+  rotate: false
+  xy: 0, 80
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+Level/Cave/Item/Weapon-Macuahuitl-1
+  rotate: false
+  xy: 16, 80
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+Level/Cave/Item/Weapon-Spear-1
+  rotate: false
+  xy: 32, 80
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+Level/Cave/Neutral/Bug-1
+  rotate: false
+  xy: 48, 80
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+Level/Cave/UI/Color/1
+  rotate: false
+  xy: 64, 80
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+Level/Cave/UI/Color/2
+  rotate: false
+  xy: 80, 80
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+Level/Cave/UI/Color/3
+  rotate: false
+  xy: 96, 80
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+Level/Cave/UI/Color/4
+  rotate: false
+  xy: 112, 80
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+Level/Cave/UI/Cursor-1
+  rotate: false
+  xy: 0, 96
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+Level/Cave/UI/Nothing
+  rotate: false
+  xy: 16, 96
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+Level/Cave/UI/Target-1
+  rotate: false
+  xy: 32, 96
+  size: 16, 16
+  orig: 16, 16
   offset: 0, 0
   index: -1

@@ -3,7 +3,7 @@ package me.dannytatom.xibalba.map;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 
 public class Cell {
-  public final Sprite sprite;
+  public Sprite sprite;
   final boolean isWall;
   public final String description;
   public boolean hidden = true;
