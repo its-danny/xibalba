@@ -24,6 +24,7 @@ public class Map {
   private final Engine engine;
   private final EntityHelpers entityHelpers;
   private final Cell[][] map;
+  public List<GridCell> searchingPath = null;
   public List<GridCell> targetingPath = null;
   public Vector2 target = null;
 
@@ -124,6 +125,51 @@ public class Map {
         );
       }
     }
+  }
+
+  public void createSearchingPath(Vector2 start, Vector2 end) {
+    Vector2 oldTarget;
+
+    GridCell[][] cells = new GridCell[width][height];
+
+    for (int x = 0; x < map.length; x++) {
+      for (int y = 0; y < map[x].length; y++) {
+        boolean canTarget = cellExists(new Vector2(x, y)) && !getCell(new Vector2(x, y)).hidden;
+
+        cells[x][y] = new GridCell(x, y, canTarget);
+      }
+    }
+
+    NavigationGrid<GridCell> grid = new NavigationGrid<>(cells);
+    AStarGridFinder<GridCell> finder = new AStarGridFinder<>(GridCell.class);
+
+    if (target == null) {
+      oldTarget = null;
+      target = start.cpy().add(end);
+    } else {
+      oldTarget = target.cpy();
+      target = target.add(end);
+    }
+
+    searchingPath = finder.findPath(
+        (int) start.x, (int) start.y, (int) target.x, (int) target.y, grid
+    );
+
+    if (searchingPath == null) {
+      target = oldTarget;
+
+      if (target != null) {
+        searchingPath = finder.findPath(
+            (int) start.x, (int) start.y, (int) target.x, (int) target.y, grid
+        );
+      }
+    }
+  }
+
+  public boolean cellExists(Vector2 position) {
+    return position.x > 0 && position.x < map.length
+        && position.y > 0 && position.y < map[0].length
+        && getCell(position) != null;
   }
 
   /**

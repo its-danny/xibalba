@@ -53,6 +53,8 @@ public class PlayerInput implements InputProcessor {
           handleMovement(attributes.energy, new Vector2(position.pos.x, position.pos.y + 1));
         } else if (main.state == Main.State.TARGETING) {
           handleTargeting(new Vector2(0, 1));
+        } else if (main.state == Main.State.SEARCHING) {
+          handleSearching(new Vector2(0, 1));
         }
         break;
       case Keys.U:
@@ -60,6 +62,8 @@ public class PlayerInput implements InputProcessor {
           handleMovement(attributes.energy, new Vector2(position.pos.x + 1, position.pos.y + 1));
         } else if (main.state == Main.State.TARGETING) {
           handleTargeting(new Vector2(1, 1));
+        } else if (main.state == Main.State.SEARCHING) {
+          handleSearching(new Vector2(1, 1));
         }
         break;
       case Keys.L:
@@ -67,6 +71,8 @@ public class PlayerInput implements InputProcessor {
           handleMovement(attributes.energy, new Vector2(position.pos.x + 1, position.pos.y));
         } else if (main.state == Main.State.TARGETING) {
           handleTargeting(new Vector2(1, 0));
+        } else if (main.state == Main.State.SEARCHING) {
+          handleSearching(new Vector2(1, 0));
         }
         break;
       case Keys.N:
@@ -74,6 +80,8 @@ public class PlayerInput implements InputProcessor {
           handleMovement(attributes.energy, new Vector2(position.pos.x + 1, position.pos.y - 1));
         } else if (main.state == Main.State.TARGETING) {
           handleTargeting(new Vector2(1, -1));
+        } else if (main.state == Main.State.SEARCHING) {
+          handleSearching(new Vector2(1, -1));
         }
         break;
       case Keys.J:
@@ -81,6 +89,8 @@ public class PlayerInput implements InputProcessor {
           handleMovement(attributes.energy, new Vector2(position.pos.x, position.pos.y - 1));
         } else if (main.state == Main.State.TARGETING) {
           handleTargeting(new Vector2(0, -1));
+        } else if (main.state == Main.State.SEARCHING) {
+          handleSearching(new Vector2(0, -1));
         }
         break;
       case Keys.B:
@@ -88,6 +98,8 @@ public class PlayerInput implements InputProcessor {
           handleMovement(attributes.energy, new Vector2(position.pos.x - 1, position.pos.y - 1));
         } else if (main.state == Main.State.TARGETING) {
           handleTargeting(new Vector2(-1, -1));
+        } else if (main.state == Main.State.SEARCHING) {
+          handleSearching(new Vector2(-1, -1));
         }
         break;
       case Keys.H:
@@ -95,6 +107,8 @@ public class PlayerInput implements InputProcessor {
           handleMovement(attributes.energy, new Vector2(position.pos.x - 1, position.pos.y));
         } else if (main.state == Main.State.TARGETING) {
           handleTargeting(new Vector2(-1, 0));
+        } else if (main.state == Main.State.SEARCHING) {
+          handleSearching(new Vector2(-1, 0));
         }
         break;
       case Keys.Y:
@@ -102,11 +116,23 @@ public class PlayerInput implements InputProcessor {
           handleMovement(attributes.energy, new Vector2(position.pos.x - 1, position.pos.y + 1));
         } else if (main.state == Main.State.TARGETING) {
           handleTargeting(new Vector2(-1, 1));
+        } else if (main.state == Main.State.SEARCHING) {
+          handleSearching(new Vector2(-1, 1));
+        }
+        break;
+      case Keys.S:
+        if (main.state == Main.State.PLAYING) {
+          main.state = Main.State.SEARCHING;
         }
         break;
       case Keys.Q:
         if (main.state == Main.State.PLAYING) {
           main.setScreen(new PauseScreen(main));
+        } else if (main.state == Main.State.SEARCHING) {
+          map.target = null;
+          map.searchingPath = null;
+
+          main.state = Main.State.PLAYING;
         } else if (main.state == Main.State.TARGETING) {
           map.target = null;
           map.targetingPath = null;
@@ -208,5 +234,9 @@ public class PlayerInput implements InputProcessor {
 
   private void handleTargeting(Vector2 pos) {
     map.createTargetingPath(main.player.getComponent(PositionComponent.class).pos, pos);
+  }
+
+  private void handleSearching(Vector2 pos) {
+    map.createSearchingPath(main.player.getComponent(PositionComponent.class).pos, pos);
   }
 }

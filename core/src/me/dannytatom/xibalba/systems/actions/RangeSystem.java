@@ -42,7 +42,12 @@ public class RangeSystem extends ActionSystem {
     if (item != null) {
       ItemComponent ic = item.getComponent(ItemComponent.class);
 
-      if (Objects.equals(ic.type, "weapon")) {
+      if (Objects.equals(ic.type, "projectile")) {
+        main.entityHelpers.spawnEffect(entity, range.target, item);
+
+        main.inventoryHelpers.removeItem(entity, item);
+        engine.removeEntity(item);
+      } else {
         Entity enemy = map.getEnemyAt(range.target);
 
         if (enemy != null) {
@@ -50,11 +55,6 @@ public class RangeSystem extends ActionSystem {
         }
 
         main.inventoryHelpers.dropItem(entity, item, range.target);
-      } else if (Objects.equals(ic.type, "projectile")) {
-        main.entityHelpers.spawnEffect(entity, range.target, item);
-
-        main.inventoryHelpers.removeItem(entity, item);
-        engine.removeEntity(item);
       }
 
       attributes.energy -= RangeComponent.COST;

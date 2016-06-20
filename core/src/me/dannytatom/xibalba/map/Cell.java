@@ -4,8 +4,11 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 
 public class Cell {
   public final Sprite sprite;
-  public final boolean isWall;
+  public String description;
+  final boolean isWall;
+
   public boolean hidden = true;
+  public boolean forgotten = false;
 
   /**
    * Holds map cell data.
@@ -13,8 +16,9 @@ public class Cell {
    * @param sprite tile sprite
    * @param isWall whether or not an entity can move onto this cell
    */
-  public Cell(Sprite sprite, boolean isWall) {
+  Cell(Sprite sprite, boolean isWall, String description) {
     this.sprite = sprite;
     this.isWall = isWall;
+    this.description = description;
   }
 }

@@ -15,6 +15,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.EnemyComponent;
+import me.dannytatom.xibalba.map.Cell;
 import me.dannytatom.xibalba.map.Map;
 
 public class HudRenderer {
@@ -26,6 +27,7 @@ public class HudRenderer {
 
   private VerticalGroup actionLog;
   private VerticalGroup areaDetails;
+  private Label lookDetails;
 
   public HudRenderer(Main main, Engine engine, SpriteBatch batch, Map map) {
     this.main = main;
@@ -35,22 +37,31 @@ public class HudRenderer {
     Viewport viewport = new FitViewport(960, 540, new OrthographicCamera());
     stage = new Stage(viewport, batch);
 
-    Table table = new Table();
-    table.top().left();
-    table.setFillParent(true);
+    Table topTable = new Table();
+    topTable.top().left();
+    topTable.setFillParent(true);
 
     actionLog = new VerticalGroup().left();
+    topTable.add(actionLog).pad(10, 10, 10, 10).width(Gdx.graphics.getWidth() / 4 * 3 - 20).top();
     areaDetails = new VerticalGroup().right();
+    topTable.add(areaDetails).pad(10, 10, 10, 10).width(Gdx.graphics.getWidth() / 4 - 20).top();
 
-    table.add(actionLog).pad(10, 10, 10, 10).width(Gdx.graphics.getWidth() / 4 * 3 - 20).top();
-    table.add(areaDetails).pad(10, 10, 10, 10).width(Gdx.graphics.getWidth() / 4 - 20).top();
+    stage.addActor(topTable);
 
-    stage.addActor(table);
+    Table bottomTable = new Table();
+    bottomTable.bottom().left();
+    bottomTable.setFillParent(true);
+
+    lookDetails = new Label(null, main.skin);
+    bottomTable.add(lookDetails).pad(10, 10, 10, 10);
+
+    stage.addActor(bottomTable);
   }
 
   public void render(float delta) {
     renderActionLog();
     renderAreaDetails();
+    renderLookDetails();
 
     stage.act(delta);
     stage.draw();
@@ -119,6 +130,20 @@ public class HudRenderer {
                     + "[LIGHT_GRAY]/" + enemyAttributes.maxHealth, main.skin
             )
         );
+      }
+    }
+  }
+
+  private void renderLookDetails() {
+    lookDetails.clear();
+
+    if (main.state == Main.State.SEARCHING && map.target != null) {
+      Cell cell = map.getCell(map.target);
+
+      if (cell.forgotten) {
+        lookDetails.setText("You remember seeing " + cell.description);
+      } else {
+        lookDetails.setText("You see " + cell.description);
       }
     }
   }

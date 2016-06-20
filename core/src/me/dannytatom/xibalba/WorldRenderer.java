@@ -90,6 +90,8 @@ public class WorldRenderer {
         }
 
         if (!cell.hidden) {
+          cell.forgotten = lightMap[x][y] <= 0;
+
           batch.setColor(1f, 1f, 1f, lightMap[x][y] <= 0.25f ? 0.25f : lightMap[x][y]);
           batch.draw(cell.sprite, x * SPRITE_WIDTH, y * SPRITE_HEIGHT);
           batch.setColor(1f, 1f, 1f, 1f);
@@ -104,7 +106,22 @@ public class WorldRenderer {
         batch.setColor(1f, 1f, 1f,
             lightMap[cell.x][cell.y] <= 0.35f ? 0.35f : lightMap[cell.x][cell.y]);
         batch.draw(
-            atlas.createSprite("Universal/UI/Target/UI-Target-1"), cell.x * SPRITE_WIDTH, cell.y * SPRITE_HEIGHT
+            atlas.createSprite("Universal/UI/Target/UI-Target-1"),
+            cell.x * SPRITE_WIDTH, cell.y * SPRITE_HEIGHT
+        );
+        batch.setColor(1f, 1f, 1f, 1f);
+      }
+    }
+
+    if (map.searchingPath != null) {
+      for (GridCell cell : map.searchingPath) {
+        TextureAtlas atlas = main.assets.get("sprites/main.atlas");
+
+        batch.setColor(1f, 1f, 1f,
+            lightMap[cell.x][cell.y] <= 0.35f ? 0.35f : lightMap[cell.x][cell.y]);
+        batch.draw(
+            atlas.createSprite("Universal/UI/Target/UI-Target-1"),
+            cell.x * SPRITE_WIDTH, cell.y * SPRITE_HEIGHT
         );
         batch.setColor(1f, 1f, 1f, 1f);
       }

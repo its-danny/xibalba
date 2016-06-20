@@ -118,17 +118,20 @@ public class CaveGenerator {
     for (int x = 0; x < geometry.length; x++) {
       for (int y = 0; y < geometry[x].length; y++) {
         if (geometry[x][y]) {
-          map[x][y] = new Cell(atlas.createSprite("Levels/Forest/Environment/Floors/Floor-Forest-"
-              + MathUtils.random(1, 8)), false);
+          map[x][y] = new Cell(atlas.createSprite(
+              "Levels/Forest/Environment/Floors/Floor-Forest-" + MathUtils.random(1, 8)
+          ), false, "a cave floor");
         } else {
           int neighbours = groundNeighbours(x, y);
 
           if (neighbours > 0) {
             map[x][y] = new Cell(atlas.createSprite(
                 "Levels/Forest/Environment/Walls/Wall-Forest-" + MathUtils.random(1, 8)
-            ), true);
+            ), true, "a cave wall");
           } else {
-            map[x][y] = new Cell(atlas.createSprite("Universal/UI/Nothing/Nothing"), true);
+            map[x][y] = new Cell(atlas.createSprite(
+                "Universal/UI/Nothing/Nothing"
+            ), true, "a cave wall");
           }
         }
       }

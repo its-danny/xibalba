@@ -90,6 +90,6 @@ public class Main extends Game {
   }
 
   public enum State {
-    PLAYING, TARGETING
+    PLAYING, TARGETING, SEARCHING
   }
 }
