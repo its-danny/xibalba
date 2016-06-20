@@ -15,6 +15,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.EnemyComponent;
+import me.dannytatom.xibalba.components.ItemComponent;
 import me.dannytatom.xibalba.map.Cell;
 import me.dannytatom.xibalba.map.Map;
 
@@ -143,7 +144,23 @@ public class HudRenderer {
       if (cell.forgotten) {
         lookDetails.setText("You remember seeing " + cell.description);
       } else {
-        lookDetails.setText("You see " + cell.description);
+        String description = "You see " + cell.description + ".";
+
+        Entity itemAtLocation = map.getItemAt(map.target);
+
+        if (itemAtLocation != null) {
+          String itemDescription = itemAtLocation.getComponent(ItemComponent.class).name;
+          description += " A " + itemDescription + " is there.";
+        }
+
+        Entity enemyAtLocation = map.getEnemyAt(map.target);
+
+        if (enemyAtLocation != null) {
+          String enemyDescription = enemyAtLocation.getComponent(AttributesComponent.class).name;
+          description += " A " + enemyDescription + " is there.";
+        }
+
+        lookDetails.setText(description);
       }
     }
   }

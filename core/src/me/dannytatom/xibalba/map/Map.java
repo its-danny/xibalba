@@ -7,6 +7,7 @@ import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import me.dannytatom.xibalba.components.EnemyComponent;
+import me.dannytatom.xibalba.components.ItemComponent;
 import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.effects.DamageEffectComponent;
@@ -244,6 +245,24 @@ public class Map {
    */
   public Entity getEnemyAt(Vector2 position) {
     ImmutableArray<Entity> entities = engine.getEntitiesFor(Family.all(EnemyComponent.class).get());
+
+    for (Entity entity : entities) {
+      if (entity.getComponent(PositionComponent.class).pos.epsilonEquals(position, 0.00001f)) {
+        return entity;
+      }
+    }
+
+    return null;
+  }
+
+  /**
+   * Get item from a location.
+   *
+   * @param position Where the item is
+   * @return The item
+   */
+  public Entity getItemAt(Vector2 position) {
+    ImmutableArray<Entity> entities = engine.getEntitiesFor(Family.all(ItemComponent.class).get());
 
     for (Entity entity : entities) {
       if (entity.getComponent(PositionComponent.class).pos.epsilonEquals(position, 0.00001f)) {
