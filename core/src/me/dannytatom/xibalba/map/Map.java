@@ -1,9 +1,9 @@
 package me.dannytatom.xibalba.map;
 
-import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import me.dannytatom.xibalba.Main;
@@ -22,25 +22,229 @@ public class Map {
   public final int width;
   public final int height;
   private final Main main;
-  private final Engine engine;
-  private final Cell[][] map;
+  private final boolean[][] geometry;
   public List<GridCell> searchingPath = null;
   public List<GridCell> targetingPath = null;
   public Vector2 target = null;
+  private Cell[][] map;
 
   /**
    * Holds logic for dealing with maps.
    *
-   * @param engine The Ashley engine
-   * @param map    The actual map
+   * @param main     Instance of Main
+   * @param geometry The map geometry
    */
-  public Map(Main main, Engine engine, Cell[][] map) {
-    this.engine = engine;
+  public Map(Main main, boolean[][] geometry) {
     this.main = main;
-    this.map = map;
+    this.geometry = geometry;
 
-    this.width = this.map.length;
-    this.height = this.map[0].length;
+    this.width = this.geometry.length;
+    this.height = this.geometry[0].length;
+  }
+
+  public void paintCave() {
+    map = new Cell[width][height];
+
+    paintFirstCoat();
+    paintSecondCoat();
+  }
+
+  // Determine floors & walls
+  private void paintFirstCoat() {
+    TextureAtlas atlas = main.assets.get("sprites/main.atlas");
+
+    for (int x = 0; x < geometry.length; x++) {
+      for (int y = 0; y < geometry[x].length; y++) {
+        if (geometry[x][y]) {
+          map[x][y] = new Cell(atlas.createSprite(
+              "Level/Cave/Environment/Floor/" + MathUtils.random(1, 2)
+          ), false, false, "a cave floor");
+        } else {
+          int neighbours = groundNeighbours(x, y);
+
+          if (neighbours > 0) {
+            map[x][y] = new Cell(atlas.createSprite(
+                "Level/Cave/UI/Color/3"
+            ), true, false, "a cave wall");
+          } else {
+            map[x][y] = new Cell(atlas.createSprite(
+                "Level/Cave/UI/Color/4"
+            ), false, true, "nothing");
+          }
+        }
+      }
+    }
+  }
+
+  // Do corners
+  private void paintSecondCoat() {
+    TextureAtlas atlas = main.assets.get("sprites/main.atlas");
+
+    for (int x = 0; x < map.length; x++) {
+      for (int y = 0; y < map[x].length; y++) {
+        int neighbours = groundNeighbours(x, y);
+
+        if (map[x][y].isNothing || map[x][y].isWall && neighbours > 0) {
+          String spritePath = "Level/Cave/UI/Color/3";
+
+          Cell cellAbove = getCellAbove(x, y);
+          Cell cellRight = getCellRight(x, y);
+          Cell cellBelow = getCellBelow(x, y);
+          Cell cellLeft = getCellLeft(x, y);
+          Cell cellAboveLeft = getCellAboveLeft(x, y);
+          Cell cellAboveRight = getCellAboveRight(x, y);
+
+          if ( // If above is nothing or wall, below is ground, to the left is wall, and to the right is wall
+              (cellAbove == null || cellAbove.isNothing || cellAbove.isWall)
+                  && (cellBelow != null && !cellBelow.isWall && !cellBelow.isNothing)
+                  && (cellLeft != null && cellLeft.isWall)
+                  && (cellRight != null && cellRight.isWall)) {
+            spritePath = "Level/Cave/Environment/Wall/Front-" + MathUtils.random(1, 3);
+          } else if ( // If above is nothing or wall, below is wall, to the left is nothing or wall, and to the right is wall, and above right is nothing or wall
+              (cellAbove == null || cellAbove.isNothing || cellAbove.isWall)
+                  && (cellBelow != null && cellBelow.isWall)
+                  && (cellLeft == null || cellLeft.isNothing || cellLeft.isWall)
+                  && (cellRight != null && cellRight.isWall)
+                  && (cellAboveRight == null || cellAboveRight.isNothing || cellAboveRight.isWall)) {
+            spritePath = "Level/Cave/Environment/Wall/Front-Left-Turn-Down-1";
+          } else if ( // If above is nothing or wall, below is wall, to the left is wall, and to the right is nothing or wall, and above left is nothing wall
+              (cellAbove == null || cellAbove.isNothing || cellAbove.isWall)
+                  && (cellBelow != null && cellBelow.isWall)
+                  && (cellLeft != null && cellLeft.isWall)
+                  && (cellRight == null || cellRight.isNothing || cellRight.isWall)
+                  && (cellAboveLeft == null || cellAboveLeft.isNothing || cellAboveLeft.isWall)) {
+            spritePath = "Level/Cave/Environment/Wall/Front-Right-Turn-Down-1";
+          } else if ( // If above is wall, below is ground, to the left is ground, and to the right is wall
+              (cellAbove != null && cellAbove.isWall)
+                  && (cellBelow != null && !cellBelow.isWall && !cellBelow.isNothing)
+                  && (cellLeft != null && !cellLeft.isWall && !cellLeft.isNothing)
+                  && (cellRight != null && cellRight.isWall)) {
+            spritePath = "Level/Cave/Environment/Wall/Front-Left-Turn-Up-1";
+          } else if ( // If above is wall, below is ground, to the left is wall, and to the right is ground
+              (cellAbove != null && cellAbove.isWall)
+                  && (cellBelow != null && !cellBelow.isWall && !cellBelow.isNothing)
+                  && (cellLeft != null && cellLeft.isWall)
+                  && (cellRight != null && !cellRight.isWall && !cellRight.isNothing)) {
+            spritePath = "Level/Cave/Environment/Wall/Front-Right-Turn-Up-1";
+          } else if ( // If above is wall, below is wall, to the left is wall or nothing, and to the right is ground
+              (cellAbove != null && cellAbove.isWall)
+                  && (cellBelow != null && cellBelow.isWall)
+                  && (cellLeft == null || cellLeft.isWall || cellLeft.isNothing)
+                  && (cellRight != null && !cellRight.isWall && !cellRight.isNothing)) {
+            spritePath = "Level/Cave/Environment/Wall/Side-with-Floor-Right-1";
+          } else if ( // If above is wall, below is wall, to the left is ground, and to the right is wall or nothing
+              (cellAbove != null && cellAbove.isWall)
+                  && (cellBelow != null && cellBelow.isWall)
+                  && (cellLeft != null && !cellLeft.isWall && !cellLeft.isNothing)
+                  && (cellRight == null || cellRight.isWall || cellRight.isNothing)) {
+            spritePath = "Level/Cave/Environment/Wall/Side-with-Floor-Left-1";
+          } else if ( // If above is ground, below it is nothing or wall, and to the sides is wall
+              (cellAbove != null && !cellAbove.isWall && !cellAbove.isNothing)
+                  && (cellBelow == null || cellBelow.isNothing || cellBelow.isWall)
+                  && (cellLeft != null && cellLeft.isWall)
+                  && (cellRight != null && cellRight.isWall)) {
+            spritePath = "Level/Cave/Environment/Wall/Behind-1";
+          } else if ( // If above is wall, below is nothing or wall, to the left is nothing or wall, and to the right is wall, and to the right and above is ground
+              (cellAbove != null && cellAbove.isWall)
+                  && (cellBelow == null || cellBelow.isNothing || cellBelow.isWall)
+                  && (cellLeft == null || cellLeft.isNothing || cellLeft.isWall)
+                  && (cellRight != null && cellRight.isWall)
+                  && (cellAboveRight != null && !cellAboveRight.isNothing && !cellAboveRight.isWall)) {
+            spritePath = "Level/Cave/Environment/Wall/Behind-Left-Turn-Up-1";
+          } else if ( // If above is wall, below is nothing or wall, to the left is wall, to the right is nothing or wall, and to left and above is ground
+              (cellAbove != null && cellAbove.isWall)
+                  && (cellBelow == null || cellBelow.isNothing || cellBelow.isWall)
+                  && (cellLeft != null && cellLeft.isWall)
+                  && (cellRight == null || cellRight.isNothing || cellRight.isWall)
+                  && (cellAboveLeft != null && !cellAboveLeft.isNothing && !cellAboveLeft.isWall)) {
+            spritePath = "Level/Cave/Environment/Wall/Behind-Right-Turn-Up-1";
+          } else if ( // If above is ground, below is wall, to the left is ground, and to the right is wall
+              (cellAbove != null && !cellAbove.isWall && !cellAbove.isNothing)
+                  && (cellBelow != null && cellBelow.isWall)
+                  && (cellLeft != null && !cellLeft.isWall && !cellLeft.isNothing)
+                  && (cellRight != null && cellRight.isWall)) {
+            spritePath = "Level/Cave/Environment/Wall/Behind-Left-Turn-Down-1";
+          } else if ( // If above is ground, below is wall, to the left is wall, and to the right is ground
+              (cellAbove != null && !cellAbove.isWall && !cellAbove.isNothing)
+                  && (cellBelow != null && cellBelow.isWall)
+                  && (cellLeft != null && cellLeft.isWall)
+                  && (cellRight != null && !cellRight.isWall && !cellRight.isNothing)) {
+            spritePath = "Level/Cave/Environment/Wall/Behind-Right-Turn-Down-1";
+          }
+
+          map[x][y].sprite = atlas.createSprite(spritePath);
+        }
+      }
+    }
+  }
+
+  private int groundNeighbours(int cellX, int cellY) {
+    int count = 0;
+
+    for (int i = -1; i < 2; i++) {
+      for (int j = -1; j < 2; j++) {
+        int nx = cellX + i;
+        int ny = cellY + j;
+
+        if (i != 0 || j != 0) {
+          if (nx >= 0 && ny >= 0 && nx < geometry.length && ny < geometry[0].length) {
+            if (geometry[nx][ny]) {
+              count += 1;
+            }
+          }
+        }
+      }
+    }
+
+    return count;
+  }
+
+  private Cell getCellAbove(int cellX, int cellY) {
+    if (cellExists(new Vector2(cellX, cellY + 1))) {
+      return getCell(cellX, cellY + 1);
+    } else {
+      return null;
+    }
+  }
+
+  private Cell getCellRight(int cellX, int cellY) {
+    if (cellExists(new Vector2(cellX + 1, cellY))) {
+      return getCell(cellX + 1, cellY);
+    } else {
+      return null;
+    }
+  }
+
+  private Cell getCellBelow(int cellX, int cellY) {
+    if (cellExists(new Vector2(cellX, cellY - 1))) {
+      return getCell(cellX, cellY - 1);
+    } else {
+      return null;
+    }
+  }
+
+  private Cell getCellLeft(int cellX, int cellY) {
+    if (cellExists(new Vector2(cellX - 1, cellY))) {
+      return getCell(cellX - 1, cellY);
+    } else {
+      return null;
+    }
+  }
+
+  private Cell getCellAboveLeft(int cellX, int cellY) {
+    if (cellExists(new Vector2(cellX - 1, cellY + 1))) {
+      return getCell(cellX - 1, cellY + 1);
+    } else {
+      return null;
+    }
+  }
+
+  private Cell getCellAboveRight(int cellX, int cellY) {
+    if (cellExists(new Vector2(cellX + 1, cellY + 1))) {
+      return getCell(cellX + 1, cellY + 1);
+    } else {
+      return null;
+    }
   }
 
   /**
@@ -62,8 +266,8 @@ public class Map {
 
   /**
    * Get starting light map.
-   * <p>
-   * <p>1 is blocked, 0 is not
+   * <p/>
+   * 1 is blocked, 0 is not
    *
    * @return Resistance map
    */
@@ -72,7 +276,7 @@ public class Map {
 
     for (int x = 0; x < width; x++) {
       for (int y = 0; y < height; y++) {
-        resistanceMap[x][y] = getCell(x, y).isWall ? 1 : 0;
+        resistanceMap[x][y] = (getCell(x, y).isWall || getCell(x, y).isNothing) ? 1 : 0;
       }
     }
 
@@ -92,9 +296,10 @@ public class Map {
 
     for (int x = 0; x < map.length; x++) {
       for (int y = 0; y < map[x].length; y++) {
-        boolean canTarget = !getCell(
-            new Vector2(x, y)).isWall && !getCell(new Vector2(x, y)
-        ).hidden;
+        boolean canTarget = cellExists(new Vector2(x, y))
+            && !getCell(new Vector2(x, y)).isWall
+            && !getCell(new Vector2(x, y)).isNothing
+            && !getCell(new Vector2(x, y)).hidden;
 
         cells[x][y] = new GridCell(x, y, canTarget);
       }
@@ -204,7 +409,7 @@ public class Map {
    */
   public Entity getEntityAt(Vector2 position) {
     ImmutableArray<Entity> entities =
-        engine.getEntitiesFor(
+        main.engine.getEntitiesFor(
             Family.all(PositionComponent.class).exclude(DecorationComponent.class).get()
         );
 
@@ -224,7 +429,7 @@ public class Map {
    * @return The enemy
    */
   public Entity getEnemyAt(Vector2 position) {
-    ImmutableArray<Entity> entities = engine.getEntitiesFor(Family.all(EnemyComponent.class).get());
+    ImmutableArray<Entity> entities = main.engine.getEntitiesFor(Family.all(EnemyComponent.class).get());
 
     for (Entity entity : entities) {
       if (entity.getComponent(PositionComponent.class).pos.epsilonEquals(position, 0.00001f)) {
@@ -242,7 +447,7 @@ public class Map {
    * @return The item
    */
   public Entity getItemAt(Vector2 position) {
-    ImmutableArray<Entity> entities = engine.getEntitiesFor(Family.all(ItemComponent.class, PositionComponent.class).get());
+    ImmutableArray<Entity> entities = main.engine.getEntitiesFor(Family.all(ItemComponent.class, PositionComponent.class).get());
 
     for (Entity entity : entities) {
       if (entity.getComponent(PositionComponent.class).pos.epsilonEquals(position, 0.00001f)) {
@@ -292,11 +497,12 @@ public class Map {
    * @return Is it blocked?
    */
   private boolean isBlocked(Vector2 position) {
-    boolean blocked = map[(int) position.x][(int) position.y].isWall;
+    boolean blocked = map[(int) position.x][(int) position.y].isWall
+        || map[(int) position.x][(int) position.y].isNothing;
 
     if (!blocked) {
       ImmutableArray<Entity> entities =
-          engine.getEntitiesFor(
+          main.engine.getEntitiesFor(
               Family.all(PositionComponent.class).exclude(DecorationComponent.class).get()
           );
 

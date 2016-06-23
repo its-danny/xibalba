@@ -1,6 +1,5 @@
 package me.dannytatom.xibalba;
 
-import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
@@ -17,12 +16,9 @@ import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.EnemyComponent;
 import me.dannytatom.xibalba.components.ItemComponent;
 import me.dannytatom.xibalba.map.Cell;
-import me.dannytatom.xibalba.map.Map;
 
 public class HudRenderer {
   private final Main main;
-  private final Engine engine;
-  private final Map map;
 
   private final Stage stage;
 
@@ -30,10 +26,8 @@ public class HudRenderer {
   private final VerticalGroup areaDetails;
   private final Label lookDetails;
 
-  public HudRenderer(Main main, Engine engine, SpriteBatch batch, Map map) {
+  public HudRenderer(Main main, SpriteBatch batch) {
     this.main = main;
-    this.engine = engine;
-    this.map = map;
 
     Viewport viewport = new FitViewport(960, 540, new OrthographicCamera());
     stage = new Stage(viewport, batch);
@@ -109,10 +103,10 @@ public class HudRenderer {
     // Enemies visible in area
 
     ImmutableArray<Entity> enemies =
-        this.engine.getEntitiesFor(Family.all(EnemyComponent.class).get());
+        main.engine.getEntitiesFor(Family.all(EnemyComponent.class).get());
 
     for (Entity enemy : enemies) {
-      if (main.entityHelpers.isVisibleToPlayer(enemy, map)) {
+      if (main.entityHelpers.isVisibleToPlayer(enemy, main.getCurrentMap())) {
         AttributesComponent enemyAttributes = enemy.getComponent(AttributesComponent.class);
 
         areaDetails.addActor(new Label(enemyAttributes.name, main.skin));
@@ -138,22 +132,22 @@ public class HudRenderer {
   private void renderLookDetails() {
     lookDetails.clear();
 
-    if (main.state == Main.State.SEARCHING && map.target != null) {
-      Cell cell = map.getCell(map.target);
+    if (main.state == Main.State.SEARCHING && main.getCurrentMap().target != null) {
+      Cell cell = main.getCurrentMap().getCell(main.getCurrentMap().target);
 
       if (cell.forgotten) {
-        lookDetails.setText("You remember seeing " + cell.description);
+        lookDetails.setText("You remember seeing " + cell.description + ".");
       } else {
         String description = "You see " + cell.description + ".";
 
-        Entity itemAtLocation = map.getItemAt(map.target);
+        Entity itemAtLocation = main.getCurrentMap().getItemAt(main.getCurrentMap().target);
 
         if (itemAtLocation != null) {
           String itemDescription = itemAtLocation.getComponent(ItemComponent.class).name;
           description += " A " + itemDescription + " is there.";
         }
 
-        Entity enemyAtLocation = map.getEnemyAt(map.target);
+        Entity enemyAtLocation = main.getCurrentMap().getEnemyAt(main.getCurrentMap().target);
 
         if (enemyAtLocation != null) {
           String enemyDescription = enemyAtLocation.getComponent(AttributesComponent.class).name;

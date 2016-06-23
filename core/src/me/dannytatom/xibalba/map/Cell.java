@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 public class Cell {
   public final String description;
   final boolean isWall;
+  final boolean isNothing;
   public Sprite sprite;
   public boolean hidden = true;
   public boolean forgotten = false;
@@ -15,9 +16,10 @@ public class Cell {
    * @param sprite tile sprite
    * @param isWall whether or not an entity can move onto this cell
    */
-  Cell(Sprite sprite, boolean isWall, String description) {
+  Cell(Sprite sprite, boolean isWall, boolean isNothing, String description) {
     this.sprite = sprite;
     this.isWall = isWall;
+    this.isNothing = isNothing;
     this.description = description;
   }
 }

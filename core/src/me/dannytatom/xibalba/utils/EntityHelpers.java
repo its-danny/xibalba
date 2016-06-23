@@ -1,6 +1,5 @@
 package me.dannytatom.xibalba.utils;
 
-import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.Gdx;
@@ -14,6 +13,7 @@ import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.DecorationComponent;
 import me.dannytatom.xibalba.components.EnemyComponent;
 import me.dannytatom.xibalba.components.EquipmentComponent;
+import me.dannytatom.xibalba.components.ExitComponent;
 import me.dannytatom.xibalba.components.InventoryComponent;
 import me.dannytatom.xibalba.components.ItemComponent;
 import me.dannytatom.xibalba.components.PlayerComponent;
@@ -26,13 +26,11 @@ import me.dannytatom.xibalba.map.ShadowCaster;
 
 public class EntityHelpers {
   private final Main main;
-  private final Engine engine;
 
   private final ShadowCaster caster;
 
-  public EntityHelpers(Main main, Engine engine) {
+  public EntityHelpers(Main main) {
     this.main = main;
-    this.engine = engine;
 
     caster = new ShadowCaster();
   }
@@ -44,13 +42,13 @@ public class EntityHelpers {
    * @param position Vector2 of where to spawn them
    */
   public void spawnPlayer(Entity player, Vector2 position) {
-    TextureAtlas atlas = main.assets.get("sprites/main.atlas");
-
-    Array<String> sprites = new Array<String>();
+    Array<String> sprites = new Array<>();
     sprites.addAll("Level/Cave/Character/Ikal-1");
     sprites.addAll("Level/Cave/Character/Iktan-1");
     sprites.addAll("Level/Cave/Character/Itzel-1");
     sprites.addAll("Level/Cave/Character/Yatzil-1");
+
+    TextureAtlas atlas = main.assets.get("sprites/main.atlas");
 
     player.add(new PlayerComponent());
     player.add(new PositionComponent(position));
@@ -60,6 +58,17 @@ public class EntityHelpers {
     player.add(new SkillsComponent());
     player.add(new InventoryComponent());
     player.add(new EquipmentComponent());
+  }
+
+  public Entity spawnExit(Vector2 position) {
+    TextureAtlas atlas = main.assets.get("sprites/main.atlas");
+
+    Entity entity = new Entity();
+    entity.add(new PositionComponent(position));
+    entity.add(new VisualComponent(atlas.createSprite("Level/Cave/FX/Bolt-1")));
+    entity.add(new ExitComponent());
+
+    return entity;
   }
 
   /**
@@ -127,7 +136,6 @@ public class EntityHelpers {
   }
 
   public Entity spawnRandomDecoration(Vector2 position) {
-    TextureAtlas atlas = main.assets.get("sprites/main.atlas");
     Entity decoration = new Entity();
 
     Array<String> types = new Array<>();
@@ -139,6 +147,8 @@ public class EntityHelpers {
     types.add("Level/Cave/Environment/Object/Rock-4");
     types.add("Level/Cave/Environment/Object/Vase-1");
 
+    TextureAtlas atlas = main.assets.get("sprites/main.atlas");
+
     decoration.add(new DecorationComponent());
     decoration.add(new PositionComponent(position));
     decoration.add(new VisualComponent(
@@ -149,7 +159,7 @@ public class EntityHelpers {
   }
 
   public Entity getPlayer() {
-    return engine.getEntitiesFor(Family.all(PlayerComponent.class).get()).first();
+    return main.engine.getEntitiesFor(Family.all(PlayerComponent.class).get()).first();
   }
 
   public boolean isEnemy(Entity entity) {
@@ -158,6 +168,10 @@ public class EntityHelpers {
 
   public boolean isItem(Entity entity) {
     return entity != null && entity.getComponent(ItemComponent.class) != null;
+  }
+
+  public boolean isExit(Entity entity) {
+    return entity != null && entity.getComponent(ExitComponent.class) != null;
   }
 
   public boolean isVisible(Entity entity, Map map) {

@@ -1,5 +1,6 @@
 package me.dannytatom.xibalba;
 
+import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -7,11 +8,13 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Colors;
+import com.badlogic.gdx.graphics.Cursor;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import me.dannytatom.xibalba.map.Map;
 import me.dannytatom.xibalba.screens.MainMenuScreen;
 import me.dannytatom.xibalba.utils.CombatHelpers;
 import me.dannytatom.xibalba.utils.EntityHelpers;
@@ -24,6 +27,8 @@ public class Main extends Game {
   public AssetManager assets;
   public Skin skin;
   public ActionLog log;
+  public Engine engine;
+  public World world;
   public CombatHelpers combatHelpers;
   public EntityHelpers entityHelpers;
   public InventoryHelpers inventoryHelpers;
@@ -31,9 +36,8 @@ public class Main extends Game {
   public SkillHelpers skillHelpers;
   public Screen playScreen;
   public Entity player;
-
-  public boolean debug = false;
   public boolean executeTurn = false;
+  public int currentMap = 0;
 
   /**
    * Setup & load the main menu.
@@ -58,8 +62,8 @@ public class Main extends Game {
 
     // Set cursor image
     Pixmap pm = new Pixmap(Gdx.files.internal("ui/cursor.png"));
-    Gdx.input.setCursorImage(pm, 0, 0);
-    pm.dispose();
+    Cursor cursor = Gdx.graphics.newCursor(pm, 0, 0);
+    Gdx.graphics.setCursor(cursor);
 
     // Setup text colors
     Colors.put("LIGHT_GRAY", parseColor("c2c2c2"));
@@ -73,6 +77,10 @@ public class Main extends Game {
 
     // Start the main menu
     setScreen(new MainMenuScreen(this));
+  }
+
+  public Map getCurrentMap() {
+    return world.maps.get(currentMap);
   }
 
   /**

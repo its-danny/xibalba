@@ -1,6 +1,5 @@
 package me.dannytatom.xibalba.utils;
 
-import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.MathUtils;
@@ -12,7 +11,6 @@ import me.dannytatom.xibalba.components.EquipmentComponent;
 import me.dannytatom.xibalba.components.ItemComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.VisualComponent;
-import me.dannytatom.xibalba.map.Map;
 
 // How combat works.
 //
@@ -26,19 +24,14 @@ import me.dannytatom.xibalba.map.Map;
 
 public class CombatHelpers {
   private final Main main;
-  private final Engine engine;
-  private final Map map;
 
   /**
    * Initialize action log.
    *
-   * @param main   Instance of the main class
-   * @param engine Ashley engine
+   * @param main Instance of the main class
    */
-  public CombatHelpers(Main main, Engine engine, Map map) {
+  public CombatHelpers(Main main) {
     this.main = main;
-    this.engine = engine;
-    this.map = map;
   }
 
   /**
@@ -146,7 +139,7 @@ public class CombatHelpers {
       main.skillHelpers.levelSkill(starter, skill, 20);
 
       if (critical > 0) {
-        Vector2 splatterSpace = map.getEmptySpaceNearEntity(
+        Vector2 splatterSpace = main.getCurrentMap().getEmptySpaceNearEntity(
             target.getComponent(PositionComponent.class).pos
         );
 
@@ -157,7 +150,7 @@ public class CombatHelpers {
           remains.add(new VisualComponent(atlas.createSprite("Level/Cave/FX/BloodSplatter-1")));
           remains.add(new PositionComponent(splatterSpace));
 
-          engine.addEntity(remains);
+          main.engine.addEntity(remains);
         }
       }
     } else {
@@ -173,8 +166,8 @@ public class CombatHelpers {
       remains.add(new PositionComponent(target.getComponent(PositionComponent.class).pos));
       remains.add(new VisualComponent(atlas.createSprite("Level/Cave/Environment/Object/Remains-1")));
 
-      engine.addEntity(remains);
-      engine.removeEntity(target);
+      main.engine.addEntity(remains);
+      main.engine.removeEntity(target);
 
       main.log.add(starterAttributes.name + " killed " + targetAttributes.name + "!");
     }

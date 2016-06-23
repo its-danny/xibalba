@@ -136,28 +136,28 @@ Level/Cave/Environment/Wall/Behind-1
   orig: 16, 16
   offset: 0, 0
   index: -1
-Level/Cave/Environment/Wall/BehindBottomLeft-1
+Level/Cave/Environment/Wall/Behind-Left-Turn-Down-1
   rotate: false
   xy: 48, 32
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
-Level/Cave/Environment/Wall/BehindBottomRight-1
+Level/Cave/Environment/Wall/Behind-Left-Turn-Up-1
   rotate: false
   xy: 64, 32
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
-Level/Cave/Environment/Wall/BehindTopLeft-1
+Level/Cave/Environment/Wall/Behind-Right-Turn-Down-1
   rotate: false
   xy: 80, 32
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
-Level/Cave/Environment/Wall/BehindTopRight-1
+Level/Cave/Environment/Wall/Behind-Right-Turn-Up-1
   rotate: false
   xy: 96, 32
   size: 16, 16
@@ -185,42 +185,42 @@ Level/Cave/Environment/Wall/Front-3
   orig: 16, 16
   offset: 0, 0
   index: -1
-Level/Cave/Environment/Wall/Left-1
+Level/Cave/Environment/Wall/Front-Left-Turn-Down-1
   rotate: false
   xy: 32, 48
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
-Level/Cave/Environment/Wall/LeftTurpUp-1
+Level/Cave/Environment/Wall/Front-Left-Turn-Up-1
   rotate: false
   xy: 48, 48
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
-Level/Cave/Environment/Wall/Right-1
+Level/Cave/Environment/Wall/Front-Right-Turn-Down-1
   rotate: false
   xy: 64, 48
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
-Level/Cave/Environment/Wall/RightTurnUp-1
+Level/Cave/Environment/Wall/Front-Right-Turn-Up-1
   rotate: false
   xy: 80, 48
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
-Level/Cave/Environment/Wall/TopLeft-1
+Level/Cave/Environment/Wall/Side-with-Floor-Left-1
   rotate: false
   xy: 96, 48
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
-Level/Cave/Environment/Wall/TopRight-1
+Level/Cave/Environment/Wall/Side-with-Floor-Right-1
   rotate: false
   xy: 112, 48
   size: 16, 16

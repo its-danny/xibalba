@@ -10,24 +10,20 @@ import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.actions.MeleeComponent;
 import me.dannytatom.xibalba.components.actions.MovementComponent;
 import me.dannytatom.xibalba.components.actions.RangeComponent;
-import me.dannytatom.xibalba.map.Map;
 import me.dannytatom.xibalba.screens.CharacterScreen;
 import me.dannytatom.xibalba.screens.InventoryScreen;
 import me.dannytatom.xibalba.screens.PauseScreen;
 
 public class PlayerInput implements InputProcessor {
   private final Main main;
-  private final Map map;
 
   /**
    * Handle player input.
    *
    * @param main Instance of the main class
-   * @param map  Map
    */
-  public PlayerInput(Main main, Map map) {
+  public PlayerInput(Main main) {
     this.main = main;
-    this.map = map;
   }
 
   @Override
@@ -36,9 +32,6 @@ public class PlayerInput implements InputProcessor {
     PositionComponent position = main.player.getComponent(PositionComponent.class);
 
     switch (keycode) {
-      case Keys.BACKSLASH:
-        main.debug ^= true;
-        break;
       case Keys.Z:
         main.executeTurn = true;
         break;
@@ -129,27 +122,27 @@ public class PlayerInput implements InputProcessor {
         if (main.state == Main.State.PLAYING) {
           main.setScreen(new PauseScreen(main));
         } else if (main.state == Main.State.SEARCHING) {
-          map.target = null;
-          map.searchingPath = null;
+          main.getCurrentMap().target = null;
+          main.getCurrentMap().searchingPath = null;
 
           main.state = Main.State.PLAYING;
         } else if (main.state == Main.State.TARGETING) {
-          map.target = null;
-          map.targetingPath = null;
+          main.getCurrentMap().target = null;
+          main.getCurrentMap().targetingPath = null;
 
           main.state = Main.State.PLAYING;
         }
         break;
       case Keys.SPACE:
         if (main.state == Main.State.TARGETING) {
-          if (map.targetingPath != null && attributes.energy >= RangeComponent.COST) {
-            main.player.add(new RangeComponent(map.target));
+          if (main.getCurrentMap().targetingPath != null && attributes.energy >= RangeComponent.COST) {
+            main.player.add(new RangeComponent(main.getCurrentMap().target));
 
             main.executeTurn = true;
           }
 
-          map.target = null;
-          map.targetingPath = null;
+          main.getCurrentMap().target = null;
+          main.getCurrentMap().targetingPath = null;
 
           main.state = Main.State.PLAYING;
         }
@@ -207,14 +200,14 @@ public class PlayerInput implements InputProcessor {
    * @param pos    The position we're attempting to move to
    */
   private void handleMovement(int energy, Vector2 pos) {
-    if (map.isWalkable(pos)) {
+    if (main.getCurrentMap().isWalkable(pos)) {
       if (energy >= MovementComponent.COST) {
         main.player.add(new MovementComponent(pos));
 
         main.executeTurn = true;
       }
     } else {
-      Entity thing = map.getEntityAt(pos);
+      Entity thing = main.getCurrentMap().getEntityAt(pos);
 
       if (main.entityHelpers.isItem(thing) && energy >= MovementComponent.COST) {
         if (main.inventoryHelpers.addItem(main.player, thing)) {
@@ -228,15 +221,17 @@ public class PlayerInput implements InputProcessor {
         main.player.add(new MeleeComponent(thing));
 
         main.executeTurn = true;
+      } else if (main.entityHelpers.isExit(thing) && energy >= MovementComponent.COST) {
+        // TODO: Switch maps
       }
     }
   }
 
   private void handleTargeting(Vector2 pos) {
-    map.createTargetingPath(main.player.getComponent(PositionComponent.class).pos, pos);
+    main.getCurrentMap().createTargetingPath(main.player.getComponent(PositionComponent.class).pos, pos);
   }
 
   private void handleSearching(Vector2 pos) {
-    map.createSearchingPath(main.player.getComponent(PositionComponent.class).pos, pos);
+    main.getCurrentMap().createSearchingPath(main.player.getComponent(PositionComponent.class).pos, pos);
   }
 }
