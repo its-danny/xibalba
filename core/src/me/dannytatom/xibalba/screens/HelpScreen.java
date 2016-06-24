@@ -89,6 +89,8 @@ public class HelpScreen implements Screen {
   private VerticalGroup createHelp() {
     VerticalGroup group = new VerticalGroup().left();
 
+    group.addActor(new Label("[LIGHT_GRAY]Always used[]", main.skin));
+    group.addActor(new Label(null, main.skin));
     group.addActor(new Label("[YELLOW]hjkl yubn[] movement", main.skin));
     group.addActor(new Label(null, main.skin));
     group.addActor(new Label("[YELLOW]c[] character sheet", main.skin));
@@ -96,8 +98,12 @@ public class HelpScreen implements Screen {
     group.addActor(new Label("[YELLOW]s[] search", main.skin));
     group.addActor(new Label("[YELLOW]z[] skip turn", main.skin));
     group.addActor(new Label("[YELLOW]q[] quit out of things", main.skin));
+    group.addActor(new Label("[YELLOW]space[] confirm & interact", main.skin));
+    group.addActor(new Label("[YELLOW]esc[] pause", main.skin));
     group.addActor(new Label(null, main.skin));
-    group.addActor(new Label("[YELLOW]ESC[] pause", main.skin));
+    group.addActor(new Label("[LIGHT_GRAY]Weapon specific[]", main.skin));
+    group.addActor(new Label(null, main.skin));
+    group.addActor(new Label("[DARK_GRAY](Bow)[] [YELLOW]r[] release arrow", main.skin));
 
     return group;
   }

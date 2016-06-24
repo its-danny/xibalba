@@ -1,0 +1,20 @@
+{
+  "name": "Wooden Arrow",
+  "description": "It's an arrow dude, idk.",
+  "type": "arrow",
+  "visual": {
+    "sprites": [
+      "Level/Cave/Item/Weapon-Arrow-1"
+    ]
+  },
+  "attributes": {
+    "throwDamage": 1,
+    "hitDamage": 20
+  },
+  "actions": {
+    "canThrow": true,
+    "canWear": false,
+    "canHold": false,
+    "canUse": false
+  }
+}

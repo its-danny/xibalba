@@ -1,0 +1,27 @@
+{
+  "name": "Wooden Bow",
+  "description": "Writing descriptions is hard.",
+  "skill": "archery",
+  "type": "weapon",
+  "usesAmmunition": true,
+  "ammunitionType": "arrow",
+  "location": "rightHand",
+  "visual": {
+    "sprites": [
+      "Level/Cave/Item/Weapon-Bow-1"
+    ]
+  },
+  "verbs": [
+    "shot"
+  ],
+  "attributes": {
+    "throwDamage": 5,
+    "hitDamage": 5
+  },
+  "actions": {
+    "canThrow": true,
+    "canWear": false,
+    "canHold": true,
+    "canUse": false
+  }
+}

@@ -121,6 +121,23 @@ public class PlayerInput implements InputProcessor {
           main.state = Main.State.SEARCHING;
         }
         break;
+      case Keys.R:
+        if (main.state == Main.State.PLAYING) {
+          Entity primaryWeapon = main.equipmentHelpers.getPrimaryWeapon(main.player);
+
+          if (primaryWeapon != null) {
+            ItemComponent itemComponent = primaryWeapon.getComponent(ItemComponent.class);
+
+            if (itemComponent.usesAmmunition) {
+              if (main.inventoryHelpers.hasAmmunitionOfType(main.player, itemComponent.ammunitionType)) {
+                main.state = Main.State.TARGETING;
+              } else {
+                main.log.add("You aren't carrying any ammunition for this");
+              }
+            }
+          }
+        }
+        break;
       case Keys.Q:
         if (main.state == Main.State.SEARCHING) {
           main.getCurrentMap().target = null;
@@ -137,7 +154,19 @@ public class PlayerInput implements InputProcessor {
       case Keys.SPACE:
         if (main.state == Main.State.TARGETING) {
           if (main.getCurrentMap().targetingPath != null && attributes.energy >= RangeComponent.COST) {
-            main.player.add(new RangeComponent(main.getCurrentMap().target));
+            Entity primaryWeapon = main.equipmentHelpers.getPrimaryWeapon(main.player);
+            Entity item = null;
+            String skill = null;
+
+            if (primaryWeapon != null && primaryWeapon.getComponent(ItemComponent.class).usesAmmunition) {
+              item = main.inventoryHelpers.getAmmunitionOfType(main.player, primaryWeapon.getComponent(ItemComponent.class).ammunitionType);
+              skill = primaryWeapon.getComponent(ItemComponent.class).skill;
+            } else {
+              item = main.inventoryHelpers.getThrowingItem(main.player);
+              skill = "throwing";
+            }
+
+            main.player.add(new RangeComponent(main.getCurrentMap().target, item, skill));
 
             main.executeTurn = true;
           }

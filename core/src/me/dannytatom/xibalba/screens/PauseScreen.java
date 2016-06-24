@@ -30,6 +30,8 @@ public class PauseScreen implements Screen {
 
     table.add(new Label("[CYAN]R[]eturn to Game", main.skin));
     table.row();
+    table.add(new Label("[CYAN]M[]ain Menu", main.skin));
+    table.row();
     table.add(new Label("[CYAN]Q[]uit", main.skin));
 
     Gdx.input.setInputProcessor(stage);
@@ -56,6 +58,13 @@ public class PauseScreen implements Screen {
 
     if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
       main.setScreen(main.playScreen);
+    }
+
+    if (Gdx.input.isKeyJustPressed(Input.Keys.M)) {
+      main.playScreen.dispose();
+      main.playScreen = null;
+
+      main.setScreen(new MainMenuScreen(main));
     }
 
     if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {

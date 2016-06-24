@@ -24,6 +24,8 @@ import me.dannytatom.xibalba.components.ai.BrainComponent;
 import me.dannytatom.xibalba.map.Map;
 import me.dannytatom.xibalba.map.ShadowCaster;
 
+import java.util.Objects;
+
 public class EntityHelpers {
   private final Main main;
 
@@ -123,13 +125,18 @@ public class EntityHelpers {
         atlas.createSprite(itemComponent.visual.get("sprites").random())
     ));
 
-    if (itemComponent.attributes != null) {
-      itemComponent.attributes.put("hitDamage",
-          MathUtils.random(itemComponent.attributes.get("hitDamage"),
-              itemComponent.attributes.get("hitDamage") + 10));
-      itemComponent.attributes.put("throwDamage",
-          MathUtils.random(itemComponent.attributes.get("throwDamage"),
-              itemComponent.attributes.get("throwDamage") + 10));
+    if (itemComponent.attributes != null && !Objects.equals(itemComponent.type, "ammunition")) {
+      if (itemComponent.attributes.get("hitDamage") != null) {
+        itemComponent.attributes.put("hitDamage",
+            MathUtils.random(itemComponent.attributes.get("hitDamage"),
+                itemComponent.attributes.get("hitDamage") + 10));
+      }
+
+      if (itemComponent.attributes.get("throwDamage") != null) {
+        itemComponent.attributes.put("throwDamage",
+            MathUtils.random(itemComponent.attributes.get("throwDamage"),
+                itemComponent.attributes.get("throwDamage") + 10));
+      }
     }
 
     return entity;

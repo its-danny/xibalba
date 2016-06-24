@@ -2,15 +2,19 @@ package me.dannytatom.xibalba.utils;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.Vector2;
+import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.components.InventoryComponent;
 import me.dannytatom.xibalba.components.ItemComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class InventoryHelpers {
-  public InventoryHelpers() {
+  private Main main;
 
+  public InventoryHelpers(Main main) {
+    this.main = main;
   }
 
   public boolean addItem(Entity entity, Entity item) {
@@ -34,6 +38,7 @@ public class InventoryHelpers {
 
       if (item != null) {
         inventoryComponent.items.remove(item);
+        main.engine.removeEntity(item);
       }
     }
   }
@@ -60,6 +65,34 @@ public class InventoryHelpers {
       ItemComponent itemComponent = item.getComponent(ItemComponent.class);
 
       if (itemComponent.throwing) {
+        return item;
+      }
+    }
+
+    return null;
+  }
+
+  public boolean hasAmmunitionOfType(Entity entity, String type) {
+    ArrayList<Entity> items = entity.getComponent(InventoryComponent.class).items;
+
+    for (Entity item : items) {
+      ItemComponent itemComponent = item.getComponent(ItemComponent.class);
+
+      if (Objects.equals(itemComponent.type, type)) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  public Entity getAmmunitionOfType(Entity entity, String type) {
+    ArrayList<Entity> items = entity.getComponent(InventoryComponent.class).items;
+
+    for (Entity item : items) {
+      ItemComponent itemComponent = item.getComponent(ItemComponent.class);
+
+      if (Objects.equals(itemComponent.type, type)) {
         return item;
       }
     }

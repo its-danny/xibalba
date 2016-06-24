@@ -88,7 +88,7 @@ public class LoadingScreen implements Screen {
   private void setup() {
     // Setup helpers
     main.entityHelpers = new EntityHelpers(main);
-    main.inventoryHelpers = new InventoryHelpers();
+    main.inventoryHelpers = new InventoryHelpers(main);
     main.equipmentHelpers = new EquipmentHelpers();
     main.skillHelpers = new SkillHelpers(main);
     main.combatHelpers = new CombatHelpers(main);
@@ -142,6 +142,18 @@ public class LoadingScreen implements Screen {
 
     for (int i = 0; i < 5; i++) {
       main.engine.addEntity(main.entityHelpers.spawnItem("shield", main.getCurrentMap().getRandomOpenPosition()));
+    }
+
+    for (int i = 0; i < 5; i++) {
+      main.engine.addEntity(main.entityHelpers.spawnItem("spear", main.getCurrentMap().getRandomOpenPosition()));
+    }
+
+    for (int i = 0; i < 5; i++) {
+      main.engine.addEntity(main.entityHelpers.spawnItem("bow", main.getCurrentMap().getRandomOpenPosition()));
+    }
+
+    for (int i = 0; i < 20; i++) {
+      main.engine.addEntity(main.entityHelpers.spawnItem("arrow", main.getCurrentMap().getRandomOpenPosition()));
     }
 
     for (int i = 0; i < 50; i++) {

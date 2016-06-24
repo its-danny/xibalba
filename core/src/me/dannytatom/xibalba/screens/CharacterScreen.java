@@ -164,8 +164,16 @@ public class CharacterScreen implements Screen {
       group.addActor(skillLine("Slashing", skills.slashing));
     }
 
-    if (skills.stabbing > 0) {
-      group.addActor(skillLine("Stabbing", skills.stabbing));
+    if (skills.piercing > 0) {
+      group.addActor(skillLine("Piercing", skills.piercing));
+    }
+
+    if (skills.bashing > 0) {
+      group.addActor(skillLine("Bashing", skills.bashing));
+    }
+
+    if (skills.archery > 0) {
+      group.addActor(skillLine("Archery", skills.archery));
     }
 
     return group;

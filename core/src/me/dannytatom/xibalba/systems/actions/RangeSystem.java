@@ -4,9 +4,12 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.components.AttributesComponent;
+import me.dannytatom.xibalba.components.ItemComponent;
 import me.dannytatom.xibalba.components.actions.RangeComponent;
 import me.dannytatom.xibalba.systems.ActionSystem;
 import me.dannytatom.xibalba.utils.ComponentMappers;
+
+import java.util.Objects;
 
 public class RangeSystem extends ActionSystem {
   private final Main main;
@@ -27,16 +30,20 @@ public class RangeSystem extends ActionSystem {
   protected void processEntity(Entity entity, float deltaTime) {
     RangeComponent range = ComponentMappers.range.get(entity);
     AttributesComponent attributes = ComponentMappers.attributes.get(entity);
-    Entity item = main.inventoryHelpers.getThrowingItem(entity);
 
-    if (item != null) {
+    if (range.item != null) {
       Entity enemy = main.getCurrentMap().getEnemyAt(range.target);
 
       if (enemy != null) {
-        main.combatHelpers.range(entity, enemy, item);
+        main.combatHelpers.range(entity, enemy, range.item, range.skill);
       }
 
-      main.inventoryHelpers.dropItem(entity, item, range.target);
+      if (Objects.equals(range.skill, "throwing")) {
+        range.item.getComponent(ItemComponent.class).throwing = false;
+        main.inventoryHelpers.dropItem(entity, range.item, range.target);
+      } else {
+        main.inventoryHelpers.removeItem(entity, range.item);
+      }
 
       attributes.energy -= RangeComponent.COST;
     }

@@ -1,12 +1,12 @@
 {
-  "name": "Chipped Flint",
-  "description": "Made of Obsidian, this chipped flint can be used at close range to stab enemies to death.",
-  "skill": "piercing",
+  "name": "Spear",
+  "description": "O shit, a spear!",
+  "skill": "stabbing",
   "type": "weapon",
   "location": "rightHand",
   "visual": {
     "sprites": [
-      "Level/Cave/Item/Weapon-ChippedFlint-1"
+      "Level/Cave/Item/Weapon-Spear-1"
     ]
   },
   "verbs": [
@@ -14,7 +14,7 @@
   ],
   "attributes": {
     "hitDamage": 20,
-    "throwDamage": 15
+    "throwDamage": 30
   },
   "actions": {
     "canThrow": true,

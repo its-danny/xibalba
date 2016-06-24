@@ -70,7 +70,7 @@ public class InventoryScreen implements Screen {
 
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-    refillInventory();
+    renderInventory();
 
     stage.act(delta);
     stage.draw();
@@ -148,7 +148,7 @@ public class InventoryScreen implements Screen {
     return group;
   }
 
-  private void refillInventory() {
+  private void renderInventory() {
     inventoryGroup.clear();
 
     for (int i = 0; i < items.size(); i++) {

@@ -12,6 +12,8 @@ import me.dannytatom.xibalba.components.ItemComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.VisualComponent;
 
+import java.util.Objects;
+
 // How combat works.
 //
 // - Each skill is 4, 6, 8, 10, or 12
@@ -75,13 +77,14 @@ public class CombatHelpers {
    * @param target  Who's getting fought
    * @param item    What they're being hit with
    */
-  public void range(Entity starter, Entity target, Entity item) {
+  public void range(Entity starter, Entity target, Entity item, String skill) {
     ItemComponent itemComponent = item.getComponent(ItemComponent.class);
 
-    int result = rollHit(main.skillHelpers.getSkill(starter, "throwing"));
+    int result = rollHit(main.skillHelpers.getSkill(starter, skill));
+    int damage = Objects.equals(skill, "throwing") ? itemComponent.attributes.get("throwDamage") : itemComponent.attributes.get("hitDamage");
 
     applyDamage(
-        result, itemComponent.attributes.get("throwDamage"), "throwing", starter, target, "hit"
+        result, damage, skill, starter, target, "hit"
     );
   }
 
