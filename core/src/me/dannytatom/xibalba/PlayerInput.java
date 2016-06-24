@@ -11,11 +11,14 @@ import me.dannytatom.xibalba.components.actions.MeleeComponent;
 import me.dannytatom.xibalba.components.actions.MovementComponent;
 import me.dannytatom.xibalba.components.actions.RangeComponent;
 import me.dannytatom.xibalba.screens.CharacterScreen;
+import me.dannytatom.xibalba.screens.HelpScreen;
 import me.dannytatom.xibalba.screens.InventoryScreen;
 import me.dannytatom.xibalba.screens.PauseScreen;
 
 public class PlayerInput implements InputProcessor {
   private final Main main;
+
+  private boolean holdingShift = false;
 
   /**
    * Handle player input.
@@ -145,6 +148,15 @@ public class PlayerInput implements InputProcessor {
           main.state = Main.State.PLAYING;
         }
         break;
+      case Keys.SLASH:
+        if (holdingShift) {
+          main.setScreen(new HelpScreen(main));
+        }
+        break;
+      case Keys.SHIFT_LEFT:
+      case Keys.SHIFT_RIGHT:
+        holdingShift = true;
+        break;
       case Keys.ESCAPE:
         main.setScreen(new PauseScreen(main));
       default:
@@ -155,7 +167,14 @@ public class PlayerInput implements InputProcessor {
 
   @Override
   public boolean keyUp(int keycode) {
-    return false;
+    switch (keycode) {
+      case Keys.SHIFT_LEFT:
+      case Keys.SHIFT_RIGHT:
+        holdingShift = false;
+        break;
+    }
+
+    return true;
   }
 
   @Override

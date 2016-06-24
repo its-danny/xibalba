@@ -74,6 +74,10 @@ public class CharacterScreen implements Screen {
       main.setScreen(new InventoryScreen(main));
     }
 
+    if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_3)) {
+      main.setScreen(new HelpScreen(main));
+    }
+
     if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
       main.setScreen(main.playScreen);
     }
@@ -90,6 +94,8 @@ public class CharacterScreen implements Screen {
     header += main.player.getComponent(AttributesComponent.class).name;
     header += "[DARK_GRAY] | ";
     header += "[CYAN]2[LIGHT_GRAY] Inventory";
+    header += "[DARK_GRAY] | ";
+    header += "[CYAN]3[LIGHT_GRAY] Help";
     header += "[DARK_GRAY] ]";
 
     VerticalGroup group = new VerticalGroup().center();
