@@ -22,6 +22,11 @@ import java.util.List;
 public class WanderSystem extends SortedIteratingSystem {
   private final Main main;
 
+  /**
+   * Handles AI wandering around.
+   *
+   * @param main Instance of Main class
+   */
   public WanderSystem(Main main) {
     super(Family.all(WanderComponent.class, PositionComponent.class).get(), new EnergyComparator());
 
@@ -37,11 +42,12 @@ public class WanderSystem extends SortedIteratingSystem {
     if (brain.path == null || brain.path.isEmpty()) {
       PositionComponent position = ComponentMappers.position.get(entity);
 
-      NavigationGrid<GridCell> grid = new NavigationGrid<>(main.getCurrentMap().createPathfindingMap(), false);
+      NavigationGrid<GridCell> grid =
+          new NavigationGrid<>(main.getMap().createPathfindingMap(), false);
       AStarGridFinder<GridCell> finder = new AStarGridFinder<>(GridCell.class);
 
       do {
-        Vector2 randomPosition = main.getCurrentMap().getRandomOpenPosition();
+        Vector2 randomPosition = main.getMap().getRandomOpenPosition();
         brain.path = finder.findPath((int) position.pos.x, (int) position.pos.y,
             (int) randomPosition.x, (int) randomPosition.y, grid);
       } while (brain.path == null);

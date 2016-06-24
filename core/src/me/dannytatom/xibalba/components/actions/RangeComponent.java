@@ -8,9 +8,16 @@ public class RangeComponent implements Component {
   public static final int COST = 100;
 
   public final Vector2 target;
-  public Entity item;
-  public String skill;
+  public final Entity item;
+  public final String skill;
 
+  /**
+   * Filling RangeComponent w/ data needed for RangeSystem.
+   *
+   * @param target Who's being attacked
+   * @param item   The item we're attacking with
+   * @param skill  The skill we're attacking with
+   */
   public RangeComponent(Vector2 target, Entity item, String skill) {
     this.target = target;
     this.item = item;

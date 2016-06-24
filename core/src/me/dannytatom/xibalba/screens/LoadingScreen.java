@@ -110,7 +110,9 @@ public class LoadingScreen implements Screen {
     main.world = new World();
 
     for (int i = 0; i < 4; i++) {
-      CaveGenerator generator = new CaveGenerator(MathUtils.random(80, 100), MathUtils.random(50, 80));
+      CaveGenerator generator = new CaveGenerator(
+          MathUtils.random(80, 100), MathUtils.random(50, 80)
+      );
       generator.generate();
 
       Map map = new Map(main, generator.geometry);
@@ -122,42 +124,67 @@ public class LoadingScreen implements Screen {
 
   private void spawnShit() {
     // Add player entity
-    main.entityHelpers.spawnPlayer(main.player, main.getCurrentMap().findPlayerStart());
+    main.entityHelpers.spawnPlayer(main.player, main.getMap().findPlayerStart());
     main.engine.addEntity(main.player);
 
     // Spawn an exit somewhere
-    main.engine.addEntity(main.entityHelpers.spawnExit(main.getCurrentMap().getRandomOpenPosition()));
+    main.engine.addEntity(
+        main.entityHelpers.spawnExit(main.getMap().getRandomOpenPosition())
+    );
 
     for (int i = 0; i < 5; i++) {
-      main.engine.addEntity(main.entityHelpers.spawnEnemy("spiderMonkey", main.getCurrentMap().getRandomOpenPosition()));
+      main.engine.addEntity(
+          main.entityHelpers.spawnEnemy("spiderMonkey",
+              main.getMap().getRandomOpenPosition())
+      );
     }
 
     for (int i = 0; i < 5; i++) {
-      main.engine.addEntity(main.entityHelpers.spawnItem("chippedFlint", main.getCurrentMap().getRandomOpenPosition()));
+      main.engine.addEntity(
+          main.entityHelpers.spawnItem("chippedFlint",
+              main.getMap().getRandomOpenPosition())
+      );
     }
 
     for (int i = 0; i < 5; i++) {
-      main.engine.addEntity(main.entityHelpers.spawnItem("macuahuitl", main.getCurrentMap().getRandomOpenPosition()));
+      main.engine.addEntity(
+          main.entityHelpers.spawnItem("macuahuitl",
+              main.getMap().getRandomOpenPosition())
+      );
     }
 
     for (int i = 0; i < 5; i++) {
-      main.engine.addEntity(main.entityHelpers.spawnItem("shield", main.getCurrentMap().getRandomOpenPosition()));
+      main.engine.addEntity(
+          main.entityHelpers.spawnItem("shield",
+              main.getMap().getRandomOpenPosition())
+      );
     }
 
     for (int i = 0; i < 5; i++) {
-      main.engine.addEntity(main.entityHelpers.spawnItem("spear", main.getCurrentMap().getRandomOpenPosition()));
+      main.engine.addEntity(
+          main.entityHelpers.spawnItem("spear",
+              main.getMap().getRandomOpenPosition())
+      );
     }
 
     for (int i = 0; i < 5; i++) {
-      main.engine.addEntity(main.entityHelpers.spawnItem("bow", main.getCurrentMap().getRandomOpenPosition()));
+      main.engine.addEntity(
+          main.entityHelpers.spawnItem("bow",
+              main.getMap().getRandomOpenPosition())
+      );
     }
 
     for (int i = 0; i < 20; i++) {
-      main.engine.addEntity(main.entityHelpers.spawnItem("arrow", main.getCurrentMap().getRandomOpenPosition()));
+      main.engine.addEntity(
+          main.entityHelpers.spawnItem("arrow",
+              main.getMap().getRandomOpenPosition())
+      );
     }
 
     for (int i = 0; i < 50; i++) {
-      main.engine.addEntity(main.entityHelpers.spawnRandomDecoration(main.getCurrentMap().getRandomOpenPosition()));
+      main.engine.addEntity(
+          main.entityHelpers.spawnRandomDecoration(main.getMap().getRandomOpenPosition())
+      );
     }
   }
 

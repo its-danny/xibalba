@@ -11,12 +11,19 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class InventoryHelpers {
-  private Main main;
+  private final Main main;
 
   public InventoryHelpers(Main main) {
     this.main = main;
   }
 
+  /**
+   * Add an item to an entity's inventory.
+   *
+   * @param entity Entity we wanna to give shit to
+   * @param item   The item itself
+   * @return Whether or not it was added
+   */
   public boolean addItem(Entity entity, Entity item) {
     if (entity.getComponent(InventoryComponent.class) != null) {
       InventoryComponent inventoryComponent = entity.getComponent(InventoryComponent.class);
@@ -32,6 +39,12 @@ public class InventoryHelpers {
     return true;
   }
 
+  /**
+   * It's like the opposite of #addItem.
+   *
+   * @param entity Entity we want to take shit from
+   * @param item   The shit we gonna take
+   */
   public void removeItem(Entity entity, Entity item) {
     if (entity.getComponent(InventoryComponent.class) != null) {
       InventoryComponent inventoryComponent = entity.getComponent(InventoryComponent.class);
@@ -43,6 +56,13 @@ public class InventoryHelpers {
     }
   }
 
+  /**
+   * Drop an item to the ground.
+   *
+   * @param entity   Whose shit we're dropping
+   * @param item     What we're dropping
+   * @param position Where we gonna drop it
+   */
   public void dropItem(Entity entity, Entity item, Vector2 position) {
     if (entity.getComponent(InventoryComponent.class) != null) {
       InventoryComponent inventoryComponent = entity.getComponent(InventoryComponent.class);
@@ -52,12 +72,24 @@ public class InventoryHelpers {
     }
   }
 
+  /**
+   * This seems mostly unnecessary. Drop it at their feet.
+   *
+   * @param entity Whose feet we're dropping shit on
+   * @param item   What we're dropping
+   */
   public void dropItem(Entity entity, Entity item) {
     if (entity.getComponent(InventoryComponent.class) != null) {
       dropItem(entity, item, entity.getComponent(PositionComponent.class).pos);
     }
   }
 
+  /**
+   * Iterate through inventory, return whatever item has the `throwing` flag set to true.
+   *
+   * @param entity Entity whose throwing things
+   * @return The item being thrown
+   */
   public Entity getThrowingItem(Entity entity) {
     ArrayList<Entity> items = entity.getComponent(InventoryComponent.class).items;
 
@@ -72,6 +104,13 @@ public class InventoryHelpers {
     return null;
   }
 
+  /**
+   * Find out if an entity has the ammunition it needs.
+   *
+   * @param entity Who needs to know
+   * @param type   Type of ammunition they're looking for
+   * @return Whether or not they got it
+   */
   public boolean hasAmmunitionOfType(Entity entity, String type) {
     ArrayList<Entity> items = entity.getComponent(InventoryComponent.class).items;
 
@@ -86,6 +125,13 @@ public class InventoryHelpers {
     return false;
   }
 
+  /**
+   * Return the first item of ammunition type given.
+   *
+   * @param entity Entity whose inventory we're looking at
+   * @param type   Type of ammunition we're looking for
+   * @return Some (or, well, 1) ammunition
+   */
   public Entity getAmmunitionOfType(Entity entity, String type) {
     ArrayList<Entity> items = entity.getComponent(InventoryComponent.class).items;
 

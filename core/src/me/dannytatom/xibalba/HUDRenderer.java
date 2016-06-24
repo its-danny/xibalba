@@ -26,6 +26,12 @@ public class HudRenderer {
   private final VerticalGroup areaDetails;
   private final Label lookDetails;
 
+  /**
+   * Renders the HUD.
+   *
+   * @param main  Instance of Main class
+   * @param batch The sprite batch to use (set in PlayScreen)
+   */
   public HudRenderer(Main main, SpriteBatch batch) {
     this.main = main;
 
@@ -53,6 +59,11 @@ public class HudRenderer {
     stage.addActor(bottomTable);
   }
 
+  /**
+   * Do some rendering.
+   *
+   * @param delta Elapsed time
+   */
   public void render(float delta) {
     renderActionLog();
     renderAreaDetails();
@@ -106,7 +117,7 @@ public class HudRenderer {
         main.engine.getEntitiesFor(Family.all(EnemyComponent.class).get());
 
     for (Entity enemy : enemies) {
-      if (main.entityHelpers.isVisibleToPlayer(enemy, main.getCurrentMap())) {
+      if (main.entityHelpers.isVisibleToPlayer(enemy, main.getMap())) {
         AttributesComponent enemyAttributes = enemy.getComponent(AttributesComponent.class);
 
         areaDetails.addActor(new Label(enemyAttributes.name, main.skin));
@@ -132,22 +143,22 @@ public class HudRenderer {
   private void renderLookDetails() {
     lookDetails.clear();
 
-    if (main.state == Main.State.SEARCHING && main.getCurrentMap().target != null) {
-      Cell cell = main.getCurrentMap().getCell(main.getCurrentMap().target);
+    if (main.state == Main.State.SEARCHING && main.getMap().target != null) {
+      Cell cell = main.getMap().getCell(main.getMap().target);
 
       if (cell.forgotten) {
         lookDetails.setText("You remember seeing " + cell.description + ".");
       } else {
         String description = "You see " + cell.description + ".";
 
-        Entity itemAtLocation = main.getCurrentMap().getItemAt(main.getCurrentMap().target);
+        Entity itemAtLocation = main.getMap().getItemAt(main.getMap().target);
 
         if (itemAtLocation != null) {
           String itemDescription = itemAtLocation.getComponent(ItemComponent.class).name;
           description += " A " + itemDescription + " is there.";
         }
 
-        Entity enemyAtLocation = main.getCurrentMap().getEnemyAt(main.getCurrentMap().target);
+        Entity enemyAtLocation = main.getMap().getEnemyAt(main.getMap().target);
 
         if (enemyAtLocation != null) {
           String enemyDescription = enemyAtLocation.getComponent(AttributesComponent.class).name;

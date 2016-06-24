@@ -65,7 +65,7 @@ public class CombatHelpers {
       verb = ic.verbs.get(MathUtils.random(0, ic.verbs.size() - 1));
     }
 
-    int result = rollHit(main.skillHelpers.getSkill(starter, skill));
+    int result = rollHit(main.skillHelpers.getSkillValue(starter, skill));
 
     applyDamage(result, damage, skill, starter, target, verb);
   }
@@ -80,8 +80,10 @@ public class CombatHelpers {
   public void range(Entity starter, Entity target, Entity item, String skill) {
     ItemComponent itemComponent = item.getComponent(ItemComponent.class);
 
-    int result = rollHit(main.skillHelpers.getSkill(starter, skill));
-    int damage = Objects.equals(skill, "throwing") ? itemComponent.attributes.get("throwDamage") : itemComponent.attributes.get("hitDamage");
+    int result = rollHit(main.skillHelpers.getSkillValue(starter, skill));
+    int damage = Objects.equals(skill, "throwing")
+        ? itemComponent.attributes.get("throwDamage")
+        : itemComponent.attributes.get("hitDamage");
 
     applyDamage(
         result, damage, skill, starter, target, "hit"
@@ -142,7 +144,7 @@ public class CombatHelpers {
       main.skillHelpers.levelSkill(starter, skill, 20);
 
       if (critical > 0) {
-        Vector2 splatterSpace = main.getCurrentMap().getEmptySpaceNearEntity(
+        Vector2 splatterSpace = main.getMap().getEmptySpaceNearEntity(
             target.getComponent(PositionComponent.class).pos
         );
 
@@ -167,7 +169,9 @@ public class CombatHelpers {
       Entity remains = new Entity();
       remains.add(new DecorationComponent());
       remains.add(new PositionComponent(target.getComponent(PositionComponent.class).pos));
-      remains.add(new VisualComponent(atlas.createSprite("Level/Cave/Environment/Object/Remains-1")));
+      remains.add(new VisualComponent(
+          atlas.createSprite("Level/Cave/Environment/Object/Remains-1")
+      ));
 
       main.engine.addEntity(remains);
       main.engine.removeEntity(target);

@@ -163,7 +163,7 @@ public class InventoryScreen implements Screen {
         name = "[DARK_GRAY]" + item.name + "[]";
       }
 
-      if (main.equipmentHelpers.isEquip(main.player, entity)) {
+      if (main.equipmentHelpers.isEquipped(main.player, entity)) {
         String location = main.equipmentHelpers.getLocation(main.player, entity);
 
         if (Objects.equals(location, "right hand") || Objects.equals(location, "left hand")) {
@@ -178,27 +178,31 @@ public class InventoryScreen implements Screen {
       if (i == selected) {
         Array<String> actions = new Array<>();
 
-        if (item.actions.get("canHold") && !main.equipmentHelpers.isEquip(main.player, entity)) {
+        if (item.actions.get("canHold")
+            && !main.equipmentHelpers.isEquipped(main.player, entity)) {
           actions.add("[CYAN]H[]old");
         }
 
-        if (item.actions.get("canWear") && !main.equipmentHelpers.isEquip(main.player, entity)) {
+        if (item.actions.get("canWear")
+            && !main.equipmentHelpers.isEquipped(main.player, entity)) {
           actions.add("[CYAN]W[]ear");
         }
 
-        if (item.actions.get("canThrow") && !main.equipmentHelpers.isEquip(main.player, entity)) {
+        if (item.actions.get("canThrow")
+            && !main.equipmentHelpers.isEquipped(main.player, entity)) {
           actions.add("[CYAN]T[]hrow");
         }
 
-        if (item.actions.get("canUse") && !main.equipmentHelpers.isEquip(main.player, entity)) {
+        if (item.actions.get("canUse")
+            && !main.equipmentHelpers.isEquipped(main.player, entity)) {
           actions.add("[CYAN]U[]se");
         }
 
-        if (main.equipmentHelpers.isEquip(main.player, entity)) {
+        if (main.equipmentHelpers.isEquipped(main.player, entity)) {
           actions.add("[CYAN]R[]emove");
         }
 
-        if (!main.equipmentHelpers.isEquip(main.player, entity)) {
+        if (!main.equipmentHelpers.isEquipped(main.player, entity)) {
           actions.add("[CYAN]D[]rop");
         }
 

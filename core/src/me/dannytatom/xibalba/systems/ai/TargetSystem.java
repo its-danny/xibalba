@@ -25,7 +25,7 @@ public class TargetSystem extends SortedIteratingSystem {
   /**
    * TargetSystem constructor.
    *
-   * @param map The map we're on
+   * @param main Instance of Main class
    */
   public TargetSystem(Main main) {
     super(Family.all(TargetComponent.class, PositionComponent.class).get(), new EnergyComparator());
@@ -43,7 +43,8 @@ public class TargetSystem extends SortedIteratingSystem {
     if (brain.path == null || brain.path.isEmpty()) {
       PositionComponent position = ComponentMappers.position.get(entity);
 
-      NavigationGrid<GridCell> grid = new NavigationGrid<>(main.getCurrentMap().createPathfindingMap(), false);
+      NavigationGrid<GridCell> grid =
+          new NavigationGrid<>(main.getMap().createPathfindingMap(), false);
       AStarGridFinder<GridCell> finder = new AStarGridFinder<>(GridCell.class);
 
       brain.path = finder.findPath((int) position.pos.x, (int) position.pos.y,

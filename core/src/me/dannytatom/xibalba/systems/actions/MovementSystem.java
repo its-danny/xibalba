@@ -12,6 +12,11 @@ import me.dannytatom.xibalba.utils.ComponentMappers;
 public class MovementSystem extends ActionSystem {
   private final Main main;
 
+  /**
+   * Handles movement.
+   *
+   * @param main Instance of Main class
+   */
   public MovementSystem(Main main) {
     super(Family.all(MovementComponent.class).get());
 
@@ -29,7 +34,7 @@ public class MovementSystem extends ActionSystem {
     MovementComponent movement = ComponentMappers.movement.get(entity);
     AttributesComponent attributes = ComponentMappers.attributes.get(entity);
 
-    if (movement.pos != null && main.getCurrentMap().isWalkable(movement.pos)) {
+    if (movement.pos != null && main.getMap().isWalkable(movement.pos)) {
       position.pos = movement.pos;
       attributes.energy -= MovementComponent.COST;
     }

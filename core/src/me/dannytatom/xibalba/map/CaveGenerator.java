@@ -9,7 +9,7 @@ public class CaveGenerator {
   private final int width;
   private final int height;
   public boolean[][] geometry;
-  public boolean[][] flooded;
+  private boolean[][] flooded;
 
   /**
    * Generates a cave. `true` is ground, `false` is wall.
@@ -22,6 +22,9 @@ public class CaveGenerator {
     this.height = height;
   }
 
+  /**
+   * Starts the cave generation.
+   */
   public void generate() {
     initialize();
 
@@ -90,7 +93,9 @@ public class CaveGenerator {
     return newGeo;
   }
 
-  // Edge of the geometry should always be inaccessible
+  /**
+   * Edge of the geometry should always be inaccessible.
+   */
   private void emptyGeometryEdges() {
     for (int x = 0; x < geometry.length; x++) {
       for (int y = 0; y < geometry[x].length; y++) {
@@ -98,7 +103,8 @@ public class CaveGenerator {
           geometry[x][y] = false;
         }
 
-        if (x == geometry.length - 1 || y == geometry[x].length - 1 || x == geometry.length - 2 || y == geometry[x].length - 2) {
+        if (x == geometry.length - 1 || y == geometry[x].length - 1
+            || x == geometry.length - 2 || y == geometry[x].length - 2) {
           geometry[x][y] = false;
         }
       }
@@ -142,33 +148,34 @@ public class CaveGenerator {
     }
   }
 
-  private void floodFill(int x, int y) {
-    if (geometry[x][y] && !flooded[x][y]) {
-      flooded[x][y] = true;
+  private void floodFill(int cellX, int cellY) {
+    if (geometry[cellX][cellY] && !flooded[cellX][cellY]) {
+      flooded[cellX][cellY] = true;
     } else {
       return;
     }
 
-    floodFill(x + 1, y);
-    floodFill(x - 1, y);
-    floodFill(x, y + 1);
-    floodFill(x, y - 1);
+    floodFill(cellX + 1, cellY);
+    floodFill(cellX - 1, cellY);
+    floodFill(cellX, cellY + 1);
+    floodFill(cellX, cellY - 1);
   }
 
-  private int countLivingNeighbours(int x, int y) {
+  private int countLivingNeighbours(int cellX, int cellY) {
     int count = 0;
 
     for (int i = -1; i < 2; i++) {
       for (int j = -1; j < 2; j++) {
-        int xNeighbour = x + i;
-        int yNeighbour = y + j;
+        int neighbourX = cellX + i;
+        int neighbourY = cellY + j;
 
-        if (i == 0 && j == 0) {
-          // Do nothing
-        } else if (xNeighbour < 0 || yNeighbour < 0 || xNeighbour >= geometry.length || yNeighbour >= geometry[0].length) {
-          count += 1;
-        } else if (geometry[xNeighbour][yNeighbour]) {
-          count += 1;
+        if (i != 0 || j != 0) {
+          if (neighbourX < 0 || neighbourY < 0
+              || neighbourX >= geometry.length || neighbourY >= geometry[0].length) {
+            count += 1;
+          } else if (geometry[neighbourX][neighbourY]) {
+            count += 1;
+          }
         }
       }
     }

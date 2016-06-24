@@ -140,39 +140,42 @@ public class PlayerInput implements InputProcessor {
         break;
       case Keys.Q:
         if (main.state == Main.State.SEARCHING) {
-          main.getCurrentMap().target = null;
-          main.getCurrentMap().searchingPath = null;
+          main.getMap().target = null;
+          main.getMap().searchingPath = null;
 
           main.state = Main.State.PLAYING;
         } else if (main.state == Main.State.TARGETING) {
-          main.getCurrentMap().target = null;
-          main.getCurrentMap().targetingPath = null;
+          main.getMap().target = null;
+          main.getMap().targetingPath = null;
 
           main.state = Main.State.PLAYING;
         }
         break;
       case Keys.SPACE:
         if (main.state == Main.State.TARGETING) {
-          if (main.getCurrentMap().targetingPath != null && attributes.energy >= RangeComponent.COST) {
+          if (main.getMap().targetingPath != null && attributes.energy >= RangeComponent.COST) {
             Entity primaryWeapon = main.equipmentHelpers.getPrimaryWeapon(main.player);
-            Entity item = null;
-            String skill = null;
+            Entity item;
+            String skill;
 
             if (primaryWeapon != null && primaryWeapon.getComponent(ItemComponent.class).usesAmmunition) {
-              item = main.inventoryHelpers.getAmmunitionOfType(main.player, primaryWeapon.getComponent(ItemComponent.class).ammunitionType);
+              item = main.inventoryHelpers.getAmmunitionOfType(
+                  main.player, primaryWeapon.getComponent(ItemComponent.class).ammunitionType
+              );
+
               skill = primaryWeapon.getComponent(ItemComponent.class).skill;
             } else {
               item = main.inventoryHelpers.getThrowingItem(main.player);
               skill = "throwing";
             }
 
-            main.player.add(new RangeComponent(main.getCurrentMap().target, item, skill));
+            main.player.add(new RangeComponent(main.getMap().target, item, skill));
 
             main.executeTurn = true;
           }
 
-          main.getCurrentMap().target = null;
-          main.getCurrentMap().targetingPath = null;
+          main.getMap().target = null;
+          main.getMap().targetingPath = null;
 
           main.state = Main.State.PLAYING;
         }
@@ -188,6 +191,7 @@ public class PlayerInput implements InputProcessor {
         break;
       case Keys.ESCAPE:
         main.setScreen(new PauseScreen(main));
+        break;
       default:
     }
 
@@ -201,6 +205,7 @@ public class PlayerInput implements InputProcessor {
       case Keys.SHIFT_RIGHT:
         holdingShift = false;
         break;
+      default:
     }
 
     return true;
@@ -240,22 +245,21 @@ public class PlayerInput implements InputProcessor {
    * Handles player movement.
    * <p>
    * <p>One of these 3 happens when attempting to move into a cell:
-   * - Actually move
-   * - Pick up item on the cell, then move
-   * - Melee attack enemy in cell
+   * <p>
+   * <p>Actually move, pick up item on the cell (then move), or melee attack enemy in cell
    *
    * @param energy How much energy the player has
    * @param pos    The position we're attempting to move to
    */
   private void handleMovement(int energy, Vector2 pos) {
-    if (main.getCurrentMap().isWalkable(pos)) {
+    if (main.getMap().isWalkable(pos)) {
       if (energy >= MovementComponent.COST) {
         main.player.add(new MovementComponent(pos));
 
         main.executeTurn = true;
       }
     } else {
-      Entity thing = main.getCurrentMap().getEntityAt(pos);
+      Entity thing = main.getMap().getEntityAt(pos);
 
       if (main.entityHelpers.isItem(thing) && energy >= MovementComponent.COST) {
         if (main.inventoryHelpers.addItem(main.player, thing)) {
@@ -276,10 +280,14 @@ public class PlayerInput implements InputProcessor {
   }
 
   private void handleTargeting(Vector2 pos) {
-    main.getCurrentMap().createTargetingPath(main.player.getComponent(PositionComponent.class).pos, pos);
+    main.getMap().createTargetingPath(
+        main.player.getComponent(PositionComponent.class).pos, pos
+    );
   }
 
   private void handleSearching(Vector2 pos) {
-    main.getCurrentMap().createSearchingPath(main.player.getComponent(PositionComponent.class).pos, pos);
+    main.getMap().createSearchingPath(
+        main.player.getComponent(PositionComponent.class).pos, pos
+    );
   }
 }

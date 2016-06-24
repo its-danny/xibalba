@@ -79,7 +79,7 @@ public class Main extends Game {
     setScreen(new MainMenuScreen(this));
   }
 
-  public Map getCurrentMap() {
+  public Map getMap() {
     return world.maps.get(currentMap);
   }
 

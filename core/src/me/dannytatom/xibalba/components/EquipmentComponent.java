@@ -8,6 +8,9 @@ import java.util.HashMap;
 public class EquipmentComponent implements Component {
   public final HashMap<String, Entity> slots = new HashMap<>();
 
+  /**
+   * Set up the equipment slots.
+   */
   public EquipmentComponent() {
     slots.put("head", null);
     slots.put("body", null);

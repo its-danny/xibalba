@@ -14,13 +14,13 @@ public class SkillHelpers {
   }
 
   /**
-   * Get skill value. TODO: Rename to getSkillValue
+   * Get skill value.
    *
    * @param entity Entity who's skill we care about
    * @param skill  The skill itself
    * @return The skill value
    */
-  public int getSkill(Entity entity, String skill) {
+  public int getSkillValue(Entity entity, String skill) {
     SkillsComponent skills = entity.getComponent(SkillsComponent.class);
     Field field;
     int value = 0;

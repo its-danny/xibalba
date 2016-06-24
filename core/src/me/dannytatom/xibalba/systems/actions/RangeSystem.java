@@ -18,7 +18,6 @@ public class RangeSystem extends ActionSystem {
    * Handles range combat.
    *
    * @param main Instance of the main class, needed for helpers*
-   * @param map  Map we're on
    */
   public RangeSystem(Main main) {
     super(Family.all(RangeComponent.class).get());
@@ -32,7 +31,7 @@ public class RangeSystem extends ActionSystem {
     AttributesComponent attributes = ComponentMappers.attributes.get(entity);
 
     if (range.item != null) {
-      Entity enemy = main.getCurrentMap().getEnemyAt(range.target);
+      Entity enemy = main.getMap().getEnemyAt(range.target);
 
       if (enemy != null) {
         main.combatHelpers.range(entity, enemy, range.item, range.skill);

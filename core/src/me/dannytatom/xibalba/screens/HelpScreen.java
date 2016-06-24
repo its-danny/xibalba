@@ -16,6 +16,11 @@ public class HelpScreen implements Screen {
   private final Main main;
   private final Stage stage;
 
+  /**
+   * The help screen, ya dingus.
+   *
+   * @param main Instance of Main class
+   */
   public HelpScreen(Main main) {
     this.main = main;
 

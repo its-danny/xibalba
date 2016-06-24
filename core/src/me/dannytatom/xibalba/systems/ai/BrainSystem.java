@@ -20,6 +20,11 @@ import java.util.Comparator;
 public class BrainSystem extends SortedIteratingSystem {
   private final Main main;
 
+  /**
+   * Handles AI states.
+   *
+   * @param main Instance of Main class
+   */
   public BrainSystem(Main main) {
     super(Family.all(BrainComponent.class).get(), new EnergyComparator());
 
@@ -51,7 +56,7 @@ public class BrainSystem extends SortedIteratingSystem {
     PositionComponent position = ComponentMappers.position.get(entity);
     AttributesComponent attributes = ComponentMappers.attributes.get(entity);
 
-    if (main.getCurrentMap().isNearPlayer(position.pos)) {
+    if (main.getMap().isNearPlayer(position.pos)) {
       if (attributes.energy >= MeleeComponent.COST) {
         switchToAttack(entity);
       } else if (attributes.energy >= MovementComponent.COST) {
@@ -59,8 +64,8 @@ public class BrainSystem extends SortedIteratingSystem {
       }
     } else {
       if (attributes.energy >= MovementComponent.COST) {
-        if (main.getCurrentMap().canSeePlayer(position.pos, attributes.vision)) {
-          switchToTarget(entity, main.getCurrentMap().getNearPlayer());
+        if (main.getMap().canSeePlayer(position.pos, attributes.vision)) {
+          switchToTarget(entity, main.getMap().getNearPlayer());
         } else {
           switchToWander(entity);
         }
@@ -72,7 +77,7 @@ public class BrainSystem extends SortedIteratingSystem {
     PositionComponent position = ComponentMappers.position.get(entity);
     AttributesComponent attributes = ComponentMappers.attributes.get(entity);
 
-    if (main.getCurrentMap().isNearPlayer(position.pos)) {
+    if (main.getMap().isNearPlayer(position.pos)) {
       if (attributes.energy >= MeleeComponent.COST) {
         switchToAttack(entity);
       } else if (attributes.energy >= MovementComponent.COST) {
@@ -82,8 +87,8 @@ public class BrainSystem extends SortedIteratingSystem {
       }
     } else {
       if (attributes.energy >= MovementComponent.COST) {
-        if (main.getCurrentMap().canSeePlayer(position.pos, attributes.vision)) {
-          switchToTarget(entity, main.getCurrentMap().getNearPlayer());
+        if (main.getMap().canSeePlayer(position.pos, attributes.vision)) {
+          switchToTarget(entity, main.getMap().getNearPlayer());
         } else {
           switchToWander(entity);
         }
@@ -97,9 +102,9 @@ public class BrainSystem extends SortedIteratingSystem {
     PositionComponent position = ComponentMappers.position.get(entity);
     AttributesComponent attributes = ComponentMappers.attributes.get(entity);
     TargetComponent target = ComponentMappers.target.get(entity);
-    Vector2 playerPosition = main.getCurrentMap().getPlayerPosition();
+    Vector2 playerPosition = main.getMap().getPlayerPosition();
 
-    if (main.getCurrentMap().isNearPlayer(position.pos)) {
+    if (main.getMap().isNearPlayer(position.pos)) {
       if (attributes.energy >= MeleeComponent.COST) {
         switchToAttack(entity);
       } else {
@@ -107,9 +112,9 @@ public class BrainSystem extends SortedIteratingSystem {
       }
     } else {
       if (attributes.energy >= MovementComponent.COST) {
-        if (main.getCurrentMap().canSeePlayer(position.pos, attributes.vision)) {
+        if (main.getMap().canSeePlayer(position.pos, attributes.vision)) {
           if (playerPosition != target.pos) {
-            switchToTarget(entity, main.getCurrentMap().getNearPlayer());
+            switchToTarget(entity, main.getMap().getNearPlayer());
           }
         } else {
           switchToWander(entity);
@@ -124,7 +129,7 @@ public class BrainSystem extends SortedIteratingSystem {
     PositionComponent position = ComponentMappers.position.get(entity);
     AttributesComponent attributes = ComponentMappers.attributes.get(entity);
 
-    if (main.getCurrentMap().isNearPlayer(position.pos)) {
+    if (main.getMap().isNearPlayer(position.pos)) {
       if (attributes.energy >= MeleeComponent.COST) {
         entity.add(new MeleeComponent(main.entityHelpers.getPlayer()));
       } else if (attributes.energy >= MovementComponent.COST) {
@@ -132,8 +137,8 @@ public class BrainSystem extends SortedIteratingSystem {
       }
     } else {
       if (attributes.energy >= MovementComponent.COST) {
-        if (main.getCurrentMap().canSeePlayer(position.pos, attributes.vision)) {
-          switchToTarget(entity, main.getCurrentMap().getNearPlayer());
+        if (main.getMap().canSeePlayer(position.pos, attributes.vision)) {
+          switchToTarget(entity, main.getMap().getNearPlayer());
         } else {
           switchToWander(entity);
         }

@@ -11,6 +11,11 @@ import me.dannytatom.xibalba.utils.ComponentMappers;
 public class MeleeSystem extends ActionSystem {
   private final Main main;
 
+  /**
+   * Handles melee combat.
+   *
+   * @param main Instance of Main class
+   */
   public MeleeSystem(Main main) {
     super(Family.all(MeleeComponent.class).get());
 

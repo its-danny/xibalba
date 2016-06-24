@@ -39,7 +39,7 @@ public class PlayScreen implements Screen {
 
     // Add player entity
     PositionComponent playerPosition = main.player.getComponent(PositionComponent.class);
-    playerPosition.pos = main.getCurrentMap().findPlayerStart();
+    playerPosition.pos = main.getMap().findPlayerStart();
 
     // Setup renderers
     worldRenderer = new WorldRenderer(main, batch);

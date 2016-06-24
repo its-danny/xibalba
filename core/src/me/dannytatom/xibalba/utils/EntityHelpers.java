@@ -31,6 +31,11 @@ public class EntityHelpers {
 
   private final ShadowCaster caster;
 
+  /**
+   * Helpers for dealing with entities.
+   *
+   * @param main Instance of Main class
+   */
   public EntityHelpers(Main main) {
     this.main = main;
 
@@ -62,6 +67,12 @@ public class EntityHelpers {
     player.add(new EquipmentComponent());
   }
 
+  /**
+   * Spawn exit entity.
+   *
+   * @param position Where to spawn it
+   * @return The exit entity
+   */
   public Entity spawnExit(Vector2 position) {
     TextureAtlas atlas = main.assets.get("sprites/main.atlas");
 
@@ -106,11 +117,12 @@ public class EntityHelpers {
 
   /**
    * Spawn an item somewhere.
+   * <p>
+   * <p>TODO: This is terrible, fix it pls. See TODO in ItemComponent.
    *
    * @param type     What type of item to spawn
    * @param position Vector2 of where to spawn it
    * @return The item
-   * <p> TODO: This is terrible, fix it pls. See TODO in ItemComponent.
    */
   public Entity spawnItem(String type, Vector2 position) {
     TextureAtlas atlas = main.assets.get("sprites/main.atlas");
@@ -142,9 +154,13 @@ public class EntityHelpers {
     return entity;
   }
 
+  /**
+   * Spawn a random filler decoration.
+   *
+   * @param position Where to spawn it
+   * @return The decoration entity
+   */
   public Entity spawnRandomDecoration(Vector2 position) {
-    Entity decoration = new Entity();
-
     Array<String> types = new Array<>();
     types.add("Level/Cave/Environment/Object/Mushroom-1");
     types.add("Level/Cave/Environment/Object/Mushroom-2");
@@ -155,6 +171,8 @@ public class EntityHelpers {
     types.add("Level/Cave/Environment/Object/Vase-1");
 
     TextureAtlas atlas = main.assets.get("sprites/main.atlas");
+
+    Entity decoration = new Entity();
 
     decoration.add(new DecorationComponent());
     decoration.add(new PositionComponent(position));
@@ -181,6 +199,13 @@ public class EntityHelpers {
     return entity != null && entity.getComponent(ExitComponent.class) != null;
   }
 
+  /**
+   * Checks if an entity is hidden or not.
+   *
+   * @param entity Entity to check
+   * @param map    Instance of the map said entity is on
+   * @return Whether or not it's visible
+   */
   public boolean isVisible(Entity entity, Map map) {
     PositionComponent positionComponent = entity.getComponent(PositionComponent.class);
 
@@ -188,6 +213,13 @@ public class EntityHelpers {
         && !map.getCell(entity.getComponent(PositionComponent.class).pos).hidden;
   }
 
+  /**
+   * Checks if an entity is visible to the player or not.
+   *
+   * @param entity Entity to check
+   * @param map    Instance of the map said entity is on
+   * @return Whether or not it's visible to the player
+   */
   public boolean isVisibleToPlayer(Entity entity, Map map) {
     PositionComponent enemyPosition = entity.getComponent(PositionComponent.class);
     PositionComponent playerPosition = getPlayer().getComponent(PositionComponent.class);

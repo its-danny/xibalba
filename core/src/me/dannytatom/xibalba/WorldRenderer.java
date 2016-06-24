@@ -17,6 +17,7 @@ import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.VisualComponent;
 import me.dannytatom.xibalba.map.Cell;
+import me.dannytatom.xibalba.map.Map;
 import me.dannytatom.xibalba.map.ShadowCaster;
 import me.dannytatom.xibalba.utils.ComponentMappers;
 import org.xguzm.pathfinding.grid.GridCell;
@@ -34,6 +35,7 @@ public class WorldRenderer {
   /**
    * Renders the game world.
    *
+   * @param main  Instance of Main class
    * @param batch The sprite batch to use (set in PlayScreen)
    */
   public WorldRenderer(Main main, SpriteBatch batch) {
@@ -69,14 +71,14 @@ public class WorldRenderer {
     AttributesComponent playerAttributes = main.player.getComponent(AttributesComponent.class);
 
     float[][] lightMap = caster.calculateFov(
-        main.getCurrentMap().createFovMap(),
+        main.getMap().createFovMap(),
         (int) playerPosition.pos.x, (int) playerPosition.pos.y,
         playerAttributes.vision
     );
 
-    for (int x = 0; x < main.getCurrentMap().width; x++) {
-      for (int y = 0; y < main.getCurrentMap().height; y++) {
-        Cell cell = main.getCurrentMap().getCell(x, y);
+    for (int x = 0; x < main.getMap().width; x++) {
+      for (int y = 0; y < main.getMap().height; y++) {
+        Cell cell = main.getMap().getCell(x, y);
 
         if (lightMap[x][y] > 0) {
           cell.hidden = false;
@@ -92,8 +94,8 @@ public class WorldRenderer {
       }
     }
 
-    if (main.getCurrentMap().targetingPath != null) {
-      for (GridCell cell : main.getCurrentMap().targetingPath) {
+    if (main.getMap().targetingPath != null) {
+      for (GridCell cell : main.getMap().targetingPath) {
         TextureAtlas atlas = main.assets.get("sprites/main.atlas");
 
         batch.setColor(1f, 1f, 1f,
@@ -106,8 +108,8 @@ public class WorldRenderer {
       }
     }
 
-    if (main.getCurrentMap().searchingPath != null) {
-      for (GridCell cell : main.getCurrentMap().searchingPath) {
+    if (main.getMap().searchingPath != null) {
+      for (GridCell cell : main.getMap().searchingPath) {
         TextureAtlas atlas = main.assets.get("sprites/main.atlas");
 
         batch.setColor(1f, 1f, 1f,
@@ -122,9 +124,9 @@ public class WorldRenderer {
 
     renderDecorations(lightMap);
     renderItems(lightMap);
-    renderPlayer(delta, lightMap);
-    renderEnemies(delta, lightMap);
-    renderStairs(delta, lightMap);
+    renderPlayer(lightMap);
+    renderEnemies(lightMap);
+    renderStairs(lightMap);
 
     batch.end();
   }
@@ -135,8 +137,9 @@ public class WorldRenderer {
 
     for (Entity entity : entities) {
       PositionComponent position = ComponentMappers.position.get(entity);
+      Map map = main.getMap();
 
-      if (main.getCurrentMap().cellExists(position.pos) && !main.getCurrentMap().getCell(position.pos).hidden) {
+      if (map.cellExists(position.pos) && !map.getCell(position.pos).hidden) {
         VisualComponent visual = ComponentMappers.visual.get(entity);
 
         batch.setColor(1f, 1f, 1f, lightMap[(int) position.pos.x][(int) position.pos.y]);
@@ -155,7 +158,7 @@ public class WorldRenderer {
     for (Entity entity : entities) {
       PositionComponent position = ComponentMappers.position.get(entity);
 
-      if (!main.getCurrentMap().getCell(position.pos).hidden) {
+      if (!main.getMap().getCell(position.pos).hidden) {
         VisualComponent visual = ComponentMappers.visual.get(entity);
 
         batch.setColor(1f, 1f, 1f, lightMap[(int) position.pos.x][(int) position.pos.y]);
@@ -165,57 +168,61 @@ public class WorldRenderer {
     }
   }
 
-  private void renderPlayer(float delta, float[][] lightMap) {
+  private void renderPlayer(float[][] lightMap) {
     ImmutableArray<Entity> entities =
         main.engine.getEntitiesFor(Family.all(PlayerComponent.class).get());
 
     for (Entity entity : entities) {
       PositionComponent position = ComponentMappers.position.get(entity);
 
-      if (!main.getCurrentMap().getCell(position.pos).hidden) {
+      if (!main.getMap().getCell(position.pos).hidden) {
         VisualComponent visual = ComponentMappers.visual.get(entity);
 
         batch.setColor(1f, 1f, 1f, lightMap[(int) position.pos.x][(int) position.pos.y]);
         batch.draw(
-            visual.sprite, position.pos.x * SPRITE_WIDTH, position.pos.y * SPRITE_HEIGHT + SPRITE_HEIGHT / 4
+            visual.sprite,
+            position.pos.x * SPRITE_WIDTH,
+            position.pos.y * SPRITE_HEIGHT + (SPRITE_HEIGHT / 4)
         );
         batch.setColor(1f, 1f, 1f, 1f);
       }
     }
   }
 
-  private void renderEnemies(float delta, float[][] lightMap) {
+  private void renderEnemies(float[][] lightMap) {
     ImmutableArray<Entity> entities =
         main.engine.getEntitiesFor(Family.all(EnemyComponent.class).get());
 
     for (Entity entity : entities) {
       PositionComponent position = ComponentMappers.position.get(entity);
 
-      if (main.entityHelpers.isVisible(entity, main.getCurrentMap())) {
+      if (main.entityHelpers.isVisible(entity, main.getMap())) {
         VisualComponent visual = ComponentMappers.visual.get(entity);
 
         batch.setColor(1f, 1f, 1f, lightMap[(int) position.pos.x][(int) position.pos.y]);
         batch.draw(
-            visual.sprite, position.pos.x * SPRITE_WIDTH, position.pos.y * SPRITE_HEIGHT + SPRITE_HEIGHT / 4
+            visual.sprite,
+            position.pos.x * SPRITE_WIDTH,
+            position.pos.y * SPRITE_HEIGHT + (SPRITE_HEIGHT / 4)
         );
         batch.setColor(1f, 1f, 1f, 1f);
       }
     }
   }
 
-  private void renderStairs(float delta, float[][] lightMap) {
+  private void renderStairs(float[][] lightMap) {
     ImmutableArray<Entity> entities =
         main.engine.getEntitiesFor(Family.all(ExitComponent.class).get());
 
     for (Entity entity : entities) {
       PositionComponent position = ComponentMappers.position.get(entity);
 
-      if (main.entityHelpers.isVisible(entity, main.getCurrentMap())) {
+      if (main.entityHelpers.isVisible(entity, main.getMap())) {
         VisualComponent visual = ComponentMappers.visual.get(entity);
 
         batch.setColor(1f, 1f, 1f, lightMap[(int) position.pos.x][(int) position.pos.y]);
         batch.draw(
-            visual.sprite, position.pos.x * SPRITE_WIDTH, position.pos.y * SPRITE_HEIGHT + SPRITE_HEIGHT / 4
+            visual.sprite, position.pos.x * SPRITE_WIDTH, position.pos.y * SPRITE_HEIGHT
         );
         batch.setColor(1f, 1f, 1f, 1f);
       }
