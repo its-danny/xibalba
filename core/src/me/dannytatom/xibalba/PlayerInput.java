@@ -243,9 +243,9 @@ public class PlayerInput implements InputProcessor {
 
   /**
    * Handles player movement.
-   * <p>
+   *
    * <p>One of these 3 happens when attempting to move into a cell:
-   * <p>
+   *
    * <p>Actually move, pick up item on the cell (then move), or melee attack enemy in cell
    *
    * @param energy How much energy the player has

@@ -406,6 +406,7 @@ public class Map {
    * Finding out if a cell exists within the map.
    *
    * @param position Position we're checking
+   *
    * @return If it does indeed exist
    */
   public boolean cellExists(Vector2 position) {
@@ -419,6 +420,7 @@ public class Map {
    *
    * @param cellX cellX pos of cell
    * @param cellY cellY pos of cell
+   *
    * @return The Cell instance at this pos
    */
   public Cell getCell(int cellX, int cellY) {
@@ -442,6 +444,7 @@ public class Map {
    * Attempt to get the entity at the given position, returns null if nobody is there.
    *
    * @param position The entity's position
+   *
    * @return The entity
    */
   public Entity getEntityAt(Vector2 position) {
@@ -463,6 +466,7 @@ public class Map {
    * Get enemy from a location.
    *
    * @param position Where the enemy is
+   *
    * @return The enemy
    */
   public Entity getEnemyAt(Vector2 position) {
@@ -482,6 +486,7 @@ public class Map {
    * Get item from a location.
    *
    * @param position Where the item is
+   *
    * @return The item
    */
   public Entity getItemAt(Vector2 position) {
@@ -533,6 +538,7 @@ public class Map {
    * Returns whether or not the given position is blocked.
    *
    * @param position Position to check
+   *
    * @return Is it blocked?
    */
   private boolean isBlocked(Vector2 position) {
@@ -566,6 +572,7 @@ public class Map {
    * Check if something is near the player.
    *
    * @param position Starting position
+   *
    * @return Whether we're near the player or not
    */
   public boolean isNearPlayer(Vector2 position) {
@@ -582,6 +589,7 @@ public class Map {
    *
    * @param position Entity's position
    * @param distance Radius to use
+   *
    * @return Can they see the player?
    */
   public boolean canSeePlayer(Vector2 position, int distance) {

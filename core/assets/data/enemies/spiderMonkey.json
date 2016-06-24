@@ -1,5 +1,6 @@
 {
   "name": "Spider Monkey",
+  "description": "It's a monkey, bro.",
   "visual": {
     "spritePath": "Level/Cave/Enemy/Monkey-1"
   },

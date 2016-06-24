@@ -52,9 +52,6 @@ public class MainMenuScreen implements Screen {
 
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-    stage.act(delta);
-    stage.draw();
-
     if (Gdx.input.isKeyJustPressed(Input.Keys.N)) {
       main.setScreen(new TraitsScreen(main));
     }
@@ -62,6 +59,9 @@ public class MainMenuScreen implements Screen {
     if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
       Gdx.app.exit();
     }
+
+    stage.act(delta);
+    stage.draw();
   }
 
   @Override

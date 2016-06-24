@@ -80,6 +80,7 @@ public class PlayScreen implements Screen {
   @Override
   public void resize(int width, int height) {
     worldRenderer.resize(width, height);
+    hudRenderer.resize(width, height);
   }
 
   @Override

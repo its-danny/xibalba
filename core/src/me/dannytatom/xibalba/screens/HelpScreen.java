@@ -54,9 +54,6 @@ public class HelpScreen implements Screen {
 
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-    stage.act(delta);
-    stage.draw();
-
     if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)) {
       main.setScreen(new CharacterScreen(main));
     }
@@ -68,6 +65,9 @@ public class HelpScreen implements Screen {
     if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
       main.setScreen(main.playScreen);
     }
+
+    stage.act(delta);
+    stage.draw();
   }
 
   @Override

@@ -18,6 +18,7 @@ public class SkillHelpers {
    *
    * @param entity Entity who's skill we care about
    * @param skill  The skill itself
+   *
    * @return The skill value
    */
   public int getSkillValue(Entity entity, String skill) {

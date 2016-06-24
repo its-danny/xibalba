@@ -22,6 +22,7 @@ public class InventoryHelpers {
    *
    * @param entity Entity we wanna to give shit to
    * @param item   The item itself
+   *
    * @return Whether or not it was added
    */
   public boolean addItem(Entity entity, Entity item) {
@@ -88,6 +89,7 @@ public class InventoryHelpers {
    * Iterate through inventory, return whatever item has the `throwing` flag set to true.
    *
    * @param entity Entity whose throwing things
+   *
    * @return The item being thrown
    */
   public Entity getThrowingItem(Entity entity) {
@@ -109,6 +111,7 @@ public class InventoryHelpers {
    *
    * @param entity Who needs to know
    * @param type   Type of ammunition they're looking for
+   *
    * @return Whether or not they got it
    */
   public boolean hasAmmunitionOfType(Entity entity, String type) {
@@ -130,6 +133,7 @@ public class InventoryHelpers {
    *
    * @param entity Entity whose inventory we're looking at
    * @param type   Type of ammunition we're looking for
+   *
    * @return Some (or, well, 1) ammunition
    */
   public Entity getAmmunitionOfType(Entity entity, String type) {

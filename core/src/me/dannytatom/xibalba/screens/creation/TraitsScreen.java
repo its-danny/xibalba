@@ -176,9 +176,6 @@ public class TraitsScreen implements Screen {
       }
     }
 
-    stage.act(delta);
-    stage.draw();
-
     if (Gdx.input.isKeyJustPressed(Input.Keys.J)) {
       if (currentIndex == currentGroup.getChildren().size - 1) {
         currentIndex = 0;
@@ -261,6 +258,9 @@ public class TraitsScreen implements Screen {
     if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
       main.setScreen(new MainMenuScreen(main));
     }
+
+    stage.act(delta);
+    stage.draw();
   }
 
   @Override

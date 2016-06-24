@@ -53,9 +53,6 @@ public class PauseScreen implements Screen {
 
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-    stage.act(delta);
-    stage.draw();
-
     if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
       main.setScreen(main.playScreen);
     }
@@ -70,6 +67,9 @@ public class PauseScreen implements Screen {
     if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
       Gdx.app.exit();
     }
+
+    stage.act(delta);
+    stage.draw();
   }
 
   @Override

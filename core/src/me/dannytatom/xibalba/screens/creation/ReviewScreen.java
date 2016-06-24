@@ -85,17 +85,17 @@ class ReviewScreen implements Screen {
 
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-    stage.act(delta);
-    stage.draw();
-
     if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
-      main.player.add(new AttributesComponent("Aapo", 100, 10, 50, 5, 5));
+      main.player.add(new AttributesComponent("Aapo", "It's you", 100, 10, 50, 5, 5));
       main.setScreen(new LoadingScreen(main));
     }
 
     if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
       main.setScreen(new MainMenuScreen(main));
     }
+
+    stage.act(delta);
+    stage.draw();
   }
 
   @Override

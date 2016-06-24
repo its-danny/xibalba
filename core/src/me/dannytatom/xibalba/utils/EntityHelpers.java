@@ -71,6 +71,7 @@ public class EntityHelpers {
    * Spawn exit entity.
    *
    * @param position Where to spawn it
+   *
    * @return The exit entity
    */
   public Entity spawnExit(Vector2 position) {
@@ -89,6 +90,7 @@ public class EntityHelpers {
    *
    * @param type     What type of enemy to spawn
    * @param position Vector2 of where to spawn them
+   *
    * @return The enemy
    */
   public Entity spawnEnemy(String type, Vector2 position) {
@@ -105,6 +107,7 @@ public class EntityHelpers {
     entity.add(new SkillsComponent());
     entity.add(new AttributesComponent(
         json.name,
+        json.description,
         json.attributes.get("speed"),
         json.attributes.get("vision"),
         json.attributes.get("maxHealth"),
@@ -117,11 +120,12 @@ public class EntityHelpers {
 
   /**
    * Spawn an item somewhere.
-   * <p>
+   *
    * <p>TODO: This is terrible, fix it pls. See TODO in ItemComponent.
    *
    * @param type     What type of item to spawn
    * @param position Vector2 of where to spawn it
+   *
    * @return The item
    */
   public Entity spawnItem(String type, Vector2 position) {
@@ -158,6 +162,7 @@ public class EntityHelpers {
    * Spawn a random filler decoration.
    *
    * @param position Where to spawn it
+   *
    * @return The decoration entity
    */
   public Entity spawnRandomDecoration(Vector2 position) {
@@ -204,6 +209,7 @@ public class EntityHelpers {
    *
    * @param entity Entity to check
    * @param map    Instance of the map said entity is on
+   *
    * @return Whether or not it's visible
    */
   public boolean isVisible(Entity entity, Map map) {
@@ -218,6 +224,7 @@ public class EntityHelpers {
    *
    * @param entity Entity to check
    * @param map    Instance of the map said entity is on
+   *
    * @return Whether or not it's visible to the player
    */
   public boolean isVisibleToPlayer(Entity entity, Map map) {

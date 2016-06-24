@@ -16,6 +16,7 @@ public class EquipmentHelpers {
    *
    * @param entity The entity whose equipment we're checking
    * @param item   The item we want to check
+   *
    * @return Whether or not it's equipped
    */
   public boolean isEquipped(Entity entity, Entity item) {
@@ -29,6 +30,7 @@ public class EquipmentHelpers {
    *
    * @param entity The entity whose equipment we're checking
    * @param item   The item we want to check
+   *
    * @return Location of item
    */
   public String getLocation(Entity entity, Entity item) {
@@ -97,6 +99,7 @@ public class EquipmentHelpers {
    * Get combined defense from all the items they're wearing.
    *
    * @param entity Who we're getting defense of
+   *
    * @return Their combined defense
    */
   public int getCombinedDefense(Entity entity) {

@@ -23,9 +23,6 @@ import me.dannytatom.xibalba.utils.ComponentMappers;
 import org.xguzm.pathfinding.grid.GridCell;
 
 public class WorldRenderer {
-  private static final int SPRITE_WIDTH = 16;
-  private static final int SPRITE_HEIGHT = 16;
-
   private final Main main;
   private final SpriteBatch batch;
   private final ShadowCaster caster;
@@ -59,8 +56,8 @@ public class WorldRenderer {
 
     // Set camera to follow player
     camera.position.set(
-        playerPosition.pos.x * SPRITE_WIDTH,
-        playerPosition.pos.y * SPRITE_HEIGHT, 0
+        playerPosition.pos.x * Main.SPRITE_WIDTH,
+        playerPosition.pos.y * Main.SPRITE_HEIGHT, 0
     );
 
     camera.update();
@@ -88,7 +85,7 @@ public class WorldRenderer {
           cell.forgotten = lightMap[x][y] <= 0;
 
           batch.setColor(1f, 1f, 1f, lightMap[x][y] <= 0.15f ? 0.15f : lightMap[x][y]);
-          batch.draw(cell.sprite, x * SPRITE_WIDTH, y * SPRITE_HEIGHT);
+          batch.draw(cell.sprite, x * Main.SPRITE_WIDTH, y * Main.SPRITE_HEIGHT);
           batch.setColor(1f, 1f, 1f, 1f);
         }
       }
@@ -102,7 +99,7 @@ public class WorldRenderer {
             lightMap[cell.x][cell.y] <= 0.5f ? 0.5f : lightMap[cell.x][cell.y]);
         batch.draw(
             atlas.createSprite("Level/Cave/UI/Target-1"),
-            cell.x * SPRITE_WIDTH, cell.y * SPRITE_HEIGHT
+            cell.x * Main.SPRITE_WIDTH, cell.y * Main.SPRITE_HEIGHT
         );
         batch.setColor(1f, 1f, 1f, 1f);
       }
@@ -116,7 +113,7 @@ public class WorldRenderer {
             lightMap[cell.x][cell.y] <= 0.5f ? 0.5f : lightMap[cell.x][cell.y]);
         batch.draw(
             atlas.createSprite("Level/Cave/UI/Target-1"),
-            cell.x * SPRITE_WIDTH, cell.y * SPRITE_HEIGHT
+            cell.x * Main.SPRITE_WIDTH, cell.y * Main.SPRITE_HEIGHT
         );
         batch.setColor(1f, 1f, 1f, 1f);
       }
@@ -143,7 +140,9 @@ public class WorldRenderer {
         VisualComponent visual = ComponentMappers.visual.get(entity);
 
         batch.setColor(1f, 1f, 1f, lightMap[(int) position.pos.x][(int) position.pos.y]);
-        batch.draw(visual.sprite, position.pos.x * SPRITE_WIDTH, position.pos.y * SPRITE_HEIGHT);
+        batch.draw(
+            visual.sprite, position.pos.x * Main.SPRITE_WIDTH, position.pos.y * Main.SPRITE_HEIGHT
+        );
         batch.setColor(1f, 1f, 1f, 1f);
       }
     }
@@ -162,7 +161,9 @@ public class WorldRenderer {
         VisualComponent visual = ComponentMappers.visual.get(entity);
 
         batch.setColor(1f, 1f, 1f, lightMap[(int) position.pos.x][(int) position.pos.y]);
-        batch.draw(visual.sprite, position.pos.x * SPRITE_WIDTH, position.pos.y * SPRITE_HEIGHT);
+        batch.draw(
+            visual.sprite, position.pos.x * Main.SPRITE_WIDTH, position.pos.y * Main.SPRITE_HEIGHT
+        );
         batch.setColor(1f, 1f, 1f, 1f);
       }
     }
@@ -181,8 +182,8 @@ public class WorldRenderer {
         batch.setColor(1f, 1f, 1f, lightMap[(int) position.pos.x][(int) position.pos.y]);
         batch.draw(
             visual.sprite,
-            position.pos.x * SPRITE_WIDTH,
-            position.pos.y * SPRITE_HEIGHT + (SPRITE_HEIGHT / 4)
+            position.pos.x * Main.SPRITE_WIDTH,
+            position.pos.y * Main.SPRITE_HEIGHT + (Main.SPRITE_HEIGHT / 4)
         );
         batch.setColor(1f, 1f, 1f, 1f);
       }
@@ -202,8 +203,8 @@ public class WorldRenderer {
         batch.setColor(1f, 1f, 1f, lightMap[(int) position.pos.x][(int) position.pos.y]);
         batch.draw(
             visual.sprite,
-            position.pos.x * SPRITE_WIDTH,
-            position.pos.y * SPRITE_HEIGHT + (SPRITE_HEIGHT / 4)
+            position.pos.x * Main.SPRITE_WIDTH,
+            position.pos.y * Main.SPRITE_HEIGHT + (Main.SPRITE_HEIGHT / 4)
         );
         batch.setColor(1f, 1f, 1f, 1f);
       }
@@ -222,7 +223,7 @@ public class WorldRenderer {
 
         batch.setColor(1f, 1f, 1f, lightMap[(int) position.pos.x][(int) position.pos.y]);
         batch.draw(
-            visual.sprite, position.pos.x * SPRITE_WIDTH, position.pos.y * SPRITE_HEIGHT
+            visual.sprite, position.pos.x * Main.SPRITE_WIDTH, position.pos.y * Main.SPRITE_HEIGHT
         );
         batch.setColor(1f, 1f, 1f, 1f);
       }
@@ -230,6 +231,6 @@ public class WorldRenderer {
   }
 
   public void resize(int width, int height) {
-    viewport.update(width, height);
+    viewport.update(width, height, true);
   }
 }

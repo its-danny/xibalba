@@ -72,9 +72,6 @@ public class InventoryScreen implements Screen {
 
     renderInventory();
 
-    stage.act(delta);
-    stage.draw();
-
     if (Gdx.input.isKeyJustPressed(Input.Keys.J)) {
       if (selected < items.size() - 1) {
         selected += 1;
@@ -125,6 +122,9 @@ public class InventoryScreen implements Screen {
     if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
       main.setScreen(main.playScreen);
     }
+
+    stage.act(delta);
+    stage.draw();
   }
 
   @Override

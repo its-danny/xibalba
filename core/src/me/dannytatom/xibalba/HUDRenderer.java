@@ -7,6 +7,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
@@ -25,6 +26,9 @@ public class HudRenderer {
   private final VerticalGroup actionLog;
   private final VerticalGroup areaDetails;
   private final Label lookDetails;
+  private final Dialog lookDialog;
+  private final VerticalGroup lookDialogList;
+  private boolean lookDialogShowing;
 
   /**
    * Renders the HUD.
@@ -37,6 +41,7 @@ public class HudRenderer {
 
     Viewport viewport = new FitViewport(960, 540, new OrthographicCamera());
     stage = new Stage(viewport, batch);
+    Gdx.input.setInputProcessor(stage);
 
     Table topTable = new Table();
     topTable.top().left();
@@ -57,6 +62,14 @@ public class HudRenderer {
     bottomTable.add(lookDetails).pad(10, 10, 10, 10);
 
     stage.addActor(bottomTable);
+
+    lookDialog = new Dialog("", main.skin);
+    lookDialog.pad(5, 10, 15, 10);
+    lookDialog.setModal(false);
+    lookDialog.setMovable(false);
+    lookDialogList = new VerticalGroup().left();
+    lookDialog.add(lookDialogList);
+    lookDialogShowing = false;
   }
 
   /**
@@ -71,6 +84,10 @@ public class HudRenderer {
 
     stage.act(delta);
     stage.draw();
+  }
+
+  public void resize(int width, int height) {
+    stage.getViewport().update(width, height, true);
   }
 
   private void renderActionLog() {
@@ -142,6 +159,7 @@ public class HudRenderer {
 
   private void renderLookDetails() {
     lookDetails.clear();
+    lookDialogList.clear();
 
     if (main.state == Main.State.SEARCHING && main.getMap().target != null) {
       Cell cell = main.getMap().getCell(main.getMap().target);
@@ -149,23 +167,62 @@ public class HudRenderer {
       if (cell.forgotten) {
         lookDetails.setText("You remember seeing " + cell.description + ".");
       } else {
-        String description = "You see " + cell.description + ".";
+        lookDetails.setText("You see " + cell.description + ".");
+
+        boolean showLookDialog = false;
 
         Entity itemAtLocation = main.getMap().getItemAt(main.getMap().target);
 
         if (itemAtLocation != null) {
-          String itemDescription = itemAtLocation.getComponent(ItemComponent.class).name;
-          description += " A " + itemDescription + " is there.";
+          showLookDialog = true;
+          ItemComponent itemComponent = itemAtLocation.getComponent(ItemComponent.class);
+
+          lookDialogList.addActor(
+              new Label("[YELLOW]" + itemComponent.name, main.skin)
+          );
+
+          lookDialogList.addActor(
+              new Label("[LIGHT_GRAY]" + itemComponent.description, main.skin)
+          );
         }
 
         Entity enemyAtLocation = main.getMap().getEnemyAt(main.getMap().target);
 
         if (enemyAtLocation != null) {
-          String enemyDescription = enemyAtLocation.getComponent(AttributesComponent.class).name;
-          description += " A " + enemyDescription + " is there.";
+          showLookDialog = true;
+          AttributesComponent attributesComponent =
+              enemyAtLocation.getComponent(AttributesComponent.class);
+
+          lookDialogList.addActor(
+              new Label("[RED]" + attributesComponent.name, main.skin)
+          );
+
+          lookDialogList.addActor(
+              new Label("[LIGHT_GRAY]" + attributesComponent.description, main.skin)
+          );
         }
 
-        lookDetails.setText(description);
+        if (lookDialogShowing) {
+          if (!showLookDialog) {
+            lookDialogShowing = false;
+            lookDialog.hide(null);
+          }
+        } else {
+          if (showLookDialog) {
+            lookDialogShowing = true;
+            lookDialog.show(stage, null);
+
+            lookDialog.setPosition(
+                Math.round((stage.getWidth() - lookDialog.getWidth()) / 2),
+                Math.round((stage.getHeight() - lookDialog.getHeight()) / 2)
+            );
+          }
+        }
+      }
+    } else {
+      if (lookDialogShowing) {
+        lookDialogShowing = false;
+        lookDialog.hide(null);
       }
     }
   }

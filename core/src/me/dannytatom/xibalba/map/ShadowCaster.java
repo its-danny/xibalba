@@ -11,17 +11,18 @@ public class ShadowCaster {
 
   /**
    * http://www.roguebasin.com/index.php?title=Improved_Shadowcasting_in_Java
-   * <p>
-   * <p>Calculates the Field Of View for the provided map from the given x, y coordinates.
-   * Returns a lightmap for a result where the values represent a percentage of fully lit.
-   * <p>
-   * <p>A value equal to or below 0 means that cell is not in the field of view,
-   * whereas a value equal to or above 1 means that cell is in the field of view.
+   *
+   * <p>Calculates the Field Of View for the provided map from the given x, y coordinates. Returns a
+   * lightmap for a result where the values represent a percentage of fully lit.
+   *
+   * <p>A value equal to or below 0 means that cell is not in the field of view, whereas a value
+   * equal to or above 1 means that cell is in the field of view.
    *
    * @param resistanceMap the grid of cells to calculate on where 0 is transparent and 1 is opaque
    * @param startX        the horizontal component of the starting location
    * @param startY        the vertical component of the starting location
    * @param radius        the maximum distance to draw the FOV
+   *
    * @return the computed light grid
    */
   public float[][] calculateFov(float[][] resistanceMap, int startX, int startY, float radius) {

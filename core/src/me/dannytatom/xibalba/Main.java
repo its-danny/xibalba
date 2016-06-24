@@ -23,6 +23,8 @@ import me.dannytatom.xibalba.utils.InventoryHelpers;
 import me.dannytatom.xibalba.utils.SkillHelpers;
 
 public class Main extends Game {
+  public static final int SPRITE_WIDTH = 16;
+  public static final int SPRITE_HEIGHT = 16;
   public State state;
   public AssetManager assets;
   public Skin skin;
@@ -87,6 +89,7 @@ public class Main extends Game {
    * Hex to RGBA.
    *
    * @param hex The color to parse
+   *
    * @return A new Color object
    */
   private Color parseColor(String hex) {
