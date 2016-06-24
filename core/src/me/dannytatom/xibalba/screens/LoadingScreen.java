@@ -3,6 +3,7 @@ package me.dannytatom.xibalba.screens;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Colors;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.MathUtils;
@@ -45,7 +46,7 @@ public class LoadingScreen implements Screen {
     table.setFillParent(true);
     stage.addActor(table);
 
-    label = new Label(null, main.skin);
+    label = new Label("HUN-CAME IS PREPARING.", main.skin);
     table.add(label);
 
     // Start loading & generating shit
@@ -54,7 +55,13 @@ public class LoadingScreen implements Screen {
 
   @Override
   public void render(float delta) {
-    Gdx.gl.glClearColor(0, 0, 0, 1);
+    Gdx.gl.glClearColor(
+        Colors.get("CAVE_BACKGROUND").r,
+        Colors.get("CAVE_BACKGROUND").g,
+        Colors.get("CAVE_BACKGROUND").b,
+        Colors.get("CAVE_BACKGROUND").a
+    );
+
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
     label.clear();
@@ -68,8 +75,6 @@ public class LoadingScreen implements Screen {
         main.playScreen = new PlayScreen(main);
         main.setScreen(main.playScreen);
       }
-    } else {
-      label.setText("Loading assets");
     }
 
     stage.act(delta);
@@ -81,8 +86,6 @@ public class LoadingScreen implements Screen {
   }
 
   private void setup() {
-    label.setText("Summoning Hun-Came");
-
     // Setup helpers
     main.entityHelpers = new EntityHelpers(main);
     main.inventoryHelpers = new InventoryHelpers();
@@ -107,12 +110,8 @@ public class LoadingScreen implements Screen {
     main.world = new World();
 
     for (int i = 0; i < 4; i++) {
-      label.setText("Generating world geometry");
-
       CaveGenerator generator = new CaveGenerator(MathUtils.random(80, 100), MathUtils.random(50, 80));
       generator.generate();
-
-      label.setText("Painting it red");
 
       Map map = new Map(main, generator.geometry);
       map.paintCave();
@@ -122,8 +121,6 @@ public class LoadingScreen implements Screen {
   }
 
   private void spawnShit() {
-    label.setText("Filling it with evil");
-
     // Add player entity
     main.entityHelpers.spawnPlayer(main.player, main.getCurrentMap().findPlayerStart());
     main.engine.addEntity(main.player);

@@ -1,5 +1,6 @@
 package me.dannytatom.xibalba.map;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
 
 import java.util.Arrays;
@@ -8,11 +9,10 @@ public class CaveGenerator {
   private final int width;
   private final int height;
   public boolean[][] geometry;
+  public boolean[][] flooded;
 
   /**
-   * Generates a cave.
-   * <p/>
-   * http://www.roguebasin.com/index.php?title=Cellular_Automata_Method_for_Generating_Random_Cave-Like_Levels#Example_Output
+   * Generates a cave. `true` is ground, `false` is wall.
    *
    * @param width  How wide the map should be in cells
    * @param height How long the map should be in cells
@@ -23,67 +23,71 @@ public class CaveGenerator {
   }
 
   public void generate() {
-    geometry = new boolean[width][height];
-
-    for (boolean[] row : geometry) {
-      Arrays.fill(row, true);
-    }
-
     initialize();
 
-    for (int i = 0; i < 4; i++) {
-      shapeGeometry();
-    }
+    geometry = blank();
 
-    for (int i = 0; i < 3; i++) {
-      shapeGeometryAgain();
+    float numberOfSteps = 5;
+
+    for (int i = 0; i < numberOfSteps; i++) {
+      geometry = step();
     }
 
     emptyGeometryEdges();
+    maybeTryAgain();
   }
 
-  // Start off with all ground, then create emptiness randomly
-  // (40% chance)
   private void initialize() {
-    for (int x = 0; x < geometry.length; x++) {
-      for (int y = 0; y < geometry[x].length; y++) {
-        if (MathUtils.random() < 0.40f) {
-          geometry[x][y] = false;
+    geometry = new boolean[width][height];
+
+    for (boolean[] row : geometry) {
+      Arrays.fill(row, false);
+    }
+
+    for (int x = 0; x < width; x++) {
+      for (int y = 0; y < height; y++) {
+        float chanceToStartAlive = 0.4f;
+
+        if (MathUtils.random() < chanceToStartAlive) {
+          geometry[x][y] = true;
         }
       }
     }
   }
 
-  // A tile becomes empty if 5 or more of its nine neighbours are empty,
-  // or it's surrounded
-  private void shapeGeometry() {
-    boolean[][] tempGeo = new boolean[width][height];
+  private boolean[][] step() {
+    boolean[][] newGeo = geometry.clone();
 
     for (int x = 0; x < geometry.length; x++) {
-      for (int y = 0; y < geometry[x].length; y++) {
-        int neighbours1 = emptyNeighbours(1, x, y);
-        int neighbours2 = emptyNeighbours(2, x, y);
+      for (int y = 0; y < geometry[0].length; y++) {
+        int neighbours = countLivingNeighbours(x, y);
 
-        tempGeo[x][y] = !(neighbours1 >= 5 || neighbours2 <= 2);
+        if (geometry[x][y]) {
+          float deathLimit = 3;
+          newGeo[x][y] = neighbours >= deathLimit;
+        } else {
+          float birthLimit = 4;
+          newGeo[x][y] = neighbours > birthLimit;
+        }
       }
     }
 
-    geometry = tempGeo;
+    return newGeo;
   }
 
-  // Same as #shapeGeometry, except we don't care about 2 step
-  private void shapeGeometryAgain() {
-    boolean[][] tempGeo = new boolean[width][height];
+  private boolean[][] blank() {
+    boolean[][] newGeo = geometry.clone();
+
+    int rows = 2;
+    int start = MathUtils.round(geometry[0].length / 2) - rows;
 
     for (int x = 0; x < geometry.length; x++) {
-      for (int y = 0; y < geometry[x].length; y++) {
-        int neighbours = emptyNeighbours(1, x, y);
-
-        tempGeo[x][y] = neighbours >= 3;
+      for (int y = start; y < start + (rows - 1); y++) {
+        newGeo[x][y] = false;
       }
     }
 
-    geometry = tempGeo;
+    return newGeo;
   }
 
   // Edge of the geometry should always be inaccessible
@@ -101,28 +105,70 @@ public class CaveGenerator {
     }
   }
 
-  /**
-   * Returns number of empty neighbors around cell within the amount of space given.
-   *
-   * @param amount How many neighboring cells to check
-   * @param cellX  cellX of cell to search from
-   * @param cellY  cellY of cell to search from
-   * @return number of empty neighbors
-   */
-  private int emptyNeighbours(int amount, int cellX, int cellY) {
+  private void maybeTryAgain() {
+    flooded = new boolean[width][height];
+
+    for (boolean[] row : flooded) {
+      Arrays.fill(row, false);
+    }
+
+    search:
+    for (int x = 0; x < geometry.length; x++) {
+      for (int y = 0; y < geometry[0].length; y++) {
+        if (geometry[x][y]) {
+          floodFill(x, y);
+          break search;
+        }
+      }
+    }
+
+    geometry = flooded;
+
+    int openCount = 0;
+
+    for (int x = 0; x < geometry.length; x++) {
+      for (int y = 0; y < geometry[0].length; y++) {
+        if (geometry[x][y]) {
+          openCount += 1;
+        }
+      }
+    }
+
+    if (openCount < (width * height) / 3) {
+      Gdx.app.log("CaveGenerator", "Only " + openCount + " tiles are open, trying again");
+      generate();
+    } else {
+      Gdx.app.log("CaveGenerator", "Ending with " + openCount + " tiles open");
+    }
+  }
+
+  private void floodFill(int x, int y) {
+    if (geometry[x][y] && !flooded[x][y]) {
+      flooded[x][y] = true;
+    } else {
+      return;
+    }
+
+    floodFill(x + 1, y);
+    floodFill(x - 1, y);
+    floodFill(x, y + 1);
+    floodFill(x, y - 1);
+  }
+
+  private int countLivingNeighbours(int x, int y) {
     int count = 0;
 
-    for (int i = -amount; i < amount + 1; i++) {
-      for (int j = -amount; j < amount + 1; j++) {
-        int nx = cellX + i;
-        int ny = cellY + j;
+    for (int i = -1; i < 2; i++) {
+      for (int j = -1; j < 2; j++) {
+        int xNeighbour = x + i;
+        int yNeighbour = y + j;
 
-        if (i != 0 || j != 0) {
-          if (nx < 0 || ny < 0 || nx >= geometry.length || ny >= geometry[0].length) {
-            count += 1;
-          } else if (!geometry[nx][ny]) {
-            count += 1;
-          }
+        if (i == 0 && j == 0) {
+          // Do nothing
+        } else if (xNeighbour < 0 || yNeighbour < 0 || xNeighbour >= geometry.length || yNeighbour >= geometry[0].length) {
+          count += 1;
+        } else if (geometry[xNeighbour][yNeighbour]) {
+          count += 1;
         }
       }
     }

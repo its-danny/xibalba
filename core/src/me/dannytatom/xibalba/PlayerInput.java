@@ -119,9 +119,7 @@ public class PlayerInput implements InputProcessor {
         }
         break;
       case Keys.Q:
-        if (main.state == Main.State.PLAYING) {
-          main.setScreen(new PauseScreen(main));
-        } else if (main.state == Main.State.SEARCHING) {
+        if (main.state == Main.State.SEARCHING) {
           main.getCurrentMap().target = null;
           main.getCurrentMap().searchingPath = null;
 
@@ -147,6 +145,8 @@ public class PlayerInput implements InputProcessor {
           main.state = Main.State.PLAYING;
         }
         break;
+      case Keys.ESCAPE:
+        main.setScreen(new PauseScreen(main));
       default:
     }
 
