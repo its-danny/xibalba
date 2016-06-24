@@ -44,6 +44,11 @@ public class PlayerInput implements InputProcessor {
       case Keys.I:
         main.setScreen(new InventoryScreen(main));
         break;
+      case Keys.SLASH:
+        if (holdingShift) {
+          main.setScreen(new HelpScreen(main));
+        }
+        break;
       case Keys.K:
         if (main.state == Main.State.PLAYING) {
           handleMovement(attributes.energy, new Vector2(position.pos.x, position.pos.y + 1));
@@ -180,11 +185,6 @@ public class PlayerInput implements InputProcessor {
           main.state = Main.State.PLAYING;
         }
         break;
-      case Keys.SLASH:
-        if (holdingShift) {
-          main.setScreen(new HelpScreen(main));
-        }
-        break;
       case Keys.SHIFT_LEFT:
       case Keys.SHIFT_RIGHT:
         holdingShift = true;
@@ -233,7 +233,9 @@ public class PlayerInput implements InputProcessor {
 
   @Override
   public boolean mouseMoved(int screenX, int screenY) {
-    return false;
+    main.mousePosition = new Vector2(screenX, screenY);
+
+    return true;
   }
 
   @Override

@@ -6,29 +6,38 @@ import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.EnemyComponent;
 import me.dannytatom.xibalba.components.ItemComponent;
 import me.dannytatom.xibalba.map.Cell;
+import me.dannytatom.xibalba.map.Map;
+import me.dannytatom.xibalba.screens.CharacterScreen;
+import me.dannytatom.xibalba.screens.HelpScreen;
+import me.dannytatom.xibalba.screens.InventoryScreen;
 
 public class HudRenderer {
+  public final Stage stage;
   private final Main main;
-
-  private final Stage stage;
-
+  private final Viewport viewport;
+  private final OrthographicCamera worldCamera;
   private final VerticalGroup actionLog;
   private final VerticalGroup areaDetails;
   private final Label lookDetails;
   private final Dialog lookDialog;
   private final VerticalGroup lookDialogList;
-  private boolean lookDialogShowing;
+  private boolean lookDialogShowing = false;
 
   /**
    * Renders the HUD.
@@ -36,12 +45,12 @@ public class HudRenderer {
    * @param main  Instance of Main class
    * @param batch The sprite batch to use (set in PlayScreen)
    */
-  public HudRenderer(Main main, SpriteBatch batch) {
+  public HudRenderer(Main main, OrthographicCamera worldCamera, SpriteBatch batch) {
     this.main = main;
+    this.worldCamera = worldCamera;
 
-    Viewport viewport = new FitViewport(960, 540, new OrthographicCamera());
+    viewport = new FitViewport(960, 540, new OrthographicCamera());
     stage = new Stage(viewport, batch);
-    Gdx.input.setInputProcessor(stage);
 
     Table topTable = new Table();
     topTable.top().left();
@@ -55,11 +64,48 @@ public class HudRenderer {
     stage.addActor(topTable);
 
     Table bottomTable = new Table();
-    bottomTable.bottom().left();
+    bottomTable.bottom();
     bottomTable.setFillParent(true);
 
+    TextButton characterButton = new TextButton("[CYAN]C[LIGHT_GRAY] Character", main.skin);
+    characterButton.pad(5);
+    characterButton.addListener(new ClickListener() {
+      @Override
+      public void clicked(InputEvent event, float positionX, float positionY) {
+        super.clicked(event, positionX, positionY);
+        main.setScreen(new CharacterScreen(main));
+      }
+    });
+
+    TextButton inventoryButton = new TextButton("[CYAN]I[LIGHT_GRAY] Inventory", main.skin);
+    inventoryButton.pad(5);
+    inventoryButton.addListener(new ClickListener() {
+      @Override
+      public void clicked(InputEvent event, float positionX, float positionY) {
+        super.clicked(event, positionX, positionY);
+        main.setScreen(new InventoryScreen(main));
+      }
+    });
+
+    TextButton helpButton = new TextButton("[CYAN]?[LIGHT_GRAY] Help", main.skin);
+    helpButton.pad(5);
+    helpButton.addListener(new ClickListener() {
+      @Override
+      public void clicked(InputEvent event, float positionX, float positionY) {
+        super.clicked(event, positionX, positionY);
+        main.setScreen(new HelpScreen(main));
+      }
+    });
+
+    Table buttons = new Table();
+    buttons.add(characterButton).pad(0, 5, 0, 5);
+    buttons.add(inventoryButton).pad(0, 5, 0, 5);
+    buttons.add(helpButton).pad(0, 5, 0, 5);
+
     lookDetails = new Label(null, main.skin);
-    bottomTable.add(lookDetails).pad(10, 10, 10, 10);
+    bottomTable.add(lookDetails).pad(0, 0, 10, 0);
+    bottomTable.row();
+    bottomTable.add(buttons).pad(0, 0, 10, 0);
 
     stage.addActor(bottomTable);
 
@@ -69,7 +115,6 @@ public class HudRenderer {
     lookDialog.setMovable(false);
     lookDialogList = new VerticalGroup().left();
     lookDialog.add(lookDialogList);
-    lookDialogShowing = false;
   }
 
   /**
@@ -80,14 +125,14 @@ public class HudRenderer {
   public void render(float delta) {
     renderActionLog();
     renderAreaDetails();
-    renderLookDetails();
+    checkAndRenderLookDetails();
 
     stage.act(delta);
     stage.draw();
   }
 
   public void resize(int width, int height) {
-    stage.getViewport().update(width, height, true);
+    viewport.update(width, height, true);
   }
 
   private void renderActionLog() {
@@ -157,72 +202,90 @@ public class HudRenderer {
     }
   }
 
-  private void renderLookDetails() {
-    lookDetails.clear();
+  private void checkAndRenderLookDetails() {
     lookDialogList.clear();
 
-    if (main.state == Main.State.SEARCHING && main.getMap().target != null) {
-      Cell cell = main.getMap().getCell(main.getMap().target);
+    Vector3 mousePosition = new Vector3(main.mousePosition.x, main.mousePosition.y, 0);
+    worldCamera.unproject(mousePosition);
 
-      if (cell.forgotten) {
-        lookDetails.setText("You remember seeing " + cell.description + ".");
-      } else {
-        lookDetails.setText("You see " + cell.description + ".");
+    Vector2 realMousePosition = new Vector2(
+        Math.round(mousePosition.x) / Main.SPRITE_WIDTH,
+        Math.round(mousePosition.y) / Main.SPRITE_HEIGHT
+    );
 
-        boolean showLookDialog = false;
+    Map map = main.getMap();
 
-        Entity itemAtLocation = main.getMap().getItemAt(main.getMap().target);
-
-        if (itemAtLocation != null) {
-          showLookDialog = true;
-          ItemComponent itemComponent = itemAtLocation.getComponent(ItemComponent.class);
-
-          lookDialogList.addActor(
-              new Label("[YELLOW]" + itemComponent.name, main.skin)
-          );
-
-          lookDialogList.addActor(
-              new Label("[LIGHT_GRAY]" + itemComponent.description, main.skin)
-          );
-        }
-
-        Entity enemyAtLocation = main.getMap().getEnemyAt(main.getMap().target);
-
-        if (enemyAtLocation != null) {
-          showLookDialog = true;
-          AttributesComponent attributesComponent =
-              enemyAtLocation.getComponent(AttributesComponent.class);
-
-          lookDialogList.addActor(
-              new Label("[RED]" + attributesComponent.name, main.skin)
-          );
-
-          lookDialogList.addActor(
-              new Label("[LIGHT_GRAY]" + attributesComponent.description, main.skin)
-          );
-        }
-
-        if (lookDialogShowing) {
-          if (!showLookDialog) {
-            lookDialogShowing = false;
-            lookDialog.hide(null);
-          }
-        } else {
-          if (showLookDialog) {
-            lookDialogShowing = true;
-            lookDialog.show(stage, null);
-
-            lookDialog.setPosition(
-                Math.round((stage.getWidth() - lookDialog.getWidth()) / 2),
-                Math.round((stage.getHeight() - lookDialog.getHeight()) / 2)
-            );
-          }
-        }
-      }
+    if (main.state == Main.State.SEARCHING && map.target != null) {
+      renderLookDetails(map.target);
+    } else if (map.cellExists(realMousePosition)) {
+      renderLookDetails(realMousePosition);
     } else {
+      lookDetails.setText("");
+
       if (lookDialogShowing) {
         lookDialogShowing = false;
         lookDialog.hide(null);
+      }
+    }
+  }
+
+  private void renderLookDetails(Vector2 position) {
+    Map map = main.getMap();
+    Cell cell = map.getCell(position);
+
+    if (cell.forgotten) {
+      lookDetails.setText("You remember seeing " + cell.description + ".");
+    } else {
+      lookDetails.setText("You see " + cell.description + ".");
+
+      boolean showLookDialog = false;
+
+      Entity itemAtLocation = map.getItemAt(position);
+
+      if (itemAtLocation != null) {
+        showLookDialog = true;
+        ItemComponent itemComponent = itemAtLocation.getComponent(ItemComponent.class);
+
+        lookDialogList.addActor(
+            new Label("[YELLOW]" + itemComponent.name, main.skin)
+        );
+
+        lookDialogList.addActor(
+            new Label("[LIGHT_GRAY]" + itemComponent.description, main.skin)
+        );
+      }
+
+      Entity enemyAtLocation = map.getEnemyAt(position);
+
+      if (enemyAtLocation != null) {
+        showLookDialog = true;
+        AttributesComponent attributesComponent =
+            enemyAtLocation.getComponent(AttributesComponent.class);
+
+        lookDialogList.addActor(
+            new Label("[RED]" + attributesComponent.name, main.skin)
+        );
+
+        lookDialogList.addActor(
+            new Label("[LIGHT_GRAY]" + attributesComponent.description, main.skin)
+        );
+      }
+
+      if (lookDialogShowing) {
+        if (!showLookDialog) {
+          lookDialogShowing = false;
+          lookDialog.hide(null);
+        }
+      } else {
+        if (showLookDialog) {
+          lookDialogShowing = true;
+          lookDialog.show(stage, null);
+
+          lookDialog.setPosition(
+              Math.round((stage.getWidth() - lookDialog.getWidth()) / 2),
+              Math.round((stage.getHeight() - lookDialog.getHeight()) / 2)
+          );
+        }
       }
     }
   }

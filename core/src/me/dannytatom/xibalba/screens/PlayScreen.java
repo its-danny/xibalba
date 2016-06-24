@@ -1,10 +1,12 @@
 package me.dannytatom.xibalba.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Colors;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import me.dannytatom.xibalba.ActionLog;
 import me.dannytatom.xibalba.HudRenderer;
@@ -42,8 +44,9 @@ public class PlayScreen implements Screen {
     playerPosition.pos = main.getMap().findPlayerStart();
 
     // Setup renderers
-    worldRenderer = new WorldRenderer(main, batch);
-    hudRenderer = new HudRenderer(main, batch);
+    OrthographicCamera worldCamera = new OrthographicCamera();
+    worldRenderer = new WorldRenderer(main, worldCamera, batch);
+    hudRenderer = new HudRenderer(main, worldCamera, batch);
 
     // Change state to playing
     main.state = Main.State.PLAYING;
@@ -85,7 +88,11 @@ public class PlayScreen implements Screen {
 
   @Override
   public void show() {
-    Gdx.input.setInputProcessor(new PlayerInput(main));
+    InputMultiplexer multiplexer = new InputMultiplexer();
+    multiplexer.addProcessor(new PlayerInput(main));
+    multiplexer.addProcessor(hudRenderer.stage);
+
+    Gdx.input.setInputProcessor(multiplexer);
   }
 
   @Override

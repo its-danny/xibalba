@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import me.dannytatom.xibalba.map.Map;
 import me.dannytatom.xibalba.screens.MainMenuScreen;
@@ -38,6 +39,7 @@ public class Main extends Game {
   public SkillHelpers skillHelpers;
   public Screen playScreen;
   public Entity player;
+  public Vector2 mousePosition = new Vector2(0, 0);
   public boolean executeTurn = false;
   public int currentMap = 0;
 
