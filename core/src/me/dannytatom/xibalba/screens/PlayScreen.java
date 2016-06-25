@@ -20,10 +20,12 @@ public class PlayScreen implements Screen {
   private final Main main;
 
   private final FPSLogger fps;
+  private final OrthographicCamera worldCamera;
   private final WorldRenderer worldRenderer;
   private final HudRenderer hudRenderer;
 
   private final SpriteBatch batch;
+  private float autoTimer = 0;
 
   /**
    * Play Screen.
@@ -33,6 +35,7 @@ public class PlayScreen implements Screen {
   public PlayScreen(Main main) {
     this.main = main;
 
+    autoTimer = 0;
     fps = new FPSLogger();
     batch = new SpriteBatch();
 
@@ -44,7 +47,7 @@ public class PlayScreen implements Screen {
     playerPosition.pos = main.getMap().findPlayerStart();
 
     // Setup renderers
-    OrthographicCamera worldCamera = new OrthographicCamera();
+    worldCamera = new OrthographicCamera();
     worldRenderer = new WorldRenderer(main, worldCamera, batch);
     hudRenderer = new HudRenderer(main, worldCamera, batch);
 
@@ -65,9 +68,17 @@ public class PlayScreen implements Screen {
 
     fps.log();
 
+    autoTimer += delta;
+
+    // When moving w/ mouse, execute a turn every quarter of a second
+    if (main.state == Main.State.MOVING && autoTimer >= .25) {
+      autoTimer = 0;
+      main.executeTurn = true;
+    }
+
+    // Update engine if it's time to execute a turn
     if (main.executeTurn) {
       main.engine.update(delta);
-
       main.executeTurn = false;
     }
 
@@ -89,7 +100,7 @@ public class PlayScreen implements Screen {
   @Override
   public void show() {
     InputMultiplexer multiplexer = new InputMultiplexer();
-    multiplexer.addProcessor(new PlayerInput(main));
+    multiplexer.addProcessor(new PlayerInput(main, worldCamera));
     multiplexer.addProcessor(hudRenderer.stage);
 
     Gdx.input.setInputProcessor(multiplexer);

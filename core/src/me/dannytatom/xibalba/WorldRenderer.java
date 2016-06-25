@@ -6,8 +6,6 @@ import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import me.dannytatom.xibalba.components.AttributesComponent;
@@ -98,9 +96,11 @@ public class WorldRenderer {
     TextureAtlas atlas = main.assets.get("sprites/main.atlas");
 
     if (map.targetingPath != null) {
-      for (GridCell cell : map.targetingPath) {
-        batch.setColor(1f, 1f, 1f,
-            lightMap[cell.x][cell.y] <= 0.5f ? 0.5f : lightMap[cell.x][cell.y]);
+      for (int i = 0; i < map.targetingPath.size(); i++) {
+        GridCell cell = map.targetingPath.get(i);
+        boolean isLast = i == (map.targetingPath.size() - 1);
+
+        batch.setColor(1f, 1f, 1f, isLast ? 1f : 0.25f);
         batch.draw(
             atlas.createSprite("Level/Cave/UI/Target-1"),
             cell.x * Main.SPRITE_WIDTH, cell.y * Main.SPRITE_HEIGHT
@@ -108,35 +108,16 @@ public class WorldRenderer {
         batch.setColor(1f, 1f, 1f, 1f);
       }
     } else if (map.searchingPath != null) {
-      for (GridCell cell : map.searchingPath) {
-        batch.setColor(1f, 1f, 1f,
-            lightMap[cell.x][cell.y] <= 0.5f ? 0.5f : lightMap[cell.x][cell.y]);
+      for (int i = 0; i < map.searchingPath.size(); i++) {
+        GridCell cell = map.searchingPath.get(i);
+        boolean isLast = i == (map.searchingPath.size() - 1);
+
+        batch.setColor(1f, 1f, 1f, isLast ? 1f : 0.25f);
         batch.draw(
             atlas.createSprite("Level/Cave/UI/Target-1"),
             cell.x * Main.SPRITE_WIDTH, cell.y * Main.SPRITE_HEIGHT
         );
         batch.setColor(1f, 1f, 1f, 1f);
-      }
-    } else {
-      Vector3 mousePosition = new Vector3(main.mousePosition.x, main.mousePosition.y, 0);
-      worldCamera.unproject(mousePosition);
-
-      int realMousePositionX = Math.round(mousePosition.x) / Main.SPRITE_WIDTH;
-      int realMousePositionY = Math.round(mousePosition.y) / Main.SPRITE_HEIGHT;
-
-      if (map.cellExists(new Vector2(realMousePositionX, realMousePositionY))) {
-        Cell cell = map.getCell(realMousePositionX, realMousePositionY);
-
-        if (!cell.hidden) {
-          batch.setColor(1f, 1f, 1f,
-              lightMap[realMousePositionX][realMousePositionY] <= 0.5f ? 0.5f
-                  : lightMap[realMousePositionX][realMousePositionY]);
-          batch.draw(
-              atlas.createSprite("Level/Cave/UI/Target-1"),
-              realMousePositionX * Main.SPRITE_WIDTH, realMousePositionY * Main.SPRITE_HEIGHT
-          );
-          batch.setColor(1f, 1f, 1f, 1f);
-        }
       }
     }
 

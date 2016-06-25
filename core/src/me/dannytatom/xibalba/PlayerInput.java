@@ -3,13 +3,16 @@ package me.dannytatom.xibalba;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
 import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.ItemComponent;
+import me.dannytatom.xibalba.components.MouseMovementComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.actions.MeleeComponent;
 import me.dannytatom.xibalba.components.actions.MovementComponent;
 import me.dannytatom.xibalba.components.actions.RangeComponent;
+import me.dannytatom.xibalba.map.Map;
 import me.dannytatom.xibalba.screens.CharacterScreen;
 import me.dannytatom.xibalba.screens.HelpScreen;
 import me.dannytatom.xibalba.screens.InventoryScreen;
@@ -17,6 +20,7 @@ import me.dannytatom.xibalba.screens.PauseScreen;
 
 public class PlayerInput implements InputProcessor {
   private final Main main;
+  private final OrthographicCamera worldCamera;
 
   private boolean holdingShift = false;
 
@@ -25,14 +29,17 @@ public class PlayerInput implements InputProcessor {
    *
    * @param main Instance of the main class
    */
-  public PlayerInput(Main main) {
+  public PlayerInput(Main main, OrthographicCamera worldCamera) {
     this.main = main;
+    this.worldCamera = worldCamera;
   }
 
   @Override
   public boolean keyDown(int keycode) {
     AttributesComponent attributes = main.player.getComponent(AttributesComponent.class);
     PositionComponent position = main.player.getComponent(PositionComponent.class);
+
+    Map map = main.getMap();
 
     switch (keycode) {
       case Keys.Z:
@@ -123,6 +130,9 @@ public class PlayerInput implements InputProcessor {
         break;
       case Keys.S:
         if (main.state == Main.State.PLAYING) {
+          map.target = null;
+          map.searchingPath = null;
+
           main.state = Main.State.SEARCHING;
         }
         break;
@@ -145,20 +155,27 @@ public class PlayerInput implements InputProcessor {
         break;
       case Keys.Q:
         if (main.state == Main.State.SEARCHING) {
-          main.getMap().target = null;
-          main.getMap().searchingPath = null;
+          map.target = null;
+          map.searchingPath = null;
 
           main.state = Main.State.PLAYING;
         } else if (main.state == Main.State.TARGETING) {
-          main.getMap().target = null;
-          main.getMap().targetingPath = null;
+          map.target = null;
+          map.targetingPath = null;
 
+          main.state = Main.State.PLAYING;
+        } else if (main.state == Main.State.MOVING) {
+          map.target = null;
+          map.searchingPath = null;
+
+          main.player.remove(MouseMovementComponent.class);
+          main.player.remove(MovementComponent.class);
           main.state = Main.State.PLAYING;
         }
         break;
       case Keys.SPACE:
         if (main.state == Main.State.TARGETING) {
-          if (main.getMap().targetingPath != null && attributes.energy >= RangeComponent.COST) {
+          if (map.targetingPath != null && attributes.energy >= RangeComponent.COST) {
             Entity primaryWeapon = main.equipmentHelpers.getPrimaryWeapon(main.player);
             Entity item;
             String skill;
@@ -174,13 +191,13 @@ public class PlayerInput implements InputProcessor {
               skill = "throwing";
             }
 
-            main.player.add(new RangeComponent(main.getMap().target, item, skill));
+            main.player.add(new RangeComponent(map.target, item, skill));
 
             main.executeTurn = true;
           }
 
-          main.getMap().target = null;
-          main.getMap().targetingPath = null;
+          map.target = null;
+          map.targetingPath = null;
 
           main.state = Main.State.PLAYING;
         }
@@ -223,6 +240,21 @@ public class PlayerInput implements InputProcessor {
 
   @Override
   public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+    if (main.state == Main.State.PLAYING
+        && main.player.getComponent(MouseMovementComponent.class) == null) {
+      Vector2 mousePosition = main.mousePositionToWorld(worldCamera);
+      Map map = main.getMap();
+
+      if (map.cellExists(mousePosition) && !map.getCell(mousePosition).hidden) {
+        main.player.add(new MouseMovementComponent());
+
+        main.state = Main.State.MOVING;
+        main.executeTurn = true;
+
+        return true;
+      }
+    }
+
     return false;
   }
 
@@ -233,9 +265,26 @@ public class PlayerInput implements InputProcessor {
 
   @Override
   public boolean mouseMoved(int screenX, int screenY) {
-    main.mousePosition = new Vector2(screenX, screenY);
+    if (main.state == Main.State.PLAYING) {
+      Map map = main.getMap();
 
-    return true;
+      map.target = null;
+      map.searchingPath = null;
+
+      PositionComponent playerPosition = main.player.getComponent(PositionComponent.class);
+      Vector2 mousePosition = main.mousePositionToWorld(worldCamera);
+      Vector2 relativeToPlayer = mousePosition.cpy().sub(playerPosition.pos);
+
+      if (map.cellExists(mousePosition)) {
+        map.createSearchingPath(
+            main.player.getComponent(PositionComponent.class).pos, relativeToPlayer, true
+        );
+
+        return true;
+      }
+    }
+
+    return false;
   }
 
   @Override
@@ -254,14 +303,19 @@ public class PlayerInput implements InputProcessor {
    * @param pos    The position we're attempting to move to
    */
   private void handleMovement(int energy, Vector2 pos) {
-    if (main.getMap().isWalkable(pos)) {
+    Map map = main.getMap();
+
+    map.target = null;
+    map.searchingPath = null;
+
+    if (map.isWalkable(pos)) {
       if (energy >= MovementComponent.COST) {
         main.player.add(new MovementComponent(pos));
 
         main.executeTurn = true;
       }
     } else {
-      Entity thing = main.getMap().getEntityAt(pos);
+      Entity thing = map.getEntityAt(pos);
 
       if (main.entityHelpers.isItem(thing) && energy >= MovementComponent.COST) {
         if (main.inventoryHelpers.addItem(main.player, thing)) {
@@ -289,7 +343,7 @@ public class PlayerInput implements InputProcessor {
 
   private void handleSearching(Vector2 pos) {
     main.getMap().createSearchingPath(
-        main.player.getComponent(PositionComponent.class).pos, pos
+        main.player.getComponent(PositionComponent.class).pos, pos, false
     );
   }
 }

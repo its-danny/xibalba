@@ -9,11 +9,13 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Colors;
 import com.badlogic.gdx.graphics.Cursor;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import me.dannytatom.xibalba.map.Map;
 import me.dannytatom.xibalba.screens.MainMenuScreen;
@@ -39,7 +41,6 @@ public class Main extends Game {
   public SkillHelpers skillHelpers;
   public Screen playScreen;
   public Entity player;
-  public Vector2 mousePosition = new Vector2(0, 0);
   public boolean executeTurn = false;
   public int currentMap = 0;
 
@@ -87,6 +88,16 @@ public class Main extends Game {
     return world.maps.get(currentMap);
   }
 
+  public Vector2 mousePositionToWorld(OrthographicCamera camera) {
+    Vector3 position = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
+    camera.unproject(position);
+
+    return new Vector2(
+        Math.round(position.x) / Main.SPRITE_WIDTH,
+        Math.round(position.y) / Main.SPRITE_HEIGHT
+    );
+  }
+
   /**
    * Hex to RGBA.
    *
@@ -108,6 +119,6 @@ public class Main extends Game {
   }
 
   public enum State {
-    PLAYING, TARGETING, SEARCHING
+    PLAYING, TARGETING, SEARCHING, MOVING
   }
 }

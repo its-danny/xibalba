@@ -363,14 +363,22 @@ public class Map {
    * @param start Start position
    * @param end   End position
    */
-  public void createSearchingPath(Vector2 start, Vector2 end) {
+  public void createSearchingPath(Vector2 start, Vector2 end, boolean careAboutThings) {
     Vector2 oldTarget;
 
     GridCell[][] cells = new GridCell[width][height];
 
     for (int x = 0; x < map.length; x++) {
       for (int y = 0; y < map[x].length; y++) {
-        boolean canTarget = cellExists(new Vector2(x, y)) && !getCell(new Vector2(x, y)).hidden;
+        boolean canTarget;
+
+        if (careAboutThings) {
+          canTarget = cellExists(new Vector2(x, y))
+              && !getCell(new Vector2(x, y)).hidden
+              && isWalkable(new Vector2(x, y));
+        } else {
+          canTarget = cellExists(new Vector2(x, y)) && !getCell(new Vector2(x, y)).hidden;
+        }
 
         cells[x][y] = new GridCell(x, y, canTarget);
       }

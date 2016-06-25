@@ -7,7 +7,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
@@ -205,20 +204,10 @@ public class HudRenderer {
   private void checkAndRenderLookDetails() {
     lookDialogList.clear();
 
-    Vector3 mousePosition = new Vector3(main.mousePosition.x, main.mousePosition.y, 0);
-    worldCamera.unproject(mousePosition);
-
-    Vector2 realMousePosition = new Vector2(
-        Math.round(mousePosition.x) / Main.SPRITE_WIDTH,
-        Math.round(mousePosition.y) / Main.SPRITE_HEIGHT
-    );
-
     Map map = main.getMap();
 
-    if (main.state == Main.State.SEARCHING && map.target != null) {
+    if (map.target != null) {
       renderLookDetails(map.target);
-    } else if (map.cellExists(realMousePosition)) {
-      renderLookDetails(realMousePosition);
     } else {
       lookDetails.setText("");
 
@@ -282,8 +271,7 @@ public class HudRenderer {
           lookDialog.show(stage, null);
 
           lookDialog.setPosition(
-              Math.round((stage.getWidth() - lookDialog.getWidth()) / 2),
-              Math.round((stage.getHeight() - lookDialog.getHeight()) / 2)
+              Math.round((stage.getWidth() - lookDialog.getWidth()) / 2), 65
           );
         }
       }

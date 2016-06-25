@@ -2,6 +2,7 @@ package me.dannytatom.xibalba.utils;
 
 import com.badlogic.ashley.core.ComponentMapper;
 import me.dannytatom.xibalba.components.AttributesComponent;
+import me.dannytatom.xibalba.components.MouseMovementComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.VisualComponent;
 import me.dannytatom.xibalba.components.actions.MeleeComponent;
@@ -16,6 +17,9 @@ public final class ComponentMappers {
 
   public static final ComponentMapper<PositionComponent> position =
       ComponentMapper.getFor(PositionComponent.class);
+
+  public static final ComponentMapper<MouseMovementComponent> moving =
+      ComponentMapper.getFor(MouseMovementComponent.class);
 
   public static final ComponentMapper<MovementComponent> movement =
       ComponentMapper.getFor(MovementComponent.class);
