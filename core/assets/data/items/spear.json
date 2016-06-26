@@ -1,7 +1,7 @@
 {
   "name": "Spear",
   "description": "O shit, a spear!",
-  "skill": "stabbing",
+  "skill": "piercing",
   "type": "weapon",
   "location": "rightHand",
   "visual": {
