@@ -95,7 +95,7 @@ public class WorldRenderer {
 
     TextureAtlas atlas = main.assets.get("sprites/main.atlas");
 
-    if (map.targetingPath != null) {
+    if (map.targetingPath != null && map.target != null) {
       for (int i = 0; i < map.targetingPath.size(); i++) {
         GridCell cell = map.targetingPath.get(i);
         boolean isLast = i == (map.targetingPath.size() - 1);
@@ -107,7 +107,7 @@ public class WorldRenderer {
         );
         batch.setColor(1f, 1f, 1f, 1f);
       }
-    } else if (map.lookingPath != null) {
+    } else if (map.lookingPath != null && map.target != null) {
       for (int i = 0; i < map.lookingPath.size(); i++) {
         GridCell cell = map.lookingPath.get(i);
         boolean isLast = i == (map.lookingPath.size() - 1);

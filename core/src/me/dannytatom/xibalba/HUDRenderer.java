@@ -153,7 +153,15 @@ public class HudRenderer {
 
     AttributesComponent playerAttributes = main.player.getComponent(AttributesComponent.class);
 
-    areaDetails.addActor(new Label(playerAttributes.name, main.skin));
+    String name = playerAttributes.name;
+
+    if (main.state == Main.State.LOOKING) {
+      name += " [DARK_GRAY][LOOKING][]";
+    } else if (main.state == Main.State.TARGETING) {
+      name += " [DARK_GRAY][TARGETING][]";
+    }
+
+    areaDetails.addActor(new Label(name, main.skin));
 
     String playerHealthColor;
 

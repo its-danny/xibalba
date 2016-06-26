@@ -70,8 +70,8 @@ public class PlayScreen implements Screen {
 
     autoTimer += delta;
 
-    // When moving w/ mouse, execute a turn every quarter of a second
-    if (main.state == Main.State.MOVING && autoTimer >= .25) {
+    // When moving w/ mouse, execute a turn every tenth of a second
+    if (main.state == Main.State.MOVING && autoTimer >= .10) {
       autoTimer = 0;
       main.executeTurn = true;
     }

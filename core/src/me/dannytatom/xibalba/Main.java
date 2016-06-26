@@ -119,6 +119,6 @@ public class Main extends Game {
   }
 
   public enum State {
-    PLAYING, TARGETING, SEARCHING, MOVING
+    PLAYING, TARGETING, LOOKING, MOVING
   }
 }

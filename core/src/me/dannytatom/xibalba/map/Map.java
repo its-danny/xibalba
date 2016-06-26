@@ -363,7 +363,7 @@ public class Map {
    * @param start Start position
    * @param end   End position
    */
-  public void createLookingPath(Vector2 start, Vector2 end, boolean careAboutThings) {
+  public void createLookingPath(Vector2 start, Vector2 end, boolean careAboutWalls) {
     Vector2 oldTarget;
 
     GridCell[][] cells = new GridCell[width][height];
@@ -372,10 +372,10 @@ public class Map {
       for (int y = 0; y < map[x].length; y++) {
         boolean canTarget;
 
-        if (careAboutThings) {
+        if (careAboutWalls) {
           canTarget = cellExists(new Vector2(x, y))
               && !getCell(new Vector2(x, y)).hidden
-              && isWalkable(new Vector2(x, y));
+              && !getCell(new Vector2(x, y)).isWall;
         } else {
           canTarget = cellExists(new Vector2(x, y)) && !getCell(new Vector2(x, y)).hidden;
         }
@@ -562,7 +562,7 @@ public class Map {
       for (Entity entity : entities) {
         PositionComponent ep = ComponentMappers.position.get(entity);
 
-        if (ep.pos.epsilonEquals(position, 0.00001f)) {
+        if (ep != null && ep.pos.epsilonEquals(position, 0.00001f)) {
           blocked = true;
           break;
         }

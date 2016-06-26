@@ -30,8 +30,6 @@ public class MouseMovementSystem extends EntitySystem {
 
   public void update(float deltaTime) {
     for (Entity entity : entities) {
-      entity.remove(MovementComponent.class);
-
       Map map = main.getMap();
 
       // Remove mouse movement component once path is empty
@@ -43,16 +41,12 @@ public class MouseMovementSystem extends EntitySystem {
         // If the path becomes blocked, reset the path.
         GridCell cell = map.lookingPath.get(0);
 
-        if (cell.isWalkable()) {
-          entity.add(new MovementComponent(new Vector2(cell.getX(), cell.getY())));
+        entity.add(new MovementComponent(new Vector2(cell.getX(), cell.getY())));
 
-          List<GridCell> newPath = new ArrayList<>(map.lookingPath);
-          newPath.remove(cell);
+        List<GridCell> newPath = new ArrayList<>(map.lookingPath);
+        newPath.remove(cell);
 
-          map.lookingPath = newPath;
-        } else {
-          map.lookingPath = null;
-        }
+        map.lookingPath = newPath;
       }
     }
   }
