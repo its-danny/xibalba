@@ -3,6 +3,7 @@ package me.dannytatom.xibalba.utils;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.Vector2;
 import me.dannytatom.xibalba.Main;
+import me.dannytatom.xibalba.components.EquipmentComponent;
 import me.dannytatom.xibalba.components.InventoryComponent;
 import me.dannytatom.xibalba.components.ItemComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
@@ -34,6 +35,14 @@ public class InventoryHelpers {
       } else {
         item.remove(PositionComponent.class);
         inventoryComponent.items.add(item);
+
+        EquipmentComponent equipmentComponent = entity.getComponent(EquipmentComponent.class);
+        ItemComponent itemComponent = item.getComponent(ItemComponent.class);
+
+        if (Objects.equals(itemComponent.type, "weapon")
+            && equipmentComponent.slots.get("rightHand") == null) {
+          main.equipmentHelpers.holdItem(entity, item);
+        }
       }
     }
 

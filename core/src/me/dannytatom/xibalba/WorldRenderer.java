@@ -107,10 +107,10 @@ public class WorldRenderer {
         );
         batch.setColor(1f, 1f, 1f, 1f);
       }
-    } else if (map.searchingPath != null) {
-      for (int i = 0; i < map.searchingPath.size(); i++) {
-        GridCell cell = map.searchingPath.get(i);
-        boolean isLast = i == (map.searchingPath.size() - 1);
+    } else if (map.lookingPath != null) {
+      for (int i = 0; i < map.lookingPath.size(); i++) {
+        GridCell cell = map.lookingPath.get(i);
+        boolean isLast = i == (map.lookingPath.size() - 1);
 
         batch.setColor(1f, 1f, 1f, isLast ? 1f : 0.25f);
         batch.draw(

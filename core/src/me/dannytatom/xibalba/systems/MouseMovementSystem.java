@@ -35,23 +35,23 @@ public class MouseMovementSystem extends EntitySystem {
       Map map = main.getMap();
 
       // Remove mouse movement component once path is empty
-      if (map.searchingPath == null || map.searchingPath.isEmpty()) {
+      if (map.lookingPath == null || map.lookingPath.isEmpty()) {
         entity.remove(MouseMovementComponent.class);
         main.state = Main.State.PLAYING;
       } else {
         // Start walking.
         // If the path becomes blocked, reset the path.
-        GridCell cell = map.searchingPath.get(0);
+        GridCell cell = map.lookingPath.get(0);
 
         if (cell.isWalkable()) {
           entity.add(new MovementComponent(new Vector2(cell.getX(), cell.getY())));
 
-          List<GridCell> newPath = new ArrayList<>(map.searchingPath);
+          List<GridCell> newPath = new ArrayList<>(map.lookingPath);
           newPath.remove(cell);
 
-          map.searchingPath = newPath;
+          map.lookingPath = newPath;
         } else {
-          map.searchingPath = null;
+          map.lookingPath = null;
         }
       }
     }

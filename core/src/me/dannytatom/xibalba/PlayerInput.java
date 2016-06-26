@@ -131,7 +131,7 @@ public class PlayerInput implements InputProcessor {
       case Keys.S:
         if (main.state == Main.State.PLAYING) {
           map.target = null;
-          map.searchingPath = null;
+          map.lookingPath = null;
 
           main.state = Main.State.SEARCHING;
         }
@@ -153,10 +153,36 @@ public class PlayerInput implements InputProcessor {
           }
         }
         break;
+      case Keys.T: {
+        if (main.state == Main.State.PLAYING) {
+          Entity primaryWeapon = main.equipmentHelpers.getPrimaryWeapon(main.player);
+
+          if (primaryWeapon != null) {
+            ItemComponent itemComponent = primaryWeapon.getComponent(ItemComponent.class);
+
+            if (itemComponent.actions.get("canThrow")) {
+              itemComponent.throwing = true;
+
+              main.state = Main.State.TARGETING;
+            }
+          }
+        }
+        break;
+      }
+      case Keys.D: {
+        if (main.state == Main.State.PLAYING) {
+          Entity primaryWeapon = main.equipmentHelpers.getPrimaryWeapon(main.player);
+
+          if (primaryWeapon != null) {
+            main.inventoryHelpers.dropItem(main.player, primaryWeapon);
+          }
+        }
+        break;
+      }
       case Keys.Q:
         if (main.state == Main.State.SEARCHING) {
           map.target = null;
-          map.searchingPath = null;
+          map.lookingPath = null;
 
           main.state = Main.State.PLAYING;
         } else if (main.state == Main.State.TARGETING) {
@@ -166,7 +192,7 @@ public class PlayerInput implements InputProcessor {
           main.state = Main.State.PLAYING;
         } else if (main.state == Main.State.MOVING) {
           map.target = null;
-          map.searchingPath = null;
+          map.lookingPath = null;
 
           main.player.remove(MouseMovementComponent.class);
           main.player.remove(MovementComponent.class);
@@ -269,14 +295,14 @@ public class PlayerInput implements InputProcessor {
       Map map = main.getMap();
 
       map.target = null;
-      map.searchingPath = null;
+      map.lookingPath = null;
 
       PositionComponent playerPosition = main.player.getComponent(PositionComponent.class);
       Vector2 mousePosition = main.mousePositionToWorld(worldCamera);
       Vector2 relativeToPlayer = mousePosition.cpy().sub(playerPosition.pos);
 
       if (map.cellExists(mousePosition)) {
-        map.createSearchingPath(
+        map.createLookingPath(
             main.player.getComponent(PositionComponent.class).pos, relativeToPlayer, true
         );
 
@@ -306,7 +332,7 @@ public class PlayerInput implements InputProcessor {
     Map map = main.getMap();
 
     map.target = null;
-    map.searchingPath = null;
+    map.lookingPath = null;
 
     if (map.isWalkable(pos)) {
       if (energy >= MovementComponent.COST) {
@@ -342,7 +368,7 @@ public class PlayerInput implements InputProcessor {
   }
 
   private void handleSearching(Vector2 pos) {
-    main.getMap().createSearchingPath(
+    main.getMap().createLookingPath(
         main.player.getComponent(PositionComponent.class).pos, pos, false
     );
   }

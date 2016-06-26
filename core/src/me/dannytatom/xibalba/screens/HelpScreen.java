@@ -100,7 +100,9 @@ public class HelpScreen implements Screen {
     group.addActor(new Label(null, main.skin));
     group.addActor(new Label("[YELLOW]c[] character sheet", main.skin));
     group.addActor(new Label("[YELLOW]i[] inventory", main.skin));
-    group.addActor(new Label("[YELLOW]s[] search", main.skin));
+    group.addActor(new Label("[YELLOW]s[] look", main.skin));
+    group.addActor(new Label("[YELLOW]t[] throw held weapon", main.skin));
+    group.addActor(new Label("[YELLOW]d[] drop held weapon", main.skin));
     group.addActor(new Label("[YELLOW]z[] skip turn", main.skin));
     group.addActor(new Label("[YELLOW]q[] quit out of things", main.skin));
     group.addActor(new Label("[YELLOW]space[] confirm & interact", main.skin));
@@ -108,7 +110,7 @@ public class HelpScreen implements Screen {
     group.addActor(new Label(null, main.skin));
     group.addActor(new Label("[LIGHT_GRAY]Weapon specific[]", main.skin));
     group.addActor(new Label(null, main.skin));
-    group.addActor(new Label("[DARK_GRAY](Bow)[] [YELLOW]r[] release arrow", main.skin));
+    group.addActor(new Label("[DARK_GRAY](Ranged)[] [YELLOW]r[] release arrow", main.skin));
 
     return group;
   }

@@ -26,7 +26,7 @@ public class Map {
   private final boolean[][] geometry;
   private final TextureAtlas atlas;
   private final Sprite defaultWallSprite;
-  public List<GridCell> searchingPath = null;
+  public List<GridCell> lookingPath = null;
   public List<GridCell> targetingPath = null;
   public Vector2 target = null;
   private Cell[][] map;
@@ -363,7 +363,7 @@ public class Map {
    * @param start Start position
    * @param end   End position
    */
-  public void createSearchingPath(Vector2 start, Vector2 end, boolean careAboutThings) {
+  public void createLookingPath(Vector2 start, Vector2 end, boolean careAboutThings) {
     Vector2 oldTarget;
 
     GridCell[][] cells = new GridCell[width][height];
@@ -395,15 +395,15 @@ public class Map {
       target = target.add(end);
     }
 
-    searchingPath = finder.findPath(
+    lookingPath = finder.findPath(
         (int) start.x, (int) start.y, (int) target.x, (int) target.y, grid
     );
 
-    if (searchingPath == null) {
+    if (lookingPath == null) {
       target = oldTarget;
 
       if (target != null) {
-        searchingPath = finder.findPath(
+        lookingPath = finder.findPath(
             (int) start.x, (int) start.y, (int) target.x, (int) target.y, grid
         );
       }
