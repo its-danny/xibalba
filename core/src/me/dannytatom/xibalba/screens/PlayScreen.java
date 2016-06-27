@@ -83,6 +83,8 @@ public class PlayScreen implements Screen {
     }
 
     if (main.player.getComponent(AttributesComponent.class).health <= 0) {
+      main.currentMapIndex = 0;
+
       main.getScreen().dispose();
       main.setScreen(new MainMenuScreen(main));
     } else {
