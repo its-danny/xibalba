@@ -4,8 +4,8 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 
 public class Cell {
   public final String description;
-  final boolean isWall;
-  final boolean isNothing;
+  public final boolean isWall;
+  public final boolean isNothing;
   public Sprite sprite;
   public boolean hidden = true;
   public boolean forgotten = false;

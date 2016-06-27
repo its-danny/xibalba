@@ -144,7 +144,7 @@ public class CombatHelpers {
       main.skillHelpers.levelSkill(starter, skill, 20);
 
       if (critical > 0) {
-        Vector2 splatterSpace = main.getMap().getEmptySpaceNearEntity(
+        Vector2 splatterSpace = main.mapHelpers.getEmptySpaceNearEntity(
             target.getComponent(PositionComponent.class).pos
         );
 

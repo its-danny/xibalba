@@ -43,11 +43,11 @@ public class WanderSystem extends SortedIteratingSystem {
       PositionComponent position = ComponentMappers.position.get(entity);
 
       NavigationGrid<GridCell> grid =
-          new NavigationGrid<>(main.getMap().createPathfindingMap(), false);
+          new NavigationGrid<>(main.mapHelpers.createPathfindingMap(), false);
       AStarGridFinder<GridCell> finder = new AStarGridFinder<>(GridCell.class);
 
       do {
-        Vector2 randomPosition = main.getMap().getRandomOpenPosition();
+        Vector2 randomPosition = main.mapHelpers.getRandomOpenPosition();
         brain.path = finder.findPath((int) position.pos.x, (int) position.pos.y,
             (int) randomPosition.x, (int) randomPosition.y, grid);
       } while (brain.path == null);

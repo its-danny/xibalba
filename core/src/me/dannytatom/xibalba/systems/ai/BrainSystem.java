@@ -56,7 +56,7 @@ public class BrainSystem extends SortedIteratingSystem {
     PositionComponent position = ComponentMappers.position.get(entity);
     AttributesComponent attributes = ComponentMappers.attributes.get(entity);
 
-    if (main.getMap().isNearPlayer(position.pos)) {
+    if (main.mapHelpers.isNearPlayer(position.pos)) {
       if (attributes.energy >= MeleeComponent.COST) {
         switchToAttack(entity);
       } else if (attributes.energy >= MovementComponent.COST) {
@@ -64,8 +64,8 @@ public class BrainSystem extends SortedIteratingSystem {
       }
     } else {
       if (attributes.energy >= MovementComponent.COST) {
-        if (main.getMap().canSeePlayer(position.pos, attributes.vision)) {
-          switchToTarget(entity, main.getMap().getNearPlayer());
+        if (main.mapHelpers.canSeePlayer(position.pos, attributes.vision)) {
+          switchToTarget(entity, main.mapHelpers.getNearPlayer());
         } else {
           switchToWander(entity);
         }
@@ -77,7 +77,7 @@ public class BrainSystem extends SortedIteratingSystem {
     PositionComponent position = ComponentMappers.position.get(entity);
     AttributesComponent attributes = ComponentMappers.attributes.get(entity);
 
-    if (main.getMap().isNearPlayer(position.pos)) {
+    if (main.mapHelpers.isNearPlayer(position.pos)) {
       if (attributes.energy >= MeleeComponent.COST) {
         switchToAttack(entity);
       } else if (attributes.energy >= MovementComponent.COST) {
@@ -87,8 +87,8 @@ public class BrainSystem extends SortedIteratingSystem {
       }
     } else {
       if (attributes.energy >= MovementComponent.COST) {
-        if (main.getMap().canSeePlayer(position.pos, attributes.vision)) {
-          switchToTarget(entity, main.getMap().getNearPlayer());
+        if (main.mapHelpers.canSeePlayer(position.pos, attributes.vision)) {
+          switchToTarget(entity, main.mapHelpers.getNearPlayer());
         } else {
           switchToWander(entity);
         }
@@ -102,9 +102,9 @@ public class BrainSystem extends SortedIteratingSystem {
     PositionComponent position = ComponentMappers.position.get(entity);
     AttributesComponent attributes = ComponentMappers.attributes.get(entity);
     TargetComponent target = ComponentMappers.target.get(entity);
-    Vector2 playerPosition = main.getMap().getPlayerPosition();
+    Vector2 playerPosition = main.player.getComponent(PositionComponent.class).pos;
 
-    if (main.getMap().isNearPlayer(position.pos)) {
+    if (main.mapHelpers.isNearPlayer(position.pos)) {
       if (attributes.energy >= MeleeComponent.COST) {
         switchToAttack(entity);
       } else {
@@ -112,9 +112,9 @@ public class BrainSystem extends SortedIteratingSystem {
       }
     } else {
       if (attributes.energy >= MovementComponent.COST) {
-        if (main.getMap().canSeePlayer(position.pos, attributes.vision)) {
+        if (main.mapHelpers.canSeePlayer(position.pos, attributes.vision)) {
           if (playerPosition != target.pos) {
-            switchToTarget(entity, main.getMap().getNearPlayer());
+            switchToTarget(entity, main.mapHelpers.getNearPlayer());
           }
         } else {
           switchToWander(entity);
@@ -129,16 +129,16 @@ public class BrainSystem extends SortedIteratingSystem {
     PositionComponent position = ComponentMappers.position.get(entity);
     AttributesComponent attributes = ComponentMappers.attributes.get(entity);
 
-    if (main.getMap().isNearPlayer(position.pos)) {
+    if (main.mapHelpers.isNearPlayer(position.pos)) {
       if (attributes.energy >= MeleeComponent.COST) {
-        entity.add(new MeleeComponent(main.entityHelpers.getPlayer()));
+        entity.add(new MeleeComponent(main.player));
       } else if (attributes.energy >= MovementComponent.COST) {
         switchToWander(entity);
       }
     } else {
       if (attributes.energy >= MovementComponent.COST) {
-        if (main.getMap().canSeePlayer(position.pos, attributes.vision)) {
-          switchToTarget(entity, main.getMap().getNearPlayer());
+        if (main.mapHelpers.canSeePlayer(position.pos, attributes.vision)) {
+          switchToTarget(entity, main.mapHelpers.getNearPlayer());
         } else {
           switchToWander(entity);
         }

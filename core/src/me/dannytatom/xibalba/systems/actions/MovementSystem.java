@@ -41,12 +41,12 @@ public class MovementSystem extends ActionSystem {
     Map map = main.getMap();
 
     // If we can move, move
-    if (map.isWalkable(movement.pos)) {
+    if (main.mapHelpers.isWalkable(movement.pos)) {
       position.pos = movement.pos;
     } else {
       // If we can't, and the entity is the player, figure out what to do instead
       if (entity.getComponent(PlayerComponent.class) != null) {
-        Entity thing = map.getEntityAt(movement.pos);
+        Entity thing = main.entityHelpers.getEntityAt(movement.pos);
 
         if (main.entityHelpers.isItem(thing)) {
           if (main.inventoryHelpers.addItem(main.player, thing)) {

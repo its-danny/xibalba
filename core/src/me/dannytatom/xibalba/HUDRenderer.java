@@ -228,7 +228,7 @@ public class HudRenderer {
 
   private void renderLookDetails(Vector2 position) {
     Map map = main.getMap();
-    Cell cell = map.getCell(position);
+    Cell cell = main.mapHelpers.getCell(position.x, position.y);
 
     if (cell.forgotten) {
       lookDetails.setText("You remember seeing " + cell.description + ".");
@@ -237,7 +237,7 @@ public class HudRenderer {
 
       boolean showLookDialog = false;
 
-      Entity itemAtLocation = map.getItemAt(position);
+      Entity itemAtLocation = main.entityHelpers.getItemAt(position);
 
       if (itemAtLocation != null) {
         showLookDialog = true;
@@ -252,7 +252,7 @@ public class HudRenderer {
         );
       }
 
-      Entity enemyAtLocation = map.getEnemyAt(position);
+      Entity enemyAtLocation = main.entityHelpers.getEnemyAt(position);
 
       if (enemyAtLocation != null) {
         showLookDialog = true;

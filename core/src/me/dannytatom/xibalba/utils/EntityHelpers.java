@@ -2,6 +2,7 @@ package me.dannytatom.xibalba.utils;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
+import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.MathUtils;
@@ -188,10 +189,6 @@ public class EntityHelpers {
     return decoration;
   }
 
-  public Entity getPlayer() {
-    return main.engine.getEntitiesFor(Family.all(PlayerComponent.class).get()).first();
-  }
-
   public boolean isEnemy(Entity entity) {
     return entity != null && entity.getComponent(EnemyComponent.class) != null;
   }
@@ -215,8 +212,11 @@ public class EntityHelpers {
   public boolean isVisible(Entity entity, Map map) {
     PositionComponent positionComponent = entity.getComponent(PositionComponent.class);
 
-    return positionComponent != null
-        && !map.getCell(entity.getComponent(PositionComponent.class).pos).hidden;
+    if (positionComponent != null) {
+      return !main.mapHelpers.getCell(positionComponent.pos.x, positionComponent.pos.y).hidden;
+    } else {
+      return false;
+    }
   }
 
   /**
@@ -229,15 +229,86 @@ public class EntityHelpers {
    */
   public boolean isVisibleToPlayer(Entity entity, Map map) {
     PositionComponent enemyPosition = entity.getComponent(PositionComponent.class);
-    PositionComponent playerPosition = getPlayer().getComponent(PositionComponent.class);
-    AttributesComponent playerAttributes = getPlayer().getComponent(AttributesComponent.class);
+    PositionComponent playerPosition = main.player.getComponent(PositionComponent.class);
+    AttributesComponent playerAttributes = main.player.getComponent(AttributesComponent.class);
 
     float[][] lightMap = caster.calculateFov(
-        map.createFovMap(),
+        main.mapHelpers.createFovMap(),
         (int) playerPosition.pos.x, (int) playerPosition.pos.y,
         playerAttributes.vision
     );
 
     return lightMap[(int) enemyPosition.pos.x][(int) enemyPosition.pos.y] > 0;
+  }
+
+  public boolean isNearPlayer(Vector2 position) {
+    Vector2 playerPosition = main.player.getComponent(PositionComponent.class).pos;
+
+    return position.x <= playerPosition.x + 1
+        && position.x >= playerPosition.x - 1
+        && position.y <= playerPosition.y + 1
+        && position.y >= playerPosition.y - 1;
+  }
+
+  /**
+   * Attempt to get the entity at the given position, returns null if nobody is there.
+   *
+   * @param position The entity's position
+   *
+   * @return The entity
+   */
+  public Entity getEntityAt(Vector2 position) {
+    ImmutableArray<Entity> entities =
+        main.engine.getEntitiesFor(
+            Family.all(PositionComponent.class).exclude(DecorationComponent.class).get()
+        );
+
+    for (Entity entity : entities) {
+      if (entity.getComponent(PositionComponent.class).pos.epsilonEquals(position, 0.00001f)) {
+        return entity;
+      }
+    }
+
+    return null;
+  }
+
+  /**
+   * Get enemy from a location.
+   *
+   * @param position Where the enemy is
+   *
+   * @return The enemy
+   */
+  public Entity getEnemyAt(Vector2 position) {
+    ImmutableArray<Entity> entities =
+        main.engine.getEntitiesFor(Family.all(EnemyComponent.class).get());
+
+    for (Entity entity : entities) {
+      if (entity.getComponent(PositionComponent.class).pos.epsilonEquals(position, 0.00001f)) {
+        return entity;
+      }
+    }
+
+    return null;
+  }
+
+  /**
+   * Get item from a location.
+   *
+   * @param position Where the item is
+   *
+   * @return The item
+   */
+  public Entity getItemAt(Vector2 position) {
+    ImmutableArray<Entity> entities =
+        main.engine.getEntitiesFor(Family.all(ItemComponent.class, PositionComponent.class).get());
+
+    for (Entity entity : entities) {
+      if (entity.getComponent(PositionComponent.class).pos.epsilonEquals(position, 0.00001f)) {
+        return entity;
+      }
+    }
+
+    return null;
   }
 }

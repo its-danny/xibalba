@@ -31,7 +31,7 @@ public class RangeSystem extends ActionSystem {
     AttributesComponent attributes = ComponentMappers.attributes.get(entity);
 
     if (range.item != null) {
-      Entity enemy = main.getMap().getEnemyAt(range.target);
+      Entity enemy = main.entityHelpers.getEnemyAt(range.target);
 
       if (enemy != null) {
         main.combatHelpers.range(entity, enemy, range.item, range.skill);

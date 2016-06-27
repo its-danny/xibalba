@@ -44,7 +44,7 @@ public class TargetSystem extends SortedIteratingSystem {
       PositionComponent position = ComponentMappers.position.get(entity);
 
       NavigationGrid<GridCell> grid =
-          new NavigationGrid<>(main.getMap().createPathfindingMap(), false);
+          new NavigationGrid<>(main.mapHelpers.createPathfindingMap(), false);
       AStarGridFinder<GridCell> finder = new AStarGridFinder<>(GridCell.class);
 
       brain.path = finder.findPath((int) position.pos.x, (int) position.pos.y,

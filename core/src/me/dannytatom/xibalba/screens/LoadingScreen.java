@@ -26,6 +26,7 @@ import me.dannytatom.xibalba.utils.CombatHelpers;
 import me.dannytatom.xibalba.utils.EntityHelpers;
 import me.dannytatom.xibalba.utils.EquipmentHelpers;
 import me.dannytatom.xibalba.utils.InventoryHelpers;
+import me.dannytatom.xibalba.utils.MapHelpers;
 import me.dannytatom.xibalba.utils.SkillHelpers;
 
 public class LoadingScreen implements Screen {
@@ -88,6 +89,7 @@ public class LoadingScreen implements Screen {
 
   private void setup() {
     // Setup helpers
+    main.mapHelpers = new MapHelpers(main);
     main.entityHelpers = new EntityHelpers(main);
     main.inventoryHelpers = new InventoryHelpers(main);
     main.equipmentHelpers = new EquipmentHelpers();
@@ -126,66 +128,66 @@ public class LoadingScreen implements Screen {
 
   private void spawnShit() {
     // Add player entity
-    main.entityHelpers.spawnPlayer(main.player, main.getMap().findPlayerStart());
+    main.entityHelpers.spawnPlayer(main.player, main.mapHelpers.getRandomOpenPosition());
     main.engine.addEntity(main.player);
 
     // Spawn an exit somewhere
     main.engine.addEntity(
-        main.entityHelpers.spawnExit(main.getMap().getRandomOpenPosition())
+        main.entityHelpers.spawnExit(main.mapHelpers.getRandomOpenPosition())
     );
 
     for (int i = 0; i < 5; i++) {
       main.engine.addEntity(
           main.entityHelpers.spawnEnemy("spiderMonkey",
-              main.getMap().getRandomOpenPosition())
+              main.mapHelpers.getRandomOpenPosition())
       );
     }
 
     for (int i = 0; i < 5; i++) {
       main.engine.addEntity(
           main.entityHelpers.spawnItem("chippedFlint",
-              main.getMap().getRandomOpenPosition())
+              main.mapHelpers.getRandomOpenPosition())
       );
     }
 
     for (int i = 0; i < 5; i++) {
       main.engine.addEntity(
           main.entityHelpers.spawnItem("macuahuitl",
-              main.getMap().getRandomOpenPosition())
+              main.mapHelpers.getRandomOpenPosition())
       );
     }
 
     for (int i = 0; i < 5; i++) {
       main.engine.addEntity(
           main.entityHelpers.spawnItem("shield",
-              main.getMap().getRandomOpenPosition())
+              main.mapHelpers.getRandomOpenPosition())
       );
     }
 
     for (int i = 0; i < 5; i++) {
       main.engine.addEntity(
           main.entityHelpers.spawnItem("spear",
-              main.getMap().getRandomOpenPosition())
+              main.mapHelpers.getRandomOpenPosition())
       );
     }
 
     for (int i = 0; i < 5; i++) {
       main.engine.addEntity(
           main.entityHelpers.spawnItem("bow",
-              main.getMap().getRandomOpenPosition())
+              main.mapHelpers.getRandomOpenPosition())
       );
     }
 
     for (int i = 0; i < 20; i++) {
       main.engine.addEntity(
           main.entityHelpers.spawnItem("arrow",
-              main.getMap().getRandomOpenPosition())
+              main.mapHelpers.getRandomOpenPosition())
       );
     }
 
     for (int i = 0; i < 50; i++) {
       main.engine.addEntity(
-          main.entityHelpers.spawnRandomDecoration(main.getMap().getRandomOpenPosition())
+          main.entityHelpers.spawnRandomDecoration(main.mapHelpers.getRandomOpenPosition())
       );
     }
   }

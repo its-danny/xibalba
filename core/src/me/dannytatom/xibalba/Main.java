@@ -23,6 +23,7 @@ import me.dannytatom.xibalba.utils.CombatHelpers;
 import me.dannytatom.xibalba.utils.EntityHelpers;
 import me.dannytatom.xibalba.utils.EquipmentHelpers;
 import me.dannytatom.xibalba.utils.InventoryHelpers;
+import me.dannytatom.xibalba.utils.MapHelpers;
 import me.dannytatom.xibalba.utils.SkillHelpers;
 
 public class Main extends Game {
@@ -34,6 +35,7 @@ public class Main extends Game {
   public ActionLog log;
   public Engine engine;
   public World world;
+  public MapHelpers mapHelpers;
   public CombatHelpers combatHelpers;
   public EntityHelpers entityHelpers;
   public InventoryHelpers inventoryHelpers;

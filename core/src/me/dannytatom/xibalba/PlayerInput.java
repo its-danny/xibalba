@@ -247,7 +247,7 @@ public class PlayerInput implements InputProcessor {
         && main.player.getComponent(MouseMovementComponent.class) == null) {
       Vector2 mousePosition = main.mousePositionToWorld(worldCamera);
 
-      if (map.cellExists(mousePosition) && !map.getCell(mousePosition).hidden) {
+      if (main.mapHelpers.cellExists(mousePosition) && !main.mapHelpers.getCell(mousePosition.x, mousePosition.y).hidden) {
         main.player.add(new MouseMovementComponent());
 
         main.state = Main.State.MOVING;
@@ -279,7 +279,7 @@ public class PlayerInput implements InputProcessor {
       map.target = null;
       map.lookingPath = null;
 
-      if (map.cellExists(mousePosition)) {
+      if (main.mapHelpers.cellExists(mousePosition)) {
         handleLooking(relativeToPlayer, true);
 
         return true;
@@ -290,7 +290,7 @@ public class PlayerInput implements InputProcessor {
       map.target = null;
       map.lookingPath = null;
 
-      if (map.cellExists(mousePosition)) {
+      if (main.mapHelpers.cellExists(mousePosition)) {
         handleLooking(relativeToPlayer, false);
 
         return true;
@@ -301,7 +301,7 @@ public class PlayerInput implements InputProcessor {
       map.target = null;
       map.targetingPath = null;
 
-      if (map.cellExists(mousePosition)) {
+      if (main.mapHelpers.cellExists(mousePosition)) {
         handleTargeting(relativeToPlayer);
 
         return true;
@@ -336,13 +336,13 @@ public class PlayerInput implements InputProcessor {
   }
 
   private void handleTargeting(Vector2 pos) {
-    main.getMap().createTargetingPath(
+    main.mapHelpers.createTargetingPath(
         main.player.getComponent(PositionComponent.class).pos, pos
     );
   }
 
   private void handleLooking(Vector2 pos, boolean careAboutWalls) {
-    main.getMap().createLookingPath(
+    main.mapHelpers.createLookingPath(
         main.player.getComponent(PositionComponent.class).pos, pos, careAboutWalls
     );
   }
