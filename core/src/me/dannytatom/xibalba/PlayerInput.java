@@ -1,6 +1,7 @@
 package me.dannytatom.xibalba;
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -315,6 +316,14 @@ public class PlayerInput implements InputProcessor {
 
   @Override
   public boolean scrolled(int amount) {
+    if (amount == 1 && worldCamera.zoom < 1) {
+      worldCamera.zoom += 0.2f;
+    } else if (amount == -1 && worldCamera.zoom > 0.4f) {
+      worldCamera.zoom -= 0.2f;
+    }
+
+    Gdx.app.log("zoom", worldCamera.zoom + "");
+
     return false;
   }
 
