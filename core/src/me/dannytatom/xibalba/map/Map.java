@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import me.dannytatom.xibalba.Main;
 import org.xguzm.pathfinding.grid.GridCell;
 
 import java.util.List;
@@ -12,10 +11,9 @@ import java.util.List;
 public class Map {
   public final int width;
   public final int height;
-  private final Main main;
+  private final boolean[][] geometry;
   private final TextureAtlas atlas;
   private final Sprite defaultWallSprite;
-  private final boolean[][] geometry;
   public List<GridCell> lookingPath = null;
   public List<GridCell> targetingPath = null;
   public Vector2 target = null;
@@ -24,17 +22,16 @@ public class Map {
   /**
    * Holds logic for dealing with maps.
    *
-   * @param main     Instance of Main
    * @param geometry The map geometry
+   * @param atlas    TextureAtlas that holds map sprites
    */
-  public Map(Main main, boolean[][] geometry) {
-    this.main = main;
+  public Map(boolean[][] geometry, TextureAtlas atlas) {
     this.geometry = geometry;
+    this.atlas = atlas;
 
     this.width = this.geometry.length;
     this.height = this.geometry[0].length;
 
-    atlas = main.assets.get("sprites/main.atlas");
     defaultWallSprite = atlas.createSprite("Level/Cave/UI/Color/3");
   }
 

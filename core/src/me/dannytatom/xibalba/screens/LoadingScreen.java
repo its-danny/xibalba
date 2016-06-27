@@ -72,7 +72,6 @@ public class LoadingScreen implements Screen {
       if (!generating) {
         setup();
         generateWorld();
-        spawnShit();
 
         main.playScreen = new PlayScreen(main);
         main.setScreen(main.playScreen);
@@ -113,81 +112,86 @@ public class LoadingScreen implements Screen {
 
     main.world = new World();
 
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < 5; i++) {
       CaveGenerator generator = new CaveGenerator(
           MathUtils.random(80, 100), MathUtils.random(50, 80)
       );
       generator.generate();
 
-      Map map = new Map(main, generator.geometry);
+      Map map = new Map(generator.geometry, main.assets.get("sprites/main.atlas"));
       map.paintCave();
 
       main.world.maps.add(map);
+
+      spawnShit(i);
     }
+
+    // Add player entity
+    main.entityHelpers.spawnPlayer(
+        main.player, main.currentMapIndex, main.mapHelpers.getRandomOpenPosition()
+    );
+    main.engine.addEntity(main.player);
   }
 
-  private void spawnShit() {
-    // Add player entity
-    main.entityHelpers.spawnPlayer(main.player, main.mapHelpers.getRandomOpenPosition());
-    main.engine.addEntity(main.player);
-
-    // Spawn an exit somewhere
+  private void spawnShit(int mapIndex) {
+    // Spawn an exit on every level but last
     main.engine.addEntity(
-        main.entityHelpers.spawnExit(main.mapHelpers.getRandomOpenPosition())
+        main.entityHelpers.spawnExit(mapIndex, main.mapHelpers.getRandomOpenPositionOnMap(mapIndex))
     );
 
     for (int i = 0; i < 5; i++) {
       main.engine.addEntity(
           main.entityHelpers.spawnEnemy("spiderMonkey",
-              main.mapHelpers.getRandomOpenPosition())
+              mapIndex, main.mapHelpers.getRandomOpenPositionOnMap(mapIndex))
       );
     }
 
     for (int i = 0; i < 5; i++) {
       main.engine.addEntity(
           main.entityHelpers.spawnItem("chippedFlint",
-              main.mapHelpers.getRandomOpenPosition())
+              mapIndex, main.mapHelpers.getRandomOpenPositionOnMap(mapIndex))
       );
     }
 
     for (int i = 0; i < 5; i++) {
       main.engine.addEntity(
           main.entityHelpers.spawnItem("macuahuitl",
-              main.mapHelpers.getRandomOpenPosition())
+              mapIndex, main.mapHelpers.getRandomOpenPositionOnMap(mapIndex))
       );
     }
 
     for (int i = 0; i < 5; i++) {
       main.engine.addEntity(
           main.entityHelpers.spawnItem("shield",
-              main.mapHelpers.getRandomOpenPosition())
+              mapIndex, main.mapHelpers.getRandomOpenPositionOnMap(mapIndex))
       );
     }
 
     for (int i = 0; i < 5; i++) {
       main.engine.addEntity(
           main.entityHelpers.spawnItem("spear",
-              main.mapHelpers.getRandomOpenPosition())
+              mapIndex, main.mapHelpers.getRandomOpenPositionOnMap(mapIndex))
       );
     }
 
     for (int i = 0; i < 5; i++) {
       main.engine.addEntity(
           main.entityHelpers.spawnItem("bow",
-              main.mapHelpers.getRandomOpenPosition())
+              mapIndex, main.mapHelpers.getRandomOpenPositionOnMap(mapIndex))
       );
     }
 
     for (int i = 0; i < 20; i++) {
       main.engine.addEntity(
           main.entityHelpers.spawnItem("arrow",
-              main.mapHelpers.getRandomOpenPosition())
+              mapIndex, main.mapHelpers.getRandomOpenPositionOnMap(mapIndex))
       );
     }
 
     for (int i = 0; i < 50; i++) {
       main.engine.addEntity(
-          main.entityHelpers.spawnRandomDecoration(main.mapHelpers.getRandomOpenPosition())
+          main.entityHelpers.spawnRandomDecoration(
+              mapIndex, main.mapHelpers.getRandomOpenPositionOnMap(mapIndex))
       );
     }
   }

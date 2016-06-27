@@ -49,7 +49,7 @@ public class PlayScreen implements Screen {
     // Setup renderers
     worldCamera = new OrthographicCamera();
     worldRenderer = new WorldRenderer(main, worldCamera, batch);
-    hudRenderer = new HudRenderer(main, worldCamera, batch);
+    hudRenderer = new HudRenderer(main, batch);
 
     // Change state to playing
     main.state = Main.State.PLAYING;
@@ -86,7 +86,7 @@ public class PlayScreen implements Screen {
       main.getScreen().dispose();
       main.setScreen(new MainMenuScreen(main));
     } else {
-      worldRenderer.render(delta);
+      worldRenderer.render();
       hudRenderer.render(delta);
     }
   }

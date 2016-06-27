@@ -40,17 +40,15 @@ public class WorldRenderer {
     this.worldCamera = worldCamera;
     this.batch = batch;
 
-    viewport = new FitViewport(960 / 2, 540 / 2, worldCamera);
+    viewport = new FitViewport(960, 540, worldCamera);
 
     caster = new ShadowCaster();
   }
 
   /**
    * Render shit.
-   *
-   * @param delta Elapsed time
    */
-  public void render(float delta) {
+  public void render() {
     // Get player position
     PositionComponent playerPosition = main.player.getComponent(PositionComponent.class);
 
@@ -67,7 +65,7 @@ public class WorldRenderer {
 
     AttributesComponent playerAttributes = main.player.getComponent(AttributesComponent.class);
 
-    Map map = main.getMap();
+    Map map = main.getCurrentMap();
 
     float[][] lightMap = caster.calculateFov(
         main.mapHelpers.createFovMap(),
@@ -136,9 +134,8 @@ public class WorldRenderer {
 
     for (Entity entity : entities) {
       PositionComponent position = ComponentMappers.position.get(entity);
-      Map map = main.getMap();
 
-      if (main.mapHelpers.cellExists(position.pos) && !main.mapHelpers.getCell(position.pos.x, position.pos.y).hidden) {
+      if (main.entityHelpers.isVisible(entity)) {
         VisualComponent visual = ComponentMappers.visual.get(entity);
 
         batch.setColor(1f, 1f, 1f, lightMap[(int) position.pos.x][(int) position.pos.y]);
@@ -159,7 +156,7 @@ public class WorldRenderer {
     for (Entity entity : entities) {
       PositionComponent position = ComponentMappers.position.get(entity);
 
-      if (!main.mapHelpers.getCell(position.pos.x, position.pos.y).hidden) {
+      if (main.entityHelpers.isVisible(entity)) {
         VisualComponent visual = ComponentMappers.visual.get(entity);
 
         batch.setColor(1f, 1f, 1f, lightMap[(int) position.pos.x][(int) position.pos.y]);
@@ -178,7 +175,7 @@ public class WorldRenderer {
     for (Entity entity : entities) {
       PositionComponent position = ComponentMappers.position.get(entity);
 
-      if (!main.mapHelpers.getCell(position.pos.x, position.pos.y).hidden) {
+      if (main.entityHelpers.isVisible(entity)) {
         VisualComponent visual = ComponentMappers.visual.get(entity);
 
         batch.setColor(1f, 1f, 1f, lightMap[(int) position.pos.x][(int) position.pos.y]);
@@ -199,7 +196,7 @@ public class WorldRenderer {
     for (Entity entity : entities) {
       PositionComponent position = ComponentMappers.position.get(entity);
 
-      if (main.entityHelpers.isVisible(entity, main.getMap())) {
+      if (main.entityHelpers.isVisible(entity)) {
         VisualComponent visual = ComponentMappers.visual.get(entity);
 
         batch.setColor(1f, 1f, 1f, lightMap[(int) position.pos.x][(int) position.pos.y]);
@@ -220,7 +217,7 @@ public class WorldRenderer {
     for (Entity entity : entities) {
       PositionComponent position = ComponentMappers.position.get(entity);
 
-      if (main.entityHelpers.isVisible(entity, main.getMap())) {
+      if (main.entityHelpers.isVisible(entity)) {
         VisualComponent visual = ComponentMappers.visual.get(entity);
 
         batch.setColor(1f, 1f, 1f, lightMap[(int) position.pos.x][(int) position.pos.y]);

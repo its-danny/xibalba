@@ -34,29 +34,35 @@ public class BrainSystem extends SortedIteratingSystem {
   @Override
   protected void processEntity(Entity entity, float deltaTime) {
     BrainComponent brain = ComponentMappers.brain.get(entity);
+    PositionComponent position = ComponentMappers.position.get(entity);
 
-    switch (brain.state) {
-      case WAITING:
-        handleWaiting(entity);
-        break;
-      case WANDERING:
-        handleWander(entity);
-        break;
-      case TARGETING:
-        handleTarget(entity);
-        break;
-      case ATTACKING:
-        handleAttack(entity);
-        break;
-      default:
+    if (position.map == main.currentMapIndex) {
+      switch (brain.state) {
+        case WAITING:
+          handleWaiting(entity);
+          break;
+        case WANDERING:
+          handleWander(entity);
+          break;
+        case TARGETING:
+          handleTarget(entity);
+          break;
+        case ATTACKING:
+          handleAttack(entity);
+          break;
+        default:
+      }
+    } else {
+      if (brain.state != BrainComponent.State.WAITING) {
+        switchToWaiting(entity);
+      }
     }
   }
 
   private void handleWaiting(Entity entity) {
-    PositionComponent position = ComponentMappers.position.get(entity);
     AttributesComponent attributes = ComponentMappers.attributes.get(entity);
 
-    if (main.mapHelpers.isNearPlayer(position.pos)) {
+    if (main.entityHelpers.isNearPlayer(entity)) {
       if (attributes.energy >= MeleeComponent.COST) {
         switchToAttack(entity);
       } else if (attributes.energy >= MovementComponent.COST) {
@@ -64,8 +70,8 @@ public class BrainSystem extends SortedIteratingSystem {
       }
     } else {
       if (attributes.energy >= MovementComponent.COST) {
-        if (main.mapHelpers.canSeePlayer(position.pos, attributes.vision)) {
-          switchToTarget(entity, main.mapHelpers.getNearPlayer());
+        if (main.entityHelpers.canSeePlayer(entity, attributes.vision)) {
+          switchToTarget(entity, main.mapHelpers.getEmptySpaceNearPlayer());
         } else {
           switchToWander(entity);
         }
@@ -74,10 +80,9 @@ public class BrainSystem extends SortedIteratingSystem {
   }
 
   private void handleWander(Entity entity) {
-    PositionComponent position = ComponentMappers.position.get(entity);
     AttributesComponent attributes = ComponentMappers.attributes.get(entity);
 
-    if (main.mapHelpers.isNearPlayer(position.pos)) {
+    if (main.entityHelpers.isNearPlayer(entity)) {
       if (attributes.energy >= MeleeComponent.COST) {
         switchToAttack(entity);
       } else if (attributes.energy >= MovementComponent.COST) {
@@ -87,8 +92,8 @@ public class BrainSystem extends SortedIteratingSystem {
       }
     } else {
       if (attributes.energy >= MovementComponent.COST) {
-        if (main.mapHelpers.canSeePlayer(position.pos, attributes.vision)) {
-          switchToTarget(entity, main.mapHelpers.getNearPlayer());
+        if (main.entityHelpers.canSeePlayer(entity, attributes.vision)) {
+          switchToTarget(entity, main.mapHelpers.getEmptySpaceNearPlayer());
         } else {
           switchToWander(entity);
         }
@@ -99,12 +104,11 @@ public class BrainSystem extends SortedIteratingSystem {
   }
 
   private void handleTarget(Entity entity) {
-    PositionComponent position = ComponentMappers.position.get(entity);
     AttributesComponent attributes = ComponentMappers.attributes.get(entity);
     TargetComponent target = ComponentMappers.target.get(entity);
     Vector2 playerPosition = main.player.getComponent(PositionComponent.class).pos;
 
-    if (main.mapHelpers.isNearPlayer(position.pos)) {
+    if (main.entityHelpers.isNearPlayer(entity)) {
       if (attributes.energy >= MeleeComponent.COST) {
         switchToAttack(entity);
       } else {
@@ -112,9 +116,9 @@ public class BrainSystem extends SortedIteratingSystem {
       }
     } else {
       if (attributes.energy >= MovementComponent.COST) {
-        if (main.mapHelpers.canSeePlayer(position.pos, attributes.vision)) {
+        if (main.entityHelpers.canSeePlayer(entity, attributes.vision)) {
           if (playerPosition != target.pos) {
-            switchToTarget(entity, main.mapHelpers.getNearPlayer());
+            switchToTarget(entity, main.mapHelpers.getEmptySpaceNearPlayer());
           }
         } else {
           switchToWander(entity);
@@ -126,10 +130,9 @@ public class BrainSystem extends SortedIteratingSystem {
   }
 
   private void handleAttack(Entity entity) {
-    PositionComponent position = ComponentMappers.position.get(entity);
     AttributesComponent attributes = ComponentMappers.attributes.get(entity);
 
-    if (main.mapHelpers.isNearPlayer(position.pos)) {
+    if (main.entityHelpers.isNearPlayer(entity)) {
       if (attributes.energy >= MeleeComponent.COST) {
         entity.add(new MeleeComponent(main.player));
       } else if (attributes.energy >= MovementComponent.COST) {
@@ -137,8 +140,8 @@ public class BrainSystem extends SortedIteratingSystem {
       }
     } else {
       if (attributes.energy >= MovementComponent.COST) {
-        if (main.mapHelpers.canSeePlayer(position.pos, attributes.vision)) {
-          switchToTarget(entity, main.mapHelpers.getNearPlayer());
+        if (main.entityHelpers.canSeePlayer(entity, attributes.vision)) {
+          switchToTarget(entity, main.mapHelpers.getEmptySpaceNearPlayer());
         } else {
           switchToWander(entity);
         }

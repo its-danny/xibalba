@@ -75,7 +75,7 @@ public class EquipmentHelpers {
   }
 
   /**
-   * Remove an item from either their right hand or whever it's slotted.
+   * Remove an item from either their right hand or wherever it's slotted.
    *
    * @param entity The entity we want to remove the item from
    * @param item   The item itself

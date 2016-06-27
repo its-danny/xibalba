@@ -27,8 +27,8 @@ import me.dannytatom.xibalba.utils.MapHelpers;
 import me.dannytatom.xibalba.utils.SkillHelpers;
 
 public class Main extends Game {
-  public static final int SPRITE_WIDTH = 16;
-  public static final int SPRITE_HEIGHT = 16;
+  static final int SPRITE_WIDTH = 16;
+  static final int SPRITE_HEIGHT = 16;
   public State state;
   public AssetManager assets;
   public Skin skin;
@@ -44,7 +44,7 @@ public class Main extends Game {
   public Screen playScreen;
   public Entity player;
   public boolean executeTurn = false;
-  public int currentMap = 0;
+  public int currentMapIndex = 0;
 
   /**
    * Setup & load the main menu.
@@ -86,10 +86,21 @@ public class Main extends Game {
     setScreen(new MainMenuScreen(this));
   }
 
-  public Map getMap() {
-    return world.maps.get(currentMap);
+  public Map getCurrentMap() {
+    return world.maps.get(currentMapIndex);
   }
 
+  public Map getMap(int index) {
+    return world.maps.get(index);
+  }
+
+  /**
+   * From mouse position to tile position.
+   *
+   * @param camera Main world camera
+   *
+   * @return A vector2 of the hovered tile position
+   */
   public Vector2 mousePositionToWorld(OrthographicCamera camera) {
     Vector3 position = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
     camera.unproject(position);

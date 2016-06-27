@@ -10,7 +10,6 @@ import me.dannytatom.xibalba.components.DecorationComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.map.Cell;
 import me.dannytatom.xibalba.map.Map;
-import me.dannytatom.xibalba.map.ShadowCaster;
 import org.xguzm.pathfinding.grid.GridCell;
 import org.xguzm.pathfinding.grid.NavigationGrid;
 import org.xguzm.pathfinding.grid.finders.AStarGridFinder;
@@ -30,7 +29,7 @@ public class MapHelpers {
    * @return If it does indeed exist
    */
   public boolean cellExists(Vector2 position) {
-    Cell[][] map = main.getMap().getCellMap();
+    Cell[][] map = main.getCurrentMap().getCellMap();
 
     return position.x > 0 && position.x < map.length
         && position.y > 0 && position.y < map[0].length
@@ -46,7 +45,7 @@ public class MapHelpers {
    * @return The Cell instance at this pos
    */
   public Cell getCell(int cellX, int cellY) {
-    return main.getMap().getCellMap()[cellX][cellY];
+    return main.getCurrentMap().getCellMap()[cellX][cellY];
   }
 
   public Cell getCell(float cellX, float cellY) {
@@ -60,8 +59,8 @@ public class MapHelpers {
    *
    * @return Is it blocked?
    */
-  private boolean isBlocked(Vector2 position) {
-    Cell[][] map = main.getMap().getCellMap();
+  private boolean isBlocked(int mapIndex, Vector2 position) {
+    Cell[][] map = main.getMap(mapIndex).getCellMap();
 
     boolean blocked = map[(int) position.x][(int) position.y].isWall
         || map[(int) position.x][(int) position.y].isNothing;
@@ -85,6 +84,10 @@ public class MapHelpers {
     return blocked;
   }
 
+  private boolean isBlocked(Vector2 position) {
+    return isBlocked(main.currentMapIndex, position);
+  }
+
   public boolean isWalkable(Vector2 position) {
     return !isBlocked(position);
   }
@@ -95,7 +98,7 @@ public class MapHelpers {
    * @return 2d array of GridCells
    */
   public GridCell[][] createPathfindingMap() {
-    Map map = main.getMap();
+    Map map = main.getCurrentMap();
     GridCell[][] cells = new GridCell[map.width][map.height];
 
     for (int x = 0; x < map.width; x++) {
@@ -115,7 +118,7 @@ public class MapHelpers {
    * @return Resistance map
    */
   public float[][] createFovMap() {
-    Map map = main.getMap();
+    Map map = main.getCurrentMap();
     float[][] resistanceMap = new float[map.width][map.height];
 
     for (int x = 0; x < map.width; x++) {
@@ -134,7 +137,7 @@ public class MapHelpers {
    * @param end   Where they're throwing to
    */
   public void createTargetingPath(Vector2 start, Vector2 end) {
-    Map map = main.getMap();
+    Map map = main.getCurrentMap();
 
     if (map.target != null && map.target.epsilonEquals(start.cpy().add(end), 0.00001f)) {
       return;
@@ -188,7 +191,7 @@ public class MapHelpers {
    * @param end   End position
    */
   public void createLookingPath(Vector2 start, Vector2 end, boolean careAboutWalls) {
-    Map map = main.getMap();
+    Map map = main.getCurrentMap();
 
     if (map.target != null && map.target.epsilonEquals(start.cpy().add(end), 0.00001f)) {
       return;
@@ -244,7 +247,7 @@ public class MapHelpers {
    *
    * @return Player position
    */
-  public Vector2 getNearPlayer() {
+  public Vector2 getEmptySpaceNearPlayer() {
     return getEmptySpaceNearEntity(
         main.player.getComponent(PositionComponent.class).pos
     );
@@ -273,55 +276,30 @@ public class MapHelpers {
     return position;
   }
 
-
   /**
-   * Check if something is near the player.
-   *
-   * @param position Starting position
-   *
-   * @return Whether we're near the player or not
-   */
-  public boolean isNearPlayer(Vector2 position) {
-    Vector2 playerPosition = main.player.getComponent(PositionComponent.class).pos;
-
-    return position.x <= playerPosition.x + 1
-        && position.x >= playerPosition.x - 1
-        && position.y <= playerPosition.y + 1
-        && position.y >= playerPosition.y - 1;
-  }
-
-  /**
-   * Uses light map to determine if they can see the player.
-   *
-   * @param position Entity's position
-   * @param distance Radius to use
-   *
-   * @return Can they see the player?
-   */
-  public boolean canSeePlayer(Vector2 position, int distance) {
-    ShadowCaster caster = new ShadowCaster();
-    float[][] lightMap = caster.calculateFov(createFovMap(),
-        (int) position.x, (int) position.y, distance);
-    Vector2 playerPosition = main.player.getComponent(PositionComponent.class).pos;
-
-    return lightMap[(int) playerPosition.x][(int) playerPosition.y] > 0;
-  }
-
-  /**
-   * Find a random open cell.
+   * Find a random open cell on any map.
    *
    * @return Random open cell
    */
-  public Vector2 getRandomOpenPosition() {
-    Map map = main.getMap();
+  public Vector2 getRandomOpenPositionOnMap(int index) {
+    Map map = main.getMap(index);
     int cellX;
     int cellY;
 
     do {
       cellX = MathUtils.random(0, map.width - 1);
       cellY = MathUtils.random(0, map.height - 1);
-    } while (isBlocked(new Vector2(cellX, cellY)));
+    } while (isBlocked(index, new Vector2(cellX, cellY)));
 
     return new Vector2(cellX, cellY);
+  }
+
+  /**
+   * Find a random open cell on current map.
+   *
+   * @return Random open cell
+   */
+  public Vector2 getRandomOpenPosition() {
+    return getRandomOpenPositionOnMap(main.currentMapIndex);
   }
 }

@@ -22,7 +22,6 @@ import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.SkillsComponent;
 import me.dannytatom.xibalba.components.VisualComponent;
 import me.dannytatom.xibalba.components.ai.BrainComponent;
-import me.dannytatom.xibalba.map.Map;
 import me.dannytatom.xibalba.map.ShadowCaster;
 
 import java.util.Objects;
@@ -49,7 +48,7 @@ public class EntityHelpers {
    * @param player   The player
    * @param position Vector2 of where to spawn them
    */
-  public void spawnPlayer(Entity player, Vector2 position) {
+  public void spawnPlayer(Entity player, int map, Vector2 position) {
     Array<String> sprites = new Array<>();
     sprites.addAll("Level/Cave/Character/Ikal-1");
     sprites.addAll("Level/Cave/Character/Iktan-1");
@@ -59,7 +58,7 @@ public class EntityHelpers {
     TextureAtlas atlas = main.assets.get("sprites/main.atlas");
 
     player.add(new PlayerComponent());
-    player.add(new PositionComponent(position));
+    player.add(new PositionComponent(map, position));
     player.add(new VisualComponent(
         atlas.createSprite(sprites.random()))
     );
@@ -75,11 +74,11 @@ public class EntityHelpers {
    *
    * @return The exit entity
    */
-  public Entity spawnExit(Vector2 position) {
+  public Entity spawnExit(int map, Vector2 position) {
     TextureAtlas atlas = main.assets.get("sprites/main.atlas");
 
     Entity entity = new Entity();
-    entity.add(new PositionComponent(position));
+    entity.add(new PositionComponent(map, position));
     entity.add(new VisualComponent(atlas.createSprite("Level/Cave/FX/Bolt-1")));
     entity.add(new ExitComponent());
 
@@ -94,7 +93,7 @@ public class EntityHelpers {
    *
    * @return The enemy
    */
-  public Entity spawnEnemy(String type, Vector2 position) {
+  public Entity spawnEnemy(String type, int map, Vector2 position) {
     JsonToEnemy json = (new Json()).fromJson(JsonToEnemy.class,
         Gdx.files.internal("data/enemies/" + type + ".json"));
     TextureAtlas atlas = main.assets.get("sprites/main.atlas");
@@ -103,7 +102,7 @@ public class EntityHelpers {
 
     entity.add(new EnemyComponent());
     entity.add(new BrainComponent());
-    entity.add(new PositionComponent(position));
+    entity.add(new PositionComponent(map, position));
     entity.add(new VisualComponent(atlas.createSprite(json.visual.get("spritePath"))));
     entity.add(new SkillsComponent());
     entity.add(new AttributesComponent(
@@ -129,7 +128,7 @@ public class EntityHelpers {
    *
    * @return The item
    */
-  public Entity spawnItem(String type, Vector2 position) {
+  public Entity spawnItem(String type, int map, Vector2 position) {
     TextureAtlas atlas = main.assets.get("sprites/main.atlas");
     ItemComponent itemComponent = (new Json()).fromJson(ItemComponent.class,
         Gdx.files.internal("data/items/" + type + ".json"));
@@ -137,7 +136,7 @@ public class EntityHelpers {
     Entity entity = new Entity();
 
     entity.add(itemComponent);
-    entity.add(new PositionComponent(position));
+    entity.add(new PositionComponent(map, position));
     entity.add(new VisualComponent(
         atlas.createSprite(itemComponent.visual.get("sprites").random())
     ));
@@ -166,7 +165,7 @@ public class EntityHelpers {
    *
    * @return The decoration entity
    */
-  public Entity spawnRandomDecoration(Vector2 position) {
+  public Entity spawnRandomDecoration(int map, Vector2 position) {
     Array<String> types = new Array<>();
     types.add("Level/Cave/Environment/Object/Mushroom-1");
     types.add("Level/Cave/Environment/Object/Mushroom-2");
@@ -181,7 +180,7 @@ public class EntityHelpers {
     Entity decoration = new Entity();
 
     decoration.add(new DecorationComponent());
-    decoration.add(new PositionComponent(position));
+    decoration.add(new PositionComponent(map, position));
     decoration.add(new VisualComponent(
         atlas.createSprite(types.random())
     ));
@@ -205,32 +204,73 @@ public class EntityHelpers {
    * Checks if an entity is hidden or not.
    *
    * @param entity Entity to check
-   * @param map    Instance of the map said entity is on
    *
    * @return Whether or not it's visible
    */
-  public boolean isVisible(Entity entity, Map map) {
+  public boolean isVisible(Entity entity) {
     PositionComponent positionComponent = entity.getComponent(PositionComponent.class);
 
-    if (positionComponent != null) {
-      return !main.mapHelpers.getCell(positionComponent.pos.x, positionComponent.pos.y).hidden;
-    } else {
+    return positionComponent != null
+        && positionComponent.map == main.currentMapIndex
+        && !main.mapHelpers.getCell(positionComponent.pos.x, positionComponent.pos.y).hidden;
+  }
+
+  /**
+   * Check if entity is near the player.
+   *
+   * @param entity Who we checking
+   *
+   * @return Whether we're near the player or not
+   */
+  public boolean isNearPlayer(Entity entity) {
+    PositionComponent entityPosition = entity.getComponent(PositionComponent.class);
+    PositionComponent playerPosition = main.player.getComponent(PositionComponent.class);
+
+    return entityPosition.map == playerPosition.map
+        && entityPosition.pos.x <= playerPosition.pos.x + 1
+        && entityPosition.pos.x >= playerPosition.pos.x - 1
+        && entityPosition.pos.y <= playerPosition.pos.y + 1
+        && entityPosition.pos.y >= playerPosition.pos.y - 1;
+  }
+
+  /**
+   * Uses light map to determine if they can see the player.
+   *
+   * @param entity   ho we checking
+   * @param distance Radius to use
+   *
+   * @return Can they see the player?
+   */
+  public boolean canSeePlayer(Entity entity, int distance) {
+    PositionComponent entityPosition = entity.getComponent(PositionComponent.class);
+    PositionComponent playerPosition = main.player.getComponent(PositionComponent.class);
+
+    if (entityPosition.map != playerPosition.map) {
       return false;
     }
+
+    ShadowCaster caster = new ShadowCaster();
+    float[][] lightMap = caster.calculateFov(main.mapHelpers.createFovMap(),
+        (int) entityPosition.pos.x, (int) entityPosition.pos.y, distance);
+
+    return lightMap[(int) playerPosition.pos.x][(int) playerPosition.pos.y] > 0;
   }
 
   /**
    * Checks if an entity is visible to the player or not.
    *
    * @param entity Entity to check
-   * @param map    Instance of the map said entity is on
    *
    * @return Whether or not it's visible to the player
    */
-  public boolean isVisibleToPlayer(Entity entity, Map map) {
+  public boolean isVisibleToPlayer(Entity entity) {
     PositionComponent enemyPosition = entity.getComponent(PositionComponent.class);
     PositionComponent playerPosition = main.player.getComponent(PositionComponent.class);
     AttributesComponent playerAttributes = main.player.getComponent(AttributesComponent.class);
+
+    if (enemyPosition.map != playerPosition.map) {
+      return false;
+    }
 
     float[][] lightMap = caster.calculateFov(
         main.mapHelpers.createFovMap(),
@@ -239,15 +279,6 @@ public class EntityHelpers {
     );
 
     return lightMap[(int) enemyPosition.pos.x][(int) enemyPosition.pos.y] > 0;
-  }
-
-  public boolean isNearPlayer(Vector2 position) {
-    Vector2 playerPosition = main.player.getComponent(PositionComponent.class).pos;
-
-    return position.x <= playerPosition.x + 1
-        && position.x >= playerPosition.x - 1
-        && position.y <= playerPosition.y + 1
-        && position.y >= playerPosition.y - 1;
   }
 
   /**
@@ -264,7 +295,10 @@ public class EntityHelpers {
         );
 
     for (Entity entity : entities) {
-      if (entity.getComponent(PositionComponent.class).pos.epsilonEquals(position, 0.00001f)) {
+      PositionComponent positionComponent = entity.getComponent(PositionComponent.class);
+
+      if (positionComponent.map == main.currentMapIndex
+          && positionComponent.pos.epsilonEquals(position, 0.00001f)) {
         return entity;
       }
     }
@@ -284,7 +318,10 @@ public class EntityHelpers {
         main.engine.getEntitiesFor(Family.all(EnemyComponent.class).get());
 
     for (Entity entity : entities) {
-      if (entity.getComponent(PositionComponent.class).pos.epsilonEquals(position, 0.00001f)) {
+      PositionComponent positionComponent = entity.getComponent(PositionComponent.class);
+
+      if (positionComponent.map == main.currentMapIndex
+          && positionComponent.pos.epsilonEquals(position, 0.00001f)) {
         return entity;
       }
     }
@@ -304,7 +341,10 @@ public class EntityHelpers {
         main.engine.getEntitiesFor(Family.all(ItemComponent.class, PositionComponent.class).get());
 
     for (Entity entity : entities) {
-      if (entity.getComponent(PositionComponent.class).pos.epsilonEquals(position, 0.00001f)) {
+      PositionComponent positionComponent = entity.getComponent(PositionComponent.class);
+
+      if (positionComponent.map == main.currentMapIndex
+          && positionComponent.pos.epsilonEquals(position, 0.00001f)) {
         return entity;
       }
     }

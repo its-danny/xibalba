@@ -9,7 +9,7 @@ import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.actions.MeleeComponent;
 import me.dannytatom.xibalba.components.actions.MovementComponent;
-import me.dannytatom.xibalba.map.Map;
+import me.dannytatom.xibalba.screens.PlayScreen;
 import me.dannytatom.xibalba.systems.ActionSystem;
 import me.dannytatom.xibalba.utils.ComponentMappers;
 
@@ -38,8 +38,6 @@ public class MovementSystem extends ActionSystem {
     MovementComponent movement = ComponentMappers.movement.get(entity);
     AttributesComponent attributes = ComponentMappers.attributes.get(entity);
 
-    Map map = main.getMap();
-
     // If we can move, move
     if (main.mapHelpers.isWalkable(movement.pos)) {
       position.pos = movement.pos;
@@ -58,7 +56,13 @@ public class MovementSystem extends ActionSystem {
         } else if (main.entityHelpers.isEnemy(thing) && attributes.energy >= MeleeComponent.COST) {
           main.player.add(new MeleeComponent(thing));
         } else if (main.entityHelpers.isExit(thing)) {
-          // TODO: Switch maps
+          main.currentMapIndex += 1;
+          main.playScreen = new PlayScreen(main);
+          main.setScreen(main.playScreen);
+
+          entity.getComponent(PositionComponent.class);
+          position.map = main.currentMapIndex;
+          attributes.energy -= MovementComponent.COST;
         }
       }
     }

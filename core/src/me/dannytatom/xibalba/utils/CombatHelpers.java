@@ -153,7 +153,7 @@ public class CombatHelpers {
           Entity remains = new Entity();
           remains.add(new DecorationComponent());
           remains.add(new VisualComponent(atlas.createSprite("Level/Cave/FX/BloodSplatter-1")));
-          remains.add(new PositionComponent(splatterSpace));
+          remains.add(new PositionComponent(main.currentMapIndex, splatterSpace));
 
           main.engine.addEntity(remains);
         }
@@ -168,7 +168,9 @@ public class CombatHelpers {
       TextureAtlas atlas = main.assets.get("sprites/main.atlas");
       Entity remains = new Entity();
       remains.add(new DecorationComponent());
-      remains.add(new PositionComponent(target.getComponent(PositionComponent.class).pos));
+      remains.add(new PositionComponent(
+          main.currentMapIndex, target.getComponent(PositionComponent.class).pos
+      ));
       remains.add(new VisualComponent(
           atlas.createSprite("Level/Cave/Environment/Object/Remains-1")
       ));

@@ -28,9 +28,14 @@ public class MouseMovementSystem extends EntitySystem {
     entities = engine.getEntitiesFor(Family.all(MouseMovementComponent.class).get());
   }
 
+  /**
+   * Get next step in moving path, add a movement component with that position, remove step.
+   *
+   * @param deltaTime Time between now and previous frame
+   */
   public void update(float deltaTime) {
     for (Entity entity : entities) {
-      Map map = main.getMap();
+      Map map = main.getCurrentMap();
 
       // Remove mouse movement component once path is empty
       if (map.lookingPath == null || map.lookingPath.isEmpty()) {

@@ -30,7 +30,6 @@ public class HudRenderer {
   public final Stage stage;
   private final Main main;
   private final Viewport viewport;
-  private final OrthographicCamera worldCamera;
   private final VerticalGroup actionLog;
   private final VerticalGroup areaDetails;
   private final Label lookDetails;
@@ -44,9 +43,8 @@ public class HudRenderer {
    * @param main  Instance of Main class
    * @param batch The sprite batch to use (set in PlayScreen)
    */
-  public HudRenderer(Main main, OrthographicCamera worldCamera, SpriteBatch batch) {
+  public HudRenderer(Main main, SpriteBatch batch) {
     this.main = main;
-    this.worldCamera = worldCamera;
 
     viewport = new FitViewport(960, 540, new OrthographicCamera());
     stage = new Stage(viewport, batch);
@@ -149,6 +147,12 @@ public class HudRenderer {
   private void renderAreaDetails() {
     areaDetails.clear();
 
+    // Depth
+    areaDetails.addActor(
+        new Label("[DARK_GRAY]Depth " + (main.currentMapIndex + 1) + "[]", main.skin)
+    );
+    areaDetails.addActor(new Label("", main.skin));
+
     // Player area
 
     AttributesComponent playerAttributes = main.player.getComponent(AttributesComponent.class);
@@ -186,7 +190,7 @@ public class HudRenderer {
         main.engine.getEntitiesFor(Family.all(EnemyComponent.class).get());
 
     for (Entity enemy : enemies) {
-      if (main.entityHelpers.isVisibleToPlayer(enemy, main.getMap())) {
+      if (main.entityHelpers.isVisibleToPlayer(enemy)) {
         AttributesComponent enemyAttributes = enemy.getComponent(AttributesComponent.class);
 
         areaDetails.addActor(new Label(enemyAttributes.name, main.skin));
@@ -212,7 +216,7 @@ public class HudRenderer {
   private void checkAndRenderLookDetails() {
     lookDialogList.clear();
 
-    Map map = main.getMap();
+    Map map = main.getCurrentMap();
 
     if (map.target != null) {
       renderLookDetails(map.target);
@@ -227,7 +231,6 @@ public class HudRenderer {
   }
 
   private void renderLookDetails(Vector2 position) {
-    Map map = main.getMap();
     Cell cell = main.mapHelpers.getCell(position.x, position.y);
 
     if (cell.forgotten) {

@@ -50,7 +50,7 @@ public class InventoryHelpers {
   }
 
   /**
-   * It's like the opposite of #addItem.
+   * It's like drop except we remove it 100%.
    *
    * @param entity Entity we want to take shit from
    * @param item   The shit we gonna take
@@ -77,7 +77,7 @@ public class InventoryHelpers {
     if (entity.getComponent(InventoryComponent.class) != null) {
       InventoryComponent inventoryComponent = entity.getComponent(InventoryComponent.class);
 
-      item.add(new PositionComponent(position));
+      item.add(new PositionComponent(main.currentMapIndex, position));
       inventoryComponent.items.remove(item);
     }
   }
