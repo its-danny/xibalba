@@ -9,6 +9,7 @@ import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.DecorationComponent;
 import me.dannytatom.xibalba.components.EquipmentComponent;
 import me.dannytatom.xibalba.components.ItemComponent;
+import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.VisualComponent;
 
@@ -117,7 +118,9 @@ public class CombatHelpers {
     AttributesComponent starterAttributes = ComponentMappers.attributes.get(starter);
     AttributesComponent targetAttributes = ComponentMappers.attributes.get(target);
 
-    String action = starterAttributes.name + " ";
+    boolean starterIsPlayer = starter.getComponent(PlayerComponent.class) != null;
+
+    String action = (starterIsPlayer ? "You" : starterAttributes.name) + " ";
 
     if (result >= 4) {
       int critical = 0;
@@ -178,7 +181,11 @@ public class CombatHelpers {
       main.engine.addEntity(remains);
       main.engine.removeEntity(target);
 
-      main.log.add(starterAttributes.name + " killed " + targetAttributes.name + "!");
+      if (starterIsPlayer) {
+        main.log.add("You killed " + targetAttributes.name + "!");
+      } else {
+        main.log.add(starterAttributes.name + " killed " + targetAttributes.name + "!");
+      }
     }
   }
 }

@@ -4,7 +4,6 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.components.AttributesComponent;
-import me.dannytatom.xibalba.components.ItemComponent;
 import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.actions.MeleeComponent;
@@ -47,9 +46,7 @@ public class MovementSystem extends ActionSystem {
         Entity thing = main.entityHelpers.getEntityAt(movement.pos);
 
         if (main.entityHelpers.isItem(thing)) {
-          if (main.inventoryHelpers.addItem(main.player, thing)) {
-            main.log.add("You pick up a " + thing.getComponent(ItemComponent.class).name);
-          }
+          main.inventoryHelpers.addItem(main.player, thing);
 
           position.pos = movement.pos;
           attributes.energy -= MovementComponent.COST;

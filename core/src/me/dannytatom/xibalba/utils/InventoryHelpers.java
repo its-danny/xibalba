@@ -6,6 +6,7 @@ import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.components.EquipmentComponent;
 import me.dannytatom.xibalba.components.InventoryComponent;
 import me.dannytatom.xibalba.components.ItemComponent;
+import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
 
 import java.util.ArrayList;
@@ -39,9 +40,12 @@ public class InventoryHelpers {
         EquipmentComponent equipmentComponent = entity.getComponent(EquipmentComponent.class);
         ItemComponent itemComponent = item.getComponent(ItemComponent.class);
 
+        main.log.add("You picked up a " + itemComponent.name);
+
         if (Objects.equals(itemComponent.type, "weapon")
             && equipmentComponent.slots.get("rightHand") == null) {
           main.equipmentHelpers.holdItem(entity, item);
+          main.log.add("You are now holding a " + itemComponent.name);
         }
       }
     }
@@ -79,6 +83,10 @@ public class InventoryHelpers {
 
       item.add(new PositionComponent(main.currentMapIndex, position));
       inventoryComponent.items.remove(item);
+
+      if (entity.getComponent(PlayerComponent.class) != null) {
+        main.log.add("You dropped a " + item.getComponent(ItemComponent.class).name);
+      }
     }
   }
 
