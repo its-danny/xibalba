@@ -139,6 +139,12 @@ public class CombatHelpers {
       if (damage > defense) {
         targetAttributes.health -= damage - targetAttributes.defense;
 
+        if (starterIsPlayer) {
+          action = "[GREEN]" + action;
+        } else {
+          action = "[RED]" + action;
+        }
+
         action += verb + " " + targetAttributes.name + " for " + damage + " damage";
       } else {
         action += "hit " + targetAttributes.name + " but did no damage";
@@ -182,9 +188,9 @@ public class CombatHelpers {
       main.engine.removeEntity(target);
 
       if (starterIsPlayer) {
-        main.log.add("You killed " + targetAttributes.name + "!");
+        main.log.add("[GREEN]You killed " + targetAttributes.name + "!");
       } else {
-        main.log.add(starterAttributes.name + " killed " + targetAttributes.name + "!");
+        main.log.add("[RED]You have been killed by " + starterAttributes.name);
       }
     }
   }

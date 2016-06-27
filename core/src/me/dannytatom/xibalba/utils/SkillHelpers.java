@@ -61,7 +61,7 @@ public class SkillHelpers {
         skillField.set(skills, skillLevel == 0 ? 4 : skillLevel + 2);
         counterField.set(skills, 0);
 
-        main.log.add("You feel better at " + skill);
+        main.log.add("[YELLOW]You feel better at " + skill);
       }
     } catch (NoSuchFieldException | IllegalAccessException e) {
       e.printStackTrace();

@@ -78,6 +78,7 @@ public class Main extends Game {
     Colors.put("CYAN", parseColor("67C8CF"));
     Colors.put("RED", parseColor("B55757"));
     Colors.put("YELLOW", parseColor("E0DFB1"));
+    Colors.put("GREEN", parseColor("67CF8B"));
 
     // Map background colors
     Colors.put("CAVE_BACKGROUND", parseColor("293033"));
