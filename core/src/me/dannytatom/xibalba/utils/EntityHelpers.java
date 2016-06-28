@@ -62,7 +62,6 @@ public class EntityHelpers {
     player.add(new VisualComponent(
         atlas.createSprite(sprites.random()))
     );
-    player.add(new SkillsComponent());
     player.add(new InventoryComponent());
     player.add(new EquipmentComponent());
   }

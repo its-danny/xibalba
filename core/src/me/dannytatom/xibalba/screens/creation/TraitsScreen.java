@@ -16,6 +16,7 @@ import com.badlogic.gdx.utils.Json;
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.components.DefectComponent;
 import me.dannytatom.xibalba.components.DefectsComponent;
+import me.dannytatom.xibalba.components.SkillsComponent;
 import me.dannytatom.xibalba.components.TraitComponent;
 import me.dannytatom.xibalba.components.TraitsComponent;
 import me.dannytatom.xibalba.screens.MainMenuScreen;
@@ -74,7 +75,6 @@ public class TraitsScreen implements Screen {
           );
       defects.add(defect);
     }
-
 
     infoLabel = new Label(null, main.skin);
     currentGroup = traitsGroup;
@@ -228,6 +228,7 @@ public class TraitsScreen implements Screen {
     if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
       // Create player entity
       main.player = new Entity();
+      main.player.add(new SkillsComponent());
 
       TraitsComponent traitsComponent = new TraitsComponent();
       DefectsComponent defectsComponent = new DefectsComponent();
@@ -238,6 +239,30 @@ public class TraitsScreen implements Screen {
         Entity entity = new Entity();
         entity.add(trait);
         traitsComponent.traits.add(entity);
+
+        SkillsComponent skills = main.player.getComponent(SkillsComponent.class);
+
+        switch (trait.name) {
+          case "Archer":
+            skills.archery = 6;
+            break;
+          case "Brawler":
+            skills.unarmed = 6;
+            break;
+          case "Brute":
+            skills.bashing = 6;
+            break;
+          case "Slasher":
+            skills.slashing = 6;
+            break;
+          case "Slinger":
+            skills.throwing = 6;
+            break;
+          case "Warrior":
+            skills.piercing = 6;
+            break;
+          default:
+        }
       }
 
       // Add selected traits to traitsComponent
