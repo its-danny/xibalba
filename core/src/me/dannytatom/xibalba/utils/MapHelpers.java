@@ -29,7 +29,7 @@ public class MapHelpers {
    * @return If it does indeed exist
    */
   public boolean cellExists(Vector2 position) {
-    Cell[][] map = main.getCurrentMap().getCellMap();
+    Cell[][] map = main.world.getCurrentMap().getCellMap();
 
     return position.x > 0 && position.x < map.length
         && position.y > 0 && position.y < map[0].length
@@ -45,7 +45,7 @@ public class MapHelpers {
    * @return The Cell instance at this pos
    */
   public Cell getCell(int cellX, int cellY) {
-    return main.getCurrentMap().getCellMap()[cellX][cellY];
+    return main.world.getCurrentMap().getCellMap()[cellX][cellY];
   }
 
   public Cell getCell(float cellX, float cellY) {
@@ -60,7 +60,7 @@ public class MapHelpers {
    * @return Is it blocked?
    */
   private boolean isBlocked(int mapIndex, Vector2 position) {
-    Cell[][] map = main.getMap(mapIndex).getCellMap();
+    Cell[][] map = main.world.getMap(mapIndex).getCellMap();
 
     boolean blocked = map[(int) position.x][(int) position.y].isWall
         || map[(int) position.x][(int) position.y].isNothing;
@@ -85,7 +85,7 @@ public class MapHelpers {
   }
 
   private boolean isBlocked(Vector2 position) {
-    return isBlocked(main.currentMapIndex, position);
+    return isBlocked(main.world.currentMapIndex, position);
   }
 
   public boolean isWalkable(Vector2 position) {
@@ -98,7 +98,7 @@ public class MapHelpers {
    * @return 2d array of GridCells
    */
   public GridCell[][] createPathfindingMap() {
-    Map map = main.getCurrentMap();
+    Map map = main.world.getCurrentMap();
     GridCell[][] cells = new GridCell[map.width][map.height];
 
     for (int x = 0; x < map.width; x++) {
@@ -118,7 +118,7 @@ public class MapHelpers {
    * @return Resistance map
    */
   public float[][] createFovMap() {
-    Map map = main.getCurrentMap();
+    Map map = main.world.getCurrentMap();
     float[][] resistanceMap = new float[map.width][map.height];
 
     for (int x = 0; x < map.width; x++) {
@@ -137,7 +137,7 @@ public class MapHelpers {
    * @param end   Where they're throwing to
    */
   public void createTargetingPath(Vector2 start, Vector2 end) {
-    Map map = main.getCurrentMap();
+    Map map = main.world.getCurrentMap();
 
     if (map.target != null && map.target.epsilonEquals(start.cpy().add(end), 0.00001f)) {
       return;
@@ -191,7 +191,7 @@ public class MapHelpers {
    * @param end   End position
    */
   public void createLookingPath(Vector2 start, Vector2 end, boolean careAboutWalls) {
-    Map map = main.getCurrentMap();
+    Map map = main.world.getCurrentMap();
 
     if (map.target != null && map.target.epsilonEquals(start.cpy().add(end), 0.00001f)) {
       return;
@@ -282,7 +282,7 @@ public class MapHelpers {
    * @return Random open cell
    */
   public Vector2 getRandomOpenPositionOnMap(int index) {
-    Map map = main.getMap(index);
+    Map map = main.world.getMap(index);
     int cellX;
     int cellY;
 
@@ -300,6 +300,6 @@ public class MapHelpers {
    * @return Random open cell
    */
   public Vector2 getRandomOpenPosition() {
-    return getRandomOpenPositionOnMap(main.currentMapIndex);
+    return getRandomOpenPositionOnMap(main.world.currentMapIndex);
   }
 }

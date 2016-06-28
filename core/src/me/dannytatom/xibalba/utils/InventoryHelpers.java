@@ -81,7 +81,7 @@ public class InventoryHelpers {
     if (entity.getComponent(InventoryComponent.class) != null) {
       InventoryComponent inventoryComponent = entity.getComponent(InventoryComponent.class);
 
-      item.add(new PositionComponent(main.currentMapIndex, position));
+      item.add(new PositionComponent(main.world.currentMapIndex, position));
       inventoryComponent.items.remove(item);
 
       if (entity.getComponent(PlayerComponent.class) != null) {

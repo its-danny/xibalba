@@ -211,7 +211,7 @@ public class EntityHelpers {
     PositionComponent positionComponent = entity.getComponent(PositionComponent.class);
 
     return positionComponent != null
-        && positionComponent.map == main.currentMapIndex
+        && positionComponent.map == main.world.currentMapIndex
         && !main.mapHelpers.getCell(positionComponent.pos.x, positionComponent.pos.y).hidden;
   }
 
@@ -297,7 +297,7 @@ public class EntityHelpers {
     for (Entity entity : entities) {
       PositionComponent positionComponent = entity.getComponent(PositionComponent.class);
 
-      if (positionComponent.map == main.currentMapIndex
+      if (positionComponent.map == main.world.currentMapIndex
           && positionComponent.pos.epsilonEquals(position, 0.00001f)) {
         return entity;
       }
@@ -320,7 +320,7 @@ public class EntityHelpers {
     for (Entity entity : entities) {
       PositionComponent positionComponent = entity.getComponent(PositionComponent.class);
 
-      if (positionComponent.map == main.currentMapIndex
+      if (positionComponent.map == main.world.currentMapIndex
           && positionComponent.pos.epsilonEquals(position, 0.00001f)) {
         return entity;
       }
@@ -343,7 +343,7 @@ public class EntityHelpers {
     for (Entity entity : entities) {
       PositionComponent positionComponent = entity.getComponent(PositionComponent.class);
 
-      if (positionComponent.map == main.currentMapIndex
+      if (positionComponent.map == main.world.currentMapIndex
           && positionComponent.pos.epsilonEquals(position, 0.00001f)) {
         return entity;
       }

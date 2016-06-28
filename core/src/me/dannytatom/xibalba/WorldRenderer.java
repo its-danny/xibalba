@@ -65,7 +65,7 @@ public class WorldRenderer {
 
     AttributesComponent playerAttributes = main.player.getComponent(AttributesComponent.class);
 
-    Map map = main.getCurrentMap();
+    Map map = main.world.getCurrentMap();
 
     float[][] lightMap = caster.calculateFov(
         main.mapHelpers.createFovMap(),

@@ -39,7 +39,7 @@ public class PlayerInput implements InputProcessor {
     AttributesComponent attributes = main.player.getComponent(AttributesComponent.class);
     PositionComponent position = main.player.getComponent(PositionComponent.class);
 
-    Map map = main.getCurrentMap();
+    Map map = main.world.getCurrentMap();
 
     switch (keycode) {
       case Keys.Z:
@@ -243,7 +243,7 @@ public class PlayerInput implements InputProcessor {
 
   @Override
   public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-    Map map = main.getCurrentMap();
+    Map map = main.world.getCurrentMap();
 
     if (main.state == Main.State.PLAYING
         && main.player.getComponent(MouseMovementComponent.class) == null) {
@@ -277,7 +277,7 @@ public class PlayerInput implements InputProcessor {
     Vector2 relativeToPlayer = mousePosition.cpy().sub(playerPosition.pos);
 
     if (main.state == Main.State.PLAYING) {
-      Map map = main.getCurrentMap();
+      Map map = main.world.getCurrentMap();
 
       map.target = null;
       map.lookingPath = null;
@@ -288,7 +288,7 @@ public class PlayerInput implements InputProcessor {
         return true;
       }
     } else if (main.state == Main.State.LOOKING) {
-      Map map = main.getCurrentMap();
+      Map map = main.world.getCurrentMap();
 
       map.target = null;
       map.lookingPath = null;
@@ -299,7 +299,7 @@ public class PlayerInput implements InputProcessor {
         return true;
       }
     } else if (main.state == Main.State.TARGETING) {
-      Map map = main.getCurrentMap();
+      Map map = main.world.getCurrentMap();
 
       map.target = null;
       map.targetingPath = null;
@@ -334,7 +334,7 @@ public class PlayerInput implements InputProcessor {
    * @param pos    The position we're attempting to move to
    */
   private void handleMovement(int energy, Vector2 pos) {
-    Map map = main.getCurrentMap();
+    Map map = main.world.getCurrentMap();
 
     map.target = null;
     map.lookingPath = null;
@@ -360,7 +360,7 @@ public class PlayerInput implements InputProcessor {
 
   private void handleThrow() {
     AttributesComponent attributes = main.player.getComponent(AttributesComponent.class);
-    Map map = main.getCurrentMap();
+    Map map = main.world.getCurrentMap();
 
     if (map.targetingPath != null && attributes.energy >= RangeComponent.COST) {
       Entity primaryWeapon = main.equipmentHelpers.getPrimaryWeapon(main.player);

@@ -162,7 +162,7 @@ public class CombatHelpers {
           Entity remains = new Entity();
           remains.add(new DecorationComponent());
           remains.add(new VisualComponent(atlas.createSprite("Level/Cave/FX/BloodSplatter-1")));
-          remains.add(new PositionComponent(main.currentMapIndex, splatterSpace));
+          remains.add(new PositionComponent(main.world.currentMapIndex, splatterSpace));
 
           main.engine.addEntity(remains);
         }
@@ -178,7 +178,7 @@ public class CombatHelpers {
       Entity remains = new Entity();
       remains.add(new DecorationComponent());
       remains.add(new PositionComponent(
-          main.currentMapIndex, target.getComponent(PositionComponent.class).pos
+          main.world.currentMapIndex, target.getComponent(PositionComponent.class).pos
       ));
       remains.add(new VisualComponent(
           atlas.createSprite("Level/Cave/Environment/Object/Remains-1")

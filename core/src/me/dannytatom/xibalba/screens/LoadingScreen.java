@@ -128,7 +128,7 @@ public class LoadingScreen implements Screen {
 
     // Add player entity
     main.entityHelpers.spawnPlayer(
-        main.player, main.currentMapIndex, main.mapHelpers.getRandomOpenPosition()
+        main.player, main.world.currentMapIndex, main.mapHelpers.getRandomOpenPosition()
     );
     main.engine.addEntity(main.player);
   }

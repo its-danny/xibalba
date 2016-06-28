@@ -36,7 +36,7 @@ public class BrainSystem extends SortedIteratingSystem {
     BrainComponent brain = ComponentMappers.brain.get(entity);
     PositionComponent position = ComponentMappers.position.get(entity);
 
-    if (position.map == main.currentMapIndex) {
+    if (position.map == main.world.currentMapIndex) {
       switch (brain.state) {
         case WAITING:
           handleWaiting(entity);

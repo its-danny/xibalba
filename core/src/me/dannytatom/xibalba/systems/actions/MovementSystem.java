@@ -53,12 +53,12 @@ public class MovementSystem extends ActionSystem {
         } else if (main.entityHelpers.isEnemy(thing) && attributes.energy >= MeleeComponent.COST) {
           main.player.add(new MeleeComponent(thing));
         } else if (main.entityHelpers.isExit(thing)) {
-          main.currentMapIndex += 1;
+          main.world.currentMapIndex += 1;
           main.playScreen = new PlayScreen(main);
           main.setScreen(main.playScreen);
 
           entity.getComponent(PositionComponent.class);
-          position.map = main.currentMapIndex;
+          position.map = main.world.currentMapIndex;
           attributes.energy -= MovementComponent.COST;
         }
       }

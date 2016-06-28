@@ -17,7 +17,6 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import me.dannytatom.xibalba.map.Map;
 import me.dannytatom.xibalba.screens.MainMenuScreen;
 import me.dannytatom.xibalba.utils.CombatHelpers;
 import me.dannytatom.xibalba.utils.EntityHelpers;
@@ -44,7 +43,6 @@ public class Main extends Game {
   public Screen playScreen;
   public Entity player;
   public boolean executeTurn = false;
-  public int currentMapIndex = 0;
 
   /**
    * Setup & load the main menu.
@@ -85,14 +83,6 @@ public class Main extends Game {
 
     // Start the main menu
     setScreen(new MainMenuScreen(this));
-  }
-
-  public Map getCurrentMap() {
-    return world.maps.get(currentMapIndex);
-  }
-
-  public Map getMap(int index) {
-    return world.maps.get(index);
   }
 
   /**

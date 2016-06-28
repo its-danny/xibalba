@@ -149,7 +149,7 @@ public class HudRenderer {
 
     // Depth
     areaDetails.addActor(
-        new Label("[DARK_GRAY]Depth " + (main.currentMapIndex + 1) + "[]", main.skin)
+        new Label("[DARK_GRAY]Depth " + (main.world.currentMapIndex + 1) + "[]", main.skin)
     );
     areaDetails.addActor(new Label("", main.skin));
 
@@ -216,7 +216,7 @@ public class HudRenderer {
   private void checkAndRenderLookDetails() {
     lookDialogList.clear();
 
-    Map map = main.getCurrentMap();
+    Map map = main.world.getCurrentMap();
 
     if (map.target != null) {
       renderLookDetails(map.target);

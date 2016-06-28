@@ -35,7 +35,7 @@ public class MouseMovementSystem extends EntitySystem {
    */
   public void update(float deltaTime) {
     for (Entity entity : entities) {
-      Map map = main.getCurrentMap();
+      Map map = main.world.getCurrentMap();
 
       // Remove mouse movement component once path is empty
       if (map.lookingPath == null || map.lookingPath.isEmpty()) {
