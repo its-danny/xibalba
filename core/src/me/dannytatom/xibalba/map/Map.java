@@ -49,10 +49,6 @@ public class Map {
     return map;
   }
 
-  public boolean[][] getGeometry() {
-    return geometry;
-  }
-
   // Determine floors & walls
   private void paintFirstCoat() {
     for (int x = 0; x < geometry.length; x++) {

@@ -6,9 +6,11 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Colors;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.components.AttributesComponent;
@@ -20,11 +22,14 @@ import me.dannytatom.xibalba.screens.LoadingScreen;
 import me.dannytatom.xibalba.screens.MainMenuScreen;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 class ReviewScreen implements Screen {
   private final Main main;
 
   private final Stage stage;
+  private TextField worldSeedField;
+  private TextField playerNameField;
 
   /**
    * Character Creation: Review Screen.
@@ -35,6 +40,8 @@ class ReviewScreen implements Screen {
     this.main = main;
 
     stage = new Stage();
+
+    main.world.seed = System.currentTimeMillis();
 
     Table table = new Table();
     table.setFillParent(true);
@@ -63,8 +70,23 @@ class ReviewScreen implements Screen {
             main.skin
         )
     ).pad(10).width(Gdx.graphics.getWidth() / 2 - 20);
+
     table.row();
     table.add(traitsGroup).pad(0, 10, 10, 10).width(Gdx.graphics.getWidth() / 2 - 20);
+
+    table.row();
+    Label worldSeedLabel = new Label("World Seed", main.skin);
+    table.add(worldSeedLabel).pad(0, 10, 10, 10).width(Gdx.graphics.getWidth() / 2 - 20);
+    table.row();
+    worldSeedField = new TextField(main.world.seed + "", main.skin);
+    table.add(worldSeedField).pad(0, 10, 10, 10).width(Gdx.graphics.getWidth() / 2 - 20);
+
+    table.row();
+    Label playerNameLabel = new Label("Name", main.skin);
+    table.add(playerNameLabel).pad(0, 10, 10, 10).width(Gdx.graphics.getWidth() / 2 - 20);
+    table.row();
+    playerNameField = new TextField("Aapo" + "", main.skin);
+    table.add(playerNameField).pad(0, 10, 10, 10).width(Gdx.graphics.getWidth() / 2 - 20);
 
     Gdx.input.setInputProcessor(stage);
   }
@@ -86,7 +108,24 @@ class ReviewScreen implements Screen {
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
     if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
-      main.player.add(new AttributesComponent("Aapo", "It's you", 100, 10, 50, 5, 5));
+      // Set world seed
+      String seedInput = worldSeedField.getText();
+
+      if (!Objects.equals(seedInput, "")) {
+        main.world.seed = Long.parseLong(seedInput);
+      }
+
+      Gdx.app.log("World Seed", main.world.seed + "");
+      MathUtils.random.setSeed(main.world.seed);
+
+      // Set player name
+      String playerName = playerNameField.getText();
+
+      if (Objects.equals(playerName, "")) {
+        playerName = "Aapo";
+      }
+
+      main.player.add(new AttributesComponent(playerName, "It's you", 100, 10, 50, 5, 5));
       main.setScreen(new LoadingScreen(main));
     }
 

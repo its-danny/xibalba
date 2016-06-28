@@ -11,7 +11,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import me.dannytatom.xibalba.Main;
-import me.dannytatom.xibalba.World;
 import me.dannytatom.xibalba.map.CaveGenerator;
 import me.dannytatom.xibalba.map.Map;
 import me.dannytatom.xibalba.systems.AttributesSystem;
@@ -110,12 +109,16 @@ public class LoadingScreen implements Screen {
   private void generateWorld() {
     generating = true;
 
-    main.world = new World();
-
     for (int i = 0; i < 5; i++) {
-      CaveGenerator generator = new CaveGenerator(
-          MathUtils.random(80, 100), MathUtils.random(50, 80)
+      int mapWidth = MathUtils.random(150, 200);
+      int mapHeight = MathUtils.random(100, 150);
+
+      Gdx.app.log(
+          "CaveGenerator",
+          "Starting cave generation for cave " + (i + 1) + ", size " + mapWidth + "x" + mapHeight
       );
+
+      CaveGenerator generator = new CaveGenerator(mapWidth, mapHeight);
       generator.generate();
 
       Map map = new Map(generator.geometry, main.assets.get("sprites/main.atlas"));

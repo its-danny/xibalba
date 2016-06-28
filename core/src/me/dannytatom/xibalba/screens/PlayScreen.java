@@ -53,6 +53,8 @@ public class PlayScreen implements Screen {
 
     // Change state to playing
     main.state = Main.State.PLAYING;
+
+    Gdx.app.log("PlayScreen", "Game Started");
   }
 
   @Override

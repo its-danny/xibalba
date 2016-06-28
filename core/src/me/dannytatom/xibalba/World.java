@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 public class World {
   public final ArrayList<Map> maps;
+  public long seed;
   public int currentMapIndex = 0;
 
   public World() {

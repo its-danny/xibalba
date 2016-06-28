@@ -50,7 +50,6 @@ public class CaveGenerator {
     for (int x = 0; x < width; x++) {
       for (int y = 0; y < height; y++) {
         float chanceToStartAlive = 0.4f;
-
         if (MathUtils.random() < chanceToStartAlive) {
           geometry[x][y] = true;
         }
@@ -140,11 +139,10 @@ public class CaveGenerator {
       }
     }
 
-    if (openCount < (width * height) / 3) {
-      Gdx.app.log("CaveGenerator", "Only " + openCount + " tiles are open, trying again");
+    if (openCount < (width * height) / 6) {
       generate();
     } else {
-      Gdx.app.log("CaveGenerator", "Ending with " + openCount + " tiles open");
+      Gdx.app.log("CaveGenerator", "Ca with " + openCount + " tiles open");
     }
   }
 

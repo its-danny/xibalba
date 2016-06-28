@@ -81,6 +81,9 @@ public class Main extends Game {
     // Map background colors
     Colors.put("CAVE_BACKGROUND", parseColor("293033"));
 
+    // Setup world
+    world = new World();
+
     // Start the main menu
     setScreen(new MainMenuScreen(this));
   }

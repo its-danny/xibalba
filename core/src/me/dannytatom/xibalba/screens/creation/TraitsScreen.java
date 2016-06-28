@@ -25,12 +25,12 @@ public class TraitsScreen implements Screen {
 
   private final Stage stage;
   private final Label infoLabel;
+  private final VerticalGroup traitsGroup;
+  private final VerticalGroup defectsGroup;
   private Array<TraitComponent> traits;
   private Array<DefectComponent> defects;
   private Array<TraitComponent> selectedTraits;
   private Array<DefectComponent> selectedDefects;
-  private final VerticalGroup traitsGroup;
-  private final VerticalGroup defectsGroup;
   private int points = 10;
   private VerticalGroup currentGroup;
   private int currentIndex;
