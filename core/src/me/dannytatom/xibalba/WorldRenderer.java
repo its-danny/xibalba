@@ -97,10 +97,11 @@ public class WorldRenderer {
       for (int i = 0; i < map.targetingPath.size(); i++) {
         GridCell cell = map.targetingPath.get(i);
         boolean isLast = i == (map.targetingPath.size() - 1);
+        String spritePath = isLast ? "Level/Cave/UI/Target-Throw-1" : "Level/Cave/UI/Target-Path-1";
 
-        batch.setColor(1f, 1f, 1f, isLast ? 1f : 0.25f);
+        batch.setColor(1f, 1f, 1f, isLast ? 1f : 0.5f);
         batch.draw(
-            atlas.createSprite("Level/Cave/UI/Target-1"),
+            atlas.createSprite(spritePath),
             cell.x * Main.SPRITE_WIDTH, cell.y * Main.SPRITE_HEIGHT
         );
         batch.setColor(1f, 1f, 1f, 1f);
@@ -109,10 +110,11 @@ public class WorldRenderer {
       for (int i = 0; i < map.lookingPath.size(); i++) {
         GridCell cell = map.lookingPath.get(i);
         boolean isLast = i == (map.lookingPath.size() - 1);
+        String spritePath = isLast ? "Level/Cave/UI/Target-1" : "Level/Cave/UI/Target-Path-1";
 
-        batch.setColor(1f, 1f, 1f, isLast ? 1f : 0.25f);
+        batch.setColor(1f, 1f, 1f, isLast ? 1f : 0.5f);
         batch.draw(
-            atlas.createSprite("Level/Cave/UI/Target-1"),
+            atlas.createSprite(spritePath),
             cell.x * Main.SPRITE_WIDTH, cell.y * Main.SPRITE_HEIGHT
         );
         batch.setColor(1f, 1f, 1f, 1f);

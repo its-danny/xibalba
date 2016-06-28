@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.components.AttributesComponent;
+import me.dannytatom.xibalba.components.MouseMovementComponent;
 import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.actions.MeleeComponent;
@@ -57,9 +58,11 @@ public class MovementSystem extends ActionSystem {
           main.playScreen = new PlayScreen(main);
           main.setScreen(main.playScreen);
 
+          entity.remove(MouseMovementComponent.class);
           entity.getComponent(PositionComponent.class);
           position.map = main.world.currentMapIndex;
           attributes.energy -= MovementComponent.COST;
+
         }
       }
     }

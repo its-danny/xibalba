@@ -137,7 +137,7 @@ public class HudRenderer {
 
     for (int i = 0; i < main.log.things.size(); i++) {
       Label label = new Label(main.log.things.get(i), main.skin);
-      label.setColor(1f, 1f, 1f, (i == 0 ? 1f : 1f / (i + 1)));
+      label.setColor(1f, 1f, 1f, i == 0 ? 1f : 0.5f);
       label.setWrap(true);
 
       actionLog.addActor(label);

@@ -74,7 +74,7 @@ public class MapHelpers {
       for (Entity entity : entities) {
         PositionComponent ep = ComponentMappers.position.get(entity);
 
-        if (ep != null && ep.pos.epsilonEquals(position, 0.00001f)) {
+        if (ep != null && ep.map == mapIndex && ep.pos.epsilonEquals(position, 0.00001f)) {
           blocked = true;
           break;
         }
@@ -139,10 +139,6 @@ public class MapHelpers {
   public void createTargetingPath(Vector2 start, Vector2 end) {
     Map map = main.world.getCurrentMap();
 
-    if (map.target != null && map.target.epsilonEquals(start.cpy().add(end), 0.00001f)) {
-      return;
-    }
-
     Vector2 oldTarget;
     GridCell[][] cells = new GridCell[map.width][map.height];
 
@@ -192,10 +188,6 @@ public class MapHelpers {
    */
   public void createLookingPath(Vector2 start, Vector2 end, boolean careAboutWalls) {
     Map map = main.world.getCurrentMap();
-
-    if (map.target != null && map.target.epsilonEquals(start.cpy().add(end), 0.00001f)) {
-      return;
-    }
 
     Vector2 oldTarget;
     GridCell[][] cells = new GridCell[map.width][map.height];

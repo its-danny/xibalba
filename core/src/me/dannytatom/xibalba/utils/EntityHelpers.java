@@ -79,7 +79,9 @@ public class EntityHelpers {
 
     Entity entity = new Entity();
     entity.add(new PositionComponent(map, position));
-    entity.add(new VisualComponent(atlas.createSprite("Level/Cave/FX/Bolt-1")));
+    entity.add(new VisualComponent(
+        atlas.createSprite("Level/Cave/Environment/Interact/Ladder-Down-1")
+    ));
     entity.add(new ExitComponent());
 
     return entity;
