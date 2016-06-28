@@ -4,7 +4,6 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Colors;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -26,10 +25,10 @@ public class TraitsScreen implements Screen {
 
   private final Stage stage;
   private final Label infoLabel;
-  private final Array<TraitComponent> traits;
-  private final Array<DefectComponent> defects;
-  private final Array<TraitComponent> selectedTraits;
-  private final Array<DefectComponent> selectedDefects;
+  private Array<TraitComponent> traits;
+  private Array<DefectComponent> defects;
+  private Array<TraitComponent> selectedTraits;
+  private Array<DefectComponent> selectedDefects;
   private final VerticalGroup traitsGroup;
   private final VerticalGroup defectsGroup;
   private int points = 10;
@@ -50,31 +49,8 @@ public class TraitsScreen implements Screen {
     table.left().top();
     stage.addActor(table);
 
-    traits = new Array<>();
-    selectedTraits = new Array<>();
     traitsGroup = new VerticalGroup().left();
-    FileHandle traitsHandle = Gdx.files.internal("data/traits/");
-
-    for (FileHandle entry : traitsHandle.list()) {
-      TraitComponent trait =
-          (new Json()).fromJson(
-              TraitComponent.class, Gdx.files.internal("data/traits/" + entry.name())
-          );
-      traits.add(trait);
-    }
-
-    defects = new Array<>();
-    selectedDefects = new Array<>();
     defectsGroup = new VerticalGroup().left();
-    FileHandle defectsHandle = Gdx.files.internal("data/defects/");
-
-    for (FileHandle entry : defectsHandle.list()) {
-      DefectComponent defect =
-          (new Json()).fromJson(
-              DefectComponent.class, Gdx.files.internal("data/defects/" + entry.name())
-          );
-      defects.add(defect);
-    }
 
     infoLabel = new Label(null, main.skin);
     currentGroup = traitsGroup;
@@ -85,15 +61,16 @@ public class TraitsScreen implements Screen {
         new Label("[LIGHT_GRAY]Take defects for more trait points", main.skin)
     ).left().pad(10);
     table.row();
-
     table.add(new Label("Traits", main.skin))
         .pad(0, 10, 10, 10).width(Gdx.graphics.getWidth() / 2 - 20);
     table.add(new Label("Defects", main.skin))
         .pad(0, 10, 10, 10).width(Gdx.graphics.getWidth() / 2 - 20);
-
     table.row();
     table.add(traitsGroup).pad(0, 10, 10, 10).width(Gdx.graphics.getWidth() / 2 - 20);
     table.add(defectsGroup).pad(0, 10, 10, 10).width(Gdx.graphics.getWidth() / 2 - 20);
+
+    loadTraits();
+    loadDefects();
 
     Gdx.input.setInputProcessor(stage);
   }
@@ -286,6 +263,40 @@ public class TraitsScreen implements Screen {
 
     stage.act(delta);
     stage.draw();
+  }
+
+  private void loadTraits() {
+    traits = new Array<>();
+    selectedTraits = new Array<>();
+
+    traits.add((new Json()).fromJson(
+        TraitComponent.class, Gdx.files.internal("data/traits/archer.json")
+    ));
+
+    traits.add((new Json()).fromJson(
+        TraitComponent.class, Gdx.files.internal("data/traits/brawler.json")
+    ));
+
+    traits.add((new Json()).fromJson(
+        TraitComponent.class, Gdx.files.internal("data/traits/brute.json")
+    ));
+
+    traits.add((new Json()).fromJson(
+        TraitComponent.class, Gdx.files.internal("data/traits/slasher.json")
+    ));
+
+    traits.add((new Json()).fromJson(
+        TraitComponent.class, Gdx.files.internal("data/traits/slinger.json")
+    ));
+
+    traits.add((new Json()).fromJson(
+        TraitComponent.class, Gdx.files.internal("data/traits/warrior.json")
+    ));
+  }
+
+  private void loadDefects() {
+    defects = new Array<>();
+    selectedDefects = new Array<>();
   }
 
   @Override
