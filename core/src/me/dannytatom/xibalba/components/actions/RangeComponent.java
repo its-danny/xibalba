@@ -10,17 +10,16 @@ public class RangeComponent implements Component {
   public final Vector2 target;
   public final Entity item;
   public final String skill;
+  public final String bodyPart;
 
-  /**
-   * Filling RangeComponent w/ data needed for RangeSystem.
-   *
-   * @param target Who's being attacked
-   * @param item   The item we're attacking with
-   * @param skill  The skill we're attacking with
-   */
-  public RangeComponent(Vector2 target, Entity item, String skill) {
+  public RangeComponent(Vector2 target, Entity item, String skill, String bodyPart) {
     this.target = target;
     this.item = item;
     this.skill = skill;
+    this.bodyPart = bodyPart;
+  }
+
+  public RangeComponent(Vector2 target, Entity item, String skill) {
+    this(target, item, skill, "body");
   }
 }

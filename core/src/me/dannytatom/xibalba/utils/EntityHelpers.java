@@ -11,6 +11,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.components.AttributesComponent;
+import me.dannytatom.xibalba.components.BodyPartsComponent;
 import me.dannytatom.xibalba.components.DecorationComponent;
 import me.dannytatom.xibalba.components.EnemyComponent;
 import me.dannytatom.xibalba.components.EquipmentComponent;
@@ -59,6 +60,7 @@ public class EntityHelpers {
 
     player.add(new PlayerComponent());
     player.add(new PositionComponent(map, position));
+    player.add(new BodyPartsComponent(10, 8, 10, 10, 10, 10));
     player.add(new VisualComponent(
         atlas.createSprite(sprites.random()))
     );
@@ -114,6 +116,14 @@ public class EntityHelpers {
         json.attributes.get("maxHealth"),
         json.attributes.get("defense"),
         json.attributes.get("damage")
+    ));
+    entity.add(new BodyPartsComponent(
+        json.bodyParts.get("head"),
+        json.bodyParts.get("body"),
+        json.bodyParts.get("rightArm"),
+        json.bodyParts.get("leftArm"),
+        json.bodyParts.get("rightLeg"),
+        json.bodyParts.get("leftLeg")
     ));
 
     return entity;

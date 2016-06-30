@@ -18,13 +18,18 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import me.dannytatom.xibalba.components.AttributesComponent;
+import me.dannytatom.xibalba.components.BodyPartsComponent;
 import me.dannytatom.xibalba.components.EnemyComponent;
 import me.dannytatom.xibalba.components.ItemComponent;
+import me.dannytatom.xibalba.components.actions.MeleeComponent;
 import me.dannytatom.xibalba.map.Cell;
 import me.dannytatom.xibalba.map.Map;
 import me.dannytatom.xibalba.screens.CharacterScreen;
 import me.dannytatom.xibalba.screens.HelpScreen;
 import me.dannytatom.xibalba.screens.InventoryScreen;
+import org.apache.commons.lang3.text.WordUtils;
+
+import java.lang.reflect.Field;
 
 public class HudRenderer {
   public final Stage stage;
@@ -35,7 +40,9 @@ public class HudRenderer {
   private final Label lookDetails;
   private final Dialog lookDialog;
   private final VerticalGroup lookDialogList;
+  private final Dialog focusedDialog;
   private boolean lookDialogShowing = false;
+  private boolean focusedDialogShowing = false;
 
   /**
    * Renders the HUD.
@@ -107,11 +114,46 @@ public class HudRenderer {
     stage.addActor(bottomTable);
 
     lookDialog = new Dialog("", main.skin);
-    lookDialog.pad(5, 10, 15, 10);
+    lookDialog.pad(5, 5, 10, 10);
     lookDialog.setModal(false);
     lookDialog.setMovable(false);
     lookDialogList = new VerticalGroup().left();
     lookDialog.add(lookDialogList);
+
+    focusedDialog = new Dialog("", main.skin);
+    focusedDialog.pad(5, 0, 10, 5);
+    focusedDialog.setModal(false);
+    focusedDialog.setMovable(false);
+    Table focusedDialogTable = new Table().left();
+    focusedDialog.add(focusedDialogTable);
+
+    Field[] bodyParts = BodyPartsComponent.class.getDeclaredFields();
+    for (Field bodyPart : bodyParts) {
+      String name = bodyPart.getName();
+      String prettyName = name.replaceAll(
+          String.format("%s|%s|%s",
+              "(?<=[A-Z])(?=[A-Z][a-z])",
+              "(?<=[^A-Z])(?=[A-Z])",
+              "(?<=[A-Za-z])(?=[^A-Za-z])"
+          ), " "
+      );
+      prettyName = WordUtils.capitalizeFully(prettyName);
+
+      TextButton button = new TextButton(prettyName, main.skin);
+      button.pad(5);
+      button.addListener(new ClickListener() {
+        @Override
+        public void clicked(InputEvent event, float positionX, float positionY) {
+          super.clicked(event, positionX, positionY);
+
+          main.player.add(new MeleeComponent(main.focusedEntity, name));
+          main.state = Main.State.PLAYING;
+          main.executeTurn = true;
+        }
+      });
+
+      focusedDialogTable.add(button).pad(0, 5, 0, 5);
+    }
   }
 
   /**
@@ -123,6 +165,7 @@ public class HudRenderer {
     renderActionLog();
     renderAreaDetails();
     checkAndRenderLookDetails();
+    checkAndRenderFocused();
 
     stage.act(delta);
     stage.draw();
@@ -163,6 +206,8 @@ public class HudRenderer {
       name += " [DARK_GRAY][LOOKING][]";
     } else if (main.state == Main.State.TARGETING) {
       name += " [DARK_GRAY][TARGETING][]";
+    } else if (main.state == Main.State.FOCUSED) {
+      name += " [DARK_GRAY][FOCUSED][]";
     }
 
     areaDetails.addActor(new Label(name, main.skin));
@@ -287,5 +332,30 @@ public class HudRenderer {
         }
       }
     }
+  }
+
+  private void checkAndRenderFocused() {
+    if (main.state == Main.State.FOCUSED) {
+      renderFocused();
+    } else {
+      if (focusedDialogShowing) {
+        focusedDialogShowing = false;
+        focusedDialog.hide(null);
+      }
+    }
+  }
+
+  private void renderFocused() {
+    if (lookDialogShowing) {
+      lookDialogShowing = false;
+      lookDialog.hide(null);
+    }
+
+    focusedDialogShowing = true;
+    focusedDialog.show(stage, null);
+
+    focusedDialog.setPosition(
+        Math.round((stage.getWidth() - focusedDialog.getWidth()) / 2), 65
+    );
   }
 }

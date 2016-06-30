@@ -34,7 +34,7 @@ public class RangeSystem extends ActionSystem {
       Entity enemy = main.entityHelpers.getEnemyAt(range.target);
 
       if (enemy != null) {
-        main.combatHelpers.range(entity, enemy, range.item, range.skill);
+        main.combatHelpers.range(entity, enemy, range.bodyPart, range.item, range.skill);
       }
 
       if (Objects.equals(range.skill, "throwing")) {

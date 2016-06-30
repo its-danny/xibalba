@@ -24,16 +24,12 @@ public class InventoryHelpers {
    *
    * @param entity Entity we wanna to give shit to
    * @param item   The item itself
-   *
-   * @return Whether or not it was added
    */
-  public boolean addItem(Entity entity, Entity item) {
+  public void addItem(Entity entity, Entity item) {
     if (entity.getComponent(InventoryComponent.class) != null) {
       InventoryComponent inventoryComponent = entity.getComponent(InventoryComponent.class);
 
-      if (inventoryComponent.items.size() == 10) {
-        return false;
-      } else {
+      if (inventoryComponent.items.size() < 10) {
         item.remove(PositionComponent.class);
         inventoryComponent.items.add(item);
 
@@ -49,8 +45,6 @@ public class InventoryHelpers {
         }
       }
     }
-
-    return true;
   }
 
   /**

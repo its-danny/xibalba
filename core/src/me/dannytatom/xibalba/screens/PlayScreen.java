@@ -20,9 +20,9 @@ public class PlayScreen implements Screen {
   private final Main main;
 
   private final FPSLogger fps;
-  private final OrthographicCamera worldCamera;
   private final WorldRenderer worldRenderer;
   private final HudRenderer hudRenderer;
+  private final InputMultiplexer multiplexer;
 
   private final SpriteBatch batch;
   private float autoTimer = 0;
@@ -47,9 +47,14 @@ public class PlayScreen implements Screen {
     playerPosition.pos = main.mapHelpers.getRandomOpenPosition();
 
     // Setup renderers
-    worldCamera = new OrthographicCamera();
+    OrthographicCamera worldCamera = new OrthographicCamera();
     worldRenderer = new WorldRenderer(main, worldCamera, batch);
     hudRenderer = new HudRenderer(main, batch);
+
+    // Setup input
+    multiplexer = new InputMultiplexer();
+    multiplexer.addProcessor(hudRenderer.stage);
+    multiplexer.addProcessor(new PlayerInput(main, worldCamera));
 
     // Change state to playing
     main.state = Main.State.PLAYING;
@@ -103,10 +108,6 @@ public class PlayScreen implements Screen {
 
   @Override
   public void show() {
-    InputMultiplexer multiplexer = new InputMultiplexer();
-    multiplexer.addProcessor(new PlayerInput(main, worldCamera));
-    multiplexer.addProcessor(hudRenderer.stage);
-
     Gdx.input.setInputProcessor(multiplexer);
   }
 

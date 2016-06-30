@@ -7,8 +7,14 @@ public class MeleeComponent implements Component {
   public static final int COST = 100;
 
   public final Entity target;
+  public final String bodyPart;
+
+  public MeleeComponent(Entity target, String bodyPart) {
+    this.target = target;
+    this.bodyPart = bodyPart;
+  }
 
   public MeleeComponent(Entity target) {
-    this.target = target;
+    this(target, "body");
   }
 }

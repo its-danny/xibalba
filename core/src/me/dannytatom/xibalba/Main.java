@@ -43,6 +43,7 @@ public class Main extends Game {
   public Screen playScreen;
   public Entity player;
   public boolean executeTurn = false;
+  public Entity focusedEntity;
 
   /**
    * Setup & load the main menu.
@@ -126,6 +127,6 @@ public class Main extends Game {
   }
 
   public enum State {
-    PLAYING, TARGETING, LOOKING, MOVING
+    PLAYING, TARGETING, LOOKING, MOVING, FOCUSED
   }
 }

@@ -28,8 +28,8 @@ class ReviewScreen implements Screen {
   private final Main main;
 
   private final Stage stage;
-  private TextField worldSeedField;
-  private TextField playerNameField;
+  private final TextField worldSeedField;
+  private final TextField playerNameField;
 
   /**
    * Character Creation: Review Screen.

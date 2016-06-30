@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.components.AttributesComponent;
+import me.dannytatom.xibalba.components.BodyPartsComponent;
 import me.dannytatom.xibalba.components.DecorationComponent;
 import me.dannytatom.xibalba.components.EquipmentComponent;
 import me.dannytatom.xibalba.components.ItemComponent;
@@ -13,12 +14,13 @@ import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.VisualComponent;
 
+import java.lang.reflect.Field;
 import java.util.Objects;
 
 // How combat works.
 //
 // - Each skill is 4, 6, 8, 10, or 12
-// - You roll your skill and a 6, highest result is used
+// - You roll your skill and a 6, highest result is used - body part die roll
 // - If the result is the highest it can be, roll that number again and add to it
 // - If result is 4 or over, you hit
 // - If result is 8 or over (critical), add a 6 roll to the damage
@@ -43,7 +45,7 @@ public class CombatHelpers {
    * @param starter Who started the fight
    * @param target  Who's getting fought
    */
-  public void melee(Entity starter, Entity target) {
+  public void melee(Entity starter, Entity target, String bodyPart) {
     String skill;
     String verb;
 
@@ -68,7 +70,11 @@ public class CombatHelpers {
 
     int result = rollHit(main.skillHelpers.getSkillValue(starter, skill));
 
-    applyDamage(result, damage, skill, starter, target, verb);
+    try {
+      applyDamage(result, damage, skill, starter, target, bodyPart, verb);
+    } catch (NoSuchFieldException e) {
+      e.printStackTrace();
+    }
   }
 
   /**
@@ -78,7 +84,7 @@ public class CombatHelpers {
    * @param target  Who's getting fought
    * @param item    What they're being hit with
    */
-  public void range(Entity starter, Entity target, Entity item, String skill) {
+  public void range(Entity starter, Entity target, String bodyPart, Entity item, String skill) {
     ItemComponent itemComponent = item.getComponent(ItemComponent.class);
 
     int result = rollHit(main.skillHelpers.getSkillValue(starter, skill));
@@ -86,9 +92,11 @@ public class CombatHelpers {
         ? itemComponent.attributes.get("throwDamage")
         : itemComponent.attributes.get("hitDamage");
 
-    applyDamage(
-        result, damage, skill, starter, target, "hit"
-    );
+    try {
+      applyDamage(result, damage, skill, starter, target, bodyPart, "hit");
+    } catch (NoSuchFieldException e) {
+      e.printStackTrace();
+    }
   }
 
   private int rollHit(int skillLevel) {
@@ -114,13 +122,27 @@ public class CombatHelpers {
   }
 
   private void applyDamage(int result, int baseDamage, String skill,
-                           Entity starter, Entity target, String verb) {
+                           Entity starter, Entity target, String bodyPart,
+                           String verb) throws NoSuchFieldException {
     AttributesComponent starterAttributes = ComponentMappers.attributes.get(starter);
     AttributesComponent targetAttributes = ComponentMappers.attributes.get(target);
 
     boolean starterIsPlayer = starter.getComponent(PlayerComponent.class) != null;
 
     String action = (starterIsPlayer ? "You" : starterAttributes.name) + " ";
+
+    BodyPartsComponent bodyParts;
+    Field bodyPartField;
+
+    try {
+      bodyParts = target.getComponent(BodyPartsComponent.class);
+      bodyPartField = bodyParts.getClass().getField(bodyPart);
+      int bodyPartDifficulty = (int) bodyPartField.get(bodyParts);
+
+      result -= MathUtils.random(1, bodyPartDifficulty);
+    } catch (IllegalAccessException e) {
+      e.printStackTrace();
+    }
 
     if (result >= 4) {
       int critical = 0;
@@ -146,6 +168,10 @@ public class CombatHelpers {
         }
 
         action += verb + " " + targetAttributes.name + " for " + damage + " damage";
+
+        if (!Objects.equals(bodyPart, "body")) {
+          action += " in the " + bodyPart;
+        }
       } else {
         action += "hit " + targetAttributes.name + " but did no damage";
       }

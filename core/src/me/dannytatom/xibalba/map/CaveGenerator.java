@@ -142,7 +142,7 @@ public class CaveGenerator {
     if (openCount < (width * height) / 6) {
       generate();
     } else {
-      Gdx.app.log("CaveGenerator", "Ca with " + openCount + " tiles open");
+      Gdx.app.log("CaveGenerator", "Cave with " + openCount + " tiles open");
     }
   }
 

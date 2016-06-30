@@ -235,6 +235,26 @@ public class MapHelpers {
   }
 
   /**
+   * Find if an entity is near the player.
+   *
+   * @param entity The entity to check
+   * @param radius How many spaces to check
+   *
+   * @return Whether or not they are
+   */
+  public boolean isNearPlayer(Entity entity, int radius) {
+    PositionComponent playerPosition = main.player.getComponent(PositionComponent.class);
+    PositionComponent entityPosition = entity.getComponent(PositionComponent.class);
+
+    return (entityPosition.pos.x == playerPosition.pos.x - radius
+        || entityPosition.pos.x == playerPosition.pos.x
+        || entityPosition.pos.x == playerPosition.pos.x + radius)
+        && (entityPosition.pos.y == playerPosition.pos.y - radius
+        || entityPosition.pos.y == playerPosition.pos.y
+        || entityPosition.pos.y == playerPosition.pos.y + radius);
+  }
+
+  /**
    * Returns an open position near the player.
    *
    * @return Player position

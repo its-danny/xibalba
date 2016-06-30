@@ -198,6 +198,8 @@ public class PlayerInput implements InputProcessor {
           main.player.remove(MouseMovementComponent.class);
           main.player.remove(MovementComponent.class);
           main.state = Main.State.PLAYING;
+        } else if (main.state == Main.State.FOCUSED) {
+          main.state = Main.State.PLAYING;
         }
         break;
       case Keys.SPACE:
@@ -243,22 +245,32 @@ public class PlayerInput implements InputProcessor {
 
   @Override
   public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-    Map map = main.world.getCurrentMap();
-
-    if (main.state == Main.State.PLAYING
-        && main.player.getComponent(MouseMovementComponent.class) == null) {
+    if (main.state == Main.State.PLAYING) {
       Vector2 mousePosition = main.mousePositionToWorld(worldCamera);
 
-      if (main.mapHelpers.cellExists(mousePosition)
-          && !main.mapHelpers.getCell(mousePosition.x, mousePosition.y).hidden) {
-        main.player.add(new MouseMovementComponent());
+      if (holdingShift) {
+        Entity enemy = main.entityHelpers.getEnemyAt(mousePosition);
 
-        main.state = Main.State.MOVING;
-        main.executeTurn = true;
+        if (enemy != null && main.mapHelpers.isNearPlayer(enemy, 1)) {
+          main.state = Main.State.FOCUSED;
+          main.focusedEntity = enemy;
+        }
 
         return true;
+      } else {
+        if (main.player.getComponent(MouseMovementComponent.class) == null) {
+          if (main.mapHelpers.cellExists(mousePosition)
+              && !main.mapHelpers.getCell(mousePosition.x, mousePosition.y).hidden) {
+            main.player.add(new MouseMovementComponent());
+
+            main.state = Main.State.MOVING;
+            main.executeTurn = true;
+
+            return true;
+          }
+        }
       }
-    } else if (main.state == Main.State.TARGETING && map.target != null) {
+    } else if (main.state == Main.State.TARGETING) {
       handleThrow();
     }
 
@@ -324,7 +336,7 @@ public class PlayerInput implements InputProcessor {
 
     Gdx.app.log("zoom", worldCamera.zoom + "");
 
-    return false;
+    return true;
   }
 
   /**
@@ -334,15 +346,24 @@ public class PlayerInput implements InputProcessor {
    * @param pos    The position we're attempting to move to
    */
   private void handleMovement(int energy, Vector2 pos) {
-    Map map = main.world.getCurrentMap();
+    if (holdingShift) {
+      Entity enemy = main.entityHelpers.getEnemyAt(pos);
 
-    map.target = null;
-    map.lookingPath = null;
+      if (enemy != null) {
+        main.state = Main.State.FOCUSED;
+        main.focusedEntity = enemy;
+      }
+    } else {
+      Map map = main.world.getCurrentMap();
 
-    if (energy >= MovementComponent.COST) {
-      main.player.add(new MovementComponent(pos));
+      map.target = null;
+      map.lookingPath = null;
 
-      main.executeTurn = true;
+      if (energy >= MovementComponent.COST) {
+        main.player.add(new MovementComponent(pos));
+
+        main.executeTurn = true;
+      }
     }
   }
 

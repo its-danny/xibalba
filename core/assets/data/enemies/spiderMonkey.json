@@ -10,5 +10,13 @@
     "maxHealth": 50,
     "defense": 5,
     "damage": 10
+  },
+  "bodyParts": {
+    "head": 8,
+    "body": 6,
+    "rightArm": 8,
+    "leftArm": 8,
+    "rightLeg": 6,
+    "leftLeg": 6
   }
 }
