@@ -1,6 +1,7 @@
 package me.dannytatom.xibalba.utils;
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -12,22 +13,32 @@ import me.dannytatom.xibalba.components.EquipmentComponent;
 import me.dannytatom.xibalba.components.ItemComponent;
 import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
+import me.dannytatom.xibalba.components.SkillsComponent;
 import me.dannytatom.xibalba.components.VisualComponent;
 import me.dannytatom.xibalba.components.actions.MeleeComponent;
 import me.dannytatom.xibalba.components.actions.RangeComponent;
 
-import java.util.HashMap;
 import java.util.Objects;
 
-// How combat works.
 //
-// - Each skill is 4, 6, 8, 10, or 12
-// - You roll your skill and a 6, highest result is used - body part die roll
-// - If the result is the highest it can be, roll that number again and add to it
-// - If result is 4 or over, you hit
-// - If result is 8 or over (critical), add a 6 roll to the damage
-// - Damage is a static number + the 6 roll if you have it
-// - Roll that, add together, they take damage equal to result - their defense
+// How combat works
+// ----------------
+//
+// Hitting
+// - Target number is 4
+// - Roll skill and a 6, highest result is used as your hit roll
+//    - If you have no level in the skill, roll a 4
+// - Roll body part you're attempting to hit
+// - If you roll over their body part roll, continue w/ hit roll
+// - If the hit roll result is the target number or higher, you hit
+//
+// Damage
+// - Melee damage is strength roll + the weapon's damage roll
+// - Ranged damage is just the weapon's damage roll
+//   - If thrown, use throwDamage, otherwise hitDamage
+// - If your hit roll was double the target number, you critical (add a 6 roll to the damage)
+// - Damage done to the enemy is your total damage over their defense
+//
 
 public class CombatHelpers {
   private final Main main;
@@ -62,9 +73,13 @@ public class CombatHelpers {
    * @param bodyPart Where you trying to hit em
    */
   public void preparePlayerForThrowing(Vector2 position, String bodyPart) {
-    Entity item = main.inventoryHelpers.getThrowingItem(main.player);
+    AttributesComponent attributes = main.player.getComponent(AttributesComponent.class);
 
-    main.player.add(new RangeComponent(position, item, "throwing", bodyPart));
+    if (attributes.energy >= RangeComponent.COST) {
+      Entity item = main.inventoryHelpers.getThrowingItem(main.player);
+
+      main.player.add(new RangeComponent(position, item, "throwing", bodyPart));
+    }
   }
 
   /**
@@ -74,15 +89,52 @@ public class CombatHelpers {
    * @param bodyPart Where you trying to hit em
    */
   public void preparePlayerForRanged(Vector2 position, String bodyPart) {
-    Entity primaryWeapon = main.equipmentHelpers.getPrimaryWeapon(main.player);
+    AttributesComponent attributes = main.player.getComponent(AttributesComponent.class);
 
-    Entity item = main.inventoryHelpers.getAmmunitionOfType(
-        main.player, primaryWeapon.getComponent(ItemComponent.class).ammunitionType
-    );
+    if (attributes.energy >= RangeComponent.COST) {
+      Entity primaryWeapon = main.equipmentHelpers.getPrimaryWeapon(main.player);
 
-    String skill = primaryWeapon.getComponent(ItemComponent.class).skill;
+      Entity item = main.inventoryHelpers.getAmmunitionOfType(
+          main.player, primaryWeapon.getComponent(ItemComponent.class).ammunitionType
+      );
 
-    main.player.add(new RangeComponent(position, item, skill, bodyPart));
+      String skill = primaryWeapon.getComponent(ItemComponent.class).skill;
+
+      main.player.add(new RangeComponent(position, item, skill, bodyPart));
+    }
+  }
+
+  /**
+   * Get combined toughness from all the items they're wearing.
+   *
+   * @param entity Who we're getting toughness of
+   *
+   * @return Their combined toughness
+   */
+  private int getCombinedDefense(Entity entity) {
+    AttributesComponent attributes = entity.getComponent(AttributesComponent.class);
+
+    return MathUtils.random(1, attributes.toughness) + getArmorDefense(entity);
+  }
+
+  public int getArmorDefense(Entity entity) {
+    EquipmentComponent equipment = entity.getComponent(EquipmentComponent.class);
+
+    int defense = 0;
+
+    if (equipment != null) {
+      for (Entity item : equipment.slots.values()) {
+        if (item != null) {
+          ItemComponent itemComponent = item.getComponent(ItemComponent.class);
+
+          if (Objects.equals(itemComponent.type, "armor")) {
+            defense += item.getComponent(ItemComponent.class).attributes.get("defense");
+          }
+        }
+      }
+    }
+
+    return defense;
   }
 
   /**
@@ -92,31 +144,63 @@ public class CombatHelpers {
    * @param target  Who's getting fought
    */
   public void melee(Entity starter, Entity target, String bodyPart) {
-    String skill;
-    String verb;
-
-    int damage = starter.getComponent(AttributesComponent.class).damage;
-
-    Entity heldWeapon = null;
+    Entity weapon = null;
 
     if (starter.getComponent(EquipmentComponent.class) != null) {
-      heldWeapon = main.equipmentHelpers.getPrimaryWeapon(starter);
+      weapon = main.equipmentHelpers.getPrimaryWeapon(starter);
     }
 
-    if (heldWeapon == null) {
-      skill = "unarmed";
+    String skillName;
+    String verb;
+
+    if (weapon == null) {
+      skillName = "unarmed";
       verb = "hit";
     } else {
-      ItemComponent ic = heldWeapon.getComponent(ItemComponent.class);
+      ItemComponent weaponItem = weapon.getComponent(ItemComponent.class);
 
-      skill = ic.skill;
-      damage += ic.attributes.get("hitDamage");
-      verb = ic.verbs.get(MathUtils.random(0, ic.verbs.size() - 1));
+      skillName = weaponItem.skill;
+      verb = weaponItem.verbs.get(MathUtils.random(0, weaponItem.verbs.size() - 1));
     }
 
-    int result = rollHit(main.skillHelpers.getSkillValue(starter, skill));
+    SkillsComponent skills = starter.getComponent(SkillsComponent.class);
 
-    applyDamage(result, damage, skill, starter, target, bodyPart, verb);
+    int skillLevel = skills.levels.get(skillName);
+    BodyComponent body = target.getComponent(BodyComponent.class);
+
+    int hit = determineHit(skillLevel, body.parts.get(bodyPart));
+
+    AttributesComponent starterAttributes = starter.getComponent(AttributesComponent.class);
+
+    if (hit >= 4) {
+      int strengthRoll = MathUtils.random(1, starterAttributes.strength);
+      int weaponRoll = 0;
+      int critRoll = 0;
+
+      if (weapon != null) {
+        ItemComponent weaponItem = weapon.getComponent(ItemComponent.class);
+        weaponRoll = MathUtils.random(1, weaponItem.attributes.get("hitDamage"));
+      }
+
+      int skillLevelAmount = 20;
+
+      if (hit >= 8) {
+        critRoll = MathUtils.random(1, 6);
+        skillLevelAmount = 40;
+      }
+
+      int damage = strengthRoll + weaponRoll + critRoll;
+
+      applyDamage(starter, target, damage, verb, bodyPart);
+
+      main.skillHelpers.levelSkill(starter, skillName, skillLevelAmount);
+    } else {
+      AttributesComponent targetAttributes = target.getComponent(AttributesComponent.class);
+
+      main.log.add(
+          starterAttributes.name + " tried to hit " + targetAttributes.name + " but missed"
+      );
+    }
   }
 
   /**
@@ -127,107 +211,96 @@ public class CombatHelpers {
    * @param item    What they're being hit with
    */
   public void range(Entity starter, Entity target, String bodyPart, Entity item, String skill) {
+    SkillsComponent skills = starter.getComponent(SkillsComponent.class);
     ItemComponent itemComponent = item.getComponent(ItemComponent.class);
 
-    int result = rollHit(main.skillHelpers.getSkillValue(starter, skill));
-    int damage = Objects.equals(skill, "throwing")
-        ? itemComponent.attributes.get("throwDamage")
-        : itemComponent.attributes.get("hitDamage");
+    Gdx.app.log("CombatHelpers", "range");
 
-    applyDamage(result, damage, skill, starter, target, bodyPart, "hit");
-  }
+    String verb;
 
-  private int rollHit(int skillLevel) {
-    int skillRoll = skillLevel == 0 ? 0 : MathUtils.random(1, skillLevel);
-    int sixRoll = MathUtils.random(1, 6);
-    int result;
-
-    if (skillRoll > sixRoll) {
-      if (skillRoll == skillLevel) {
-        result = skillRoll + MathUtils.random(1, skillLevel);
-      } else {
-        result = skillRoll;
-      }
+    if (Objects.equals(skill, "throwing")) {
+      verb = "hit";
     } else {
-      if (sixRoll == 6) {
-        result = sixRoll + MathUtils.random(1, 6);
-      } else {
-        result = sixRoll;
-      }
+      ItemComponent firingWeapon = main.equipmentHelpers.getPrimaryWeapon(starter).getComponent(ItemComponent.class);
+      verb = firingWeapon.verbs.get(MathUtils.random(0, firingWeapon.verbs.size() - 1));
     }
 
-    return result;
+    int skillLevel = skills.levels.get(skill);
+    BodyComponent body = target.getComponent(BodyComponent.class);
+
+    int hit = determineHit(skillLevel, body.parts.get(bodyPart));
+
+    AttributesComponent starterAttributes = starter.getComponent(AttributesComponent.class);
+
+    if (hit >= 4) {
+      int weaponRoll;
+      int critRoll = 0;
+
+      if (Objects.equals(skill, "throwing")) {
+        weaponRoll = MathUtils.random(1, itemComponent.attributes.get("throwDamage"));
+      } else {
+        weaponRoll = MathUtils.random(1, itemComponent.attributes.get("hitDamage"));
+      }
+
+      int skillLevelAmount = 20;
+
+      if (hit >= 8) {
+        critRoll = MathUtils.random(1, 6);
+        skillLevelAmount = 40;
+      }
+
+      int damage = weaponRoll + critRoll;
+
+      applyDamage(starter, target, damage, verb, bodyPart);
+
+      main.skillHelpers.levelSkill(starter, skill, skillLevelAmount);
+    } else {
+      AttributesComponent targetAttributes = target.getComponent(AttributesComponent.class);
+
+      main.log.add(
+          starterAttributes.name + " tried to hit " + targetAttributes.name + " but missed"
+      );
+    }
   }
 
-  private void applyDamage(int result, int baseDamage, String skill,
-                           Entity starter, Entity target, String bodyPart,
-                           String verb) {
-    AttributesComponent starterAttributes = ComponentMappers.attributes.get(starter);
-    AttributesComponent targetAttributes = ComponentMappers.attributes.get(target);
+  private int determineHit(int skillLevel, int bodyPart) {
+    // Roll your skill and a 6
+    int skillRoll = MathUtils.random(1, skillLevel == 0 ? 4 : skillLevel);
+    int extraRoll = MathUtils.random(1, 6);
 
-    boolean starterIsPlayer = starter.getComponent(PlayerComponent.class) != null;
+    // Hit roll is whichever of the 2 is highest
+    int hitRoll = extraRoll > skillRoll ? extraRoll : skillLevel;
 
-    String action = (starterIsPlayer ? "You" : starterAttributes.name) + " ";
+    // Roll target body part
+    int bodyPartRoll = MathUtils.random(1, bodyPart);
 
-    HashMap<String, Integer> bodyParts = target.getComponent(BodyComponent.class).parts;
-    int bodyPartDifficulty = bodyParts.get(bodyPart);
-
-    result -= MathUtils.random(1, bodyPartDifficulty);
-
-    if (result >= 4) {
-      int critical = 0;
-
-      if (result >= 8) {
-        critical = MathUtils.random(1, 6);
-      }
-
-      int damage = baseDamage + critical;
-      int defense = targetAttributes.defense;
-
-      if (target.getComponent(EquipmentComponent.class) != null) {
-        defense = main.equipmentHelpers.getCombinedDefense(target);
-      }
-
-      if (damage > defense) {
-        targetAttributes.health -= damage - targetAttributes.defense;
-
-        if (starterIsPlayer) {
-          action = "[GREEN]" + action;
-        } else {
-          action = "[RED]" + action;
-        }
-
-        action += verb + " " + targetAttributes.name + " for " + damage + " damage";
-
-        if (!Objects.equals(bodyPart, "body")) {
-          action += " in the " + bodyPart;
-        }
-      } else {
-        action += "hit " + targetAttributes.name + " but did no damage";
-      }
-
-      main.skillHelpers.levelSkill(starter, skill, 20);
-
-      if (critical > 0) {
-        Vector2 splatterSpace = main.mapHelpers.getEmptySpaceNearEntity(
-            target.getComponent(PositionComponent.class).pos
-        );
-
-        if (splatterSpace != null) {
-          TextureAtlas atlas = main.assets.get("sprites/main.atlas");
-          Entity remains = new Entity();
-          remains.add(new DecorationComponent());
-          remains.add(new VisualComponent(atlas.createSprite("Level/Cave/FX/BloodSplatter-1")));
-          remains.add(new PositionComponent(main.world.currentMapIndex, splatterSpace));
-
-          main.engine.addEntity(remains);
-        }
-      }
+    // Return the hit roll if it's above the body part roll
+    if (hitRoll > bodyPartRoll) {
+      return hitRoll;
     } else {
-      action += "missed " + targetAttributes.name;
+      return 0;
     }
+  }
 
-    main.log.add(action);
+  private void applyDamage(Entity starter, Entity target, int damage, String verb, String bodyPart) {
+    AttributesComponent starterAttributes = starter.getComponent(AttributesComponent.class);
+    AttributesComponent targetAttributes = target.getComponent(AttributesComponent.class);
+
+    int totalDamage = damage - getCombinedDefense(target);
+
+    if (totalDamage > 0) {
+      targetAttributes.health -= totalDamage;
+
+      main.log.add(
+          starterAttributes.name + " " + verb + " "
+              + targetAttributes.name + " in the " + bodyPart + " for " + totalDamage + ""
+      );
+    } else {
+      main.log.add(
+          starterAttributes.name + " " + verb + " "
+              + targetAttributes.name + " in the " + bodyPart + " but did no damage"
+      );
+    }
 
     if (targetAttributes.health <= 0) {
       TextureAtlas atlas = main.assets.get("sprites/main.atlas");
@@ -243,7 +316,7 @@ public class CombatHelpers {
       main.engine.addEntity(remains);
       main.engine.removeEntity(target);
 
-      if (starterIsPlayer) {
+      if (starter.getComponent(PlayerComponent.class) != null) {
         main.log.add("[GREEN]You killed " + targetAttributes.name + "!");
       } else {
         main.log.add("[RED]You have been killed by " + starterAttributes.name);

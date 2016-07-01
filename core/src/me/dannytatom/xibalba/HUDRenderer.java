@@ -305,48 +305,50 @@ public class HudRenderer {
   }
 
   private void checkAndRenderFocused() {
-    focusedDialogTable.clear();
-
     if (main.state == Main.State.FOCUSED) {
       if (lookDialogShowing) {
         lookDialogShowing = false;
         lookDialog.hide(null);
       }
 
-      BodyComponent body = main.focusedEntity.getComponent(BodyComponent.class);
-      for (String part : body.parts.keySet()) {
-        TextButton button = new TextButton(part, main.skin);
-        button.pad(5);
-        button.addListener(new ClickListener() {
-          @Override
-          public void clicked(InputEvent event, float positionX, float positionY) {
-            super.clicked(event, positionX, positionY);
+      if (!focusedDialogShowing) {
+        focusedDialogTable.clear();
 
-            PlayerComponent playerComponent = main.player.getComponent(PlayerComponent.class);
-            PositionComponent focusedPosition = main.focusedEntity.getComponent(PositionComponent.class);
+        BodyComponent body = main.focusedEntity.getComponent(BodyComponent.class);
+        for (String part : body.parts.keySet()) {
+          TextButton button = new TextButton(part, main.skin);
+          button.pad(5);
+          button.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float positionX, float positionY) {
+              super.clicked(event, positionX, positionY);
 
-            if (playerComponent.focusedAction == PlayerComponent.FocusedAction.MELEE) {
-              main.combatHelpers.preparePlayerForMelee(main.focusedEntity, part);
-            } else if (playerComponent.focusedAction == PlayerComponent.FocusedAction.THROWING) {
-              main.combatHelpers.preparePlayerForThrowing(focusedPosition.pos, part);
-            } else if (playerComponent.focusedAction == PlayerComponent.FocusedAction.RANGED) {
-              main.combatHelpers.preparePlayerForRanged(focusedPosition.pos, part);
+              PlayerComponent playerComponent = main.player.getComponent(PlayerComponent.class);
+              PositionComponent focusedPosition = main.focusedEntity.getComponent(PositionComponent.class);
+
+              if (playerComponent.focusedAction == PlayerComponent.FocusedAction.MELEE) {
+                main.combatHelpers.preparePlayerForMelee(main.focusedEntity, part);
+              } else if (playerComponent.focusedAction == PlayerComponent.FocusedAction.THROWING) {
+                main.combatHelpers.preparePlayerForThrowing(focusedPosition.pos, part);
+              } else if (playerComponent.focusedAction == PlayerComponent.FocusedAction.RANGED) {
+                main.combatHelpers.preparePlayerForRanged(focusedPosition.pos, part);
+              }
+
+              main.state = Main.State.PLAYING;
+              main.executeTurn = true;
             }
+          });
 
-            main.state = Main.State.PLAYING;
-            main.executeTurn = true;
-          }
-        });
+          focusedDialogTable.add(button).pad(0, 5, 0, 5);
+        }
 
-        focusedDialogTable.add(button).pad(0, 5, 0, 5);
+        focusedDialogShowing = true;
+        focusedDialog.show(stage, null);
+
+        focusedDialog.setPosition(
+            Math.round((stage.getWidth() - focusedDialog.getWidth()) / 2), 65
+        );
       }
-
-      focusedDialogShowing = true;
-      focusedDialog.show(stage, null);
-
-      focusedDialog.setPosition(
-          Math.round((stage.getWidth() - focusedDialog.getWidth()) / 2), 65
-      );
     } else {
       if (focusedDialogShowing) {
         focusedDialogShowing = false;

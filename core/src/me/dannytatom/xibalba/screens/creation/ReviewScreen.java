@@ -101,7 +101,7 @@ public class ReviewScreen implements Screen {
       }
 
       main.player = new Entity();
-      main.player.add(new AttributesComponent(playerName, "It's you", 100, 10, 50, 5, 5));
+      main.player.add(new AttributesComponent(playerName, "It's you", 100, 10, 4, 4));
 
       main.setScreen(new LoadingScreen(main));
     }

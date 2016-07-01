@@ -275,7 +275,7 @@ public class MapHelpers {
    *
    * @return An open position
    */
-  public Vector2 getEmptySpaceNearEntity(Vector2 pos) {
+  private Vector2 getEmptySpaceNearEntity(Vector2 pos) {
     Vector2 position;
 
     if (isWalkable(new Vector2(pos.x + 1, pos.y))) {

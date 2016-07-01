@@ -30,21 +30,26 @@ public class RangeSystem extends ActionSystem {
     RangeComponent range = ComponentMappers.range.get(entity);
     AttributesComponent attributes = ComponentMappers.attributes.get(entity);
 
-    Entity target = main.entityHelpers.getEnemyAt(range.position);
+    if (range.position != null && !entity.isScheduledForRemoval()) {
+      Entity target = main.entityHelpers.getEnemyAt(range.position);
 
-    if (target != null) {
-      main.combatHelpers.range(entity, target, range.bodyPart, range.item, range.skill);
+      if (target != null) {
+        main.combatHelpers.range(entity, target, range.bodyPart, range.item, range.skill);
+      }
 
       if (Objects.equals(range.skill, "throwing")) {
         range.item.getComponent(ItemComponent.class).throwing = false;
         main.inventoryHelpers.dropItem(entity, range.item, range.position);
       } else {
-        main.inventoryHelpers.removeItem(entity, range.item);
+        if (target == null) {
+          main.inventoryHelpers.dropItem(entity, range.item, range.position);
+        } else {
+          main.inventoryHelpers.removeItem(entity, range.item);
+        }
       }
-
-      attributes.energy -= RangeComponent.COST;
     }
 
+    attributes.energy -= RangeComponent.COST;
     entity.remove(RangeComponent.class);
   }
 }

@@ -164,7 +164,7 @@ public class InventoryScreen implements Screen {
       }
 
       if (main.equipmentHelpers.isEquipped(main.player, entity)) {
-        String location = main.equipmentHelpers.getLocation(main.player, entity);
+        String location = main.equipmentHelpers.getLocation(entity);
 
         if (Objects.equals(location, "right hand") || Objects.equals(location, "left hand")) {
           name += " [YELLOW](holding in " + location + ")[]";
@@ -216,8 +216,8 @@ public class InventoryScreen implements Screen {
           stats.add("[DARK_GRAY]Throw Damage: [LIGHT_GRAY]" + item.attributes.get("throwDamage"));
         }
 
-        if (item.attributes.get("defense") != null) {
-          stats.add("[DARK_GRAY]Defense: [LIGHT_GRAY]" + item.attributes.get("defense"));
+        if (item.attributes.get("toughness") != null) {
+          stats.add("[DARK_GRAY]Defense: [LIGHT_GRAY]" + item.attributes.get("toughness"));
         }
 
         inventoryGroup.addActor(new Label("[LIGHT_GRAY]" + item.description + "[]", main.skin));

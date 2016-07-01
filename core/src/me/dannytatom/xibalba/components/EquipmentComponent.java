@@ -15,8 +15,8 @@ public class EquipmentComponent implements Component {
     slots.put("head", null);
     slots.put("body", null);
     slots.put("arms", null);
-    slots.put("leftHand", null);
-    slots.put("rightHand", null);
+    slots.put("left hand", null);
+    slots.put("right hand", null);
     slots.put("legs", null);
     slots.put("feet", null);
   }

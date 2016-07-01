@@ -101,9 +101,9 @@ public class LoadingScreen implements Screen {
     main.engine.addSystem(new BrainSystem(main));
     main.engine.addSystem(new WanderSystem(main));
     main.engine.addSystem(new TargetSystem(main));
-    main.engine.addSystem(new MovementSystem(main));
     main.engine.addSystem(new MeleeSystem(main));
     main.engine.addSystem(new RangeSystem(main));
+    main.engine.addSystem(new MovementSystem(main));
   }
 
   private void generateWorld() {

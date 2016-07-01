@@ -49,7 +49,6 @@ public class MovementSystem extends ActionSystem {
           main.inventoryHelpers.addItem(main.player, thing);
 
           position.pos = movement.pos;
-          attributes.energy -= MovementComponent.COST;
         } else if (main.entityHelpers.isEnemy(thing)) {
           main.combatHelpers.preparePlayerForMelee(thing, "body");
         } else if (main.entityHelpers.isExit(thing)) {
@@ -60,12 +59,11 @@ public class MovementSystem extends ActionSystem {
           entity.remove(MouseMovementComponent.class);
           entity.getComponent(PositionComponent.class);
           position.map = main.world.currentMapIndex;
-          attributes.energy -= MovementComponent.COST;
-
         }
       }
     }
 
+    attributes.energy -= MovementComponent.COST;
     entity.remove(MovementComponent.class);
   }
 }

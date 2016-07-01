@@ -5,7 +5,6 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
@@ -27,7 +26,6 @@ import me.dannytatom.xibalba.map.ShadowCaster;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 public class EntityHelpers {
   private final Main main;
@@ -124,9 +122,8 @@ public class EntityHelpers {
         json.description,
         json.attributes.get("speed"),
         json.attributes.get("vision"),
-        json.attributes.get("maxHealth"),
-        json.attributes.get("defense"),
-        json.attributes.get("damage")
+        json.attributes.get("toughness"),
+        json.attributes.get("strength")
     ));
 
     HashMap<String, Integer> bodyParts = new HashMap<>();
@@ -160,20 +157,6 @@ public class EntityHelpers {
     entity.add(new VisualComponent(
         atlas.createSprite(itemComponent.visual.get("sprites").random())
     ));
-
-    if (itemComponent.attributes != null && !Objects.equals(itemComponent.type, "ammunition")) {
-      if (itemComponent.attributes.get("hitDamage") != null) {
-        itemComponent.attributes.put("hitDamage",
-            MathUtils.random(itemComponent.attributes.get("hitDamage"),
-                itemComponent.attributes.get("hitDamage") + 10));
-      }
-
-      if (itemComponent.attributes.get("throwDamage") != null) {
-        itemComponent.attributes.put("throwDamage",
-            MathUtils.random(itemComponent.attributes.get("throwDamage"),
-                itemComponent.attributes.get("throwDamage") + 10));
-      }
-    }
 
     return entity;
   }

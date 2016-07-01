@@ -5,15 +5,15 @@ import com.badlogic.ashley.core.Component;
 import java.util.HashMap;
 
 public class SkillsComponent implements Component {
-  public HashMap<String, Integer> levels;
-  public HashMap<String, Integer> counters;
+  public final HashMap<String, Integer> levels;
+  public final HashMap<String, Integer> counters;
 
   public SkillsComponent() {
     levels = new HashMap<>();
 
-    levels.put("unarmed", 0);
+    levels.put("unarmed", 6);
     levels.put("throwing", 0);
-    levels.put("slashing", 0);
+    levels.put("slashing", 6);
     levels.put("piercing", 0);
     levels.put("bashing", 0);
     levels.put("archery", 0);

@@ -39,7 +39,7 @@ public class InventoryHelpers {
         main.log.add("You picked up a " + itemComponent.name);
 
         if (Objects.equals(itemComponent.type, "weapon")
-            && equipmentComponent.slots.get("rightHand") == null) {
+            && equipmentComponent.slots.get("right hand") == null) {
           main.equipmentHelpers.holdItem(entity, item);
           main.log.add("You are now holding a " + itemComponent.name);
         }

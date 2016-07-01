@@ -2,6 +2,7 @@ package me.dannytatom.xibalba.utils;
 
 import com.badlogic.ashley.core.Entity;
 import me.dannytatom.xibalba.Main;
+import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.SkillsComponent;
 
 public class SkillHelpers {
@@ -44,7 +45,9 @@ public class SkillHelpers {
       skills.levels.put(skill, skillLevel == 0 ? 4 : skillLevel + 2);
       skills.counters.put(skill, 0);
 
-      main.log.add("[YELLOW]You feel better at " + skill);
+      if (entity.getComponent(PlayerComponent.class) != null) {
+        main.log.add("[YELLOW]You feel better at " + skill);
+      }
     }
   }
 }

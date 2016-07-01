@@ -27,11 +27,11 @@ public class MeleeSystem extends ActionSystem {
     MeleeComponent melee = ComponentMappers.melee.get(entity);
     AttributesComponent attributes = ComponentMappers.attributes.get(entity);
 
-    if (melee.target != null) {
+    if (melee.target != null && !entity.isScheduledForRemoval()) {
       main.combatHelpers.melee(entity, melee.target, melee.bodyPart);
-      attributes.energy -= MeleeComponent.COST;
     }
 
+    attributes.energy -= MeleeComponent.COST;
     entity.remove(MeleeComponent.class);
   }
 }

@@ -330,7 +330,7 @@ public class PlayerInput implements InputProcessor {
       worldCamera.zoom -= 0.2f;
     }
 
-    Gdx.app.log("zoom", worldCamera.zoom + "");
+    Gdx.app.log("PlayerInput", "Zoom Level: " + worldCamera.zoom + "");
 
     return true;
   }
@@ -350,17 +350,18 @@ public class PlayerInput implements InputProcessor {
         main.focusedEntity = enemy;
       }
     } else {
-      PlayerComponent player = main.player.getComponent(PlayerComponent.class);
-
-      player.target = null;
-      player.lookingPath = null;
-
       if (energy >= MovementComponent.COST) {
         main.player.add(new MovementComponent(pos));
 
         main.executeTurn = true;
       }
     }
+
+    PlayerComponent player = main.player.getComponent(PlayerComponent.class);
+
+    player.target = null;
+    player.lookingPath = null;
+    player.targetingPath = null;
   }
 
   private void handleTargeting(Vector2 pos) {
@@ -383,24 +384,24 @@ public class PlayerInput implements InputProcessor {
     }
 
     PlayerComponent player = main.player.getComponent(PlayerComponent.class);
-    Entity enemy = main.entityHelpers.getEnemyAt(player.target);
 
-    if (enemy != null) {
-      if (holdingShift) {
-        main.player.getComponent(PlayerComponent.class).focusedAction
-            = PlayerComponent.FocusedAction.THROWING;
+    if (holdingShift) {
+      Entity enemy = main.entityHelpers.getEnemyAt(player.target);
+
+      if (enemy != null) {
+        player.focusedAction = PlayerComponent.FocusedAction.THROWING;
         main.state = Main.State.FOCUSED;
         main.focusedEntity = enemy;
-      } else {
-        main.combatHelpers.preparePlayerForThrowing(player.target, "body");
-        main.executeTurn = true;
-
-        player.target = null;
-        player.targetingPath = null;
-
-        main.state = Main.State.PLAYING;
       }
+    } else {
+      main.combatHelpers.preparePlayerForThrowing(player.target, "body");
+      main.executeTurn = true;
+
+      main.state = Main.State.PLAYING;
     }
+
+    player.target = null;
+    player.targetingPath = null;
   }
 
   private void handleRange() {
@@ -411,23 +412,23 @@ public class PlayerInput implements InputProcessor {
     }
 
     PlayerComponent player = main.player.getComponent(PlayerComponent.class);
-    Entity enemy = main.entityHelpers.getEnemyAt(player.target);
 
-    if (enemy != null) {
-      if (holdingShift) {
-        main.player.getComponent(PlayerComponent.class).focusedAction
-            = PlayerComponent.FocusedAction.RANGED;
+    if (holdingShift) {
+      Entity enemy = main.entityHelpers.getEnemyAt(player.target);
+
+      if (enemy != null) {
+        player.focusedAction = PlayerComponent.FocusedAction.RANGED;
         main.state = Main.State.FOCUSED;
         main.focusedEntity = enemy;
-      } else {
-        main.combatHelpers.preparePlayerForRanged(player.target, "body");
-        main.executeTurn = true;
-
-        player.target = null;
-        player.targetingPath = null;
-
-        main.state = Main.State.PLAYING;
       }
+    } else {
+      main.combatHelpers.preparePlayerForRanged(player.target, "body");
+      main.executeTurn = true;
+
+      main.state = Main.State.PLAYING;
     }
+
+    player.target = null;
+    player.targetingPath = null;
   }
 }

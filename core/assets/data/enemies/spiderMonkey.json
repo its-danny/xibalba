@@ -7,9 +7,8 @@
   "attributes": {
     "speed": 80,
     "vision": 10,
-    "maxHealth": 50,
-    "defense": 5,
-    "damage": 10
+    "toughness": 4,
+    "strength": 4
   },
   "bodyParts": {
     "head": 8,

@@ -117,24 +117,40 @@ public class CharacterScreen implements Screen {
         )
     );
 
-    // Toughness & damage
+    // Toughness & strength
 
-    int defense = attrs.defense + main.equipmentHelpers.getCombinedDefense(main.player);
+    int toughness = attrs.toughness;
+    int strength = attrs.strength;
 
-    int damage = attrs.damage;
-    Entity heldWeapon = main.equipmentHelpers.getPrimaryWeapon(main.player);
+    group.addActor(
+        new Label(
+            "[LIGHT_GRAY]TUF " + "[YELLOW]" + toughness + "[DARK_GRAY]d "
+                + "[LIGHT_GRAY]STR " + "[CYAN]" + strength + "[DARK_GRAY]d",
+            main.skin
+        )
+    );
 
-    if (heldWeapon != null) {
-      ItemComponent ic = heldWeapon.getComponent(ItemComponent.class);
-      damage += ic.attributes.get("hitDamage");
+    // Defense & damage
+
+    int defense = main.combatHelpers.getArmorDefense(main.player);
+    int damage = 0;
+
+    Entity primaryWeapon = main.equipmentHelpers.getPrimaryWeapon(main.player);
+
+    if (primaryWeapon != null) {
+      damage = primaryWeapon.getComponent(ItemComponent.class).attributes.get("hitDamage");
     }
 
     group.addActor(
         new Label(
-            "[LIGHT_GRAY]Defense: []" + defense
-                + ", [LIGHT_GRAY]Damage: []" + damage, main.skin
+            "[LIGHT_GRAY]DEF " + "[YELLOW]" + toughness + "[DARK_GRAY]d "
+                + (defense > 0 ? "[LIGHT_GRAY]+ " + "[GREEN]" + defense + "[DARK_GRAY] " : "")
+                + "[LIGHT_GRAY]DMG " + "[CYAN]" + strength + "[DARK_GRAY]d "
+                + (damage > 0 ? "[LIGHT_GRAY]+ " + "[RED]" + damage + "[DARK_GRAY]d" : ""),
+            main.skin
         )
     );
+
 
     return group;
   }
@@ -148,23 +164,23 @@ public class CharacterScreen implements Screen {
       group.addActor(skillLine("Unarmed", skills.levels.get("unarmed")));
     }
 
-    if (skills.levels.get("unarmed") > 0) {
+    if (skills.levels.get("throwing") > 0) {
       group.addActor(skillLine("Throwing", skills.levels.get("throwing")));
     }
 
-    if (skills.levels.get("unarmed") > 0) {
+    if (skills.levels.get("slashing") > 0) {
       group.addActor(skillLine("Slashing", skills.levels.get("slashing")));
     }
 
-    if (skills.levels.get("unarmed") > 0) {
+    if (skills.levels.get("piercing") > 0) {
       group.addActor(skillLine("Piercing", skills.levels.get("piercing")));
     }
 
-    if (skills.levels.get("unarmed") > 0) {
+    if (skills.levels.get("bashing") > 0) {
       group.addActor(skillLine("Bashing", skills.levels.get("bashing")));
     }
 
-    if (skills.levels.get("unarmed") > 0) {
+    if (skills.levels.get("archery") > 0) {
       group.addActor(skillLine("Archery", skills.levels.get("archery")));
     }
 
@@ -179,19 +195,19 @@ public class CharacterScreen implements Screen {
         str += "[LIGHT_GRAY]xxxxx";
         break;
       case 4:
-        str += "[WHITE]x[LIGHT_GRAY]xxxx";
+        str += "[WHITE]x[DARK_GRAY]xxxx";
         break;
       case 6:
-        str += "[WHITE]xx[LIGHT_GRAY]xxx";
+        str += "[WHITE]xx[DARK_GRAY]xxx";
         break;
       case 8:
-        str += "[WHITE]xxx[LIGHT_GRAY]xx";
+        str += "[WHITE]xxx[DARK_GRAY]xx";
         break;
       case 10:
-        str += "[WHITE]xxxx[LIGHT_GRAY]x";
+        str += "[WHITE]xxxx[DARK_GRAY]x";
         break;
       case 12:
-        str += "[WHITE]xxxxx[LIGHT_GRAY]";
+        str += "[WHITE]xxxxx";
         break;
       default:
     }

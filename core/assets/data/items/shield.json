@@ -3,7 +3,7 @@
   "description": "Not great, but does the job.",
   "skill": "bashing",
   "type": "armor",
-  "location": "leftHand",
+  "location": "left hand",
   "visual": {
     "sprites": [
       "Level/Cave/Item/Shield-1"
@@ -13,8 +13,8 @@
     "bashed", "hit"
   ],
   "attributes": {
-    "hitDamage": 20,
-    "throwDamage": 15,
+    "hitDamage": 6,
+    "throwDamage": 6,
     "defense": 20
   },
   "actions": {

@@ -3,7 +3,7 @@
   "description": "O shit, a spear!",
   "skill": "piercing",
   "type": "weapon",
-  "location": "rightHand",
+  "location": "right hand",
   "visual": {
     "sprites": [
       "Level/Cave/Item/Weapon-Spear-1"
@@ -13,8 +13,8 @@
     "stabbed", "impaled", "gutted", "pierced"
   ],
   "attributes": {
-    "hitDamage": 20,
-    "throwDamage": 30
+    "hitDamage": 6,
+    "throwDamage": 8
   },
   "actions": {
     "canThrow": true,

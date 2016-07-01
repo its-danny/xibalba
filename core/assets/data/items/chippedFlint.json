@@ -3,7 +3,7 @@
   "description": "Made of Obsidian, this chipped flint can be used at close range to stab enemies to death.",
   "skill": "piercing",
   "type": "weapon",
-  "location": "rightHand",
+  "location": "right hand",
   "visual": {
     "sprites": [
       "Level/Cave/Item/Weapon-ChippedFlint-1"
@@ -13,8 +13,8 @@
     "stabbed", "impaled", "gutted", "pierced"
   ],
   "attributes": {
-    "hitDamage": 20,
-    "throwDamage": 15
+    "hitDamage": 6,
+    "throwDamage": 4
   },
   "actions": {
     "canThrow": true,

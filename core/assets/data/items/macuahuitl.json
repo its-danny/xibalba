@@ -3,7 +3,7 @@
   "description": "A fuckin' murder stick!",
   "skill": "slashing",
   "type": "weapon",
-  "location": "rightHand",
+  "location": "right hand",
   "visual": {
     "sprites": [
       "Level/Cave/Item/Weapon-Macuahuitl-1"
@@ -13,8 +13,8 @@
     "cut", "slashed", "rekt"
   ],
   "attributes": {
-    "hitDamage": 50,
-    "throwDamage": 35
+    "hitDamage": 10,
+    "throwDamage": 6
   },
   "actions": {
     "canThrow": true,

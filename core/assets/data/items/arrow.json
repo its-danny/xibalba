@@ -8,8 +8,8 @@
     ]
   },
   "attributes": {
-    "throwDamage": 1,
-    "hitDamage": 20
+    "throwDamage": 4,
+    "hitDamage": 6
   },
   "actions": {
     "canThrow": true,
