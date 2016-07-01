@@ -66,6 +66,7 @@ public class EntityHelpers {
     );
     player.add(new InventoryComponent());
     player.add(new EquipmentComponent());
+    player.add(new SkillsComponent());
   }
 
   /**

@@ -9,7 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import me.dannytatom.xibalba.Main;
-import me.dannytatom.xibalba.screens.creation.TraitsScreen;
+import me.dannytatom.xibalba.screens.creation.ReviewScreen;
 
 public class MainMenuScreen implements Screen {
   private final Main main;
@@ -53,7 +53,7 @@ public class MainMenuScreen implements Screen {
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
     if (Gdx.input.isKeyJustPressed(Input.Keys.N)) {
-      main.setScreen(new TraitsScreen(main));
+      main.setScreen(new ReviewScreen(main));
     }
 
     if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {

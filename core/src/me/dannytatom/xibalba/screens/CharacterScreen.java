@@ -12,14 +12,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.components.AttributesComponent;
-import me.dannytatom.xibalba.components.DefectComponent;
-import me.dannytatom.xibalba.components.DefectsComponent;
 import me.dannytatom.xibalba.components.ItemComponent;
 import me.dannytatom.xibalba.components.SkillsComponent;
-import me.dannytatom.xibalba.components.TraitComponent;
-import me.dannytatom.xibalba.components.TraitsComponent;
-
-import java.util.ArrayList;
 
 public class CharacterScreen implements Screen {
   private final Main main;
@@ -45,8 +39,6 @@ public class CharacterScreen implements Screen {
     table.add(createStats()).pad(0, 10, 10, 10).left();
     table.row();
     table.add(createSkills()).pad(0, 10, 10, 10).left();
-    table.row();
-    table.add(createTraits()).pad(0, 10, 10, 10).left();
 
     Gdx.input.setInputProcessor(stage);
   }
@@ -174,25 +166,6 @@ public class CharacterScreen implements Screen {
 
     if (skills.archery > 0) {
       group.addActor(skillLine("Archery", skills.archery));
-    }
-
-    return group;
-  }
-
-  private VerticalGroup createTraits() {
-    VerticalGroup group = new VerticalGroup().left();
-
-    ArrayList<Entity> traits = main.player.getComponent(TraitsComponent.class).traits;
-    ArrayList<Entity> defects = main.player.getComponent(DefectsComponent.class).defects;
-
-    for (Entity entity : traits) {
-      TraitComponent trait = entity.getComponent(TraitComponent.class);
-      group.addActor(new Label(trait.name + " [LIGHT_GRAY]" + trait.description, main.skin));
-    }
-
-    for (Entity entity : defects) {
-      DefectComponent defect = entity.getComponent(DefectComponent.class);
-      group.addActor(new Label(defect.name + " [LIGHT_GRAY]" + defect.description, main.skin));
     }
 
     return group;
