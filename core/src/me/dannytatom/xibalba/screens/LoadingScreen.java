@@ -130,17 +130,20 @@ public class LoadingScreen implements Screen {
     }
 
     // Add player entity
-    main.entityHelpers.spawnPlayer(
-        main.player, main.world.currentMapIndex, main.mapHelpers.getRandomOpenPosition()
-    );
+    main.entityHelpers.spawnPlayer(main.player, main.world.currentMapIndex);
     main.engine.addEntity(main.player);
   }
 
   private void spawnShit(int mapIndex) {
+    // Spawn an entrance on every level but first
+    if (mapIndex > 0) {
+      main.engine.addEntity(main.entityHelpers.spawnEntrance(mapIndex));
+    }
+
     // Spawn an exit on every level but last
-    main.engine.addEntity(
-        main.entityHelpers.spawnExit(mapIndex, main.mapHelpers.getRandomOpenPositionOnMap(mapIndex))
-    );
+    if (mapIndex < 4) {
+      main.engine.addEntity(main.entityHelpers.spawnExit(mapIndex));
+    }
 
     for (int i = 0; i < 5; i++) {
       main.engine.addEntity(

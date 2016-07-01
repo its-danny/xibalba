@@ -38,7 +38,7 @@ public class MovementSystem extends ActionSystem {
     AttributesComponent attributes = ComponentMappers.attributes.get(entity);
 
     // If we can move, move
-    if (main.mapHelpers.isWalkable(movement.pos)) {
+    if (!main.mapHelpers.isBlocked(main.world.currentMapIndex, movement.pos)) {
       position.pos = movement.pos;
     } else {
       // If we can't, and the entity is the player, figure out what to do instead
@@ -53,6 +53,14 @@ public class MovementSystem extends ActionSystem {
           main.combatHelpers.preparePlayerForMelee(thing, "body");
         } else if (main.entityHelpers.isExit(thing)) {
           main.world.currentMapIndex += 1;
+          main.playScreen = new PlayScreen(main);
+          main.setScreen(main.playScreen);
+
+          entity.remove(MouseMovementComponent.class);
+          entity.getComponent(PositionComponent.class);
+          position.map = main.world.currentMapIndex;
+        } else if (main.entityHelpers.isEntrance(thing)) {
+          main.world.currentMapIndex -= 1;
           main.playScreen = new PlayScreen(main);
           main.setScreen(main.playScreen);
 

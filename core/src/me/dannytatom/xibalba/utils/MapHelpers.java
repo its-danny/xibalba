@@ -7,6 +7,8 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.components.DecorationComponent;
+import me.dannytatom.xibalba.components.EntranceComponent;
+import me.dannytatom.xibalba.components.ExitComponent;
 import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.map.Cell;
@@ -37,20 +39,16 @@ public class MapHelpers {
         && getCell(position.x, position.y) != null;
   }
 
-  /**
-   * Get the cell for this position.
-   *
-   * @param cellX cellX pos of cell
-   * @param cellY cellY pos of cell
-   *
-   * @return The Cell instance at this pos
-   */
+  public Cell getCell(int mapIndex, int cellX, int cellY) {
+    return main.world.getMap(mapIndex).getCellMap()[cellX][cellY];
+  }
+
   public Cell getCell(int cellX, int cellY) {
-    return main.world.getCurrentMap().getCellMap()[cellX][cellY];
+    return getCell(main.world.currentMapIndex, cellX, cellY);
   }
 
   public Cell getCell(float cellX, float cellY) {
-    return getCell((int) cellX, (int) cellY);
+    return getCell(main.world.currentMapIndex, (int) cellX, (int) cellY);
   }
 
   /**
@@ -60,7 +58,7 @@ public class MapHelpers {
    *
    * @return Is it blocked?
    */
-  private boolean isBlocked(int mapIndex, Vector2 position) {
+  public boolean isBlocked(int mapIndex, Vector2 position) {
     Cell[][] map = main.world.getMap(mapIndex).getCellMap();
 
     boolean blocked = map[(int) position.x][(int) position.y].isWall
@@ -85,14 +83,6 @@ public class MapHelpers {
     return blocked;
   }
 
-  private boolean isBlocked(Vector2 position) {
-    return isBlocked(main.world.currentMapIndex, position);
-  }
-
-  public boolean isWalkable(Vector2 position) {
-    return !isBlocked(position);
-  }
-
   /**
    * Get pathfinding cells.
    *
@@ -104,7 +94,7 @@ public class MapHelpers {
 
     for (int x = 0; x < map.width; x++) {
       for (int y = 0; y < map.height; y++) {
-        cells[x][y] = new GridCell(x, y, isWalkable(new Vector2(x, y)));
+        cells[x][y] = new GridCell(x, y, !isBlocked(main.world.currentMapIndex, new Vector2(x, y)));
       }
     }
 
@@ -278,19 +268,49 @@ public class MapHelpers {
   private Vector2 getEmptySpaceNearEntity(Vector2 pos) {
     Vector2 position;
 
-    if (isWalkable(new Vector2(pos.x + 1, pos.y))) {
+    if (!isBlocked(main.world.currentMapIndex, new Vector2(pos.x + 1, pos.y))) {
       position = new Vector2(pos.x + 1, pos.y);
-    } else if (isWalkable(new Vector2(pos.x - 1, pos.y))) {
+    } else if (!isBlocked(main.world.currentMapIndex, new Vector2(pos.x - 1, pos.y))) {
       position = new Vector2(pos.x - 1, pos.y);
-    } else if (isWalkable(new Vector2(pos.x, pos.y + 1))) {
+    } else if (!isBlocked(main.world.currentMapIndex, new Vector2(pos.x, pos.y + 1))) {
       position = new Vector2(pos.x, pos.y + 1);
-    } else if (isWalkable(new Vector2(pos.x, pos.y - 1))) {
+    } else if (!isBlocked(main.world.currentMapIndex, new Vector2(pos.x, pos.y - 1))) {
       position = new Vector2(pos.x, pos.y - 1);
     } else {
       position = null;
     }
 
     return position;
+  }
+
+  public Vector2 getEntrancePosition() {
+    ImmutableArray<Entity> entrances =
+        main.engine.getEntitiesFor(Family.all(EntranceComponent.class).get());
+
+    for (Entity entrance : entrances) {
+      PositionComponent position = entrance.getComponent(PositionComponent.class);
+
+      if (position.map == main.world.currentMapIndex) {
+        return position.pos;
+      }
+    }
+
+    return getRandomOpenPositionOnMap(main.world.currentMapIndex);
+  }
+
+  public Vector2 getExitPosition() {
+    ImmutableArray<Entity> exits =
+        main.engine.getEntitiesFor(Family.all(ExitComponent.class).get());
+
+    for (Entity exit : exits) {
+      PositionComponent position = exit.getComponent(PositionComponent.class);
+
+      if (position.map == main.world.currentMapIndex) {
+        return position.pos;
+      }
+    }
+
+    return getRandomOpenPositionOnMap(main.world.currentMapIndex);
   }
 
   /**
@@ -318,5 +338,32 @@ public class MapHelpers {
    */
   public Vector2 getRandomOpenPosition() {
     return getRandomOpenPositionOnMap(main.world.currentMapIndex);
+  }
+
+  public int getWallNeighbours(int mapIndex, int cellX, int cellY) {
+    int count = 0;
+
+    boolean[][] geometry = main.world.getMap(mapIndex).geometry;
+
+    for (int i = -1; i < 2; i++) {
+      for (int j = -1; j < 2; j++) {
+        int nx = cellX + i;
+        int ny = cellY + j;
+
+        if (i != 0 || j != 0) {
+          if (nx >= 0 && ny >= 0 && nx < geometry.length && ny < geometry[0].length) {
+            if (!geometry[nx][ny]) {
+              count += 1;
+            }
+          } else {
+            count += 1;
+          }
+        } else {
+          count += 1;
+        }
+      }
+    }
+
+    return count;
   }
 }

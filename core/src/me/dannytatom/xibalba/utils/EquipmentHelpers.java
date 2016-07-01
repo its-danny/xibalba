@@ -26,8 +26,7 @@ public class EquipmentHelpers {
   /**
    * Get the slot location of an item.
    *
-   * @param entity The entity whose equipment we're checking
-   * @param item   The item we want to check
+   * @param item The item we want to check
    *
    * @return Location of item
    */

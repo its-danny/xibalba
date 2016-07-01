@@ -11,6 +11,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.DecorationComponent;
 import me.dannytatom.xibalba.components.EnemyComponent;
+import me.dannytatom.xibalba.components.EntranceComponent;
 import me.dannytatom.xibalba.components.ExitComponent;
 import me.dannytatom.xibalba.components.ItemComponent;
 import me.dannytatom.xibalba.components.PlayerComponent;
@@ -20,6 +21,7 @@ import me.dannytatom.xibalba.map.Cell;
 import me.dannytatom.xibalba.map.Map;
 import me.dannytatom.xibalba.map.ShadowCaster;
 import me.dannytatom.xibalba.utils.ComponentMappers;
+import org.apache.commons.lang3.ArrayUtils;
 import org.xguzm.pathfinding.grid.GridCell;
 
 public class WorldRenderer {
@@ -122,13 +124,37 @@ public class WorldRenderer {
       }
     }
 
-    renderDecorations(lightMap);
     renderStairs(lightMap);
+    renderDecorations(lightMap);
     renderItems(lightMap);
     renderEnemies(lightMap);
     renderPlayer(lightMap);
 
     batch.end();
+  }
+
+  private void renderStairs(float[][] lightMap) {
+    ImmutableArray<Entity> entrances =
+        main.engine.getEntitiesFor(Family.all(EntranceComponent.class).get());
+    ImmutableArray<Entity> exits =
+        main.engine.getEntitiesFor(Family.all(ExitComponent.class).get());
+
+    Object[] entities = ArrayUtils.addAll(entrances.toArray(), exits.toArray());
+
+    for (Object e : entities) {
+      Entity entity = (Entity) e;
+      PositionComponent position = ComponentMappers.position.get(entity);
+
+      if (main.entityHelpers.isVisible(entity)) {
+        VisualComponent visual = ComponentMappers.visual.get(entity);
+
+        batch.setColor(1f, 1f, 1f, lightMap[(int) position.pos.x][(int) position.pos.y]);
+        batch.draw(
+            visual.sprite, position.pos.x * Main.SPRITE_WIDTH, position.pos.y * Main.SPRITE_HEIGHT
+        );
+        batch.setColor(1f, 1f, 1f, 1f);
+      }
+    }
   }
 
   private void renderDecorations(float[][] lightMap) {
@@ -171,27 +197,6 @@ public class WorldRenderer {
     }
   }
 
-  private void renderPlayer(float[][] lightMap) {
-    ImmutableArray<Entity> entities =
-        main.engine.getEntitiesFor(Family.all(PlayerComponent.class).get());
-
-    for (Entity entity : entities) {
-      PositionComponent position = ComponentMappers.position.get(entity);
-
-      if (main.entityHelpers.isVisible(entity)) {
-        VisualComponent visual = ComponentMappers.visual.get(entity);
-
-        batch.setColor(1f, 1f, 1f, lightMap[(int) position.pos.x][(int) position.pos.y]);
-        batch.draw(
-            visual.sprite,
-            position.pos.x * Main.SPRITE_WIDTH,
-            position.pos.y * Main.SPRITE_HEIGHT + (Main.SPRITE_HEIGHT / 4)
-        );
-        batch.setColor(1f, 1f, 1f, 1f);
-      }
-    }
-  }
-
   private void renderEnemies(float[][] lightMap) {
     ImmutableArray<Entity> entities =
         main.engine.getEntitiesFor(Family.all(EnemyComponent.class).get());
@@ -213,9 +218,9 @@ public class WorldRenderer {
     }
   }
 
-  private void renderStairs(float[][] lightMap) {
+  private void renderPlayer(float[][] lightMap) {
     ImmutableArray<Entity> entities =
-        main.engine.getEntitiesFor(Family.all(ExitComponent.class).get());
+        main.engine.getEntitiesFor(Family.all(PlayerComponent.class).get());
 
     for (Entity entity : entities) {
       PositionComponent position = ComponentMappers.position.get(entity);
@@ -225,7 +230,9 @@ public class WorldRenderer {
 
         batch.setColor(1f, 1f, 1f, lightMap[(int) position.pos.x][(int) position.pos.y]);
         batch.draw(
-            visual.sprite, position.pos.x * Main.SPRITE_WIDTH, position.pos.y * Main.SPRITE_HEIGHT
+            visual.sprite,
+            position.pos.x * Main.SPRITE_WIDTH,
+            position.pos.y * Main.SPRITE_HEIGHT + (Main.SPRITE_HEIGHT / 4)
         );
         batch.setColor(1f, 1f, 1f, 1f);
       }

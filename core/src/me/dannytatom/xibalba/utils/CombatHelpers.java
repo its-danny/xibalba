@@ -221,7 +221,8 @@ public class CombatHelpers {
     if (Objects.equals(skill, "throwing")) {
       verb = "hit";
     } else {
-      ItemComponent firingWeapon = main.equipmentHelpers.getPrimaryWeapon(starter).getComponent(ItemComponent.class);
+      ItemComponent firingWeapon =
+          main.equipmentHelpers.getPrimaryWeapon(starter).getComponent(ItemComponent.class);
       verb = firingWeapon.verbs.get(MathUtils.random(0, firingWeapon.verbs.size() - 1));
     }
 
@@ -282,7 +283,8 @@ public class CombatHelpers {
     }
   }
 
-  private void applyDamage(Entity starter, Entity target, int damage, String verb, String bodyPart) {
+  private void applyDamage(Entity starter, Entity target, int damage,
+                           String verb, String bodyPart) {
     AttributesComponent starterAttributes = starter.getComponent(AttributesComponent.class);
     AttributesComponent targetAttributes = target.getComponent(AttributesComponent.class);
 

@@ -5,6 +5,7 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
@@ -13,6 +14,7 @@ import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.BodyComponent;
 import me.dannytatom.xibalba.components.DecorationComponent;
 import me.dannytatom.xibalba.components.EnemyComponent;
+import me.dannytatom.xibalba.components.EntranceComponent;
 import me.dannytatom.xibalba.components.EquipmentComponent;
 import me.dannytatom.xibalba.components.ExitComponent;
 import me.dannytatom.xibalba.components.InventoryComponent;
@@ -22,10 +24,10 @@ import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.SkillsComponent;
 import me.dannytatom.xibalba.components.VisualComponent;
 import me.dannytatom.xibalba.components.ai.BrainComponent;
+import me.dannytatom.xibalba.map.Map;
 import me.dannytatom.xibalba.map.ShadowCaster;
 
 import java.util.HashMap;
-import java.util.Map;
 
 public class EntityHelpers {
   private final Main main;
@@ -47,9 +49,9 @@ public class EntityHelpers {
    * Spawn the player somewhere.
    *
    * @param player   The player
-   * @param position Vector2 of where to spawn them
+   * @param mapIndex Map to spawn em on
    */
-  public void spawnPlayer(Entity player, int map, Vector2 position) {
+  public void spawnPlayer(Entity player, int mapIndex) {
     Array<String> sprites = new Array<>();
     sprites.addAll("Level/Cave/Character/Ikal-1");
     sprites.addAll("Level/Cave/Character/Iktan-1");
@@ -59,7 +61,7 @@ public class EntityHelpers {
     TextureAtlas atlas = main.assets.get("sprites/main.atlas");
 
     player.add(new PlayerComponent());
-    player.add(new PositionComponent(map, position));
+    player.add(new PositionComponent(mapIndex, main.mapHelpers.getEntrancePosition()));
     player.add(new VisualComponent(
         atlas.createSprite(sprites.random()))
     );
@@ -75,26 +77,6 @@ public class EntityHelpers {
     bodyParts.put("left leg", 10);
     bodyParts.put("right leg", 10);
     player.add(new BodyComponent(bodyParts));
-  }
-
-  /**
-   * Spawn exit entity.
-   *
-   * @param position Where to spawn it
-   *
-   * @return The exit entity
-   */
-  public Entity spawnExit(int map, Vector2 position) {
-    TextureAtlas atlas = main.assets.get("sprites/main.atlas");
-
-    Entity entity = new Entity();
-    entity.add(new PositionComponent(map, position));
-    entity.add(new VisualComponent(
-        atlas.createSprite("Level/Cave/Environment/Interact/Ladder-Down-1")
-    ));
-    entity.add(new ExitComponent());
-
-    return entity;
   }
 
   /**
@@ -127,7 +109,7 @@ public class EntityHelpers {
     ));
 
     HashMap<String, Integer> bodyParts = new HashMap<>();
-    for (Map.Entry<String, Integer> part : json.bodyParts.entrySet()) {
+    for (java.util.Map.Entry<String, Integer> part : json.bodyParts.entrySet()) {
       bodyParts.put(part.getKey(), part.getValue());
     }
     entity.add(new BodyComponent(bodyParts));
@@ -191,12 +173,78 @@ public class EntityHelpers {
     return decoration;
   }
 
+  /**
+   * Spawn entrance entity.
+   *
+   * @param mapIndex Map to spawn it on
+   *
+   * @return The entrance entity
+   */
+  public Entity spawnEntrance(int mapIndex) {
+    Map map = main.world.getMap(mapIndex);
+
+    int cellX;
+    int cellY;
+
+    do {
+      cellX = MathUtils.random(0, map.width - 1);
+      cellY = MathUtils.random(0, map.height - 1);
+    } while (main.mapHelpers.isBlocked(mapIndex, new Vector2(cellX, cellY))
+        && main.mapHelpers.getWallNeighbours(mapIndex, cellX, cellY) >= 4);
+
+    Entity entity = new Entity();
+    entity.add(new EntranceComponent());
+    entity.add(new PositionComponent(mapIndex, new Vector2(cellX, cellY)));
+
+    TextureAtlas atlas = main.assets.get("sprites/main.atlas");
+    entity.add(new VisualComponent(
+        atlas.createSprite("Level/Cave/Environment/Interact/Ladder-Up-1")
+    ));
+
+    return entity;
+  }
+
+  /**
+   * Spawn exit entity.
+   *
+   * @param mapIndex Map to spawn it on
+   *
+   * @return The exit entity
+   */
+  public Entity spawnExit(int mapIndex) {
+    Map map = main.world.getMap(mapIndex);
+
+    int cellX;
+    int cellY;
+
+    do {
+      cellX = MathUtils.random(0, map.width - 1);
+      cellY = MathUtils.random(0, map.height - 1);
+    } while (main.mapHelpers.isBlocked(mapIndex, new Vector2(cellX, cellY))
+        && main.mapHelpers.getWallNeighbours(mapIndex, cellX, cellY) >= 4);
+
+    Entity entity = new Entity();
+    entity.add(new ExitComponent());
+    entity.add(new PositionComponent(mapIndex, new Vector2(cellX, cellY)));
+
+    TextureAtlas atlas = main.assets.get("sprites/main.atlas");
+    entity.add(new VisualComponent(
+        atlas.createSprite("Level/Cave/Environment/Interact/Ladder-Down-1")
+    ));
+
+    return entity;
+  }
+
   public boolean isEnemy(Entity entity) {
     return entity != null && entity.getComponent(EnemyComponent.class) != null;
   }
 
   public boolean isItem(Entity entity) {
     return entity != null && entity.getComponent(ItemComponent.class) != null;
+  }
+
+  public boolean isEntrance(Entity entity) {
+    return entity != null && entity.getComponent(EntranceComponent.class) != null;
   }
 
   public boolean isExit(Entity entity) {

@@ -13,20 +13,6 @@ public class SkillHelpers {
   }
 
   /**
-   * Get skill value.
-   *
-   * @param entity Entity who's skill we care about
-   * @param skill  The skill itself
-   *
-   * @return The skill value
-   */
-  public int getSkillValue(Entity entity, String skill) {
-    SkillsComponent skills = entity.getComponent(SkillsComponent.class);
-
-    return skills.levels.get(skill);
-  }
-
-  /**
    * Level an entity's skill.
    *
    * @param entity Who we're leveling

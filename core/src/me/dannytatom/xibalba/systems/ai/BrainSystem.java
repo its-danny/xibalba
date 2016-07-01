@@ -52,6 +52,14 @@ public class BrainSystem extends SortedIteratingSystem {
           break;
         default:
       }
+    } else {
+      if (brain.state != BrainComponent.State.WAITING) {
+        brain.state = BrainComponent.State.WAITING;
+
+        entity.remove(WanderComponent.class);
+        entity.remove(TargetComponent.class);
+        entity.remove(AttackComponent.class);
+      }
     }
   }
 

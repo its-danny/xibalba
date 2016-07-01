@@ -324,7 +324,8 @@ public class HudRenderer {
               super.clicked(event, positionX, positionY);
 
               PlayerComponent playerComponent = main.player.getComponent(PlayerComponent.class);
-              PositionComponent focusedPosition = main.focusedEntity.getComponent(PositionComponent.class);
+              PositionComponent focusedPosition =
+                  main.focusedEntity.getComponent(PositionComponent.class);
 
               if (playerComponent.focusedAction == PlayerComponent.FocusedAction.MELEE) {
                 main.combatHelpers.preparePlayerForMelee(main.focusedEntity, part);

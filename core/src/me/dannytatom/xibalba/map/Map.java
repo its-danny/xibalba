@@ -7,7 +7,7 @@ import com.badlogic.gdx.math.MathUtils;
 public class Map {
   public final int width;
   public final int height;
-  private final boolean[][] geometry;
+  public final boolean[][] geometry;
   private final TextureAtlas atlas;
   private final Sprite defaultWallSprite;
   private Cell[][] map;
@@ -51,7 +51,7 @@ public class Map {
               "Level/Cave/Environment/Floor/" + MathUtils.random(1, 2)
           ), false, false, "a cave floor");
         } else {
-          int neighbours = groundNeighbours(x, y);
+          int neighbours = getGroundNeighbours(x, y);
 
           if (neighbours > 0) {
             map[x][y] = new Cell(defaultWallSprite, true, false, "a cave wall");
@@ -69,7 +69,7 @@ public class Map {
   private void paintSecondCoat() {
     for (int x = 0; x < map.length; x++) {
       for (int y = 0; y < map[x].length; y++) {
-        int neighbours = groundNeighbours(x, y);
+        int neighbours = getGroundNeighbours(x, y);
 
         if (map[x][y].isNothing || map[x][y].isWall && neighbours > 0) {
           String spritePath = null;
@@ -171,7 +171,7 @@ public class Map {
     }
   }
 
-  private int groundNeighbours(int cellX, int cellY) {
+  private int getGroundNeighbours(int cellX, int cellY) {
     int count = 0;
 
     for (int i = -1; i < 2; i++) {
