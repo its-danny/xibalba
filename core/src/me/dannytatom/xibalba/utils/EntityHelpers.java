@@ -11,7 +11,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.components.AttributesComponent;
-import me.dannytatom.xibalba.components.BodyPartsComponent;
+import me.dannytatom.xibalba.components.BodyComponent;
 import me.dannytatom.xibalba.components.DecorationComponent;
 import me.dannytatom.xibalba.components.EnemyComponent;
 import me.dannytatom.xibalba.components.EquipmentComponent;
@@ -25,6 +25,8 @@ import me.dannytatom.xibalba.components.VisualComponent;
 import me.dannytatom.xibalba.components.ai.BrainComponent;
 import me.dannytatom.xibalba.map.ShadowCaster;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 public class EntityHelpers {
@@ -60,13 +62,21 @@ public class EntityHelpers {
 
     player.add(new PlayerComponent());
     player.add(new PositionComponent(map, position));
-    player.add(new BodyPartsComponent(10, 8, 10, 10, 10, 10));
     player.add(new VisualComponent(
         atlas.createSprite(sprites.random()))
     );
     player.add(new InventoryComponent());
     player.add(new EquipmentComponent());
     player.add(new SkillsComponent());
+
+    HashMap<String, Integer> bodyParts = new HashMap<>();
+    bodyParts.put("head", 10);
+    bodyParts.put("body", 8);
+    bodyParts.put("left arm", 10);
+    bodyParts.put("right arm", 10);
+    bodyParts.put("left leg", 10);
+    bodyParts.put("right leg", 10);
+    player.add(new BodyComponent(bodyParts));
   }
 
   /**
@@ -118,14 +128,12 @@ public class EntityHelpers {
         json.attributes.get("defense"),
         json.attributes.get("damage")
     ));
-    entity.add(new BodyPartsComponent(
-        json.bodyParts.get("head"),
-        json.bodyParts.get("body"),
-        json.bodyParts.get("rightArm"),
-        json.bodyParts.get("leftArm"),
-        json.bodyParts.get("rightLeg"),
-        json.bodyParts.get("leftLeg")
-    ));
+
+    HashMap<String, Integer> bodyParts = new HashMap<>();
+    for (Map.Entry<String, Integer> part : json.bodyParts.entrySet()) {
+      bodyParts.put(part.getKey(), part.getValue());
+    }
+    entity.add(new BodyComponent(bodyParts));
 
     return entity;
   }

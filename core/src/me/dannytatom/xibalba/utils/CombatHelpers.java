@@ -6,7 +6,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.components.AttributesComponent;
-import me.dannytatom.xibalba.components.BodyPartsComponent;
+import me.dannytatom.xibalba.components.BodyComponent;
 import me.dannytatom.xibalba.components.DecorationComponent;
 import me.dannytatom.xibalba.components.EquipmentComponent;
 import me.dannytatom.xibalba.components.ItemComponent;
@@ -16,7 +16,7 @@ import me.dannytatom.xibalba.components.VisualComponent;
 import me.dannytatom.xibalba.components.actions.MeleeComponent;
 import me.dannytatom.xibalba.components.actions.RangeComponent;
 
-import java.lang.reflect.Field;
+import java.util.HashMap;
 import java.util.Objects;
 
 // How combat works.
@@ -116,11 +116,7 @@ public class CombatHelpers {
 
     int result = rollHit(main.skillHelpers.getSkillValue(starter, skill));
 
-    try {
-      applyDamage(result, damage, skill, starter, target, bodyPart, verb);
-    } catch (NoSuchFieldException e) {
-      e.printStackTrace();
-    }
+    applyDamage(result, damage, skill, starter, target, bodyPart, verb);
   }
 
   /**
@@ -138,11 +134,7 @@ public class CombatHelpers {
         ? itemComponent.attributes.get("throwDamage")
         : itemComponent.attributes.get("hitDamage");
 
-    try {
-      applyDamage(result, damage, skill, starter, target, bodyPart, "hit");
-    } catch (NoSuchFieldException e) {
-      e.printStackTrace();
-    }
+    applyDamage(result, damage, skill, starter, target, bodyPart, "hit");
   }
 
   private int rollHit(int skillLevel) {
@@ -169,7 +161,7 @@ public class CombatHelpers {
 
   private void applyDamage(int result, int baseDamage, String skill,
                            Entity starter, Entity target, String bodyPart,
-                           String verb) throws NoSuchFieldException {
+                           String verb) {
     AttributesComponent starterAttributes = ComponentMappers.attributes.get(starter);
     AttributesComponent targetAttributes = ComponentMappers.attributes.get(target);
 
@@ -177,18 +169,10 @@ public class CombatHelpers {
 
     String action = (starterIsPlayer ? "You" : starterAttributes.name) + " ";
 
-    BodyPartsComponent bodyParts;
-    Field bodyPartField;
+    HashMap<String, Integer> bodyParts = target.getComponent(BodyComponent.class).parts;
+    int bodyPartDifficulty = bodyParts.get(bodyPart);
 
-    try {
-      bodyParts = target.getComponent(BodyPartsComponent.class);
-      bodyPartField = bodyParts.getClass().getField(bodyPart);
-      int bodyPartDifficulty = (int) bodyPartField.get(bodyParts);
-
-      result -= MathUtils.random(1, bodyPartDifficulty);
-    } catch (IllegalAccessException e) {
-      e.printStackTrace();
-    }
+    result -= MathUtils.random(1, bodyPartDifficulty);
 
     if (result >= 4) {
       int critical = 0;

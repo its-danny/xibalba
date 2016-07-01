@@ -14,9 +14,9 @@
   "bodyParts": {
     "head": 8,
     "body": 6,
-    "rightArm": 8,
-    "leftArm": 8,
-    "rightLeg": 6,
-    "leftLeg": 6
+    "left arm": 8,
+    "right arm": 8,
+    "left leg": 6,
+    "right leg": 6
   }
 }

@@ -2,22 +2,29 @@ package me.dannytatom.xibalba.components;
 
 import com.badlogic.ashley.core.Component;
 
-@SuppressWarnings("CanBeFinal")
+import java.util.HashMap;
+
 public class SkillsComponent implements Component {
-  public int unarmed = 0;
-  public int throwing = 0;
-  public int slashing = 0;
-  public int piercing = 0;
-  public int bashing = 0;
-  public int archery = 0;
-  public int unarmedCounter = 0;
-  public int throwingCounter = 0;
-  public int slashingCounter = 0;
-  public int piercingCounter = 0;
-  public int bashingCounter = 0;
-  public int archeryCounter = 0;
+  public HashMap<String, Integer> levels;
+  public HashMap<String, Integer> counters;
 
   public SkillsComponent() {
+    levels = new HashMap<>();
 
+    levels.put("unarmed", 0);
+    levels.put("throwing", 0);
+    levels.put("slashing", 0);
+    levels.put("piercing", 0);
+    levels.put("bashing", 0);
+    levels.put("archery", 0);
+
+    counters = new HashMap<>();
+
+    counters.put("unarmed", 0);
+    counters.put("throwing", 0);
+    counters.put("slashing", 0);
+    counters.put("piercing", 0);
+    counters.put("bashing", 0);
+    counters.put("archery", 0);
   }
 }

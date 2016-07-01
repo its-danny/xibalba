@@ -144,28 +144,28 @@ public class CharacterScreen implements Screen {
 
     SkillsComponent skills = this.main.player.getComponent(SkillsComponent.class);
 
-    if (skills.unarmed > 0) {
-      group.addActor(skillLine("Unarmed", skills.unarmed));
+    if (skills.levels.get("unarmed") > 0) {
+      group.addActor(skillLine("Unarmed", skills.levels.get("unarmed")));
     }
 
-    if (skills.throwing > 0) {
-      group.addActor(skillLine("Throwing", skills.throwing));
+    if (skills.levels.get("unarmed") > 0) {
+      group.addActor(skillLine("Throwing", skills.levels.get("throwing")));
     }
 
-    if (skills.slashing > 0) {
-      group.addActor(skillLine("Slashing", skills.slashing));
+    if (skills.levels.get("unarmed") > 0) {
+      group.addActor(skillLine("Slashing", skills.levels.get("slashing")));
     }
 
-    if (skills.piercing > 0) {
-      group.addActor(skillLine("Piercing", skills.piercing));
+    if (skills.levels.get("unarmed") > 0) {
+      group.addActor(skillLine("Piercing", skills.levels.get("piercing")));
     }
 
-    if (skills.bashing > 0) {
-      group.addActor(skillLine("Bashing", skills.bashing));
+    if (skills.levels.get("unarmed") > 0) {
+      group.addActor(skillLine("Bashing", skills.levels.get("bashing")));
     }
 
-    if (skills.archery > 0) {
-      group.addActor(skillLine("Archery", skills.archery));
+    if (skills.levels.get("unarmed") > 0) {
+      group.addActor(skillLine("Archery", skills.levels.get("archery")));
     }
 
     return group;

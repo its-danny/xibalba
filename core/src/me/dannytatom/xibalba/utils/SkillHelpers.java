@@ -4,8 +4,6 @@ import com.badlogic.ashley.core.Entity;
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.components.SkillsComponent;
 
-import java.lang.reflect.Field;
-
 public class SkillHelpers {
   private final Main main;
 
@@ -23,17 +21,8 @@ public class SkillHelpers {
    */
   public int getSkillValue(Entity entity, String skill) {
     SkillsComponent skills = entity.getComponent(SkillsComponent.class);
-    Field field;
-    int value = 0;
 
-    try {
-      field = skills.getClass().getField(skill);
-      value = (int) field.get(skills);
-    } catch (NoSuchFieldException | IllegalAccessException e) {
-      e.printStackTrace();
-    }
-
-    return value;
+    return skills.levels.get(skill);
   }
 
   /**
@@ -45,26 +34,17 @@ public class SkillHelpers {
    */
   public void levelSkill(Entity entity, String skill, int amount) {
     SkillsComponent skills = entity.getComponent(SkillsComponent.class);
-    Field skillField;
-    Field counterField;
 
-    try {
-      skillField = skills.getClass().getField(skill);
-      counterField = skills.getClass().getField(skill + "Counter");
+    skills.counters.put(skill, skills.counters.get(skill) + amount);
 
-      counterField.set(skills, (int) counterField.get(skills) + amount);
+    int skillLevel = skills.levels.get(skill);
+    int expNeeded = skillLevel == 0 ? 40 : ((skillLevel + 2) * 10);
 
-      int skillLevel = (int) skillField.get(skills);
-      int expNeeded = skillLevel == 0 ? 40 : ((skillLevel + 2) * 10);
+    if (skills.counters.get(skill) >= expNeeded && skillLevel < 12) {
+      skills.levels.put(skill, skillLevel == 0 ? 4 : skillLevel + 2);
+      skills.counters.put(skill, 0);
 
-      if ((int) counterField.get(skills) >= expNeeded && skillLevel < 12) {
-        skillField.set(skills, skillLevel == 0 ? 4 : skillLevel + 2);
-        counterField.set(skills, 0);
-
-        main.log.add("[YELLOW]You feel better at " + skill);
-      }
-    } catch (NoSuchFieldException | IllegalAccessException e) {
-      e.printStackTrace();
+      main.log.add("[YELLOW]You feel better at " + skill);
     }
   }
 }

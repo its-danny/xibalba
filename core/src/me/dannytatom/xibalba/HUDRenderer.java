@@ -18,17 +18,15 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import me.dannytatom.xibalba.components.AttributesComponent;
-import me.dannytatom.xibalba.components.BodyPartsComponent;
+import me.dannytatom.xibalba.components.BodyComponent;
 import me.dannytatom.xibalba.components.EnemyComponent;
 import me.dannytatom.xibalba.components.ItemComponent;
 import me.dannytatom.xibalba.components.PlayerComponent;
+import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.map.Cell;
 import me.dannytatom.xibalba.screens.CharacterScreen;
 import me.dannytatom.xibalba.screens.HelpScreen;
 import me.dannytatom.xibalba.screens.InventoryScreen;
-import org.apache.commons.lang3.text.WordUtils;
-
-import java.lang.reflect.Field;
 
 public class HudRenderer {
   public final Stage stage;
@@ -41,6 +39,7 @@ public class HudRenderer {
   private final Dialog lookDialog;
   private final VerticalGroup lookDialogList;
   private final Dialog focusedDialog;
+  private final Table focusedDialogTable;
   private boolean lookDialogShowing = false;
   private boolean focusedDialogShowing = false;
 
@@ -125,45 +124,8 @@ public class HudRenderer {
     focusedDialog.pad(5, 0, 10, 5);
     focusedDialog.setModal(false);
     focusedDialog.setMovable(false);
-    Table focusedDialogTable = new Table().left();
+    focusedDialogTable = new Table().left();
     focusedDialog.add(focusedDialogTable);
-
-    Field[] bodyParts = BodyPartsComponent.class.getDeclaredFields();
-    for (Field bodyPart : bodyParts) {
-      String name = bodyPart.getName();
-      String prettyName = name.replaceAll(
-          String.format("%s|%s|%s",
-              "(?<=[A-Z])(?=[A-Z][a-z])",
-              "(?<=[^A-Z])(?=[A-Z])",
-              "(?<=[A-Za-z])(?=[^A-Za-z])"
-          ), " "
-      );
-      prettyName = WordUtils.capitalizeFully(prettyName);
-
-      TextButton button = new TextButton(prettyName, main.skin);
-      button.pad(5);
-      button.addListener(new ClickListener() {
-        @Override
-        public void clicked(InputEvent event, float positionX, float positionY) {
-          super.clicked(event, positionX, positionY);
-
-          PlayerComponent playerComponent = main.player.getComponent(PlayerComponent.class);
-
-          if (playerComponent.focusedAction == PlayerComponent.FocusedAction.MELEE) {
-            main.combatHelpers.preparePlayerForMelee(main.focusedEntity, name);
-          } else if (playerComponent.focusedAction == PlayerComponent.FocusedAction.THROWING) {
-            main.combatHelpers.preparePlayerForThrowing(main.focusedEntity, name);
-          } else if (playerComponent.focusedAction == PlayerComponent.FocusedAction.RANGED) {
-            main.combatHelpers.preparePlayerForRanged(main.focusedEntity, name);
-          }
-
-          main.state = Main.State.PLAYING;
-          main.executeTurn = true;
-        }
-      });
-
-      focusedDialogTable.add(button).pad(0, 5, 0, 5);
-    }
   }
 
   /**
@@ -343,10 +305,40 @@ public class HudRenderer {
   }
 
   private void checkAndRenderFocused() {
+    focusedDialogTable.clear();
+
     if (main.state == Main.State.FOCUSED) {
       if (lookDialogShowing) {
         lookDialogShowing = false;
         lookDialog.hide(null);
+      }
+
+      BodyComponent body = main.focusedEntity.getComponent(BodyComponent.class);
+      for (String part : body.parts.keySet()) {
+        TextButton button = new TextButton(part, main.skin);
+        button.pad(5);
+        button.addListener(new ClickListener() {
+          @Override
+          public void clicked(InputEvent event, float positionX, float positionY) {
+            super.clicked(event, positionX, positionY);
+
+            PlayerComponent playerComponent = main.player.getComponent(PlayerComponent.class);
+            PositionComponent focusedPosition = main.focusedEntity.getComponent(PositionComponent.class);
+
+            if (playerComponent.focusedAction == PlayerComponent.FocusedAction.MELEE) {
+              main.combatHelpers.preparePlayerForMelee(main.focusedEntity, part);
+            } else if (playerComponent.focusedAction == PlayerComponent.FocusedAction.THROWING) {
+              main.combatHelpers.preparePlayerForThrowing(focusedPosition.pos, part);
+            } else if (playerComponent.focusedAction == PlayerComponent.FocusedAction.RANGED) {
+              main.combatHelpers.preparePlayerForRanged(focusedPosition.pos, part);
+            }
+
+            main.state = Main.State.PLAYING;
+            main.executeTurn = true;
+          }
+        });
+
+        focusedDialogTable.add(button).pad(0, 5, 0, 5);
       }
 
       focusedDialogShowing = true;
