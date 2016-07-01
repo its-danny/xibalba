@@ -21,9 +21,8 @@ import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.BodyPartsComponent;
 import me.dannytatom.xibalba.components.EnemyComponent;
 import me.dannytatom.xibalba.components.ItemComponent;
-import me.dannytatom.xibalba.components.actions.MeleeComponent;
+import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.map.Cell;
-import me.dannytatom.xibalba.map.Map;
 import me.dannytatom.xibalba.screens.CharacterScreen;
 import me.dannytatom.xibalba.screens.HelpScreen;
 import me.dannytatom.xibalba.screens.InventoryScreen;
@@ -35,6 +34,7 @@ public class HudRenderer {
   public final Stage stage;
   private final Main main;
   private final Viewport viewport;
+  private final PlayerComponent player;
   private final VerticalGroup actionLog;
   private final VerticalGroup areaDetails;
   private final Label lookDetails;
@@ -55,6 +55,7 @@ public class HudRenderer {
 
     viewport = new FitViewport(960, 540, new OrthographicCamera());
     stage = new Stage(viewport, batch);
+    player = main.player.getComponent(PlayerComponent.class);
 
     Table topTable = new Table();
     topTable.top().left();
@@ -146,7 +147,16 @@ public class HudRenderer {
         public void clicked(InputEvent event, float positionX, float positionY) {
           super.clicked(event, positionX, positionY);
 
-          main.player.add(new MeleeComponent(main.focusedEntity, name));
+          PlayerComponent playerComponent = main.player.getComponent(PlayerComponent.class);
+
+          if (playerComponent.focusedAction == PlayerComponent.FocusedAction.MELEE) {
+            main.combatHelpers.preparePlayerForMelee(main.focusedEntity, name);
+          } else if (playerComponent.focusedAction == PlayerComponent.FocusedAction.THROWING) {
+            main.combatHelpers.preparePlayerForThrowing(main.focusedEntity, name);
+          } else if (playerComponent.focusedAction == PlayerComponent.FocusedAction.RANGED) {
+            main.combatHelpers.preparePlayerForRanged(main.focusedEntity, name);
+          }
+
           main.state = Main.State.PLAYING;
           main.executeTurn = true;
         }
@@ -261,17 +271,15 @@ public class HudRenderer {
   private void checkAndRenderLookDetails() {
     lookDialogList.clear();
 
-    Map map = main.world.getCurrentMap();
-
-    if (map.target != null) {
-      renderLookDetails(map.target);
-    } else {
+    if (player.target == null) {
       lookDetails.setText("");
 
       if (lookDialogShowing) {
         lookDialogShowing = false;
         lookDialog.hide(null);
       }
+    } else {
+      renderLookDetails(player.target);
     }
   }
 
@@ -336,26 +344,22 @@ public class HudRenderer {
 
   private void checkAndRenderFocused() {
     if (main.state == Main.State.FOCUSED) {
-      renderFocused();
+      if (lookDialogShowing) {
+        lookDialogShowing = false;
+        lookDialog.hide(null);
+      }
+
+      focusedDialogShowing = true;
+      focusedDialog.show(stage, null);
+
+      focusedDialog.setPosition(
+          Math.round((stage.getWidth() - focusedDialog.getWidth()) / 2), 65
+      );
     } else {
       if (focusedDialogShowing) {
         focusedDialogShowing = false;
         focusedDialog.hide(null);
       }
     }
-  }
-
-  private void renderFocused() {
-    if (lookDialogShowing) {
-      lookDialogShowing = false;
-      lookDialog.hide(null);
-    }
-
-    focusedDialogShowing = true;
-    focusedDialog.show(stage, null);
-
-    focusedDialog.setPosition(
-        Math.round((stage.getWidth() - focusedDialog.getWidth()) / 2), 65
-    );
   }
 }

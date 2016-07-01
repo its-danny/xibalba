@@ -13,8 +13,4 @@ public class MeleeComponent implements Component {
     this.target = target;
     this.bodyPart = bodyPart;
   }
-
-  public MeleeComponent(Entity target) {
-    this(target, "body");
-  }
 }

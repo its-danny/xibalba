@@ -13,6 +13,8 @@ import me.dannytatom.xibalba.components.ItemComponent;
 import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.VisualComponent;
+import me.dannytatom.xibalba.components.actions.MeleeComponent;
+import me.dannytatom.xibalba.components.actions.RangeComponent;
 
 import java.lang.reflect.Field;
 import java.util.Objects;
@@ -37,6 +39,50 @@ public class CombatHelpers {
    */
   public CombatHelpers(Main main) {
     this.main = main;
+  }
+
+  /**
+   * Add MeleeComponent to player.
+   *
+   * @param enemy    Who ya hitting
+   * @param bodyPart Where ya hitting them at
+   */
+  public void preparePlayerForMelee(Entity enemy, String bodyPart) {
+    AttributesComponent attributes = main.player.getComponent(AttributesComponent.class);
+
+    if (attributes.energy >= MeleeComponent.COST) {
+      main.player.add(new MeleeComponent(enemy, bodyPart));
+    }
+  }
+
+  /**
+   * Add RangeComponent for throwing.
+   *
+   * @param position Where ya throwing
+   * @param bodyPart Where you trying to hit em
+   */
+  public void preparePlayerForThrowing(Vector2 position, String bodyPart) {
+    Entity item = main.inventoryHelpers.getThrowingItem(main.player);
+
+    main.player.add(new RangeComponent(position, item, "throwing", bodyPart));
+  }
+
+  /**
+   * Add RangeComponent for range weapons.
+   *
+   * @param position Where ya throwing
+   * @param bodyPart Where you trying to hit em
+   */
+  public void preparePlayerForRanged(Vector2 position, String bodyPart) {
+    Entity primaryWeapon = main.equipmentHelpers.getPrimaryWeapon(main.player);
+
+    Entity item = main.inventoryHelpers.getAmmunitionOfType(
+        main.player, primaryWeapon.getComponent(ItemComponent.class).ammunitionType
+    );
+
+    String skill = primaryWeapon.getComponent(ItemComponent.class).skill;
+
+    main.player.add(new RangeComponent(position, item, skill, bodyPart));
   }
 
   /**

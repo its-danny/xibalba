@@ -3,10 +3,6 @@ package me.dannytatom.xibalba.map;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Vector2;
-import org.xguzm.pathfinding.grid.GridCell;
-
-import java.util.List;
 
 public class Map {
   public final int width;
@@ -14,9 +10,6 @@ public class Map {
   private final boolean[][] geometry;
   private final TextureAtlas atlas;
   private final Sprite defaultWallSprite;
-  public List<GridCell> lookingPath = null;
-  public List<GridCell> targetingPath = null;
-  public Vector2 target = null;
   private Cell[][] map;
 
   /**
@@ -271,9 +264,5 @@ public class Map {
 
   private Cell getCell(int cellX, int cellY) {
     return map[cellX][cellY];
-  }
-
-  private Cell getCell(Vector2 position) {
-    return getCell((int) position.x, (int) position.y);
   }
 }

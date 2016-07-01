@@ -92,11 +92,12 @@ public class WorldRenderer {
     }
 
     TextureAtlas atlas = main.assets.get("sprites/main.atlas");
+    PlayerComponent player = main.player.getComponent(PlayerComponent.class);
 
-    if (map.targetingPath != null && map.target != null) {
-      for (int i = 0; i < map.targetingPath.size(); i++) {
-        GridCell cell = map.targetingPath.get(i);
-        boolean isLast = i == (map.targetingPath.size() - 1);
+    if (player.targetingPath != null) {
+      for (int i = 0; i < player.targetingPath.size(); i++) {
+        GridCell cell = player.targetingPath.get(i);
+        boolean isLast = i == (player.targetingPath.size() - 1);
         String spritePath = isLast ? "Level/Cave/UI/Target-Throw-1" : "Level/Cave/UI/Target-Path-1";
 
         batch.setColor(1f, 1f, 1f, isLast ? 1f : 0.5f);
@@ -106,10 +107,10 @@ public class WorldRenderer {
         );
         batch.setColor(1f, 1f, 1f, 1f);
       }
-    } else if (map.lookingPath != null && map.target != null) {
-      for (int i = 0; i < map.lookingPath.size(); i++) {
-        GridCell cell = map.lookingPath.get(i);
-        boolean isLast = i == (map.lookingPath.size() - 1);
+    } else if (player.lookingPath != null) {
+      for (int i = 0; i < player.lookingPath.size(); i++) {
+        GridCell cell = player.lookingPath.get(i);
+        boolean isLast = i == (player.lookingPath.size() - 1);
         String spritePath = isLast ? "Level/Cave/UI/Target-1" : "Level/Cave/UI/Target-Path-1";
 
         batch.setColor(1f, 1f, 1f, isLast ? 1f : 0.5f);
@@ -122,10 +123,10 @@ public class WorldRenderer {
     }
 
     renderDecorations(lightMap);
-    renderItems(lightMap);
-    renderPlayer(lightMap);
-    renderEnemies(lightMap);
     renderStairs(lightMap);
+    renderItems(lightMap);
+    renderEnemies(lightMap);
+    renderPlayer(lightMap);
 
     batch.end();
   }

@@ -52,10 +52,6 @@ public class BrainSystem extends SortedIteratingSystem {
           break;
         default:
       }
-    } else {
-      if (brain.state != BrainComponent.State.WAITING) {
-        switchToWaiting(entity);
-      }
     }
   }
 
@@ -134,7 +130,7 @@ public class BrainSystem extends SortedIteratingSystem {
 
     if (main.entityHelpers.isNearPlayer(entity)) {
       if (attributes.energy >= MeleeComponent.COST) {
-        entity.add(new MeleeComponent(main.player));
+        entity.add(new MeleeComponent(main.player, "body"));
       } else if (attributes.energy >= MovementComponent.COST) {
         switchToWander(entity);
       }

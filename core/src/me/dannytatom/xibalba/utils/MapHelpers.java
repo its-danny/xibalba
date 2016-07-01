@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.components.DecorationComponent;
+import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.map.Cell;
 import me.dannytatom.xibalba.map.Map;
@@ -156,25 +157,27 @@ public class MapHelpers {
     NavigationGrid<GridCell> grid = new NavigationGrid<>(cells, false);
     AStarGridFinder<GridCell> finder = new AStarGridFinder<>(GridCell.class);
 
-    if (map.target == null) {
+    PlayerComponent player = main.player.getComponent(PlayerComponent.class);
+
+    if (player.target == null) {
       oldTarget = null;
-      map.target = start.cpy().add(end);
+      player.target = start.cpy().add(end);
     } else {
-      oldTarget = map.target.cpy();
-      map.target = map.target.add(end);
+      oldTarget = player.target.cpy();
+      player.target = player.target.add(end);
     }
 
-    map.targetingPath = finder.findPath(
-        (int) start.x, (int) start.y, (int) map.target.x, (int) map.target.y, grid
+    player.targetingPath = finder.findPath(
+        (int) start.x, (int) start.y, (int) player.target.x, (int) player.target.y, grid
     );
 
     // TODO: Instead of 5, range should be determined by strength
-    if (map.targetingPath == null || map.targetingPath.size() > 5) {
-      map.target = oldTarget;
+    if (player.targetingPath == null || player.targetingPath.size() > 5) {
+      player.target = oldTarget;
 
-      if (map.target != null) {
-        map.targetingPath = finder.findPath(
-            (int) start.x, (int) start.y, (int) map.target.x, (int) map.target.y, grid
+      if (player.target != null) {
+        player.targetingPath = finder.findPath(
+            (int) start.x, (int) start.y, (int) player.target.x, (int) player.target.y, grid
         );
       }
     }
@@ -211,24 +214,26 @@ public class MapHelpers {
     NavigationGrid<GridCell> grid = new NavigationGrid<>(cells, false);
     AStarGridFinder<GridCell> finder = new AStarGridFinder<>(GridCell.class);
 
-    if (map.target == null) {
+    PlayerComponent player = main.player.getComponent(PlayerComponent.class);
+
+    if (player.target == null) {
       oldTarget = null;
-      map.target = start.cpy().add(end);
+      player.target = start.cpy().add(end);
     } else {
-      oldTarget = map.target.cpy();
-      map.target = map.target.add(end);
+      oldTarget = player.target.cpy();
+      player.target = player.target.add(end);
     }
 
-    map.lookingPath = finder.findPath(
-        (int) start.x, (int) start.y, (int) map.target.x, (int) map.target.y, grid
+    player.lookingPath = finder.findPath(
+        (int) start.x, (int) start.y, (int) player.target.x, (int) player.target.y, grid
     );
 
-    if (map.lookingPath == null) {
-      map.target = oldTarget;
+    if (player.lookingPath == null) {
+      player.target = oldTarget;
 
-      if (map.target != null) {
-        map.lookingPath = finder.findPath(
-            (int) start.x, (int) start.y, (int) map.target.x, (int) map.target.y, grid
+      if (player.target != null) {
+        player.lookingPath = finder.findPath(
+            (int) start.x, (int) start.y, (int) player.target.x, (int) player.target.y, grid
         );
       }
     }

@@ -7,7 +7,6 @@ import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.MouseMovementComponent;
 import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
-import me.dannytatom.xibalba.components.actions.MeleeComponent;
 import me.dannytatom.xibalba.components.actions.MovementComponent;
 import me.dannytatom.xibalba.screens.PlayScreen;
 import me.dannytatom.xibalba.systems.ActionSystem;
@@ -51,8 +50,8 @@ public class MovementSystem extends ActionSystem {
 
           position.pos = movement.pos;
           attributes.energy -= MovementComponent.COST;
-        } else if (main.entityHelpers.isEnemy(thing) && attributes.energy >= MeleeComponent.COST) {
-          main.player.add(new MeleeComponent(thing));
+        } else if (main.entityHelpers.isEnemy(thing)) {
+          main.combatHelpers.preparePlayerForMelee(thing, "body");
         } else if (main.entityHelpers.isExit(thing)) {
           main.world.currentMapIndex += 1;
           main.playScreen = new PlayScreen(main);

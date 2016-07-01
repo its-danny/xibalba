@@ -9,10 +9,10 @@ import com.badlogic.gdx.math.Vector2;
 import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.ItemComponent;
 import me.dannytatom.xibalba.components.MouseMovementComponent;
+import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.actions.MovementComponent;
 import me.dannytatom.xibalba.components.actions.RangeComponent;
-import me.dannytatom.xibalba.map.Map;
 import me.dannytatom.xibalba.screens.CharacterScreen;
 import me.dannytatom.xibalba.screens.HelpScreen;
 import me.dannytatom.xibalba.screens.InventoryScreen;
@@ -39,7 +39,7 @@ public class PlayerInput implements InputProcessor {
     AttributesComponent attributes = main.player.getComponent(AttributesComponent.class);
     PositionComponent position = main.player.getComponent(PositionComponent.class);
 
-    Map map = main.world.getCurrentMap();
+    PlayerComponent player = main.player.getComponent(PlayerComponent.class);
 
     switch (keycode) {
       case Keys.Z:
@@ -130,9 +130,6 @@ public class PlayerInput implements InputProcessor {
         break;
       case Keys.S:
         if (main.state == Main.State.PLAYING) {
-          map.target = null;
-          map.lookingPath = null;
-
           main.state = Main.State.LOOKING;
         }
         break;
@@ -150,6 +147,8 @@ public class PlayerInput implements InputProcessor {
               } else {
                 main.log.add("You aren't carrying any ammunition for this");
               }
+            } else {
+              main.log.add("This weapon doesn't take ammunition");
             }
           }
         }
@@ -165,6 +164,8 @@ public class PlayerInput implements InputProcessor {
               itemComponent.throwing = true;
 
               main.state = Main.State.TARGETING;
+            } else {
+              main.log.add("You can't throw that");
             }
           }
         }
@@ -181,30 +182,24 @@ public class PlayerInput implements InputProcessor {
         break;
       }
       case Keys.Q:
-        if (main.state == Main.State.LOOKING) {
-          map.target = null;
-          map.lookingPath = null;
+        player.target = null;
+        player.lookingPath = null;
+        player.targetingPath = null;
 
-          main.state = Main.State.PLAYING;
-        } else if (main.state == Main.State.TARGETING) {
-          map.target = null;
-          map.targetingPath = null;
-
-          main.state = Main.State.PLAYING;
-        } else if (main.state == Main.State.MOVING) {
-          map.target = null;
-          map.lookingPath = null;
-
+        if (main.state == Main.State.MOVING) {
           main.player.remove(MouseMovementComponent.class);
           main.player.remove(MovementComponent.class);
-          main.state = Main.State.PLAYING;
-        } else if (main.state == Main.State.FOCUSED) {
-          main.state = Main.State.PLAYING;
         }
+
+        main.state = Main.State.PLAYING;
         break;
       case Keys.SPACE:
         if (main.state == Main.State.TARGETING) {
-          handleThrow();
+          if (main.inventoryHelpers.getThrowingItem(main.player) == null) {
+            handleRange();
+          } else {
+            handleThrow();
+          }
         }
         break;
       case Keys.SHIFT_LEFT:
@@ -252,6 +247,8 @@ public class PlayerInput implements InputProcessor {
         Entity enemy = main.entityHelpers.getEnemyAt(mousePosition);
 
         if (enemy != null && main.mapHelpers.isNearPlayer(enemy, 1)) {
+          main.player.getComponent(PlayerComponent.class).focusedAction
+              = PlayerComponent.FocusedAction.MELEE;
           main.state = Main.State.FOCUSED;
           main.focusedEntity = enemy;
         }
@@ -271,7 +268,11 @@ public class PlayerInput implements InputProcessor {
         }
       }
     } else if (main.state == Main.State.TARGETING) {
-      handleThrow();
+      if (main.inventoryHelpers.getThrowingItem(main.player) == null) {
+        handleRange();
+      } else {
+        handleThrow();
+      }
     }
 
     return false;
@@ -284,15 +285,14 @@ public class PlayerInput implements InputProcessor {
 
   @Override
   public boolean mouseMoved(int screenX, int screenY) {
+    PlayerComponent player = main.player.getComponent(PlayerComponent.class);
     PositionComponent playerPosition = main.player.getComponent(PositionComponent.class);
     Vector2 mousePosition = main.mousePositionToWorld(worldCamera);
     Vector2 relativeToPlayer = mousePosition.cpy().sub(playerPosition.pos);
 
     if (main.state == Main.State.PLAYING) {
-      Map map = main.world.getCurrentMap();
-
-      map.target = null;
-      map.lookingPath = null;
+      player.target = null;
+      player.lookingPath = null;
 
       if (main.mapHelpers.cellExists(mousePosition)) {
         handleLooking(relativeToPlayer, true);
@@ -300,10 +300,8 @@ public class PlayerInput implements InputProcessor {
         return true;
       }
     } else if (main.state == Main.State.LOOKING) {
-      Map map = main.world.getCurrentMap();
-
-      map.target = null;
-      map.lookingPath = null;
+      player.target = null;
+      player.lookingPath = null;
 
       if (main.mapHelpers.cellExists(mousePosition)) {
         handleLooking(relativeToPlayer, false);
@@ -311,10 +309,8 @@ public class PlayerInput implements InputProcessor {
         return true;
       }
     } else if (main.state == Main.State.TARGETING) {
-      Map map = main.world.getCurrentMap();
-
-      map.target = null;
-      map.targetingPath = null;
+      player.target = null;
+      player.targetingPath = null;
 
       if (main.mapHelpers.cellExists(mousePosition)) {
         handleTargeting(relativeToPlayer);
@@ -354,10 +350,10 @@ public class PlayerInput implements InputProcessor {
         main.focusedEntity = enemy;
       }
     } else {
-      Map map = main.world.getCurrentMap();
+      PlayerComponent player = main.player.getComponent(PlayerComponent.class);
 
-      map.target = null;
-      map.lookingPath = null;
+      player.target = null;
+      player.lookingPath = null;
 
       if (energy >= MovementComponent.COST) {
         main.player.add(new MovementComponent(pos));
@@ -381,32 +377,57 @@ public class PlayerInput implements InputProcessor {
 
   private void handleThrow() {
     AttributesComponent attributes = main.player.getComponent(AttributesComponent.class);
-    Map map = main.world.getCurrentMap();
 
-    if (map.targetingPath != null && attributes.energy >= RangeComponent.COST) {
-      Entity primaryWeapon = main.equipmentHelpers.getPrimaryWeapon(main.player);
-      Entity item;
-      String skill;
-
-      if (primaryWeapon != null && primaryWeapon.getComponent(ItemComponent.class).usesAmmunition) {
-        item = main.inventoryHelpers.getAmmunitionOfType(
-            main.player, primaryWeapon.getComponent(ItemComponent.class).ammunitionType
-        );
-
-        skill = primaryWeapon.getComponent(ItemComponent.class).skill;
-      } else {
-        item = main.inventoryHelpers.getThrowingItem(main.player);
-        skill = "throwing";
-      }
-
-      main.player.add(new RangeComponent(map.target, item, skill));
-
-      main.executeTurn = true;
+    if (attributes.energy < RangeComponent.COST) {
+      return;
     }
 
-    map.target = null;
-    map.targetingPath = null;
+    PlayerComponent player = main.player.getComponent(PlayerComponent.class);
+    Entity enemy = main.entityHelpers.getEnemyAt(player.target);
 
-    main.state = Main.State.PLAYING;
+    if (enemy != null) {
+      if (holdingShift) {
+        main.player.getComponent(PlayerComponent.class).focusedAction
+            = PlayerComponent.FocusedAction.THROWING;
+        main.state = Main.State.FOCUSED;
+        main.focusedEntity = enemy;
+      } else {
+        main.combatHelpers.preparePlayerForThrowing(player.target, "body");
+        main.executeTurn = true;
+
+        player.target = null;
+        player.targetingPath = null;
+
+        main.state = Main.State.PLAYING;
+      }
+    }
+  }
+
+  private void handleRange() {
+    AttributesComponent attributes = main.player.getComponent(AttributesComponent.class);
+
+    if (attributes.energy < RangeComponent.COST) {
+      return;
+    }
+
+    PlayerComponent player = main.player.getComponent(PlayerComponent.class);
+    Entity enemy = main.entityHelpers.getEnemyAt(player.target);
+
+    if (enemy != null) {
+      if (holdingShift) {
+        main.player.getComponent(PlayerComponent.class).focusedAction
+            = PlayerComponent.FocusedAction.RANGED;
+        main.state = Main.State.FOCUSED;
+        main.focusedEntity = enemy;
+      } else {
+        main.combatHelpers.preparePlayerForRanged(player.target, "body");
+        main.executeTurn = true;
+
+        player.target = null;
+        player.targetingPath = null;
+
+        main.state = Main.State.PLAYING;
+      }
+    }
   }
 }
