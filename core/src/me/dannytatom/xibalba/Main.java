@@ -52,10 +52,10 @@ public class Main extends Game {
     // Load custom font
     assets = new AssetManager();
     FreeTypeFontGenerator generator =
-        new FreeTypeFontGenerator(Gdx.files.internal("ui/Inconsolata.ttf"));
+        new FreeTypeFontGenerator(Gdx.files.internal("ui/Aller_RG.ttf"));
     FreeTypeFontGenerator.FreeTypeFontParameter parameter =
         new FreeTypeFontGenerator.FreeTypeFontParameter();
-    parameter.size = 14;
+    parameter.size = 12;
     BitmapFont font = generator.generateFont(parameter);
     generator.dispose();
 
@@ -75,7 +75,7 @@ public class Main extends Game {
     Colors.put("LIGHT_GRAY", parseColor("c2c2c2"));
     Colors.put("DARK_GRAY", parseColor("666666"));
     Colors.put("CYAN", parseColor("67C8CF"));
-    Colors.put("RED", parseColor("B55757"));
+    Colors.put("RED", parseColor("D67474"));
     Colors.put("YELLOW", parseColor("E0DFB1"));
     Colors.put("GREEN", parseColor("67CF8B"));
 

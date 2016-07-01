@@ -5,9 +5,12 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Colors;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.screens.creation.ReviewScreen;
 
@@ -29,9 +32,35 @@ public class MainMenuScreen implements Screen {
     table.setFillParent(true);
     stage.addActor(table);
 
-    table.add(new Label("[CYAN]N[]ew Game", main.skin));
+    TextButton newGameButton = new TextButton(
+        "[DARK_GRAY][ [CYAN]N[DARK_GRAY] ][WHITE]ew Game", main.skin
+    );
+    newGameButton.pad(5);
+    newGameButton.addListener(new ClickListener() {
+      @Override
+      public void clicked(InputEvent event, float positionX, float positionY) {
+        super.clicked(event, positionX, positionY);
+        main.setScreen(new ReviewScreen(main));
+      }
+    });
+
+    TextButton quitButton = new TextButton(
+        "[DARK_GRAY][ [CYAN]Q[DARK_GRAY] ][WHITE]uit", main.skin
+    );
+    quitButton.pad(5);
+    quitButton.addListener(new ClickListener() {
+      @Override
+      public void clicked(InputEvent event, float positionX, float positionY) {
+        super.clicked(event, positionX, positionY);
+        Gdx.app.exit();
+      }
+    });
+
+    table.add(new Label("[LIGHT_GRAY]Xibalba v0.1.0[]", main.skin)).pad(0, 0, 10, 0);
     table.row();
-    table.add(new Label("[CYAN]Q[]uit", main.skin));
+    table.add(newGameButton).pad(0, 0, 10, 0);
+    table.row();
+    table.add(quitButton);
 
     Gdx.input.setInputProcessor(stage);
   }

@@ -72,7 +72,9 @@ public class HudRenderer {
     bottomTable.bottom();
     bottomTable.setFillParent(true);
 
-    TextButton characterButton = new TextButton("[CYAN]C[LIGHT_GRAY] Character", main.skin);
+    TextButton characterButton = new TextButton(
+        "[DARK_GRAY][ [CYAN]C[DARK_GRAY] ][WHITE]haracter", main.skin
+    );
     characterButton.pad(5);
     characterButton.addListener(new ClickListener() {
       @Override
@@ -82,7 +84,9 @@ public class HudRenderer {
       }
     });
 
-    TextButton inventoryButton = new TextButton("[CYAN]I[LIGHT_GRAY] Inventory", main.skin);
+    TextButton inventoryButton = new TextButton(
+        "[DARK_GRAY][ [CYAN]I[DARK_GRAY] ][WHITE]nventory", main.skin
+    );
     inventoryButton.pad(5);
     inventoryButton.addListener(new ClickListener() {
       @Override
@@ -92,7 +96,9 @@ public class HudRenderer {
       }
     });
 
-    TextButton helpButton = new TextButton("[CYAN]?[LIGHT_GRAY] Help", main.skin);
+    TextButton helpButton = new TextButton(
+        "[DARK_GRAY][ [CYAN]?[DARK_GRAY] ][WHITE] Help", main.skin
+    );
     helpButton.pad(5);
     helpButton.addListener(new ClickListener() {
       @Override
@@ -200,8 +206,6 @@ public class HudRenderer {
         )
     );
 
-    areaDetails.addActor(new Label("[DARK_GRAY]-----[]", main.skin));
-
     // Enemies visible in area
 
     ImmutableArray<Entity> enemies =
@@ -211,7 +215,7 @@ public class HudRenderer {
       if (main.entityHelpers.isVisibleToPlayer(enemy)) {
         AttributesComponent enemyAttributes = ComponentMappers.attributes.get(enemy);
 
-        areaDetails.addActor(new Label(enemyAttributes.name, main.skin));
+        areaDetails.addActor(new Label("[RED]" + enemyAttributes.name + "[]", main.skin));
 
         String enemyHealthColor;
 
