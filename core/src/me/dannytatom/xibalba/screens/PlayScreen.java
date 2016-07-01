@@ -13,8 +13,8 @@ import me.dannytatom.xibalba.HudRenderer;
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.PlayerInput;
 import me.dannytatom.xibalba.WorldRenderer;
-import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
+import me.dannytatom.xibalba.utils.ComponentMappers;
 
 public class PlayScreen implements Screen {
   private final Main main;
@@ -43,8 +43,7 @@ public class PlayScreen implements Screen {
     main.log = new ActionLog();
 
     // Add player entity
-    PositionComponent playerPosition = main.player.getComponent(PositionComponent.class);
-
+    PositionComponent playerPosition = ComponentMappers.position.get(main.player);
     playerPosition.pos = main.mapHelpers.getEntrancePosition();
 
     // Setup renderers
@@ -90,7 +89,7 @@ public class PlayScreen implements Screen {
       main.executeTurn = false;
     }
 
-    if (main.player.getComponent(AttributesComponent.class).health <= 0) {
+    if (ComponentMappers.attributes.get(main.player).health <= 0) {
       main.world.currentMapIndex = 0;
 
       main.getScreen().dispose();

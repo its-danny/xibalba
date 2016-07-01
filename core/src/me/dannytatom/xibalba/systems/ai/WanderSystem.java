@@ -74,8 +74,8 @@ public class WanderSystem extends SortedIteratingSystem {
   private static class EnergyComparator implements Comparator<Entity> {
     @Override
     public int compare(Entity e1, Entity e2) {
-      AttributesComponent a1 = e1.getComponent(AttributesComponent.class);
-      AttributesComponent a2 = e2.getComponent(AttributesComponent.class);
+      AttributesComponent a1 = ComponentMappers.attributes.get(e1);
+      AttributesComponent a2 = ComponentMappers.attributes.get(e2);
 
       if (a2.energy > a1.energy) {
         return 1;

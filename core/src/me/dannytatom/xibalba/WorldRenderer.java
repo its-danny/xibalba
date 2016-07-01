@@ -51,10 +51,10 @@ public class WorldRenderer {
    * Render shit.
    */
   public void render() {
-    // Get player position
-    PositionComponent playerPosition = main.player.getComponent(PositionComponent.class);
+    // Get playerDetails position
+    PositionComponent playerPosition = ComponentMappers.position.get(main.player);
 
-    // Set worldCamera to follow player
+    // Set worldCamera to follow playerDetails
     worldCamera.position.set(
         playerPosition.pos.x * Main.SPRITE_WIDTH,
         playerPosition.pos.y * Main.SPRITE_HEIGHT, 0
@@ -65,7 +65,7 @@ public class WorldRenderer {
     batch.setProjectionMatrix(worldCamera.combined);
     batch.begin();
 
-    AttributesComponent playerAttributes = main.player.getComponent(AttributesComponent.class);
+    AttributesComponent playerAttributes = ComponentMappers.attributes.get(main.player);
 
     Map map = main.world.getCurrentMap();
 
@@ -94,12 +94,12 @@ public class WorldRenderer {
     }
 
     TextureAtlas atlas = main.assets.get("sprites/main.atlas");
-    PlayerComponent player = main.player.getComponent(PlayerComponent.class);
+    PlayerComponent playerDetails = ComponentMappers.player.get(main.player);
 
-    if (player.targetingPath != null && player.target != null) {
-      for (int i = 0; i < player.targetingPath.size(); i++) {
-        GridCell cell = player.targetingPath.get(i);
-        boolean isLast = i == (player.targetingPath.size() - 1);
+    if (playerDetails.targetingPath != null && playerDetails.target != null) {
+      for (int i = 0; i < playerDetails.targetingPath.size(); i++) {
+        GridCell cell = playerDetails.targetingPath.get(i);
+        boolean isLast = i == (playerDetails.targetingPath.size() - 1);
         String spritePath = isLast ? "Level/Cave/UI/Target-Throw-1" : "Level/Cave/UI/Target-Path-1";
 
         batch.setColor(1f, 1f, 1f, isLast ? 1f : 0.5f);
@@ -109,10 +109,10 @@ public class WorldRenderer {
         );
         batch.setColor(1f, 1f, 1f, 1f);
       }
-    } else if (player.lookingPath != null && player.target != null) {
-      for (int i = 0; i < player.lookingPath.size(); i++) {
-        GridCell cell = player.lookingPath.get(i);
-        boolean isLast = i == (player.lookingPath.size() - 1);
+    } else if (playerDetails.lookingPath != null && playerDetails.target != null) {
+      for (int i = 0; i < playerDetails.lookingPath.size(); i++) {
+        GridCell cell = playerDetails.lookingPath.get(i);
+        boolean isLast = i == (playerDetails.lookingPath.size() - 1);
         String spritePath = isLast ? "Level/Cave/UI/Target-1" : "Level/Cave/UI/Target-Path-1";
 
         batch.setColor(1f, 1f, 1f, isLast ? 1f : 0.5f);

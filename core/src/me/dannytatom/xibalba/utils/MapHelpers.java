@@ -39,7 +39,7 @@ public class MapHelpers {
         && getCell(position.x, position.y) != null;
   }
 
-  public Cell getCell(int mapIndex, int cellX, int cellY) {
+  private Cell getCell(int mapIndex, int cellX, int cellY) {
     return main.world.getMap(mapIndex).getCellMap()[cellX][cellY];
   }
 
@@ -147,27 +147,29 @@ public class MapHelpers {
     NavigationGrid<GridCell> grid = new NavigationGrid<>(cells, false);
     AStarGridFinder<GridCell> finder = new AStarGridFinder<>(GridCell.class);
 
-    PlayerComponent player = main.player.getComponent(PlayerComponent.class);
+    PlayerComponent playerDetails = ComponentMappers.player.get(main.player);
 
-    if (player.target == null) {
+    if (playerDetails.target == null) {
       oldTarget = null;
-      player.target = start.cpy().add(end);
+      playerDetails.target = start.cpy().add(end);
     } else {
-      oldTarget = player.target.cpy();
-      player.target = player.target.add(end);
+      oldTarget = playerDetails.target.cpy();
+      playerDetails.target = playerDetails.target.add(end);
     }
 
-    player.targetingPath = finder.findPath(
-        (int) start.x, (int) start.y, (int) player.target.x, (int) player.target.y, grid
+    playerDetails.targetingPath = finder.findPath(
+        (int) start.x, (int) start.y,
+        (int) playerDetails.target.x, (int) playerDetails.target.y, grid
     );
 
     // TODO: Instead of 5, range should be determined by strength
-    if (player.targetingPath == null || player.targetingPath.size() > 5) {
-      player.target = oldTarget;
+    if (playerDetails.targetingPath == null || playerDetails.targetingPath.size() > 5) {
+      playerDetails.target = oldTarget;
 
-      if (player.target != null) {
-        player.targetingPath = finder.findPath(
-            (int) start.x, (int) start.y, (int) player.target.x, (int) player.target.y, grid
+      if (playerDetails.target != null) {
+        playerDetails.targetingPath = finder.findPath(
+            (int) start.x, (int) start.y,
+            (int) playerDetails.target.x, (int) playerDetails.target.y, grid
         );
       }
     }
@@ -204,26 +206,28 @@ public class MapHelpers {
     NavigationGrid<GridCell> grid = new NavigationGrid<>(cells, false);
     AStarGridFinder<GridCell> finder = new AStarGridFinder<>(GridCell.class);
 
-    PlayerComponent player = main.player.getComponent(PlayerComponent.class);
+    PlayerComponent playerDetails = ComponentMappers.player.get(main.player);
 
-    if (player.target == null) {
+    if (playerDetails.target == null) {
       oldTarget = null;
-      player.target = start.cpy().add(end);
+      playerDetails.target = start.cpy().add(end);
     } else {
-      oldTarget = player.target.cpy();
-      player.target = player.target.add(end);
+      oldTarget = playerDetails.target.cpy();
+      playerDetails.target = playerDetails.target.add(end);
     }
 
-    player.lookingPath = finder.findPath(
-        (int) start.x, (int) start.y, (int) player.target.x, (int) player.target.y, grid
+    playerDetails.lookingPath = finder.findPath(
+        (int) start.x, (int) start.y,
+        (int) playerDetails.target.x, (int) playerDetails.target.y, grid
     );
 
-    if (player.lookingPath == null) {
-      player.target = oldTarget;
+    if (playerDetails.lookingPath == null) {
+      playerDetails.target = oldTarget;
 
-      if (player.target != null) {
-        player.lookingPath = finder.findPath(
-            (int) start.x, (int) start.y, (int) player.target.x, (int) player.target.y, grid
+      if (playerDetails.target != null) {
+        playerDetails.lookingPath = finder.findPath(
+            (int) start.x, (int) start.y,
+            (int) playerDetails.target.x, (int) playerDetails.target.y, grid
         );
       }
     }
@@ -238,8 +242,8 @@ public class MapHelpers {
    * @return Whether or not they are
    */
   public boolean isNearPlayer(Entity entity, int radius) {
-    PositionComponent playerPosition = main.player.getComponent(PositionComponent.class);
-    PositionComponent entityPosition = entity.getComponent(PositionComponent.class);
+    PositionComponent playerPosition = ComponentMappers.position.get(main.player);
+    PositionComponent entityPosition = ComponentMappers.position.get(entity);
 
     return (entityPosition.pos.x == playerPosition.pos.x - radius
         || entityPosition.pos.x == playerPosition.pos.x
@@ -255,9 +259,7 @@ public class MapHelpers {
    * @return Player position
    */
   public Vector2 getEmptySpaceNearPlayer() {
-    return getEmptySpaceNearEntity(
-        main.player.getComponent(PositionComponent.class).pos
-    );
+    return getEmptySpaceNearEntity(ComponentMappers.position.get(main.player).pos);
   }
 
   /**
@@ -283,12 +285,17 @@ public class MapHelpers {
     return position;
   }
 
+  /**
+   * Get position of entrance.
+   *
+   * @return The position
+   */
   public Vector2 getEntrancePosition() {
     ImmutableArray<Entity> entrances =
         main.engine.getEntitiesFor(Family.all(EntranceComponent.class).get());
 
     for (Entity entrance : entrances) {
-      PositionComponent position = entrance.getComponent(PositionComponent.class);
+      PositionComponent position = ComponentMappers.position.get(entrance);
 
       if (position.map == main.world.currentMapIndex) {
         return position.pos;
@@ -298,12 +305,17 @@ public class MapHelpers {
     return getRandomOpenPositionOnMap(main.world.currentMapIndex);
   }
 
+  /**
+   * Get position of exit.
+   *
+   * @return The position
+   */
   public Vector2 getExitPosition() {
     ImmutableArray<Entity> exits =
         main.engine.getEntitiesFor(Family.all(ExitComponent.class).get());
 
     for (Entity exit : exits) {
-      PositionComponent position = exit.getComponent(PositionComponent.class);
+      PositionComponent position = ComponentMappers.position.get(exit);
 
       if (position.map == main.world.currentMapIndex) {
         return position.pos;
@@ -340,6 +352,15 @@ public class MapHelpers {
     return getRandomOpenPositionOnMap(main.world.currentMapIndex);
   }
 
+  /**
+   * Get count of wall neighbours.
+   *
+   * @param mapIndex Which map to check
+   * @param cellX    X position of cell we're checking around
+   * @param cellY    Y position of cell we're checking around
+   *
+   * @return Amount of wall neighbours around it
+   */
   public int getWallNeighbours(int mapIndex, int cellX, int cellY) {
     int count = 0;
 

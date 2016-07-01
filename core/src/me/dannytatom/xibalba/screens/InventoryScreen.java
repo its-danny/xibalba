@@ -12,9 +12,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.utils.Array;
 import me.dannytatom.xibalba.Main;
-import me.dannytatom.xibalba.components.AttributesComponent;
-import me.dannytatom.xibalba.components.InventoryComponent;
 import me.dannytatom.xibalba.components.ItemComponent;
+import me.dannytatom.xibalba.utils.ComponentMappers;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -36,7 +35,7 @@ public class InventoryScreen implements Screen {
   public InventoryScreen(Main main) {
     this.main = main;
 
-    items = main.player.getComponent(InventoryComponent.class).items;
+    items = ComponentMappers.inventory.get(main.player).items;
 
     stage = new Stage();
 
@@ -85,7 +84,7 @@ public class InventoryScreen implements Screen {
     }
 
     if (items.size() >= 1) {
-      ItemComponent item = items.get(selected).getComponent(ItemComponent.class);
+      ItemComponent item = ComponentMappers.item.get(items.get(selected));
 
       if (Gdx.input.isKeyJustPressed(Input.Keys.H) && item.actions.get("canHold")) {
         main.equipmentHelpers.holdItem(main.player, items.get(selected));
@@ -96,7 +95,7 @@ public class InventoryScreen implements Screen {
       }
 
       if (Gdx.input.isKeyJustPressed(Input.Keys.T) && item.actions.get("canThrow")) {
-        items.get(selected).getComponent(ItemComponent.class).throwing = true;
+        item.throwing = true;
 
         main.state = Main.State.TARGETING;
         main.setScreen(main.playScreen);
@@ -135,7 +134,7 @@ public class InventoryScreen implements Screen {
   private VerticalGroup createHeader() {
     String header = "[DARK_GRAY][ ";
     header += "[CYAN]1[LIGHT_GRAY] ";
-    header += main.player.getComponent(AttributesComponent.class).name;
+    header += ComponentMappers.attributes.get(main.player).name;
     header += "[DARK_GRAY] | ";
     header += "[CYAN]2[WHITE] Inventory";
     header += "[DARK_GRAY] | ";
@@ -153,7 +152,7 @@ public class InventoryScreen implements Screen {
 
     for (int i = 0; i < items.size(); i++) {
       Entity entity = items.get(i);
-      ItemComponent item = entity.getComponent(ItemComponent.class);
+      ItemComponent item = ComponentMappers.item.get(entity);
 
       String name;
 

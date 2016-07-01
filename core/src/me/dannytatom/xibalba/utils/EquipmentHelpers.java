@@ -18,9 +18,9 @@ public class EquipmentHelpers {
    * @return Whether or not it's equipped
    */
   public boolean isEquipped(Entity entity, Entity item) {
-    EquipmentComponent equipmentComponent = entity.getComponent(EquipmentComponent.class);
+    EquipmentComponent equipment = ComponentMappers.equipment.get(entity);
 
-    return equipmentComponent.slots.containsValue(item);
+    return equipment.slots.containsValue(item);
   }
 
   /**
@@ -31,7 +31,7 @@ public class EquipmentHelpers {
    * @return Location of item
    */
   public String getLocation(Entity item) {
-    return item.getComponent(ItemComponent.class).location;
+    return ComponentMappers.item.get(item).location;
   }
 
   /**
@@ -41,11 +41,11 @@ public class EquipmentHelpers {
    * @param item   The item itself
    */
   public void holdItem(Entity entity, Entity item) {
-    ItemComponent itemComponent = item.getComponent(ItemComponent.class);
-    EquipmentComponent equipmentComponent = entity.getComponent(EquipmentComponent.class);
+    ItemComponent itemDetails = ComponentMappers.item.get(item);
+    EquipmentComponent equipment = ComponentMappers.equipment.get(entity);
 
-    if (itemComponent.actions.get("canHold")) {
-      equipmentComponent.slots.put("right hand", item);
+    if (itemDetails.actions.get("canHold")) {
+      equipment.slots.put("right hand", item);
     }
   }
 
@@ -56,10 +56,10 @@ public class EquipmentHelpers {
    * @param item   The item itself
    */
   public void wearItem(Entity entity, Entity item) {
-    EquipmentComponent equipmentComponent = entity.getComponent(EquipmentComponent.class);
-    ItemComponent itemComponent = item.getComponent(ItemComponent.class);
+    EquipmentComponent equipment = ComponentMappers.equipment.get(entity);
+    ItemComponent itemDetails = ComponentMappers.item.get(item);
 
-    equipmentComponent.slots.put(itemComponent.location, item);
+    equipment.slots.put(itemDetails.location, item);
   }
 
   /**
@@ -69,17 +69,17 @@ public class EquipmentHelpers {
    * @param item   The item itself
    */
   public void removeItem(Entity entity, Entity item) {
-    EquipmentComponent equipmentComponent = entity.getComponent(EquipmentComponent.class);
-    ItemComponent itemComponent = item.getComponent(ItemComponent.class);
+    EquipmentComponent equipment = ComponentMappers.equipment.get(entity);
+    ItemComponent itemDetails = ComponentMappers.item.get(item);
 
-    if (equipmentComponent.slots.get("right hand") == item) {
-      equipmentComponent.slots.put("right hand", null);
+    if (equipment.slots.get("right hand") == item) {
+      equipment.slots.put("right hand", null);
     } else {
-      equipmentComponent.slots.put(itemComponent.location, null);
+      equipment.slots.put(itemDetails.location, null);
     }
   }
 
   public Entity getPrimaryWeapon(Entity entity) {
-    return entity.getComponent(EquipmentComponent.class).slots.get("right hand");
+    return ComponentMappers.equipment.get(entity).slots.get("right hand");
   }
 }

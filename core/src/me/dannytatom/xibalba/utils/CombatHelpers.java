@@ -11,7 +11,6 @@ import me.dannytatom.xibalba.components.BodyComponent;
 import me.dannytatom.xibalba.components.DecorationComponent;
 import me.dannytatom.xibalba.components.EquipmentComponent;
 import me.dannytatom.xibalba.components.ItemComponent;
-import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.SkillsComponent;
 import me.dannytatom.xibalba.components.VisualComponent;
@@ -59,7 +58,7 @@ public class CombatHelpers {
    * @param bodyPart Where ya hitting them at
    */
   public void preparePlayerForMelee(Entity enemy, String bodyPart) {
-    AttributesComponent attributes = main.player.getComponent(AttributesComponent.class);
+    AttributesComponent attributes = ComponentMappers.attributes.get(main.player);
 
     if (attributes.energy >= MeleeComponent.COST) {
       main.player.add(new MeleeComponent(enemy, bodyPart));
@@ -73,7 +72,7 @@ public class CombatHelpers {
    * @param bodyPart Where you trying to hit em
    */
   public void preparePlayerForThrowing(Vector2 position, String bodyPart) {
-    AttributesComponent attributes = main.player.getComponent(AttributesComponent.class);
+    AttributesComponent attributes = ComponentMappers.attributes.get(main.player);
 
     if (attributes.energy >= RangeComponent.COST) {
       Entity item = main.inventoryHelpers.getThrowingItem(main.player);
@@ -89,46 +88,52 @@ public class CombatHelpers {
    * @param bodyPart Where you trying to hit em
    */
   public void preparePlayerForRanged(Vector2 position, String bodyPart) {
-    AttributesComponent attributes = main.player.getComponent(AttributesComponent.class);
+    AttributesComponent attributes = ComponentMappers.attributes.get(main.player);
 
     if (attributes.energy >= RangeComponent.COST) {
       Entity primaryWeapon = main.equipmentHelpers.getPrimaryWeapon(main.player);
+      ItemComponent primaryWeaponDetails = ComponentMappers.item.get(primaryWeapon);
 
       Entity item = main.inventoryHelpers.getAmmunitionOfType(
-          main.player, primaryWeapon.getComponent(ItemComponent.class).ammunitionType
+          main.player, primaryWeaponDetails.ammunitionType
       );
 
-      String skill = primaryWeapon.getComponent(ItemComponent.class).skill;
-
-      main.player.add(new RangeComponent(position, item, skill, bodyPart));
+      main.player.add(new RangeComponent(position, item, primaryWeaponDetails.skill, bodyPart));
     }
   }
 
   /**
-   * Get combined toughness from all the items they're wearing.
+   * Entity's toughness + armor defense.
    *
-   * @param entity Who we're getting toughness of
+   * @param entity Who we're getting defense of
    *
-   * @return Their combined toughness
+   * @return Their combined defense
    */
   private int getCombinedDefense(Entity entity) {
-    AttributesComponent attributes = entity.getComponent(AttributesComponent.class);
+    AttributesComponent attributes = ComponentMappers.attributes.get(entity);
 
     return MathUtils.random(1, attributes.toughness) + getArmorDefense(entity);
   }
 
+  /**
+   * Just armor defense.
+   *
+   * @param entity Who we're getting defense of
+   *
+   * @return Their armor defense
+   */
   public int getArmorDefense(Entity entity) {
-    EquipmentComponent equipment = entity.getComponent(EquipmentComponent.class);
+    EquipmentComponent equipment = ComponentMappers.equipment.get(entity);
 
     int defense = 0;
 
     if (equipment != null) {
       for (Entity item : equipment.slots.values()) {
         if (item != null) {
-          ItemComponent itemComponent = item.getComponent(ItemComponent.class);
+          ItemComponent itemDetails = ComponentMappers.item.get(item);
 
-          if (Objects.equals(itemComponent.type, "armor")) {
-            defense += item.getComponent(ItemComponent.class).attributes.get("defense");
+          if (Objects.equals(itemDetails.type, "armor")) {
+            defense += itemDetails.attributes.get("defense");
           }
         }
       }
@@ -146,7 +151,7 @@ public class CombatHelpers {
   public void melee(Entity starter, Entity target, String bodyPart) {
     Entity weapon = null;
 
-    if (starter.getComponent(EquipmentComponent.class) != null) {
+    if (ComponentMappers.equipment.get(starter) != null) {
       weapon = main.equipmentHelpers.getPrimaryWeapon(starter);
     }
 
@@ -157,20 +162,20 @@ public class CombatHelpers {
       skillName = "unarmed";
       verb = "hit";
     } else {
-      ItemComponent weaponItem = weapon.getComponent(ItemComponent.class);
+      ItemComponent weaponItem = ComponentMappers.item.get(weapon);
 
       skillName = weaponItem.skill;
       verb = weaponItem.verbs.get(MathUtils.random(0, weaponItem.verbs.size() - 1));
     }
 
-    SkillsComponent skills = starter.getComponent(SkillsComponent.class);
+    SkillsComponent skills = ComponentMappers.skills.get(starter);
 
     int skillLevel = skills.levels.get(skillName);
-    BodyComponent body = target.getComponent(BodyComponent.class);
+    BodyComponent body = ComponentMappers.body.get(target);
 
     int hit = determineHit(skillLevel, body.parts.get(bodyPart));
 
-    AttributesComponent starterAttributes = starter.getComponent(AttributesComponent.class);
+    AttributesComponent starterAttributes = ComponentMappers.attributes.get(starter);
 
     if (hit >= 4) {
       int strengthRoll = MathUtils.random(1, starterAttributes.strength);
@@ -178,7 +183,7 @@ public class CombatHelpers {
       int critRoll = 0;
 
       if (weapon != null) {
-        ItemComponent weaponItem = weapon.getComponent(ItemComponent.class);
+        ItemComponent weaponItem = ComponentMappers.item.get(weapon);
         weaponRoll = MathUtils.random(1, weaponItem.attributes.get("hitDamage"));
       }
 
@@ -195,7 +200,7 @@ public class CombatHelpers {
 
       main.skillHelpers.levelSkill(starter, skillName, skillLevelAmount);
     } else {
-      AttributesComponent targetAttributes = target.getComponent(AttributesComponent.class);
+      AttributesComponent targetAttributes = ComponentMappers.attributes.get(target);
 
       main.log.add(
           starterAttributes.name + " tried to hit " + targetAttributes.name + " but missed"
@@ -211,8 +216,8 @@ public class CombatHelpers {
    * @param item    What they're being hit with
    */
   public void range(Entity starter, Entity target, String bodyPart, Entity item, String skill) {
-    SkillsComponent skills = starter.getComponent(SkillsComponent.class);
-    ItemComponent itemComponent = item.getComponent(ItemComponent.class);
+    SkillsComponent skills = ComponentMappers.skills.get(starter);
+    ItemComponent itemDetails = ComponentMappers.item.get(item);
 
     Gdx.app.log("CombatHelpers", "range");
 
@@ -222,25 +227,25 @@ public class CombatHelpers {
       verb = "hit";
     } else {
       ItemComponent firingWeapon =
-          main.equipmentHelpers.getPrimaryWeapon(starter).getComponent(ItemComponent.class);
+          ComponentMappers.item.get(main.equipmentHelpers.getPrimaryWeapon(starter));
       verb = firingWeapon.verbs.get(MathUtils.random(0, firingWeapon.verbs.size() - 1));
     }
 
     int skillLevel = skills.levels.get(skill);
-    BodyComponent body = target.getComponent(BodyComponent.class);
+    BodyComponent body = ComponentMappers.body.get(target);
 
     int hit = determineHit(skillLevel, body.parts.get(bodyPart));
 
-    AttributesComponent starterAttributes = starter.getComponent(AttributesComponent.class);
+    AttributesComponent starterAttributes = ComponentMappers.attributes.get(starter);
 
     if (hit >= 4) {
       int weaponRoll;
       int critRoll = 0;
 
       if (Objects.equals(skill, "throwing")) {
-        weaponRoll = MathUtils.random(1, itemComponent.attributes.get("throwDamage"));
+        weaponRoll = MathUtils.random(1, itemDetails.attributes.get("throwDamage"));
       } else {
-        weaponRoll = MathUtils.random(1, itemComponent.attributes.get("hitDamage"));
+        weaponRoll = MathUtils.random(1, itemDetails.attributes.get("hitDamage"));
       }
 
       int skillLevelAmount = 20;
@@ -256,7 +261,7 @@ public class CombatHelpers {
 
       main.skillHelpers.levelSkill(starter, skill, skillLevelAmount);
     } else {
-      AttributesComponent targetAttributes = target.getComponent(AttributesComponent.class);
+      AttributesComponent targetAttributes = ComponentMappers.attributes.get(target);
 
       main.log.add(
           starterAttributes.name + " tried to hit " + targetAttributes.name + " but missed"
@@ -285,8 +290,8 @@ public class CombatHelpers {
 
   private void applyDamage(Entity starter, Entity target, int damage,
                            String verb, String bodyPart) {
-    AttributesComponent starterAttributes = starter.getComponent(AttributesComponent.class);
-    AttributesComponent targetAttributes = target.getComponent(AttributesComponent.class);
+    AttributesComponent starterAttributes = ComponentMappers.attributes.get(starter);
+    AttributesComponent targetAttributes = ComponentMappers.attributes.get(target);
 
     int totalDamage = damage - getCombinedDefense(target);
 
@@ -309,7 +314,7 @@ public class CombatHelpers {
       Entity remains = new Entity();
       remains.add(new DecorationComponent());
       remains.add(new PositionComponent(
-          main.world.currentMapIndex, target.getComponent(PositionComponent.class).pos
+          main.world.currentMapIndex, ComponentMappers.position.get(target).pos
       ));
       remains.add(new VisualComponent(
           atlas.createSprite("Level/Cave/Environment/Object/Remains-1")
@@ -318,7 +323,7 @@ public class CombatHelpers {
       main.engine.addEntity(remains);
       main.engine.removeEntity(target);
 
-      if (starter.getComponent(PlayerComponent.class) != null) {
+      if (ComponentMappers.player.get(starter) != null) {
         main.log.add("[GREEN]You killed " + targetAttributes.name + "!");
       } else {
         main.log.add("[RED]You have been killed by " + starterAttributes.name);

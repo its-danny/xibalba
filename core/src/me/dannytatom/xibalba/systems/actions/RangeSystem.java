@@ -4,7 +4,6 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.components.AttributesComponent;
-import me.dannytatom.xibalba.components.ItemComponent;
 import me.dannytatom.xibalba.components.actions.RangeComponent;
 import me.dannytatom.xibalba.systems.ActionSystem;
 import me.dannytatom.xibalba.utils.ComponentMappers;
@@ -38,7 +37,7 @@ public class RangeSystem extends ActionSystem {
       }
 
       if (Objects.equals(range.skill, "throwing")) {
-        range.item.getComponent(ItemComponent.class).throwing = false;
+        ComponentMappers.item.get(range.item).throwing = false;
         main.inventoryHelpers.dropItem(entity, range.item, range.position);
       } else {
         if (target == null) {

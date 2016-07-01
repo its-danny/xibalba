@@ -10,6 +10,7 @@ import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.components.MouseMovementComponent;
 import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.actions.MovementComponent;
+import me.dannytatom.xibalba.utils.ComponentMappers;
 import org.xguzm.pathfinding.grid.GridCell;
 
 import java.util.ArrayList;
@@ -35,23 +36,23 @@ public class MouseMovementSystem extends EntitySystem {
    */
   public void update(float deltaTime) {
     for (Entity entity : entities) {
-      PlayerComponent player = main.player.getComponent(PlayerComponent.class);
+      PlayerComponent playerDetails = ComponentMappers.player.get(main.player);
 
       // Remove mouse movement component once path is empty
-      if (player.lookingPath == null || player.lookingPath.isEmpty()) {
+      if (playerDetails.lookingPath == null || playerDetails.lookingPath.isEmpty()) {
         entity.remove(MouseMovementComponent.class);
         main.state = Main.State.PLAYING;
       } else {
         // Start walking.
         // If the path becomes blocked, reset the path.
-        GridCell cell = player.lookingPath.get(0);
+        GridCell cell = playerDetails.lookingPath.get(0);
 
         entity.add(new MovementComponent(new Vector2(cell.getX(), cell.getY())));
 
-        List<GridCell> newPath = new ArrayList<>(player.lookingPath);
+        List<GridCell> newPath = new ArrayList<>(playerDetails.lookingPath);
         newPath.remove(cell);
 
-        player.lookingPath = newPath;
+        playerDetails.lookingPath = newPath;
       }
     }
   }

@@ -2,7 +2,6 @@ package me.dannytatom.xibalba.utils;
 
 import com.badlogic.ashley.core.Entity;
 import me.dannytatom.xibalba.Main;
-import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.SkillsComponent;
 
 public class SkillHelpers {
@@ -20,7 +19,7 @@ public class SkillHelpers {
    * @param amount How much we're giving 'em
    */
   public void levelSkill(Entity entity, String skill, int amount) {
-    SkillsComponent skills = entity.getComponent(SkillsComponent.class);
+    SkillsComponent skills = ComponentMappers.skills.get(entity);
 
     skills.counters.put(skill, skills.counters.get(skill) + amount);
 
@@ -31,7 +30,7 @@ public class SkillHelpers {
       skills.levels.put(skill, skillLevel == 0 ? 4 : skillLevel + 2);
       skills.counters.put(skill, 0);
 
-      if (entity.getComponent(PlayerComponent.class) != null) {
+      if (ComponentMappers.player.get(entity) != null) {
         main.log.add("[YELLOW]You feel better at " + skill);
       }
     }

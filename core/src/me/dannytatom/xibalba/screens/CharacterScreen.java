@@ -12,8 +12,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.components.AttributesComponent;
-import me.dannytatom.xibalba.components.ItemComponent;
 import me.dannytatom.xibalba.components.SkillsComponent;
+import me.dannytatom.xibalba.utils.ComponentMappers;
 
 public class CharacterScreen implements Screen {
   private final Main main;
@@ -83,7 +83,7 @@ public class CharacterScreen implements Screen {
   private VerticalGroup createHeader() {
     String header = "[DARK_GRAY][ ";
     header += "[CYAN]1[WHITE] ";
-    header += main.player.getComponent(AttributesComponent.class).name;
+    header += ComponentMappers.attributes.get(main.player).name;
     header += "[DARK_GRAY] | ";
     header += "[CYAN]2[LIGHT_GRAY] Inventory";
     header += "[DARK_GRAY] | ";
@@ -98,7 +98,7 @@ public class CharacterScreen implements Screen {
 
   private VerticalGroup createStats() {
     VerticalGroup group = new VerticalGroup().left();
-    AttributesComponent attrs = main.player.getComponent(AttributesComponent.class);
+    AttributesComponent attrs = ComponentMappers.attributes.get(main.player);
 
     // Health
 
@@ -138,7 +138,7 @@ public class CharacterScreen implements Screen {
     Entity primaryWeapon = main.equipmentHelpers.getPrimaryWeapon(main.player);
 
     if (primaryWeapon != null) {
-      damage = primaryWeapon.getComponent(ItemComponent.class).attributes.get("hitDamage");
+      damage = ComponentMappers.item.get(primaryWeapon).attributes.get("hitDamage");
     }
 
     group.addActor(
@@ -158,7 +158,7 @@ public class CharacterScreen implements Screen {
   private VerticalGroup createSkills() {
     VerticalGroup group = new VerticalGroup().left();
 
-    SkillsComponent skills = this.main.player.getComponent(SkillsComponent.class);
+    SkillsComponent skills = ComponentMappers.skills.get(main.player);
 
     if (skills.levels.get("unarmed") > 0) {
       group.addActor(skillLine("Unarmed", skills.levels.get("unarmed")));

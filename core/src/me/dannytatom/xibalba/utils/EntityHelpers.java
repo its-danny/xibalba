@@ -129,15 +129,15 @@ public class EntityHelpers {
    */
   public Entity spawnItem(String type, int map, Vector2 position) {
     TextureAtlas atlas = main.assets.get("sprites/main.atlas");
-    ItemComponent itemComponent = (new Json()).fromJson(ItemComponent.class,
+    ItemComponent itemDetails = (new Json()).fromJson(ItemComponent.class,
         Gdx.files.internal("data/items/" + type + ".json"));
 
     Entity entity = new Entity();
 
-    entity.add(itemComponent);
+    entity.add(itemDetails);
     entity.add(new PositionComponent(map, position));
     entity.add(new VisualComponent(
-        atlas.createSprite(itemComponent.visual.get("sprites").random())
+        atlas.createSprite(itemDetails.visual.get("sprites").random())
     ));
 
     return entity;
@@ -236,19 +236,19 @@ public class EntityHelpers {
   }
 
   public boolean isEnemy(Entity entity) {
-    return entity != null && entity.getComponent(EnemyComponent.class) != null;
+    return entity != null && ComponentMappers.enemy.get(entity) != null;
   }
 
   public boolean isItem(Entity entity) {
-    return entity != null && entity.getComponent(ItemComponent.class) != null;
+    return entity != null && ComponentMappers.item.get(entity) != null;
   }
 
   public boolean isEntrance(Entity entity) {
-    return entity != null && entity.getComponent(EntranceComponent.class) != null;
+    return entity != null && ComponentMappers.entrance.get(entity) != null;
   }
 
   public boolean isExit(Entity entity) {
-    return entity != null && entity.getComponent(ExitComponent.class) != null;
+    return entity != null && ComponentMappers.exit.get(entity) != null;
   }
 
   /**
@@ -259,11 +259,11 @@ public class EntityHelpers {
    * @return Whether or not it's visible
    */
   public boolean isVisible(Entity entity) {
-    PositionComponent positionComponent = entity.getComponent(PositionComponent.class);
+    PositionComponent entityPosition = ComponentMappers.position.get(entity);
 
-    return positionComponent != null
-        && positionComponent.map == main.world.currentMapIndex
-        && !main.mapHelpers.getCell(positionComponent.pos.x, positionComponent.pos.y).hidden;
+    return entityPosition != null
+        && entityPosition.map == main.world.currentMapIndex
+        && !main.mapHelpers.getCell(entityPosition.pos.x, entityPosition.pos.y).hidden;
   }
 
   /**
@@ -274,8 +274,8 @@ public class EntityHelpers {
    * @return Whether we're near the player or not
    */
   public boolean isNearPlayer(Entity entity) {
-    PositionComponent entityPosition = entity.getComponent(PositionComponent.class);
-    PositionComponent playerPosition = main.player.getComponent(PositionComponent.class);
+    PositionComponent entityPosition = ComponentMappers.position.get(entity);
+    PositionComponent playerPosition = ComponentMappers.position.get(main.player);
 
     return entityPosition.map == playerPosition.map
         && entityPosition.pos.x <= playerPosition.pos.x + 1
@@ -293,8 +293,8 @@ public class EntityHelpers {
    * @return Can they see the player?
    */
   public boolean canSeePlayer(Entity entity, int distance) {
-    PositionComponent entityPosition = entity.getComponent(PositionComponent.class);
-    PositionComponent playerPosition = main.player.getComponent(PositionComponent.class);
+    PositionComponent entityPosition = ComponentMappers.position.get(entity);
+    PositionComponent playerPosition = ComponentMappers.position.get(main.player);
 
     if (entityPosition.map != playerPosition.map) {
       return false;
@@ -315,9 +315,9 @@ public class EntityHelpers {
    * @return Whether or not it's visible to the player
    */
   public boolean isVisibleToPlayer(Entity entity) {
-    PositionComponent enemyPosition = entity.getComponent(PositionComponent.class);
-    PositionComponent playerPosition = main.player.getComponent(PositionComponent.class);
-    AttributesComponent playerAttributes = main.player.getComponent(AttributesComponent.class);
+    PositionComponent enemyPosition = ComponentMappers.position.get(entity);
+    PositionComponent playerPosition = ComponentMappers.position.get(main.player);
+    AttributesComponent playerAttributes = ComponentMappers.attributes.get(main.player);
 
     if (enemyPosition.map != playerPosition.map) {
       return false;
@@ -346,10 +346,10 @@ public class EntityHelpers {
         );
 
     for (Entity entity : entities) {
-      PositionComponent positionComponent = entity.getComponent(PositionComponent.class);
+      PositionComponent entityPosition = ComponentMappers.position.get(entity);
 
-      if (positionComponent.map == main.world.currentMapIndex
-          && positionComponent.pos.epsilonEquals(position, 0.00001f)) {
+      if (entityPosition.map == main.world.currentMapIndex
+          && entityPosition.pos.epsilonEquals(position, 0.00001f)) {
         return entity;
       }
     }
@@ -369,10 +369,10 @@ public class EntityHelpers {
         main.engine.getEntitiesFor(Family.all(EnemyComponent.class).get());
 
     for (Entity entity : entities) {
-      PositionComponent positionComponent = entity.getComponent(PositionComponent.class);
+      PositionComponent entityPosition = ComponentMappers.position.get(entity);
 
-      if (positionComponent.map == main.world.currentMapIndex
-          && positionComponent.pos.epsilonEquals(position, 0.00001f)) {
+      if (entityPosition.map == main.world.currentMapIndex
+          && entityPosition.pos.epsilonEquals(position, 0.00001f)) {
         return entity;
       }
     }
@@ -392,10 +392,10 @@ public class EntityHelpers {
         main.engine.getEntitiesFor(Family.all(ItemComponent.class, PositionComponent.class).get());
 
     for (Entity entity : entities) {
-      PositionComponent positionComponent = entity.getComponent(PositionComponent.class);
+      PositionComponent entityPosition = ComponentMappers.position.get(entity);
 
-      if (positionComponent.map == main.world.currentMapIndex
-          && positionComponent.pos.epsilonEquals(position, 0.00001f)) {
+      if (entityPosition.map == main.world.currentMapIndex
+          && entityPosition.pos.epsilonEquals(position, 0.00001f)) {
         return entity;
       }
     }

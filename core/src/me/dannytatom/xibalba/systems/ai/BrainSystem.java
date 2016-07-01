@@ -110,7 +110,7 @@ public class BrainSystem extends SortedIteratingSystem {
   private void handleTarget(Entity entity) {
     AttributesComponent attributes = ComponentMappers.attributes.get(entity);
     TargetComponent target = ComponentMappers.target.get(entity);
-    Vector2 playerPosition = main.player.getComponent(PositionComponent.class).pos;
+    Vector2 playerPosition = ComponentMappers.position.get(main.player).pos;
 
     if (main.entityHelpers.isNearPlayer(entity)) {
       if (attributes.energy >= MeleeComponent.COST) {
@@ -156,7 +156,7 @@ public class BrainSystem extends SortedIteratingSystem {
   }
 
   private void switchToWaiting(Entity entity) {
-    entity.getComponent(BrainComponent.class).state = BrainComponent.State.WAITING;
+    ComponentMappers.brain.get(entity).state = BrainComponent.State.WAITING;
 
     entity.remove(WanderComponent.class);
     entity.remove(TargetComponent.class);
@@ -164,7 +164,7 @@ public class BrainSystem extends SortedIteratingSystem {
   }
 
   private void switchToWander(Entity entity) {
-    BrainComponent brain = entity.getComponent(BrainComponent.class);
+    BrainComponent brain = ComponentMappers.brain.get(entity);
 
     if (brain.state == BrainComponent.State.TARGETING) {
       brain.path = null;
@@ -178,7 +178,7 @@ public class BrainSystem extends SortedIteratingSystem {
   }
 
   private void switchToTarget(Entity entity, Vector2 target) {
-    BrainComponent brain = entity.getComponent(BrainComponent.class);
+    BrainComponent brain = ComponentMappers.brain.get(entity);
 
     if (brain.state == BrainComponent.State.WANDERING) {
       brain.path = null;
@@ -192,7 +192,7 @@ public class BrainSystem extends SortedIteratingSystem {
   }
 
   private void switchToAttack(Entity entity) {
-    BrainComponent brain = entity.getComponent(BrainComponent.class);
+    BrainComponent brain = ComponentMappers.brain.get(entity);
 
     brain.path = null;
     brain.state = BrainComponent.State.ATTACKING;
@@ -205,8 +205,8 @@ public class BrainSystem extends SortedIteratingSystem {
   private static class EnergyComparator implements Comparator<Entity> {
     @Override
     public int compare(Entity e1, Entity e2) {
-      AttributesComponent a1 = e1.getComponent(AttributesComponent.class);
-      AttributesComponent a2 = e2.getComponent(AttributesComponent.class);
+      AttributesComponent a1 = ComponentMappers.attributes.get(e1);
+      AttributesComponent a2 = ComponentMappers.attributes.get(e2);
 
       if (a2.energy > a1.energy) {
         return 1;

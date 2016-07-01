@@ -10,7 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import me.dannytatom.xibalba.Main;
-import me.dannytatom.xibalba.components.AttributesComponent;
+import me.dannytatom.xibalba.utils.ComponentMappers;
 
 public class HelpScreen implements Screen {
   private final Main main;
@@ -78,7 +78,7 @@ public class HelpScreen implements Screen {
   private VerticalGroup createHeader() {
     String header = "[DARK_GRAY][ ";
     header += "[CYAN]1[LIGHT_GRAY] ";
-    header += main.player.getComponent(AttributesComponent.class).name;
+    header += ComponentMappers.attributes.get(main.player).name;
     header += "[DARK_GRAY] | ";
     header += "[CYAN]2[LIGHT_GRAY] Inventory";
     header += "[DARK_GRAY] | ";

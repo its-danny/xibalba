@@ -6,7 +6,6 @@ import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.components.EquipmentComponent;
 import me.dannytatom.xibalba.components.InventoryComponent;
 import me.dannytatom.xibalba.components.ItemComponent;
-import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
 
 import java.util.ArrayList;
@@ -26,22 +25,22 @@ public class InventoryHelpers {
    * @param item   The item itself
    */
   public void addItem(Entity entity, Entity item) {
-    if (entity.getComponent(InventoryComponent.class) != null) {
-      InventoryComponent inventoryComponent = entity.getComponent(InventoryComponent.class);
+    InventoryComponent inventory = ComponentMappers.inventory.get(entity);
 
-      if (inventoryComponent.items.size() < 10) {
+    if (inventory != null) {
+      if (inventory.items.size() < 10) {
         item.remove(PositionComponent.class);
-        inventoryComponent.items.add(item);
+        inventory.items.add(item);
 
-        EquipmentComponent equipmentComponent = entity.getComponent(EquipmentComponent.class);
-        ItemComponent itemComponent = item.getComponent(ItemComponent.class);
+        EquipmentComponent equipment = ComponentMappers.equipment.get(entity);
+        ItemComponent itemDetails = ComponentMappers.item.get(item);
 
-        main.log.add("You picked up a " + itemComponent.name);
+        main.log.add("You picked up a " + itemDetails.name);
 
-        if (Objects.equals(itemComponent.type, "weapon")
-            && equipmentComponent.slots.get("right hand") == null) {
+        if (Objects.equals(itemDetails.type, "weapon")
+            && equipment.slots.get("right hand") == null) {
           main.equipmentHelpers.holdItem(entity, item);
-          main.log.add("You are now holding a " + itemComponent.name);
+          main.log.add("You are now holding a " + itemDetails.name);
         }
       }
     }
@@ -54,11 +53,11 @@ public class InventoryHelpers {
    * @param item   The shit we gonna take
    */
   public void removeItem(Entity entity, Entity item) {
-    if (entity.getComponent(InventoryComponent.class) != null) {
-      InventoryComponent inventoryComponent = entity.getComponent(InventoryComponent.class);
+    InventoryComponent inventory = ComponentMappers.inventory.get(entity);
 
+    if (ComponentMappers.inventory.get(entity) != null) {
       if (item != null) {
-        inventoryComponent.items.remove(item);
+        inventory.items.remove(item);
         main.engine.removeEntity(item);
       }
     }
@@ -72,18 +71,18 @@ public class InventoryHelpers {
    * @param position Where we gonna drop it
    */
   public void dropItem(Entity entity, Entity item, Vector2 position) {
-    if (entity.getComponent(InventoryComponent.class) != null) {
-      InventoryComponent inventoryComponent = entity.getComponent(InventoryComponent.class);
+    InventoryComponent inventory = ComponentMappers.inventory.get(entity);
 
+    if (inventory != null) {
       if (main.equipmentHelpers.isEquipped(entity, item)) {
         main.equipmentHelpers.removeItem(entity, item);
       }
 
       item.add(new PositionComponent(main.world.currentMapIndex, position));
-      inventoryComponent.items.remove(item);
+      inventory.items.remove(item);
 
-      if (entity.getComponent(PlayerComponent.class) != null) {
-        main.log.add("You dropped a " + item.getComponent(ItemComponent.class).name);
+      if (ComponentMappers.player.get(entity) != null) {
+        main.log.add("You dropped a " + ComponentMappers.item.get(item).name);
       }
     }
   }
@@ -95,8 +94,8 @@ public class InventoryHelpers {
    * @param item   What we're dropping
    */
   public void dropItem(Entity entity, Entity item) {
-    if (entity.getComponent(InventoryComponent.class) != null) {
-      dropItem(entity, item, entity.getComponent(PositionComponent.class).pos);
+    if (ComponentMappers.inventory.get(entity) != null) {
+      dropItem(entity, item, ComponentMappers.position.get(entity).pos);
     }
   }
 
@@ -108,12 +107,12 @@ public class InventoryHelpers {
    * @return The item being thrown
    */
   public Entity getThrowingItem(Entity entity) {
-    ArrayList<Entity> items = entity.getComponent(InventoryComponent.class).items;
+    ArrayList<Entity> items = ComponentMappers.inventory.get(entity).items;
 
     for (Entity item : items) {
-      ItemComponent itemComponent = item.getComponent(ItemComponent.class);
+      ItemComponent itemDetails = ComponentMappers.item.get(item);
 
-      if (itemComponent.throwing) {
+      if (itemDetails.throwing) {
         return item;
       }
     }
@@ -130,12 +129,12 @@ public class InventoryHelpers {
    * @return Whether or not they got it
    */
   public boolean hasAmmunitionOfType(Entity entity, String type) {
-    ArrayList<Entity> items = entity.getComponent(InventoryComponent.class).items;
+    ArrayList<Entity> items = ComponentMappers.inventory.get(entity).items;
 
     for (Entity item : items) {
-      ItemComponent itemComponent = item.getComponent(ItemComponent.class);
+      ItemComponent itemDetails = ComponentMappers.item.get(item);
 
-      if (Objects.equals(itemComponent.type, type)) {
+      if (Objects.equals(itemDetails.type, type)) {
         return true;
       }
     }
@@ -152,12 +151,12 @@ public class InventoryHelpers {
    * @return Some (or, well, 1) ammunition
    */
   public Entity getAmmunitionOfType(Entity entity, String type) {
-    ArrayList<Entity> items = entity.getComponent(InventoryComponent.class).items;
+    ArrayList<Entity> items = ComponentMappers.inventory.get(entity).items;
 
     for (Entity item : items) {
-      ItemComponent itemComponent = item.getComponent(ItemComponent.class);
+      ItemComponent itemDetails = ComponentMappers.item.get(item);
 
-      if (Objects.equals(itemComponent.type, type)) {
+      if (Objects.equals(itemDetails.type, type)) {
         return item;
       }
     }

@@ -5,7 +5,6 @@ import com.badlogic.ashley.core.Family;
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.MouseMovementComponent;
-import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.actions.MovementComponent;
 import me.dannytatom.xibalba.screens.PlayScreen;
@@ -42,7 +41,7 @@ public class MovementSystem extends ActionSystem {
       position.pos = movement.pos;
     } else {
       // If we can't, and the entity is the player, figure out what to do instead
-      if (entity.getComponent(PlayerComponent.class) != null) {
+      if (ComponentMappers.player.get(entity) != null) {
         Entity thing = main.entityHelpers.getEntityAt(movement.pos);
 
         if (main.entityHelpers.isItem(thing)) {
@@ -57,7 +56,6 @@ public class MovementSystem extends ActionSystem {
           main.setScreen(main.playScreen);
 
           entity.remove(MouseMovementComponent.class);
-          entity.getComponent(PositionComponent.class);
           position.map = main.world.currentMapIndex;
         } else if (main.entityHelpers.isEntrance(thing)) {
           main.world.currentMapIndex -= 1;
@@ -65,7 +63,6 @@ public class MovementSystem extends ActionSystem {
           main.setScreen(main.playScreen);
 
           entity.remove(MouseMovementComponent.class);
-          entity.getComponent(PositionComponent.class);
           position.map = main.world.currentMapIndex;
         }
       }
