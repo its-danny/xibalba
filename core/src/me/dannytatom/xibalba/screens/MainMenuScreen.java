@@ -33,7 +33,7 @@ public class MainMenuScreen implements Screen {
     stage.addActor(table);
 
     TextButton newGameButton = new TextButton(
-        "[DARK_GRAY][ [CYAN]N[DARK_GRAY] ][WHITE]ew Game", main.skin
+        "[DARK_GRAY][ [CYAN]N[DARK_GRAY] ][WHITE] New Game", main.skin
     );
     newGameButton.pad(5);
     newGameButton.addListener(new ClickListener() {
@@ -45,7 +45,7 @@ public class MainMenuScreen implements Screen {
     });
 
     TextButton quitButton = new TextButton(
-        "[DARK_GRAY][ [CYAN]Q[DARK_GRAY] ][WHITE]uit", main.skin
+        "[DARK_GRAY][ [CYAN]Q[DARK_GRAY] ][WHITE] Quit", main.skin
     );
     quitButton.pad(5);
     quitButton.addListener(new ClickListener() {

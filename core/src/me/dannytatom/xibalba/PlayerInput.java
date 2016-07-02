@@ -15,7 +15,6 @@ import me.dannytatom.xibalba.components.actions.MovementComponent;
 import me.dannytatom.xibalba.components.actions.RangeComponent;
 import me.dannytatom.xibalba.screens.CharacterScreen;
 import me.dannytatom.xibalba.screens.HelpScreen;
-import me.dannytatom.xibalba.screens.InventoryScreen;
 import me.dannytatom.xibalba.screens.PauseScreen;
 import me.dannytatom.xibalba.utils.ComponentMappers;
 
@@ -47,9 +46,6 @@ public class PlayerInput implements InputProcessor {
         break;
       case Keys.C:
         main.setScreen(new CharacterScreen(main));
-        break;
-      case Keys.I:
-        main.setScreen(new InventoryScreen(main));
         break;
       case Keys.SLASH:
         if (holdingShift) {

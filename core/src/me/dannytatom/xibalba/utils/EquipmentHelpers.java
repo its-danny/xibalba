@@ -4,6 +4,8 @@ import com.badlogic.ashley.core.Entity;
 import me.dannytatom.xibalba.components.EquipmentComponent;
 import me.dannytatom.xibalba.components.ItemComponent;
 
+import java.util.Map;
+
 public class EquipmentHelpers {
   public EquipmentHelpers() {
 
@@ -30,8 +32,16 @@ public class EquipmentHelpers {
    *
    * @return Location of item
    */
-  public String getLocation(Entity item) {
-    return ComponentMappers.item.get(item).location;
+  public String getLocation(Entity entity, Entity item) {
+    EquipmentComponent equipment = ComponentMappers.equipment.get(entity);
+
+    for (Map.Entry<String, Entity> slot : equipment.slots.entrySet()) {
+      if (slot.getValue() == item) {
+        return slot.getKey();
+      }
+    }
+
+    return null;
   }
 
   /**

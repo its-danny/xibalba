@@ -11,7 +11,7 @@ public class SkillsComponent implements Component {
   public SkillsComponent() {
     levels = new HashMap<>();
 
-    levels.put("unarmed", 6);
+    levels.put("unarmed", 12);
     levels.put("throwing", 0);
     levels.put("slashing", 6);
     levels.put("piercing", 0);

@@ -26,8 +26,8 @@ import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.map.Cell;
 import me.dannytatom.xibalba.screens.CharacterScreen;
 import me.dannytatom.xibalba.screens.HelpScreen;
-import me.dannytatom.xibalba.screens.InventoryScreen;
 import me.dannytatom.xibalba.utils.ComponentMappers;
+import org.apache.commons.lang3.text.WordUtils;
 
 public class HudRenderer {
   public final Stage stage;
@@ -72,8 +72,9 @@ public class HudRenderer {
     bottomTable.bottom();
     bottomTable.setFillParent(true);
 
+    AttributesComponent playerAttributes = ComponentMappers.attributes.get(main.player);
     TextButton characterButton = new TextButton(
-        "[DARK_GRAY][ [CYAN]C[DARK_GRAY] ][WHITE]haracter", main.skin
+        "[DARK_GRAY][ [CYAN]C[DARK_GRAY] ][WHITE] " + playerAttributes.name, main.skin
     );
     characterButton.pad(5);
     characterButton.addListener(new ClickListener() {
@@ -81,18 +82,6 @@ public class HudRenderer {
       public void clicked(InputEvent event, float positionX, float positionY) {
         super.clicked(event, positionX, positionY);
         main.setScreen(new CharacterScreen(main));
-      }
-    });
-
-    TextButton inventoryButton = new TextButton(
-        "[DARK_GRAY][ [CYAN]I[DARK_GRAY] ][WHITE]nventory", main.skin
-    );
-    inventoryButton.pad(5);
-    inventoryButton.addListener(new ClickListener() {
-      @Override
-      public void clicked(InputEvent event, float positionX, float positionY) {
-        super.clicked(event, positionX, positionY);
-        main.setScreen(new InventoryScreen(main));
       }
     });
 
@@ -110,7 +99,6 @@ public class HudRenderer {
 
     Table buttons = new Table();
     buttons.add(characterButton).pad(0, 5, 0, 5);
-    buttons.add(inventoryButton).pad(0, 5, 0, 5);
     buttons.add(helpButton).pad(0, 5, 0, 5);
 
     lookDetails = new Label(null, main.skin);
@@ -158,9 +146,9 @@ public class HudRenderer {
     actionLog.clear();
 
     for (int i = 0; i < main.log.things.size(); i++) {
-      Label label = new Label(main.log.things.get(i), main.skin);
+      String action = WordUtils.wrap(main.log.things.get(i), 100);
+      Label label = new Label(action, main.skin);
       label.setColor(1f, 1f, 1f, i == 0 ? 1f : 0.5f);
-      label.setWrap(true);
 
       actionLog.addActor(label);
     }
@@ -270,8 +258,10 @@ public class HudRenderer {
             new Label("[YELLOW]" + itemDetails.name, main.skin)
         );
 
+        String description = WordUtils.wrap(itemDetails.description, 50);
+
         lookDialogList.addActor(
-            new Label("[LIGHT_GRAY]" + itemDetails.description, main.skin)
+            new Label("[LIGHT_GRAY]" + description, main.skin)
         );
       }
 
@@ -285,8 +275,10 @@ public class HudRenderer {
             new Label("[RED]" + enemyAttributes.name, main.skin)
         );
 
+        String description = WordUtils.wrap(enemyAttributes.description, 50);
+
         lookDialogList.addActor(
-            new Label("[LIGHT_GRAY]" + enemyAttributes.description, main.skin)
+            new Label("[LIGHT_GRAY]" + description, main.skin)
         );
       }
 
@@ -320,7 +312,7 @@ public class HudRenderer {
 
         BodyComponent body = ComponentMappers.body.get(main.focusedEntity);
         for (String part : body.parts.keySet()) {
-          TextButton button = new TextButton(part, main.skin);
+          TextButton button = new TextButton(WordUtils.capitalize(part), main.skin);
           button.pad(5);
           button.addListener(new ClickListener() {
             @Override

@@ -10,7 +10,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import me.dannytatom.xibalba.Main;
-import me.dannytatom.xibalba.utils.ComponentMappers;
 
 public class HelpScreen implements Screen {
   private final Main main;
@@ -26,14 +25,12 @@ public class HelpScreen implements Screen {
 
     stage = new Stage();
 
-    Table table = new Table();
+    Table table = new Table().pad(10);
     table.setFillParent(true);
     table.left().top();
     stage.addActor(table);
 
-    table.add(createHeader()).pad(10, 10, 10, 10).width(Gdx.graphics.getWidth() - 20);
-    table.row();
-    table.add(createHelp()).pad(0, 10, 10, 10).left();
+    table.add(createHelp()).left();
 
     Gdx.input.setInputProcessor(stage);
   }
@@ -54,14 +51,6 @@ public class HelpScreen implements Screen {
 
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-    if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)) {
-      main.setScreen(new CharacterScreen(main));
-    }
-
-    if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_2)) {
-      main.setScreen(new InventoryScreen(main));
-    }
-
     if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
       main.setScreen(main.playScreen);
     }
@@ -73,22 +62,6 @@ public class HelpScreen implements Screen {
   @Override
   public void resize(int width, int height) {
     stage.getViewport().update(width, height, true);
-  }
-
-  private VerticalGroup createHeader() {
-    String header = "[DARK_GRAY][ ";
-    header += "[CYAN]1[LIGHT_GRAY] ";
-    header += ComponentMappers.attributes.get(main.player).name;
-    header += "[DARK_GRAY] | ";
-    header += "[CYAN]2[LIGHT_GRAY] Inventory";
-    header += "[DARK_GRAY] | ";
-    header += "[CYAN]3[WHITE] Help";
-    header += "[DARK_GRAY] ]";
-
-    VerticalGroup group = new VerticalGroup().center();
-    group.addActor(new Label(header, main.skin));
-
-    return group;
   }
 
   private VerticalGroup createHelp() {
