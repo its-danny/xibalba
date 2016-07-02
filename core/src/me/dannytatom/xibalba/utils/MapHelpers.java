@@ -258,8 +258,8 @@ public class MapHelpers {
    *
    * @return Player position
    */
-  public Vector2 getEmptySpaceNearPlayer() {
-    return getEmptySpaceNearEntity(ComponentMappers.position.get(main.player).pos);
+  public Vector2 getOpenSpaceNearPlayer() {
+    return getOpenSpaceNearEntity(ComponentMappers.position.get(main.player).pos);
   }
 
   /**
@@ -267,7 +267,7 @@ public class MapHelpers {
    *
    * @return An open position
    */
-  private Vector2 getEmptySpaceNearEntity(Vector2 pos) {
+  private Vector2 getOpenSpaceNearEntity(Vector2 pos) {
     Vector2 position;
 
     if (!isBlocked(main.world.currentMapIndex, new Vector2(pos.x + 1, pos.y))) {

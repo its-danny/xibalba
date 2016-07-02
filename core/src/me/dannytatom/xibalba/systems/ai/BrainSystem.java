@@ -75,7 +75,7 @@ public class BrainSystem extends SortedIteratingSystem {
     } else {
       if (attributes.energy >= MovementComponent.COST) {
         if (main.entityHelpers.canSeePlayer(entity, attributes.vision)) {
-          switchToTarget(entity, main.mapHelpers.getEmptySpaceNearPlayer());
+          switchToTarget(entity, main.mapHelpers.getOpenSpaceNearPlayer());
         } else {
           switchToWander(entity);
         }
@@ -97,7 +97,7 @@ public class BrainSystem extends SortedIteratingSystem {
     } else {
       if (attributes.energy >= MovementComponent.COST) {
         if (main.entityHelpers.canSeePlayer(entity, attributes.vision)) {
-          switchToTarget(entity, main.mapHelpers.getEmptySpaceNearPlayer());
+          switchToTarget(entity, main.mapHelpers.getOpenSpaceNearPlayer());
         } else {
           switchToWander(entity);
         }
@@ -122,7 +122,7 @@ public class BrainSystem extends SortedIteratingSystem {
       if (attributes.energy >= MovementComponent.COST) {
         if (main.entityHelpers.canSeePlayer(entity, attributes.vision)) {
           if (playerPosition != target.pos) {
-            switchToTarget(entity, main.mapHelpers.getEmptySpaceNearPlayer());
+            switchToTarget(entity, main.mapHelpers.getOpenSpaceNearPlayer());
           }
         } else {
           switchToWander(entity);
@@ -145,7 +145,7 @@ public class BrainSystem extends SortedIteratingSystem {
     } else {
       if (attributes.energy >= MovementComponent.COST) {
         if (main.entityHelpers.canSeePlayer(entity, attributes.vision)) {
-          switchToTarget(entity, main.mapHelpers.getEmptySpaceNearPlayer());
+          switchToTarget(entity, main.mapHelpers.getOpenSpaceNearPlayer());
         } else {
           switchToWander(entity);
         }

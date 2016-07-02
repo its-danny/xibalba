@@ -6,6 +6,7 @@ import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.MouseMovementComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
+import me.dannytatom.xibalba.components.VisualComponent;
 import me.dannytatom.xibalba.components.actions.MovementComponent;
 import me.dannytatom.xibalba.screens.PlayScreen;
 import me.dannytatom.xibalba.systems.ActionSystem;
@@ -33,8 +34,15 @@ public class MovementSystem extends ActionSystem {
    */
   public void processEntity(Entity entity, float deltaTime) {
     PositionComponent position = ComponentMappers.position.get(entity);
+    VisualComponent visual = ComponentMappers.visual.get(entity);
     MovementComponent movement = ComponentMappers.movement.get(entity);
     AttributesComponent attributes = ComponentMappers.attributes.get(entity);
+
+    if (movement.pos.x < position.pos.x) {
+      visual.sprite.setFlip(true, false);
+    } else {
+      visual.sprite.setFlip(false, false);
+    }
 
     // If we can move, move
     if (!main.mapHelpers.isBlocked(main.world.currentMapIndex, movement.pos)) {

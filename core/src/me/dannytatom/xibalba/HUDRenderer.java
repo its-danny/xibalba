@@ -113,6 +113,10 @@ public class HudRenderer {
     inventoryButton.setKeys(Input.Keys.I);
     inventoryButton.setAction(bottomTable, () -> main.setScreen(new CharacterScreen(main)));
 
+    ActionButton restButton = new ActionButton("Z", "Rest", main.skin);
+    restButton.setKeys(Input.Keys.Z);
+    restButton.setAction(bottomTable, () -> main.executeTurn = true);
+
     ActionButton pauseButton = new ActionButton("ESC", "Pause", main.skin);
     pauseButton.setKeys(Input.Keys.ESCAPE);
     pauseButton.setAction(bottomTable, () -> main.setScreen(new PauseScreen(main)));
@@ -120,6 +124,7 @@ public class HudRenderer {
     Table buttons = new Table();
     buttons.add(characterButton).pad(0, 5, 0, 5);
     buttons.add(inventoryButton).pad(0, 5, 0, 5);
+    buttons.add(restButton).pad(0, 5, 0, 5);
     buttons.add(pauseButton).pad(0, 5, 0, 5);
 
     // Look details
@@ -205,8 +210,15 @@ public class HudRenderer {
     ImmutableArray<Entity> enemies =
         main.engine.getEntitiesFor(Family.all(EnemyComponent.class).get());
 
+    boolean showingEnemyBreak = false;
+
     for (Entity enemy : enemies) {
       if (main.entityHelpers.isVisibleToPlayer(enemy)) {
+        if (!showingEnemyBreak) {
+          areaDetails.addActor(new Label("", main.skin));
+          showingEnemyBreak = true;
+        }
+
         AttributesComponent enemyAttributes = ComponentMappers.attributes.get(enemy);
 
         areaDetails.addActor(new Label("[RED]" + enemyAttributes.name + "[]", main.skin));
@@ -225,6 +237,26 @@ public class HudRenderer {
                     + "[LIGHT_GRAY]/" + enemyAttributes.maxHealth, main.skin
             )
         );
+      }
+    }
+
+    // Items visible in area
+
+    ImmutableArray<Entity> items =
+        main.engine.getEntitiesFor(Family.all(ItemComponent.class).get());
+
+    boolean showingItemBreak = false;
+
+    for (Entity item : items) {
+      if (main.entityHelpers.isVisibleToPlayer(item)) {
+        if (!showingItemBreak) {
+          areaDetails.addActor(new Label("", main.skin));
+          showingItemBreak = true;
+        }
+
+        ItemComponent itemDetails = ComponentMappers.item.get(item);
+
+        areaDetails.addActor(new Label("[YELLOW]" + itemDetails.name + "[]", main.skin));
       }
     }
   }
@@ -285,6 +317,23 @@ public class HudRenderer {
 
         lookDialogGroup.addActor(
             new Label("[LIGHT_GRAY]" + description, main.skin)
+        );
+
+        lookDialogGroup.addActor(new Label("", main.skin));
+
+        String enemyHealthColor;
+
+        if (enemyAttributes.health / enemyAttributes.maxHealth <= 0.5f) {
+          enemyHealthColor = "[RED]";
+        } else {
+          enemyHealthColor = "[WHITE]";
+        }
+
+        lookDialogGroup.addActor(
+            new Label(
+                "[LIGHT_GRAY]HP " + enemyHealthColor + enemyAttributes.health
+                    + "[LIGHT_GRAY]/" + enemyAttributes.maxHealth, main.skin
+            )
         );
       }
 

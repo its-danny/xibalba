@@ -43,8 +43,7 @@ public class MouseMovementSystem extends EntitySystem {
         entity.remove(MouseMovementComponent.class);
         main.state = Main.State.PLAYING;
       } else {
-        // Start walking.
-        // If the path becomes blocked, reset the path.
+        // Start walking
         GridCell cell = playerDetails.lookingPath.get(0);
 
         entity.add(new MovementComponent(new Vector2(cell.getX(), cell.getY())));

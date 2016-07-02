@@ -38,9 +38,6 @@ public class PlayerInput implements InputProcessor {
     PlayerComponent playerDetails = ComponentMappers.player.get(main.player);
 
     switch (keycode) {
-      case Keys.Z:
-        main.executeTurn = true;
-        break;
       case Keys.K:
         if (main.state == Main.State.PLAYING) {
           handleMovement(attributes.energy, new Vector2(position.pos.x, position.pos.y + 1));
@@ -233,9 +230,9 @@ public class PlayerInput implements InputProcessor {
               PlayerComponent.FocusedAction.MELEE;
           main.state = Main.State.FOCUSED;
           main.focusedEntity = enemy;
-        }
 
-        return true;
+          return true;
+        }
       } else {
         if (ComponentMappers.mouseMovement.get(main.player) == null) {
           if (main.mapHelpers.cellExists(mousePosition)

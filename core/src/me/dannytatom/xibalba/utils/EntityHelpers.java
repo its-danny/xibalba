@@ -315,11 +315,11 @@ public class EntityHelpers {
    * @return Whether or not it's visible to the player
    */
   public boolean isVisibleToPlayer(Entity entity) {
-    PositionComponent enemyPosition = ComponentMappers.position.get(entity);
+    PositionComponent entityPosition = ComponentMappers.position.get(entity);
     PositionComponent playerPosition = ComponentMappers.position.get(main.player);
     AttributesComponent playerAttributes = ComponentMappers.attributes.get(main.player);
 
-    if (enemyPosition.map != playerPosition.map) {
+    if (entityPosition == null || entityPosition.map != playerPosition.map) {
       return false;
     }
 
@@ -329,7 +329,7 @@ public class EntityHelpers {
         playerAttributes.vision
     );
 
-    return lightMap[(int) enemyPosition.pos.x][(int) enemyPosition.pos.y] > 0;
+    return lightMap[(int) entityPosition.pos.x][(int) entityPosition.pos.y] > 0;
   }
 
   /**
