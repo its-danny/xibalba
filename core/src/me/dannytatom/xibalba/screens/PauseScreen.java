@@ -5,18 +5,13 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Colors;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import me.dannytatom.xibalba.Main;
+import me.dannytatom.xibalba.ui.ActionButton;
 
 public class PauseScreen implements Screen {
-  private final Main main;
-
   private final Stage stage;
 
   /**
@@ -25,90 +20,28 @@ public class PauseScreen implements Screen {
    * @param main Instance of main class
    */
   public PauseScreen(Main main) {
-    this.main = main;
     stage = new Stage();
 
     Table table = new Table();
     table.setFillParent(true);
     stage.addActor(table);
 
-    TextButton returnToGameButton = new TextButton(
-        "[DARK_GRAY][ [CYAN]R[DARK_GRAY] ][WHITE] Return to Game", main.skin
-    );
-    returnToGameButton.pad(5);
-    returnToGameButton.addListener(new ClickListener() {
-      @Override
-      public void enter(InputEvent event, float positionX, float positionY,
-                        int pointer, Actor fromActor) {
-        returnToGameButton.setColor(1, 1, 1, 0.5f);
-      }
+    ActionButton returnToGameButton = new ActionButton("ESC", "Return to Game", main.skin);
+    returnToGameButton.setKeys(Input.Keys.ESCAPE);
+    returnToGameButton.setAction(table, () -> main.setScreen(main.playScreen));
 
-      @Override
-      public void exit(InputEvent event, float positionX, float positionY,
-                       int pointer, Actor toActor) {
-        returnToGameButton.setColor(1, 1, 1, 1);
-      }
+    ActionButton mainMenuButton = new ActionButton("M", "Main Menu", main.skin);
+    mainMenuButton.setKeys(Input.Keys.M);
+    mainMenuButton.setAction(table, () -> {
+      main.playScreen.dispose();
+      main.playScreen = null;
 
-      @Override
-      public void clicked(InputEvent event, float positionX, float positionY) {
-        super.clicked(event, positionX, positionY);
-
-        main.setScreen(main.playScreen);
-      }
+      main.setScreen(new MainMenuScreen(main));
     });
 
-    TextButton mainMenuButton = new TextButton(
-        "[DARK_GRAY][ [CYAN]M[DARK_GRAY] ][WHITE] Main Menu", main.skin
-    );
-    mainMenuButton.pad(5);
-    mainMenuButton.addListener(new ClickListener() {
-      @Override
-      public void enter(InputEvent event, float positionX, float positionY,
-                        int pointer, Actor fromActor) {
-        mainMenuButton.setColor(1, 1, 1, 0.5f);
-      }
-
-      @Override
-      public void exit(InputEvent event, float positionX, float positionY,
-                       int pointer, Actor toActor) {
-        mainMenuButton.setColor(1, 1, 1, 1);
-      }
-
-      @Override
-      public void clicked(InputEvent event, float positionX, float positionY) {
-        super.clicked(event, positionX, positionY);
-
-        main.playScreen.dispose();
-        main.playScreen = null;
-
-        main.setScreen(new MainMenuScreen(main));
-      }
-    });
-
-    TextButton quitButton = new TextButton(
-        "[DARK_GRAY][ [CYAN]Q[DARK_GRAY] ][WHITE] Quit", main.skin
-    );
-    quitButton.pad(5);
-    quitButton.addListener(new ClickListener() {
-      @Override
-      public void enter(InputEvent event, float positionX, float positionY,
-                        int pointer, Actor fromActor) {
-        quitButton.setColor(1, 1, 1, 0.5f);
-      }
-
-      @Override
-      public void exit(InputEvent event, float positionX, float positionY,
-                       int pointer, Actor toActor) {
-        quitButton.setColor(1, 1, 1, 1);
-      }
-
-      @Override
-      public void clicked(InputEvent event, float positionX, float positionY) {
-        super.clicked(event, positionX, positionY);
-
-        Gdx.app.exit();
-      }
-    });
+    ActionButton quitButton = new ActionButton("Q", "Quit", main.skin);
+    quitButton.setKeys(Input.Keys.Q);
+    quitButton.setAction(table, () -> Gdx.app.exit());
 
     table.add(new Label("[LIGHT_GRAY]PAUSED[]", main.skin)).pad(0, 0, 10, 0);
     table.row();
@@ -119,6 +52,7 @@ public class PauseScreen implements Screen {
     table.add(quitButton);
 
     Gdx.input.setInputProcessor(stage);
+    stage.setKeyboardFocus(table);
   }
 
   @Override
@@ -136,21 +70,6 @@ public class PauseScreen implements Screen {
     );
 
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-    if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
-      main.setScreen(main.playScreen);
-    }
-
-    if (Gdx.input.isKeyJustPressed(Input.Keys.M)) {
-      main.playScreen.dispose();
-      main.playScreen = null;
-
-      main.setScreen(new MainMenuScreen(main));
-    }
-
-    if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
-      Gdx.app.exit();
-    }
 
     stage.act(delta);
     stage.draw();

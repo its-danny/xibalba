@@ -13,9 +13,6 @@ import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.actions.MovementComponent;
 import me.dannytatom.xibalba.components.actions.RangeComponent;
-import me.dannytatom.xibalba.screens.CharacterScreen;
-import me.dannytatom.xibalba.screens.HelpScreen;
-import me.dannytatom.xibalba.screens.PauseScreen;
 import me.dannytatom.xibalba.utils.ComponentMappers;
 
 public class PlayerInput implements InputProcessor {
@@ -43,14 +40,6 @@ public class PlayerInput implements InputProcessor {
     switch (keycode) {
       case Keys.Z:
         main.executeTurn = true;
-        break;
-      case Keys.C:
-        main.setScreen(new CharacterScreen(main));
-        break;
-      case Keys.SLASH:
-        if (holdingShift) {
-          main.setScreen(new HelpScreen(main));
-        }
         break;
       case Keys.K:
         if (main.state == Main.State.PLAYING) {
@@ -201,9 +190,6 @@ public class PlayerInput implements InputProcessor {
       case Keys.SHIFT_LEFT:
       case Keys.SHIFT_RIGHT:
         holdingShift = true;
-        break;
-      case Keys.ESCAPE:
-        main.setScreen(new PauseScreen(main));
         break;
       default:
     }

@@ -8,15 +8,11 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import me.dannytatom.xibalba.components.AttributesComponent;
@@ -27,7 +23,8 @@ import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.map.Cell;
 import me.dannytatom.xibalba.screens.CharacterScreen;
-import me.dannytatom.xibalba.screens.HelpScreen;
+import me.dannytatom.xibalba.screens.PauseScreen;
+import me.dannytatom.xibalba.ui.ActionButton;
 import me.dannytatom.xibalba.utils.ComponentMappers;
 import org.apache.commons.lang3.text.WordUtils;
 
@@ -36,13 +33,15 @@ public class HudRenderer {
   private final Main main;
   private final Viewport viewport;
   private final PlayerComponent playerDetails;
-  private final VerticalGroup actionLog;
-  private final VerticalGroup areaDetails;
-  private final Label lookDetails;
-  private final Dialog lookDialog;
-  private final VerticalGroup lookDialogList;
-  private final Dialog focusedDialog;
-  private final Table focusedDialogTable;
+  private final Table topTable;
+  private final Table bottomTable;
+  private VerticalGroup actionLog;
+  private VerticalGroup areaDetails;
+  private Label lookDetails;
+  private Dialog lookDialog;
+  private VerticalGroup lookDialogGroup;
+  private Dialog focusedDialog;
+  private Table focusedDialogTable;
   private boolean lookDialogShowing = false;
   private boolean focusedDialogShowing = false;
 
@@ -59,94 +58,21 @@ public class HudRenderer {
     stage = new Stage(viewport, batch);
     playerDetails = ComponentMappers.player.get(main.player);
 
-    Table topTable = new Table();
+    topTable = new Table();
     topTable.top().left();
     topTable.setFillParent(true);
-
-    actionLog = new VerticalGroup().left();
-    topTable.add(actionLog).pad(10, 10, 10, 10).width(Gdx.graphics.getWidth() / 4 * 3 - 20).top();
-    areaDetails = new VerticalGroup().right();
-    topTable.add(areaDetails).pad(10, 10, 10, 10).width(Gdx.graphics.getWidth() / 4 - 20).top();
-
     stage.addActor(topTable);
 
-    Table bottomTable = new Table();
+    setupTopTable();
+
+    bottomTable = new Table();
     bottomTable.bottom();
     bottomTable.setFillParent(true);
-
-    AttributesComponent playerAttributes = ComponentMappers.attributes.get(main.player);
-    TextButton characterButton = new TextButton(
-        "[DARK_GRAY][ [CYAN]C[DARK_GRAY] ][WHITE] " + playerAttributes.name, main.skin
-    );
-    characterButton.pad(5);
-    characterButton.addListener(new ClickListener() {
-      @Override
-      public void enter(InputEvent event, float positionX, float positionY,
-                        int pointer, Actor fromActor) {
-        characterButton.setColor(1, 1, 1, 0.5f);
-      }
-
-      @Override
-      public void exit(InputEvent event, float positionX, float positionY,
-                       int pointer, Actor toActor) {
-        characterButton.setColor(1, 1, 1, 1);
-      }
-
-      @Override
-      public void clicked(InputEvent event, float positionX, float positionY) {
-        super.clicked(event, positionX, positionY);
-        main.setScreen(new CharacterScreen(main));
-      }
-    });
-
-    TextButton helpButton = new TextButton(
-        "[DARK_GRAY][ [CYAN]?[DARK_GRAY] ][WHITE] Help", main.skin
-    );
-    helpButton.pad(5);
-    helpButton.addListener(new ClickListener() {
-      @Override
-      public void enter(InputEvent event, float positionX, float positionY,
-                        int pointer, Actor fromActor) {
-        helpButton.setColor(1, 1, 1, 0.5f);
-      }
-
-      @Override
-      public void exit(InputEvent event, float positionX, float positionY,
-                       int pointer, Actor toActor) {
-        helpButton.setColor(1, 1, 1, 1);
-      }
-
-      @Override
-      public void clicked(InputEvent event, float positionX, float positionY) {
-        super.clicked(event, positionX, positionY);
-        main.setScreen(new HelpScreen(main));
-      }
-    });
-
-    Table buttons = new Table();
-    buttons.add(characterButton).pad(0, 5, 0, 5);
-    buttons.add(helpButton).pad(0, 5, 0, 5);
-
-    lookDetails = new Label(null, main.skin);
-    bottomTable.add(lookDetails).pad(0, 0, 10, 0);
-    bottomTable.row();
-    bottomTable.add(buttons).pad(0, 0, 10, 0);
-
     stage.addActor(bottomTable);
 
-    lookDialog = new Dialog("", main.skin);
-    lookDialog.pad(5, 5, 10, 10);
-    lookDialog.setModal(false);
-    lookDialog.setMovable(false);
-    lookDialogList = new VerticalGroup().left();
-    lookDialog.add(lookDialogList);
+    setupBottomTable();
 
-    focusedDialog = new Dialog("", main.skin);
-    focusedDialog.pad(5, 0, 10, 5);
-    focusedDialog.setModal(false);
-    focusedDialog.setMovable(false);
-    focusedDialogTable = new Table().left();
-    focusedDialog.add(focusedDialogTable);
+    stage.setKeyboardFocus(bottomTable);
   }
 
   /**
@@ -160,60 +86,66 @@ public class HudRenderer {
     checkAndRenderLookDetails();
     checkAndRenderFocused();
 
-    if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)) {
-      if (main.state == Main.State.FOCUSED && focusedDialogTable.getChildren().size >= 1) {
-        TextButton button = (TextButton) focusedDialogTable.getChildren().get(0);
-        String part = WordUtils.uncapitalize(button.getText().toString().split("\\s+", 2)[1]);
-        handleFocusedAttack(part);
-      }
-    }
-
-    if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_2)) {
-      if (main.state == Main.State.FOCUSED && focusedDialogTable.getChildren().size >= 2) {
-        TextButton button = (TextButton) focusedDialogTable.getChildren().get(1);
-        String part = WordUtils.uncapitalize(button.getText().toString().split("\\s+", 2)[1]);
-        handleFocusedAttack(part);
-      }
-    }
-
-    if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_3)) {
-      if (main.state == Main.State.FOCUSED && focusedDialogTable.getChildren().size >= 3) {
-        TextButton button = (TextButton) focusedDialogTable.getChildren().get(2);
-        String part = WordUtils.uncapitalize(button.getText().toString().split("\\s+", 2)[1]);
-        handleFocusedAttack(part);
-      }
-    }
-
-    if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_4)) {
-      if (main.state == Main.State.FOCUSED && focusedDialogTable.getChildren().size >= 4) {
-        TextButton button = (TextButton) focusedDialogTable.getChildren().get(3);
-        String part = WordUtils.uncapitalize(button.getText().toString().split("\\s+", 2)[1]);
-        handleFocusedAttack(part);
-      }
-    }
-
-    if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_5)) {
-      if (main.state == Main.State.FOCUSED && focusedDialogTable.getChildren().size >= 5) {
-        TextButton button = (TextButton) focusedDialogTable.getChildren().get(4);
-        String part = WordUtils.uncapitalize(button.getText().toString().split("\\s+", 2)[1]);
-        handleFocusedAttack(part);
-      }
-    }
-
-    if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_6)) {
-      if (main.state == Main.State.FOCUSED && focusedDialogTable.getChildren().size >= 5) {
-        TextButton button = (TextButton) focusedDialogTable.getChildren().get(5);
-        String part = WordUtils.uncapitalize(button.getText().toString().split("\\s+", 2)[1]);
-        handleFocusedAttack(part);
-      }
-    }
-
     stage.act(delta);
     stage.draw();
   }
 
   public void resize(int width, int height) {
     viewport.update(width, height, true);
+  }
+
+  private void setupTopTable() {
+    actionLog = new VerticalGroup().left();
+    topTable.add(actionLog).pad(10, 10, 10, 10).width(Gdx.graphics.getWidth() / 4 * 3 - 20).top();
+    areaDetails = new VerticalGroup().right();
+    topTable.add(areaDetails).pad(10, 10, 10, 10).width(Gdx.graphics.getWidth() / 4 - 20).top();
+  }
+
+  private void setupBottomTable() {
+    // Bottom buttons
+
+    AttributesComponent playerAttributes = ComponentMappers.attributes.get(main.player);
+    ActionButton characterButton = new ActionButton("C", playerAttributes.name, main.skin);
+    characterButton.setKeys(Input.Keys.C);
+    characterButton.setAction(bottomTable, () -> main.setScreen(new CharacterScreen(main)));
+
+    ActionButton inventoryButton = new ActionButton("I", "Inventory", main.skin);
+    inventoryButton.setKeys(Input.Keys.I);
+    inventoryButton.setAction(bottomTable, () -> main.setScreen(new CharacterScreen(main)));
+
+    ActionButton pauseButton = new ActionButton("ESC", "Pause", main.skin);
+    pauseButton.setKeys(Input.Keys.ESCAPE);
+    pauseButton.setAction(bottomTable, () -> main.setScreen(new PauseScreen(main)));
+
+    Table buttons = new Table();
+    buttons.add(characterButton).pad(0, 5, 0, 5);
+    buttons.add(inventoryButton).pad(0, 5, 0, 5);
+    buttons.add(pauseButton).pad(0, 5, 0, 5);
+
+    // Look details
+
+    lookDetails = new Label(null, main.skin);
+    bottomTable.add(lookDetails).pad(0, 0, 10, 0);
+    bottomTable.row();
+    bottomTable.add(buttons).pad(0, 0, 10, 0);
+
+    // Look Dialog
+
+    lookDialog = new Dialog("", main.skin);
+    lookDialog.pad(5, 5, 10, 10);
+    lookDialog.setModal(false);
+    lookDialog.setMovable(false);
+    lookDialogGroup = new VerticalGroup().left();
+    lookDialog.add(lookDialogGroup);
+
+    // Focused Dialog
+
+    focusedDialog = new Dialog("", main.skin);
+    focusedDialog.pad(5, 0, 10, 5);
+    focusedDialog.setModal(false);
+    focusedDialog.setMovable(false);
+    focusedDialogTable = new Table().left();
+    focusedDialog.add(focusedDialogTable);
   }
 
   private void renderActionLog() {
@@ -298,7 +230,7 @@ public class HudRenderer {
   }
 
   private void checkAndRenderLookDetails() {
-    lookDialogList.clear();
+    lookDialogGroup.clear();
 
     if (playerDetails.target == null) {
       lookDetails.setText("");
@@ -328,13 +260,13 @@ public class HudRenderer {
         showLookDialog = true;
         ItemComponent itemDetails = ComponentMappers.item.get(item);
 
-        lookDialogList.addActor(
+        lookDialogGroup.addActor(
             new Label("[YELLOW]" + itemDetails.name, main.skin)
         );
 
         String description = WordUtils.wrap(itemDetails.description, 50);
 
-        lookDialogList.addActor(
+        lookDialogGroup.addActor(
             new Label("[LIGHT_GRAY]" + description, main.skin)
         );
       }
@@ -345,13 +277,13 @@ public class HudRenderer {
         showLookDialog = true;
         AttributesComponent enemyAttributes = ComponentMappers.attributes.get(enemy);
 
-        lookDialogList.addActor(
+        lookDialogGroup.addActor(
             new Label("[RED]" + enemyAttributes.name, main.skin)
         );
 
         String description = WordUtils.wrap(enemyAttributes.description, 50);
 
-        lookDialogList.addActor(
+        lookDialogGroup.addActor(
             new Label("[LIGHT_GRAY]" + description, main.skin)
         );
       }
@@ -390,30 +322,11 @@ public class HudRenderer {
         for (String part : body.parts.keySet()) {
           actionNumber++;
 
-          String text = "[DARK_GRAY][[CYAN]" + actionNumber
-              + "[DARK_GRAY]][WHITE] " + WordUtils.capitalize(part);
-          TextButton button = new TextButton(text, main.skin);
-          button.pad(5);
-          button.addListener(new ClickListener() {
-            @Override
-            public void enter(InputEvent event, float positionX, float positionY,
-                              int pointer, Actor fromActor) {
-              button.setColor(1, 1, 1, 0.5f);
-            }
-
-            @Override
-            public void exit(InputEvent event, float positionX, float positionY,
-                             int pointer, Actor toActor) {
-              button.setColor(1, 1, 1, 1);
-            }
-
-            @Override
-            public void clicked(InputEvent event, float positionX, float positionY) {
-              super.clicked(event, positionX, positionY);
-
-              handleFocusedAttack(part);
-            }
-          });
+          // If you look at the docs for Input.Keys, number keys are offset by 7
+          // (e.g. 0 = 7, 1 = 8, etc)
+          ActionButton button = new ActionButton(actionNumber, WordUtils.capitalize(part), main.skin);
+          button.setKeys(actionNumber + 7);
+          button.setAction(focusedDialogTable, () -> handleFocusedAttack(part));
 
           focusedDialogTable.add(button).pad(0, 5, 0, 5);
         }
@@ -424,11 +337,14 @@ public class HudRenderer {
         focusedDialog.setPosition(
             Math.round((stage.getWidth() - focusedDialog.getWidth()) / 2), 65
         );
+
+        stage.setKeyboardFocus(focusedDialogTable);
       }
     } else {
       if (focusedDialogShowing) {
         focusedDialogShowing = false;
         focusedDialog.hide(null);
+        stage.setKeyboardFocus(bottomTable);
       }
     }
   }

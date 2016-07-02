@@ -5,19 +5,14 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Colors;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.screens.creation.ReviewScreen;
+import me.dannytatom.xibalba.ui.ActionButton;
 
 public class MainMenuScreen implements Screen {
-  private final Main main;
-
   private final Stage stage;
 
   /**
@@ -26,62 +21,19 @@ public class MainMenuScreen implements Screen {
    * @param main Instance of main class
    */
   public MainMenuScreen(Main main) {
-    this.main = main;
     stage = new Stage();
 
     Table table = new Table();
     table.setFillParent(true);
     stage.addActor(table);
 
-    TextButton newGameButton = new TextButton(
-        "[DARK_GRAY][ [CYAN]N[DARK_GRAY] ][WHITE] New Game", main.skin
-    );
-    newGameButton.pad(5);
-    newGameButton.addListener(new ClickListener() {
-      @Override
-      public void enter(InputEvent event, float positionX, float positionY,
-                        int pointer, Actor fromActor) {
-        newGameButton.setColor(1, 1, 1, 0.5f);
-      }
+    ActionButton newGameButton = new ActionButton("N", "New Game", main.skin);
+    newGameButton.setKeys(Input.Keys.N);
+    newGameButton.setAction(table, () -> main.setScreen(new ReviewScreen(main)));
 
-      @Override
-      public void exit(InputEvent event, float positionX, float positionY,
-                       int pointer, Actor toActor) {
-        newGameButton.setColor(1, 1, 1, 1);
-      }
-
-      @Override
-      public void clicked(InputEvent event, float positionX, float positionY) {
-        super.clicked(event, positionX, positionY);
-
-        main.setScreen(new ReviewScreen(main));
-      }
-    });
-
-    TextButton quitButton = new TextButton(
-        "[DARK_GRAY][ [CYAN]Q[DARK_GRAY] ][WHITE] Quit", main.skin
-    );
-    quitButton.pad(5);
-    quitButton.addListener(new ClickListener() {
-      @Override
-      public void enter(InputEvent event, float positionX, float positionY,
-                        int pointer, Actor fromActor) {
-        quitButton.setColor(1, 1, 1, 0.5f);
-      }
-
-      @Override
-      public void exit(InputEvent event, float positionX, float positionY,
-                       int pointer, Actor toActor) {
-        quitButton.setColor(1, 1, 1, 1);
-      }
-
-      @Override
-      public void clicked(InputEvent event, float positionX, float positionY) {
-        super.clicked(event, positionX, positionY);
-
-        Gdx.app.exit();
-      }
-    });
+    ActionButton quitButton = new ActionButton("Q", "Quit", main.skin);
+    quitButton.setKeys(Input.Keys.Q);
+    quitButton.setAction(table, () -> Gdx.app.exit());
 
     table.add(new Label("[LIGHT_GRAY]Xibalba v0.1.0[]", main.skin)).pad(0, 0, 10, 0);
     table.row();
@@ -90,6 +42,7 @@ public class MainMenuScreen implements Screen {
     table.add(quitButton);
 
     Gdx.input.setInputProcessor(stage);
+    stage.setKeyboardFocus(table);
   }
 
   @Override
@@ -107,14 +60,6 @@ public class MainMenuScreen implements Screen {
     );
 
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-    if (Gdx.input.isKeyJustPressed(Input.Keys.N)) {
-      main.setScreen(new ReviewScreen(main));
-    }
-
-    if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
-      Gdx.app.exit();
-    }
 
     stage.act(delta);
     stage.draw();

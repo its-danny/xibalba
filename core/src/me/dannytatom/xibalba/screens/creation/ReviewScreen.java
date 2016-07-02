@@ -7,18 +7,15 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Colors;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.screens.LoadingScreen;
 import me.dannytatom.xibalba.screens.MainMenuScreen;
+import me.dannytatom.xibalba.ui.ActionButton;
 
 import java.util.Objects;
 
@@ -47,7 +44,13 @@ public class ReviewScreen implements Screen {
     table.pad(10);
     stage.addActor(table);
 
+    ActionButton backButton = new ActionButton("Q", "Back to Main Menu", main.skin);
+    backButton.setKeys(Input.Keys.Q);
+    backButton.setAction(table, () -> main.setScreen(new MainMenuScreen(main)));
+    table.add(backButton).pad(0, 0, 10, 0).left();
+
     table.row();
+
     Label worldSeedLabel = new Label("World Seed", main.skin);
     table.add(worldSeedLabel).pad(0, 0, 10, 10).width(Gdx.graphics.getWidth() / 2 - 20);
     table.row();
@@ -61,35 +64,15 @@ public class ReviewScreen implements Screen {
     playerNameField = new TextField("Aapo" + "", main.skin);
     table.add(playerNameField).pad(0, 0, 10, 10).width(Gdx.graphics.getWidth() / 2 - 20);
 
-    TextButton continueButton = new TextButton(
-        "[DARK_GRAY][ [CYAN]ENTER [DARK_GRAY] ][WHITE] Begin Your Journey", main.skin
-    );
-    continueButton.pad(5);
-    continueButton.addListener(new ClickListener() {
-      @Override
-      public void enter(InputEvent event, float positionX, float positionY,
-                        int pointer, Actor fromActor) {
-        continueButton.setColor(1, 1, 1, 0.5f);
-      }
-
-      @Override
-      public void exit(InputEvent event, float positionX, float positionY,
-                       int pointer, Actor toActor) {
-        continueButton.setColor(1, 1, 1, 1);
-      }
-
-      @Override
-      public void clicked(InputEvent event, float positionX, float positionY) {
-        super.clicked(event, positionX, positionY);
-
-        startGame();
-      }
-    });
+    ActionButton continueButton = new ActionButton("ENTER", "Begin Your Journey", main.skin);
+    continueButton.setKeys(Input.Keys.ENTER);
+    continueButton.setAction(table, this::startGame);
 
     table.row();
     table.add(continueButton).left();
 
     Gdx.input.setInputProcessor(stage);
+    stage.setKeyboardFocus(table);
   }
 
   @Override
@@ -107,14 +90,6 @@ public class ReviewScreen implements Screen {
     );
 
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-    if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
-      startGame();
-    }
-
-    if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
-      main.setScreen(new MainMenuScreen(main));
-    }
 
     stage.act(delta);
     stage.draw();

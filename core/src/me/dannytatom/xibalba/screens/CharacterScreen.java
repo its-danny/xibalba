@@ -13,7 +13,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
@@ -22,11 +21,11 @@ import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.EquipmentComponent;
 import me.dannytatom.xibalba.components.ItemComponent;
 import me.dannytatom.xibalba.components.SkillsComponent;
+import me.dannytatom.xibalba.ui.ActionButton;
 import me.dannytatom.xibalba.utils.ComponentMappers;
 import org.apache.commons.lang3.text.WordUtils;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class CharacterScreen implements Screen {
   private final Main main;
@@ -34,21 +33,24 @@ public class CharacterScreen implements Screen {
   private final Stage stage;
 
   private final FPSLogger fps;
-  private final VerticalGroup statsGroup;
+  private final VerticalGroup attributesGroup;
   private final VerticalGroup skillsGroup;
   private final VerticalGroup inventoryGroup;
   private final Table itemDetails;
   private final VerticalGroup equipmentGroup;
+  private final AttributesComponent attributes;
+  private final SkillsComponent skills;
+  private final EquipmentComponent equipment;
+  private final ArrayList<Entity> inventoryItems;
+  private HorizontalGroup itemActionGroup;
   private ArrayList<Label> inventoryItemLabels;
-  private TextButton holdButton;
-  private TextButton wearButton;
-  private TextButton throwButton;
-  private TextButton removeButton;
-  private TextButton dropButton;
-  private ArrayList<Entity> items;
-  private HashMap<String, Entity> slots;
-  private int selected = 0;
-  private int hovered = 0;
+  private ActionButton holdButton;
+  private ActionButton wearButton;
+  private ActionButton throwButton;
+  private ActionButton removeButton;
+  private ActionButton dropButton;
+  private int itemSelected = 0;
+  private int itemHovered = 0;
 
   /**
    * View and manage inventory.
@@ -59,8 +61,10 @@ public class CharacterScreen implements Screen {
     this.main = main;
 
     fps = new FPSLogger();
-    items = ComponentMappers.inventory.get(main.player).items;
-    slots = ComponentMappers.equipment.get(main.player).slots;
+    attributes = ComponentMappers.attributes.get(main.player);
+    skills = ComponentMappers.skills.get(main.player);
+    equipment = ComponentMappers.equipment.get(main.player);
+    inventoryItems = ComponentMappers.inventory.get(main.player).items;
 
     stage = new Stage();
 
@@ -69,30 +73,48 @@ public class CharacterScreen implements Screen {
     table.left().top();
     stage.addActor(table);
 
-    statsGroup = new VerticalGroup().align(Align.top | Align.left);
+    HorizontalGroup titleGroup = new HorizontalGroup().align(Align.center | Align.left);
+    titleGroup.space(5);
+
+    ActionButton backButton = new ActionButton("Q", null, main.skin);
+    backButton.setKeys(Input.Keys.Q);
+    backButton.setAction(table, () -> main.setScreen(main.playScreen));
+    titleGroup.addActor(backButton);
+
+    Label title = new Label(attributes.name + " Character Sheet", main.skin);
+    titleGroup.addActor(title);
+
+    Table titleTable = new Table();
+    titleTable.add(titleGroup).pad(10).width(Gdx.graphics.getWidth() - 20).top().left();
+
+    attributesGroup = new VerticalGroup().align(Align.top | Align.left);
     skillsGroup = new VerticalGroup().align(Align.top | Align.left);
+
+    Table characterTable = new Table();
+    characterTable.add(attributesGroup).pad(10).width(Gdx.graphics.getWidth() / 3 - 20).top().left();
+    characterTable.add(skillsGroup).pad(10).width(Gdx.graphics.getWidth() / 3 - 20).top().left();
+    characterTable.add(new VerticalGroup()).pad(10).width(Gdx.graphics.getWidth() / 3 - 20).top().left();
+
     inventoryGroup = new VerticalGroup().align(Align.top | Align.left);
     itemDetails = new Table().align(Align.top | Align.left);
     equipmentGroup = new VerticalGroup().align(Align.top | Align.left);
 
-    Table topTable = new Table();
-    topTable.add(statsGroup).pad(10).width(Gdx.graphics.getWidth() / 3 - 20).top().left();
-    topTable.add(skillsGroup).pad(10).width(Gdx.graphics.getWidth() / 3 - 20).top().left();
-    topTable.add(new VerticalGroup()).pad(10).width(Gdx.graphics.getWidth() / 3 - 20).top().left();
+    Table inventoryTable = new Table();
+    inventoryTable.add(inventoryGroup).pad(10).width(Gdx.graphics.getWidth() / 3 - 20).top().left();
+    inventoryTable.add(itemDetails).pad(10).width(Gdx.graphics.getWidth() / 3 - 20).top().left();
+    inventoryTable.add(equipmentGroup).pad(10).width(Gdx.graphics.getWidth() / 3 - 20).top().left();
 
-    Table bottomTable = new Table();
-    bottomTable.add(inventoryGroup).pad(10).width(Gdx.graphics.getWidth() / 3 - 20).top().left();
-    bottomTable.add(itemDetails).pad(10).width(Gdx.graphics.getWidth() / 3 - 20).top().left();
-    bottomTable.add(equipmentGroup).pad(10).width(Gdx.graphics.getWidth() / 3 - 20).top().left();
-
-    table.add(topTable);
+    table.add(titleTable);
     table.row();
-    table.add(bottomTable);
+    table.add(characterTable);
+    table.row();
+    table.add(inventoryTable);
 
     setupInventoryLabels();
     setupActionButtons();
 
     Gdx.input.setInputProcessor(stage);
+    stage.setKeyboardFocus(table);
   }
 
   @Override
@@ -113,28 +135,24 @@ public class CharacterScreen implements Screen {
 
     fps.log();
 
-    renderStats();
+    renderAttributes();
     renderSkills();
     renderInventory();
     renderItemDetails();
     renderEquipment();
 
     if (Gdx.input.isKeyJustPressed(Input.Keys.J) || Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
-      if (selected < items.size() - 1) {
-        selected += 1;
-        hovered = selected;
+      if (itemSelected < inventoryItems.size() - 1) {
+        itemSelected += 1;
+        itemHovered = itemSelected;
       }
     }
 
     if (Gdx.input.isKeyJustPressed(Input.Keys.K) || Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
-      if (selected > 0) {
-        selected -= 1;
-        hovered = selected;
+      if (itemSelected > 0) {
+        itemSelected -= 1;
+        itemHovered = itemSelected;
       }
-    }
-
-    if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
-      main.setScreen(main.playScreen);
     }
 
     stage.act(delta);
@@ -149,8 +167,8 @@ public class CharacterScreen implements Screen {
   private void setupInventoryLabels() {
     inventoryItemLabels = new ArrayList<>();
 
-    for (int i = 0; i < items.size(); i++) {
-      Entity entity = items.get(i);
+    for (int i = 0; i < inventoryItems.size(); i++) {
+      Entity entity = inventoryItems.get(i);
       ItemComponent item = ComponentMappers.item.get(entity);
       Label label = new Label(item.name, main.skin);
       int index = i;
@@ -158,16 +176,16 @@ public class CharacterScreen implements Screen {
         @Override
         public void enter(InputEvent event, float positionX, float positionY,
                           int pointer, Actor fromActor) {
-          if (hovered != index) {
-            hovered = index;
+          if (itemHovered != index) {
+            itemHovered = index;
           }
         }
 
         @Override
         public void exit(InputEvent event, float positionX, float positionY,
                          int pointer, Actor toActor) {
-          if (hovered != selected) {
-            hovered = selected;
+          if (itemHovered != itemSelected) {
+            itemHovered = itemSelected;
           }
         }
 
@@ -175,8 +193,8 @@ public class CharacterScreen implements Screen {
         public void clicked(InputEvent event, float positionX, float positionY) {
           super.clicked(event, positionX, positionY);
 
-          if (selected != index) {
-            selected = index;
+          if (itemSelected != index) {
+            itemSelected = index;
           }
         }
       });
@@ -186,134 +204,34 @@ public class CharacterScreen implements Screen {
   }
 
   private void setupActionButtons() {
-    holdButton = new TextButton(
-        "[DARK_GRAY][ [CYAN]H[DARK_GRAY] ][WHITE] Hold", main.skin
-    );
-    holdButton.pad(5);
-    holdButton.addListener(new ClickListener() {
-      @Override
-      public void enter(InputEvent event, float positionX, float positionY,
-                        int pointer, Actor fromActor) {
-        holdButton.setColor(1, 1, 1, 0.5f);
-      }
+    itemActionGroup = new HorizontalGroup().space(5).align(Align.top | Align.left);
 
-      @Override
-      public void exit(InputEvent event, float positionX, float positionY,
-                       int pointer, Actor toActor) {
-        holdButton.setColor(1, 1, 1, 1);
-      }
+    holdButton = new ActionButton("H", "Hold", main.skin);
+    holdButton.setKeys(Input.Keys.H);
+    holdButton.setAction(itemActionGroup, this::handleHold);
 
-      @Override
-      public void clicked(InputEvent event, float positionX, float positionY) {
-        super.clicked(event, positionX, positionY);
-        handleHold();
-      }
-    });
+    wearButton = new ActionButton("W", "Wear", main.skin);
+    wearButton.setKeys(Input.Keys.W);
+    wearButton.setAction(itemActionGroup, this::handleWear);
 
-    wearButton = new TextButton(
-        "[DARK_GRAY][ [CYAN]W[DARK_GRAY] ][WHITE] Wear", main.skin
-    );
-    wearButton.pad(5);
-    wearButton.addListener(new ClickListener() {
-      @Override
-      public void enter(InputEvent event, float positionX, float positionY,
-                        int pointer, Actor fromActor) {
-        wearButton.setColor(1, 1, 1, 0.5f);
-      }
+    throwButton = new ActionButton("T", "Throw", main.skin);
+    throwButton.setKeys(Input.Keys.T);
+    throwButton.setAction(itemActionGroup, this::handleThrow);
 
-      @Override
-      public void exit(InputEvent event, float positionX, float positionY,
-                       int pointer, Actor toActor) {
-        wearButton.setColor(1, 1, 1, 1);
-      }
+    removeButton = new ActionButton("R", "Remove", main.skin);
+    removeButton.setKeys(Input.Keys.R);
+    removeButton.setAction(itemActionGroup, this::handleRemove);
 
-      @Override
-      public void clicked(InputEvent event, float positionX, float positionY) {
-        super.clicked(event, positionX, positionY);
-        handleWear();
-      }
-    });
-
-    throwButton = new TextButton(
-        "[DARK_GRAY][ [CYAN]T[DARK_GRAY] ][WHITE] Throw", main.skin
-    );
-    throwButton.pad(5);
-    throwButton.addListener(new ClickListener() {
-      @Override
-      public void enter(InputEvent event, float positionX, float positionY,
-                        int pointer, Actor fromActor) {
-        throwButton.setColor(1, 1, 1, 0.5f);
-      }
-
-      @Override
-      public void exit(InputEvent event, float positionX, float positionY,
-                       int pointer, Actor toActor) {
-        throwButton.setColor(1, 1, 1, 1);
-      }
-
-      @Override
-      public void clicked(InputEvent event, float positionX, float positionY) {
-        super.clicked(event, positionX, positionY);
-        handleThrow();
-      }
-    });
-
-    removeButton = new TextButton(
-        "[DARK_GRAY][ [CYAN]R[DARK_GRAY] ][WHITE] Remove", main.skin
-    );
-    removeButton.pad(5);
-    removeButton.addListener(new ClickListener() {
-      @Override
-      public void enter(InputEvent event, float positionX, float positionY,
-                        int pointer, Actor fromActor) {
-        removeButton.setColor(1, 1, 1, 0.5f);
-      }
-
-      @Override
-      public void exit(InputEvent event, float positionX, float positionY,
-                       int pointer, Actor toActor) {
-        removeButton.setColor(1, 1, 1, 1);
-      }
-
-      @Override
-      public void clicked(InputEvent event, float positionX, float positionY) {
-        super.clicked(event, positionX, positionY);
-        handleRemove();
-      }
-    });
-
-    dropButton = new TextButton(
-        "[DARK_GRAY][ [CYAN]D[DARK_GRAY] ][WHITE] Drop", main.skin
-    );
-    dropButton.pad(5);
-    dropButton.addListener(new ClickListener() {
-      @Override
-      public void enter(InputEvent event, float positionX, float positionY,
-                        int pointer, Actor fromActor) {
-        dropButton.setColor(1, 1, 1, 0.5f);
-      }
-
-      @Override
-      public void exit(InputEvent event, float positionX, float positionY,
-                       int pointer, Actor toActor) {
-        dropButton.setColor(1, 1, 1, 1);
-      }
-
-      @Override
-      public void clicked(InputEvent event, float positionX, float positionY) {
-        super.clicked(event, positionX, positionY);
-        handleDrop();
-      }
-    });
+    dropButton = new ActionButton("D", "Drop", main.skin);
+    dropButton.setKeys(Input.Keys.D);
+    dropButton.setAction(itemActionGroup, this::handleDrop);
   }
 
-  private void renderStats() {
-    statsGroup.clear();
+  private void renderAttributes() {
+    attributesGroup.clear();
 
-    AttributesComponent attributes = ComponentMappers.attributes.get(main.player);
-
-    statsGroup.addActor(new Label("[DARK_GRAY]-[] " + attributes.name, main.skin));
-    statsGroup.addActor(new Label("", main.skin));
+    attributesGroup.addActor(new Label("[DARK_GRAY]-[] Attributes", main.skin));
+    attributesGroup.addActor(new Label("", main.skin));
 
     // Health
 
@@ -325,7 +243,7 @@ public class CharacterScreen implements Screen {
       healthColor = "[WHITE]";
     }
 
-    statsGroup.addActor(
+    attributesGroup.addActor(
         new Label(
             "[LIGHT_GRAY]HP[] " + healthColor + attributes.health
                 + "[LIGHT_GRAY]/" + attributes.maxHealth, main.skin
@@ -337,7 +255,7 @@ public class CharacterScreen implements Screen {
     int toughness = attributes.toughness;
     int strength = attributes.strength;
 
-    statsGroup.addActor(
+    attributesGroup.addActor(
         new Label(
             "[LIGHT_GRAY]TUF " + "[YELLOW]" + toughness + "[DARK_GRAY]d "
                 + "[LIGHT_GRAY]STR " + "[CYAN]" + strength + "[DARK_GRAY]d",
@@ -356,7 +274,7 @@ public class CharacterScreen implements Screen {
       damage = ComponentMappers.item.get(primaryWeapon).attributes.get("hitDamage");
     }
 
-    statsGroup.addActor(
+    attributesGroup.addActor(
         new Label(
             "[LIGHT_GRAY]DEF " + "[YELLOW]" + toughness + "[DARK_GRAY]d "
                 + (defense > 0 ? "[LIGHT_GRAY]+ " + "[GREEN]" + defense + "[DARK_GRAY] " : "")
@@ -372,8 +290,6 @@ public class CharacterScreen implements Screen {
 
     skillsGroup.addActor(new Label("[DARK_GRAY]-[] Skills", main.skin));
     skillsGroup.addActor(new Label("", main.skin));
-
-    SkillsComponent skills = ComponentMappers.skills.get(main.player);
 
     if (skills.levels.get("unarmed") > 0) {
       skillsGroup.addActor(makeSkillLine("Unarmed", skills.levels.get("unarmed")));
@@ -406,15 +322,15 @@ public class CharacterScreen implements Screen {
     inventoryGroup.addActor(new Label("[DARK_GRAY]-[] Inventory", main.skin));
     inventoryGroup.addActor(new Label("", main.skin));
 
-    for (int i = 0; i < items.size(); i++) {
-      Entity entity = items.get(i);
+    for (int i = 0; i < inventoryItems.size(); i++) {
+      Entity entity = inventoryItems.get(i);
       ItemComponent item = ComponentMappers.item.get(entity);
 
       String name;
 
-      if (i == selected) {
+      if (i == itemSelected) {
         name = "[DARK_GRAY]> [WHITE]" + item.name;
-      } else if (i == hovered) {
+      } else if (i == itemHovered) {
         name = "[LIGHT_GRAY]" + item.name;
       } else {
         name = "[DARK_GRAY]" + item.name;
@@ -434,15 +350,23 @@ public class CharacterScreen implements Screen {
   private void renderItemDetails() {
     itemDetails.clear();
 
-    if (!items.isEmpty()) {
+    // Only clear children,
+    // we don't want to clear listeners 'cause that's what action button events are attached to
+    itemActionGroup.clearChildren();
+
+    if (!inventoryItems.isEmpty()) {
+      stage.setKeyboardFocus(itemActionGroup);
+
       VerticalGroup statsGroup = new VerticalGroup().align(Align.top | Align.left);
-      HorizontalGroup actionsGroup = new HorizontalGroup().space(5).align(Align.top | Align.left);
+
       itemDetails.add(statsGroup).width(Gdx.graphics.getWidth() / 3 - 20).top().left();
       itemDetails.row();
-      itemDetails.add(actionsGroup).top().left();
+      itemDetails.add(itemActionGroup).top().left();
 
-      Entity selectedItem = items.get(selected);
+      Entity selectedItem = inventoryItems.get(itemSelected);
       ItemComponent selectedItemDetails = ComponentMappers.item.get(selectedItem);
+
+      // Area name is item name
 
       statsGroup.addActor(
           new Label(
@@ -452,12 +376,16 @@ public class CharacterScreen implements Screen {
           )
       );
 
+      // Description
+
       String description = "[LIGHT_GRAY]" + selectedItemDetails.description;
       description = WordUtils.wrap(description, 50);
       Label descriptionLabel = new Label(description, main.skin);
       statsGroup.addActor(descriptionLabel);
 
       statsGroup.addActor(new Label("", main.skin));
+
+      // Where the item is equipped if it is equipped
 
       if (main.equipmentHelpers.isEquipped(main.player, selectedItem)) {
         statsGroup.addActor(
@@ -471,7 +399,7 @@ public class CharacterScreen implements Screen {
         statsGroup.addActor(new Label("", main.skin));
       }
 
-      EquipmentComponent equipment = ComponentMappers.equipment.get(main.player);
+      // Item stats
 
       if (selectedItemDetails.attributes.get("defense") != null) {
         String string = "[LIGHT_GRAY]DEF " + "[GREEN]"
@@ -534,47 +462,29 @@ public class CharacterScreen implements Screen {
 
       statsGroup.addActor(new Label("", main.skin));
 
+      // Item actions
+
       if (selectedItemDetails.actions.get("canHold")
           && !main.equipmentHelpers.isEquipped(main.player, selectedItem)) {
-        actionsGroup.addActor(holdButton);
-
-        if (Gdx.input.isKeyJustPressed(Input.Keys.H)) {
-          handleHold();
-        }
+        itemActionGroup.addActor(holdButton);
       }
 
       if (selectedItemDetails.actions.get("canWear")
           && !main.equipmentHelpers.isEquipped(main.player, selectedItem)) {
-        actionsGroup.addActor(wearButton);
-
-        if (Gdx.input.isKeyJustPressed(Input.Keys.W)) {
-          handleWear();
-        }
+        itemActionGroup.addActor(wearButton);
       }
 
       if (selectedItemDetails.actions.get("canThrow")
           && !main.equipmentHelpers.isEquipped(main.player, selectedItem)) {
-        actionsGroup.addActor(throwButton);
-
-        if (Gdx.input.isKeyJustPressed(Input.Keys.T)) {
-          handleThrow();
-        }
+        itemActionGroup.addActor(throwButton);
       }
 
       if (main.equipmentHelpers.isEquipped(main.player, selectedItem)) {
-        actionsGroup.addActor(removeButton);
-
-        if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
-          handleRemove();
-        }
+        itemActionGroup.addActor(removeButton);
       }
 
       if (!main.equipmentHelpers.isEquipped(main.player, selectedItem)) {
-        actionsGroup.addActor(dropButton);
-
-        if (Gdx.input.isKeyJustPressed(Input.Keys.D)) {
-          handleDrop();
-        }
+        itemActionGroup.addActor(dropButton);
       }
     }
   }
@@ -585,7 +495,7 @@ public class CharacterScreen implements Screen {
     equipmentGroup.addActor(new Label("[DARK_GRAY]-[] Equipment", main.skin));
     equipmentGroup.addActor(new Label("", main.skin));
 
-    for (java.util.Map.Entry<String, Entity> slot : slots.entrySet()) {
+    for (java.util.Map.Entry<String, Entity> slot : equipment.slots.entrySet()) {
       String key = WordUtils.capitalize(slot.getKey());
       Entity item = slot.getValue();
 
@@ -637,27 +547,27 @@ public class CharacterScreen implements Screen {
   }
 
   private void handleHold() {
-    main.equipmentHelpers.holdItem(main.player, items.get(selected));
+    main.equipmentHelpers.holdItem(main.player, inventoryItems.get(itemSelected));
   }
 
   private void handleWear() {
-    main.equipmentHelpers.wearItem(main.player, items.get(selected));
+    main.equipmentHelpers.wearItem(main.player, inventoryItems.get(itemSelected));
   }
 
   private void handleThrow() {
-    ComponentMappers.item.get(items.get(selected)).throwing = true;
+    ComponentMappers.item.get(inventoryItems.get(itemSelected)).throwing = true;
 
     main.state = Main.State.TARGETING;
     main.setScreen(main.playScreen);
   }
 
   private void handleRemove() {
-    main.equipmentHelpers.removeItem(main.player, items.get(selected));
+    main.equipmentHelpers.removeItem(main.player, inventoryItems.get(itemSelected));
   }
 
   private void handleDrop() {
-    main.inventoryHelpers.dropItem(main.player, items.get(selected));
-    selected = 0;
+    main.inventoryHelpers.dropItem(main.player, inventoryItems.get(itemSelected));
+    itemSelected = 0;
   }
 
   @Override
