@@ -52,7 +52,7 @@ public class Main extends Game {
     // Load custom font
     assets = new AssetManager();
     FreeTypeFontGenerator generator =
-        new FreeTypeFontGenerator(Gdx.files.internal("ui/Aller_RG.ttf"));
+        new FreeTypeFontGenerator(Gdx.files.internal("ui/Aller_Rg.ttf"));
     FreeTypeFontGenerator.FreeTypeFontParameter parameter =
         new FreeTypeFontGenerator.FreeTypeFontParameter();
     parameter.size = 12;
