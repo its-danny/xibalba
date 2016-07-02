@@ -4,9 +4,11 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
@@ -79,6 +81,18 @@ public class HudRenderer {
     characterButton.pad(5);
     characterButton.addListener(new ClickListener() {
       @Override
+      public void enter(InputEvent event, float positionX, float positionY,
+                        int pointer, Actor fromActor) {
+        characterButton.setColor(1, 1, 1, 0.5f);
+      }
+
+      @Override
+      public void exit(InputEvent event, float positionX, float positionY,
+                       int pointer, Actor toActor) {
+        characterButton.setColor(1, 1, 1, 1);
+      }
+
+      @Override
       public void clicked(InputEvent event, float positionX, float positionY) {
         super.clicked(event, positionX, positionY);
         main.setScreen(new CharacterScreen(main));
@@ -90,6 +104,18 @@ public class HudRenderer {
     );
     helpButton.pad(5);
     helpButton.addListener(new ClickListener() {
+      @Override
+      public void enter(InputEvent event, float positionX, float positionY,
+                        int pointer, Actor fromActor) {
+        helpButton.setColor(1, 1, 1, 0.5f);
+      }
+
+      @Override
+      public void exit(InputEvent event, float positionX, float positionY,
+                       int pointer, Actor toActor) {
+        helpButton.setColor(1, 1, 1, 1);
+      }
+
       @Override
       public void clicked(InputEvent event, float positionX, float positionY) {
         super.clicked(event, positionX, positionY);
@@ -133,6 +159,54 @@ public class HudRenderer {
     renderAreaDetails();
     checkAndRenderLookDetails();
     checkAndRenderFocused();
+
+    if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)) {
+      if (main.state == Main.State.FOCUSED && focusedDialogTable.getChildren().size >= 1) {
+        TextButton button = (TextButton) focusedDialogTable.getChildren().get(0);
+        String part = WordUtils.uncapitalize(button.getText().toString().split("\\s+", 2)[1]);
+        handleFocusedAttack(part);
+      }
+    }
+
+    if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_2)) {
+      if (main.state == Main.State.FOCUSED && focusedDialogTable.getChildren().size >= 2) {
+        TextButton button = (TextButton) focusedDialogTable.getChildren().get(1);
+        String part = WordUtils.uncapitalize(button.getText().toString().split("\\s+", 2)[1]);
+        handleFocusedAttack(part);
+      }
+    }
+
+    if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_3)) {
+      if (main.state == Main.State.FOCUSED && focusedDialogTable.getChildren().size >= 3) {
+        TextButton button = (TextButton) focusedDialogTable.getChildren().get(2);
+        String part = WordUtils.uncapitalize(button.getText().toString().split("\\s+", 2)[1]);
+        handleFocusedAttack(part);
+      }
+    }
+
+    if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_4)) {
+      if (main.state == Main.State.FOCUSED && focusedDialogTable.getChildren().size >= 4) {
+        TextButton button = (TextButton) focusedDialogTable.getChildren().get(3);
+        String part = WordUtils.uncapitalize(button.getText().toString().split("\\s+", 2)[1]);
+        handleFocusedAttack(part);
+      }
+    }
+
+    if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_5)) {
+      if (main.state == Main.State.FOCUSED && focusedDialogTable.getChildren().size >= 5) {
+        TextButton button = (TextButton) focusedDialogTable.getChildren().get(4);
+        String part = WordUtils.uncapitalize(button.getText().toString().split("\\s+", 2)[1]);
+        handleFocusedAttack(part);
+      }
+    }
+
+    if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_6)) {
+      if (main.state == Main.State.FOCUSED && focusedDialogTable.getChildren().size >= 5) {
+        TextButton button = (TextButton) focusedDialogTable.getChildren().get(5);
+        String part = WordUtils.uncapitalize(button.getText().toString().split("\\s+", 2)[1]);
+        handleFocusedAttack(part);
+      }
+    }
 
     stage.act(delta);
     stage.draw();
@@ -311,27 +385,33 @@ public class HudRenderer {
         focusedDialogTable.clear();
 
         BodyComponent body = ComponentMappers.body.get(main.focusedEntity);
+
+        int actionNumber = 0;
         for (String part : body.parts.keySet()) {
-          TextButton button = new TextButton(WordUtils.capitalize(part), main.skin);
+          actionNumber++;
+
+          String text = "[DARK_GRAY][[CYAN]" + actionNumber
+              + "[DARK_GRAY]][WHITE] " + WordUtils.capitalize(part);
+          TextButton button = new TextButton(text, main.skin);
           button.pad(5);
           button.addListener(new ClickListener() {
+            @Override
+            public void enter(InputEvent event, float positionX, float positionY,
+                              int pointer, Actor fromActor) {
+              button.setColor(1, 1, 1, 0.5f);
+            }
+
+            @Override
+            public void exit(InputEvent event, float positionX, float positionY,
+                             int pointer, Actor toActor) {
+              button.setColor(1, 1, 1, 1);
+            }
+
             @Override
             public void clicked(InputEvent event, float positionX, float positionY) {
               super.clicked(event, positionX, positionY);
 
-              PlayerComponent playerDetails = ComponentMappers.player.get(main.player);
-              PositionComponent focusedPosition = ComponentMappers.position.get(main.focusedEntity);
-
-              if (playerDetails.focusedAction == PlayerComponent.FocusedAction.MELEE) {
-                main.combatHelpers.preparePlayerForMelee(main.focusedEntity, part);
-              } else if (playerDetails.focusedAction == PlayerComponent.FocusedAction.THROWING) {
-                main.combatHelpers.preparePlayerForThrowing(focusedPosition.pos, part);
-              } else if (playerDetails.focusedAction == PlayerComponent.FocusedAction.RANGED) {
-                main.combatHelpers.preparePlayerForRanged(focusedPosition.pos, part);
-              }
-
-              main.state = Main.State.PLAYING;
-              main.executeTurn = true;
+              handleFocusedAttack(part);
             }
           });
 
@@ -351,5 +431,23 @@ public class HudRenderer {
         focusedDialog.hide(null);
       }
     }
+  }
+
+  private void handleFocusedAttack(String part) {
+    Gdx.app.log("HudRenderer", "Attacking " + part);
+
+    PlayerComponent playerDetails = ComponentMappers.player.get(main.player);
+    PositionComponent focusedPosition = ComponentMappers.position.get(main.focusedEntity);
+
+    if (playerDetails.focusedAction == PlayerComponent.FocusedAction.MELEE) {
+      main.combatHelpers.preparePlayerForMelee(main.focusedEntity, part);
+    } else if (playerDetails.focusedAction == PlayerComponent.FocusedAction.THROWING) {
+      main.combatHelpers.preparePlayerForThrowing(focusedPosition.pos, part);
+    } else if (playerDetails.focusedAction == PlayerComponent.FocusedAction.RANGED) {
+      main.combatHelpers.preparePlayerForRanged(focusedPosition.pos, part);
+    }
+
+    main.state = Main.State.PLAYING;
+    main.executeTurn = true;
   }
 }

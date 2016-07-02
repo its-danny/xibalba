@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Colors;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -38,8 +39,21 @@ public class MainMenuScreen implements Screen {
     newGameButton.pad(5);
     newGameButton.addListener(new ClickListener() {
       @Override
+      public void enter(InputEvent event, float positionX, float positionY,
+                        int pointer, Actor fromActor) {
+        newGameButton.setColor(1, 1, 1, 0.5f);
+      }
+
+      @Override
+      public void exit(InputEvent event, float positionX, float positionY,
+                       int pointer, Actor toActor) {
+        newGameButton.setColor(1, 1, 1, 1);
+      }
+
+      @Override
       public void clicked(InputEvent event, float positionX, float positionY) {
         super.clicked(event, positionX, positionY);
+
         main.setScreen(new ReviewScreen(main));
       }
     });
@@ -50,8 +64,21 @@ public class MainMenuScreen implements Screen {
     quitButton.pad(5);
     quitButton.addListener(new ClickListener() {
       @Override
+      public void enter(InputEvent event, float positionX, float positionY,
+                        int pointer, Actor fromActor) {
+        quitButton.setColor(1, 1, 1, 0.5f);
+      }
+
+      @Override
+      public void exit(InputEvent event, float positionX, float positionY,
+                       int pointer, Actor toActor) {
+        quitButton.setColor(1, 1, 1, 1);
+      }
+
+      @Override
       public void clicked(InputEvent event, float positionX, float positionY) {
         super.clicked(event, positionX, positionY);
+
         Gdx.app.exit();
       }
     });

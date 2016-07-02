@@ -5,9 +5,13 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Colors;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import me.dannytatom.xibalba.Main;
 
 public class PauseScreen implements Screen {
@@ -28,11 +32,91 @@ public class PauseScreen implements Screen {
     table.setFillParent(true);
     stage.addActor(table);
 
-    table.add(new Label("[CYAN]R[]eturn to Game", main.skin));
+    TextButton returnToGameButton = new TextButton(
+        "[DARK_GRAY][ [CYAN]R[DARK_GRAY] ][WHITE] Return to Game", main.skin
+    );
+    returnToGameButton.pad(5);
+    returnToGameButton.addListener(new ClickListener() {
+      @Override
+      public void enter(InputEvent event, float positionX, float positionY,
+                        int pointer, Actor fromActor) {
+        returnToGameButton.setColor(1, 1, 1, 0.5f);
+      }
+
+      @Override
+      public void exit(InputEvent event, float positionX, float positionY,
+                       int pointer, Actor toActor) {
+        returnToGameButton.setColor(1, 1, 1, 1);
+      }
+
+      @Override
+      public void clicked(InputEvent event, float positionX, float positionY) {
+        super.clicked(event, positionX, positionY);
+
+        main.setScreen(main.playScreen);
+      }
+    });
+
+    TextButton mainMenuButton = new TextButton(
+        "[DARK_GRAY][ [CYAN]M[DARK_GRAY] ][WHITE] Main Menu", main.skin
+    );
+    mainMenuButton.pad(5);
+    mainMenuButton.addListener(new ClickListener() {
+      @Override
+      public void enter(InputEvent event, float positionX, float positionY,
+                        int pointer, Actor fromActor) {
+        mainMenuButton.setColor(1, 1, 1, 0.5f);
+      }
+
+      @Override
+      public void exit(InputEvent event, float positionX, float positionY,
+                       int pointer, Actor toActor) {
+        mainMenuButton.setColor(1, 1, 1, 1);
+      }
+
+      @Override
+      public void clicked(InputEvent event, float positionX, float positionY) {
+        super.clicked(event, positionX, positionY);
+
+        main.playScreen.dispose();
+        main.playScreen = null;
+
+        main.setScreen(new MainMenuScreen(main));
+      }
+    });
+
+    TextButton quitButton = new TextButton(
+        "[DARK_GRAY][ [CYAN]Q[DARK_GRAY] ][WHITE] Quit", main.skin
+    );
+    quitButton.pad(5);
+    quitButton.addListener(new ClickListener() {
+      @Override
+      public void enter(InputEvent event, float positionX, float positionY,
+                        int pointer, Actor fromActor) {
+        quitButton.setColor(1, 1, 1, 0.5f);
+      }
+
+      @Override
+      public void exit(InputEvent event, float positionX, float positionY,
+                       int pointer, Actor toActor) {
+        quitButton.setColor(1, 1, 1, 1);
+      }
+
+      @Override
+      public void clicked(InputEvent event, float positionX, float positionY) {
+        super.clicked(event, positionX, positionY);
+
+        Gdx.app.exit();
+      }
+    });
+
+    table.add(new Label("[LIGHT_GRAY]PAUSED[]", main.skin)).pad(0, 0, 10, 0);
     table.row();
-    table.add(new Label("[CYAN]M[]ain Menu", main.skin));
+    table.add(returnToGameButton).pad(0, 0, 10, 0);
     table.row();
-    table.add(new Label("[CYAN]Q[]uit", main.skin));
+    table.add(mainMenuButton).pad(0, 0, 10, 0);
+    table.row();
+    table.add(quitButton);
 
     Gdx.input.setInputProcessor(stage);
   }

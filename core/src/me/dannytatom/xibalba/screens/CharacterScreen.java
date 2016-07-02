@@ -192,6 +192,18 @@ public class CharacterScreen implements Screen {
     holdButton.pad(5);
     holdButton.addListener(new ClickListener() {
       @Override
+      public void enter(InputEvent event, float positionX, float positionY,
+                        int pointer, Actor fromActor) {
+        holdButton.setColor(1, 1, 1, 0.5f);
+      }
+
+      @Override
+      public void exit(InputEvent event, float positionX, float positionY,
+                       int pointer, Actor toActor) {
+        holdButton.setColor(1, 1, 1, 1);
+      }
+
+      @Override
       public void clicked(InputEvent event, float positionX, float positionY) {
         super.clicked(event, positionX, positionY);
         handleHold();
@@ -203,6 +215,18 @@ public class CharacterScreen implements Screen {
     );
     wearButton.pad(5);
     wearButton.addListener(new ClickListener() {
+      @Override
+      public void enter(InputEvent event, float positionX, float positionY,
+                        int pointer, Actor fromActor) {
+        wearButton.setColor(1, 1, 1, 0.5f);
+      }
+
+      @Override
+      public void exit(InputEvent event, float positionX, float positionY,
+                       int pointer, Actor toActor) {
+        wearButton.setColor(1, 1, 1, 1);
+      }
+
       @Override
       public void clicked(InputEvent event, float positionX, float positionY) {
         super.clicked(event, positionX, positionY);
@@ -216,6 +240,18 @@ public class CharacterScreen implements Screen {
     throwButton.pad(5);
     throwButton.addListener(new ClickListener() {
       @Override
+      public void enter(InputEvent event, float positionX, float positionY,
+                        int pointer, Actor fromActor) {
+        throwButton.setColor(1, 1, 1, 0.5f);
+      }
+
+      @Override
+      public void exit(InputEvent event, float positionX, float positionY,
+                       int pointer, Actor toActor) {
+        throwButton.setColor(1, 1, 1, 1);
+      }
+
+      @Override
       public void clicked(InputEvent event, float positionX, float positionY) {
         super.clicked(event, positionX, positionY);
         handleThrow();
@@ -228,6 +264,18 @@ public class CharacterScreen implements Screen {
     removeButton.pad(5);
     removeButton.addListener(new ClickListener() {
       @Override
+      public void enter(InputEvent event, float positionX, float positionY,
+                        int pointer, Actor fromActor) {
+        removeButton.setColor(1, 1, 1, 0.5f);
+      }
+
+      @Override
+      public void exit(InputEvent event, float positionX, float positionY,
+                       int pointer, Actor toActor) {
+        removeButton.setColor(1, 1, 1, 1);
+      }
+
+      @Override
       public void clicked(InputEvent event, float positionX, float positionY) {
         super.clicked(event, positionX, positionY);
         handleRemove();
@@ -239,6 +287,18 @@ public class CharacterScreen implements Screen {
     );
     dropButton.pad(5);
     dropButton.addListener(new ClickListener() {
+      @Override
+      public void enter(InputEvent event, float positionX, float positionY,
+                        int pointer, Actor fromActor) {
+        dropButton.setColor(1, 1, 1, 0.5f);
+      }
+
+      @Override
+      public void exit(InputEvent event, float positionX, float positionY,
+                       int pointer, Actor toActor) {
+        dropButton.setColor(1, 1, 1, 1);
+      }
+
       @Override
       public void clicked(InputEvent event, float positionX, float positionY) {
         super.clicked(event, positionX, positionY);
