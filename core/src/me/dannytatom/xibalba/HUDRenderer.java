@@ -21,6 +21,7 @@ import me.dannytatom.xibalba.components.EnemyComponent;
 import me.dannytatom.xibalba.components.ItemComponent;
 import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
+import me.dannytatom.xibalba.components.StatusComponent;
 import me.dannytatom.xibalba.map.Cell;
 import me.dannytatom.xibalba.screens.CharacterScreen;
 import me.dannytatom.xibalba.screens.PauseScreen;
@@ -168,9 +169,9 @@ public class HudRenderer {
   private void renderAreaDetails() {
     areaDetails.clear();
 
-    // Depth
+    // Depth & turn count
     areaDetails.addActor(
-        new Label("[DARK_GRAY]Depth " + (main.world.currentMapIndex + 1) + "[]", main.skin)
+        new Label("[DARK_GRAY]Depth " + (main.world.currentMapIndex + 1) + ", Turn " + main.turnCount, main.skin)
     );
     areaDetails.addActor(new Label("", main.skin));
 
@@ -205,6 +206,12 @@ public class HudRenderer {
         )
     );
 
+    StatusComponent playerStatus = ComponentMappers.status.get(main.player);
+
+    if (playerStatus.crippled) {
+      areaDetails.addActor(new Label("[DARK_GRAY]CRIPPLED[]", main.skin));
+    }
+
     // Enemies visible in area
 
     ImmutableArray<Entity> enemies =
@@ -237,6 +244,12 @@ public class HudRenderer {
                     + "[LIGHT_GRAY]/" + enemyAttributes.maxHealth, main.skin
             )
         );
+
+        StatusComponent enemyStatus = ComponentMappers.status.get(enemy);
+
+        if (enemyStatus.crippled) {
+          areaDetails.addActor(new Label("[DARK_GRAY][CRIPPLED][]", main.skin));
+        }
       }
     }
 
@@ -399,8 +412,6 @@ public class HudRenderer {
   }
 
   private void handleFocusedAttack(String part) {
-    Gdx.app.log("HudRenderer", "Attacking " + part);
-
     PlayerComponent playerDetails = ComponentMappers.player.get(main.player);
     PositionComponent focusedPosition = ComponentMappers.position.get(main.focusedEntity);
 

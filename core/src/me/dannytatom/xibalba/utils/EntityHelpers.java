@@ -22,6 +22,7 @@ import me.dannytatom.xibalba.components.ItemComponent;
 import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.SkillsComponent;
+import me.dannytatom.xibalba.components.StatusComponent;
 import me.dannytatom.xibalba.components.VisualComponent;
 import me.dannytatom.xibalba.components.ai.BrainComponent;
 import me.dannytatom.xibalba.map.Map;
@@ -68,6 +69,7 @@ public class EntityHelpers {
     player.add(new InventoryComponent());
     player.add(new EquipmentComponent());
     player.add(new SkillsComponent());
+    player.add(new StatusComponent());
 
     HashMap<String, Integer> bodyParts = new HashMap<>();
     bodyParts.put("head", 10);
@@ -99,6 +101,7 @@ public class EntityHelpers {
     entity.add(new PositionComponent(map, position));
     entity.add(new VisualComponent(atlas.createSprite(json.visual.get("spritePath"))));
     entity.add(new SkillsComponent());
+    entity.add(new StatusComponent());
     entity.add(new AttributesComponent(
         json.name,
         json.description,

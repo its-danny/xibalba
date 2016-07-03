@@ -13,6 +13,7 @@ import me.dannytatom.xibalba.components.EquipmentComponent;
 import me.dannytatom.xibalba.components.ItemComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.SkillsComponent;
+import me.dannytatom.xibalba.components.StatusComponent;
 import me.dannytatom.xibalba.components.VisualComponent;
 import me.dannytatom.xibalba.components.actions.MeleeComponent;
 import me.dannytatom.xibalba.components.actions.RangeComponent;
@@ -37,6 +38,8 @@ import java.util.Objects;
 //   - If thrown, use throwDamage, otherwise hitDamage
 // - If your hit roll was double the target number, you critical (add a 6 roll to the damage)
 // - Damage done to the enemy is your total damage over their defense
+//   - This is done to their actual health and to the body part damage
+// - Body part damage is checked, add status effects to entity if necessary
 //
 
 public class CombatHelpers {
@@ -219,8 +222,6 @@ public class CombatHelpers {
     SkillsComponent skills = ComponentMappers.skills.get(starter);
     ItemComponent itemDetails = ComponentMappers.item.get(item);
 
-    Gdx.app.log("CombatHelpers", "range");
-
     String verb;
 
     if (Objects.equals(skill, "throwing")) {
@@ -296,12 +297,25 @@ public class CombatHelpers {
     int totalDamage = damage - getCombinedDefense(target);
 
     if (totalDamage > 0) {
+      BodyComponent targetBody = ComponentMappers.body.get(target);
+
       targetAttributes.health -= totalDamage;
+      targetBody.damage.put(bodyPart, targetBody.damage.get(bodyPart) + totalDamage);
 
       main.log.add(
           starterAttributes.name + " " + verb + " "
-              + targetAttributes.name + " in the " + bodyPart + " for " + totalDamage + ""
+              + targetAttributes.name + " in the " + bodyPart + " for " + totalDamage + " damage"
       );
+
+      // If you've done damage to the body part equal to or more than a third their health,
+      // apply status effect
+      if (targetBody.damage.get(bodyPart) > (targetAttributes.maxHealth / 3)) {
+        StatusComponent targetStatus = ComponentMappers.status.get(target);
+
+        if (bodyPart.contains("leg")) {
+          targetStatus.crippled = true;
+        }
+      }
     } else {
       main.log.add(
           starterAttributes.name + " " + verb + " "

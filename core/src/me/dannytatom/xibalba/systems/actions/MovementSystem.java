@@ -9,10 +9,10 @@ import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.VisualComponent;
 import me.dannytatom.xibalba.components.actions.MovementComponent;
 import me.dannytatom.xibalba.screens.PlayScreen;
-import me.dannytatom.xibalba.systems.ActionSystem;
+import me.dannytatom.xibalba.systems.UsesEnergySystem;
 import me.dannytatom.xibalba.utils.ComponentMappers;
 
-public class MovementSystem extends ActionSystem {
+public class MovementSystem extends UsesEnergySystem {
   private final Main main;
 
   /**

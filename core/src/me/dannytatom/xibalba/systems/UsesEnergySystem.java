@@ -8,8 +8,8 @@ import me.dannytatom.xibalba.utils.ComponentMappers;
 
 import java.util.Comparator;
 
-public abstract class ActionSystem extends SortedIteratingSystem {
-  protected ActionSystem(Family family) {
+public abstract class UsesEnergySystem extends SortedIteratingSystem {
+  protected UsesEnergySystem(Family family) {
     super(family, new EnergyComparator());
   }
 

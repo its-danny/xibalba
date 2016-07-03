@@ -2,22 +2,21 @@ package me.dannytatom.xibalba.systems.ai;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
-import com.badlogic.ashley.systems.SortedIteratingSystem;
 import com.badlogic.gdx.math.Vector2;
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
+import me.dannytatom.xibalba.components.StatusComponent;
 import me.dannytatom.xibalba.components.actions.MeleeComponent;
 import me.dannytatom.xibalba.components.actions.MovementComponent;
 import me.dannytatom.xibalba.components.ai.AttackComponent;
 import me.dannytatom.xibalba.components.ai.BrainComponent;
 import me.dannytatom.xibalba.components.ai.TargetComponent;
 import me.dannytatom.xibalba.components.ai.WanderComponent;
+import me.dannytatom.xibalba.systems.UsesEnergySystem;
 import me.dannytatom.xibalba.utils.ComponentMappers;
 
-import java.util.Comparator;
-
-public class BrainSystem extends SortedIteratingSystem {
+public class BrainSystem extends UsesEnergySystem {
   private final Main main;
 
   /**
@@ -26,7 +25,7 @@ public class BrainSystem extends SortedIteratingSystem {
    * @param main Instance of Main class
    */
   public BrainSystem(Main main) {
-    super(Family.all(BrainComponent.class).get(), new EnergyComparator());
+    super(Family.all(BrainComponent.class).get());
 
     this.main = main;
   }
@@ -165,6 +164,13 @@ public class BrainSystem extends SortedIteratingSystem {
 
   private void switchToWander(Entity entity) {
     BrainComponent brain = ComponentMappers.brain.get(entity);
+    StatusComponent status = ComponentMappers.status.get(entity);
+
+    if (status.crippled && status.crippledTurnCounter > 0) {
+      switchToWaiting(entity);
+
+      return;
+    }
 
     if (brain.state == BrainComponent.State.TARGETING) {
       brain.path = null;
@@ -179,6 +185,13 @@ public class BrainSystem extends SortedIteratingSystem {
 
   private void switchToTarget(Entity entity, Vector2 target) {
     BrainComponent brain = ComponentMappers.brain.get(entity);
+    StatusComponent status = ComponentMappers.status.get(entity);
+
+    if (status.crippled && status.crippledTurnCounter > 0) {
+      switchToWaiting(entity);
+
+      return;
+    }
 
     if (brain.state == BrainComponent.State.WANDERING) {
       brain.path = null;
@@ -200,21 +213,5 @@ public class BrainSystem extends SortedIteratingSystem {
     entity.remove(WanderComponent.class);
     entity.remove(TargetComponent.class);
     entity.add(new AttackComponent());
-  }
-
-  private static class EnergyComparator implements Comparator<Entity> {
-    @Override
-    public int compare(Entity e1, Entity e2) {
-      AttributesComponent a1 = ComponentMappers.attributes.get(e1);
-      AttributesComponent a2 = ComponentMappers.attributes.get(e2);
-
-      if (a2.energy > a1.energy) {
-        return 1;
-      } else if (a1.energy > a2.energy) {
-        return -1;
-      } else {
-        return 0;
-      }
-    }
   }
 }

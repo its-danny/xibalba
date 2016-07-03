@@ -14,6 +14,7 @@ import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.PlayerInput;
 import me.dannytatom.xibalba.WorldRenderer;
 import me.dannytatom.xibalba.components.PositionComponent;
+import me.dannytatom.xibalba.components.StatusComponent;
 import me.dannytatom.xibalba.utils.ComponentMappers;
 
 public class PlayScreen implements Screen {
@@ -34,6 +35,8 @@ public class PlayScreen implements Screen {
    */
   public PlayScreen(Main main) {
     this.main = main;
+
+    main.turnCount = 0;
 
     autoTimer = 0;
     fps = new FPSLogger();
@@ -77,14 +80,17 @@ public class PlayScreen implements Screen {
 
     autoTimer += delta;
 
-    // When moving w/ mouse, execute a turn every tenth of a second
-    if (main.state == Main.State.MOVING && autoTimer >= .10) {
+    // In some cases, we want the game to take turns on it's own
+    StatusComponent status = ComponentMappers.status.get(main.player);
+    if ((main.state == Main.State.MOVING || status.crippled && status.crippledTurnCounter > 0) && autoTimer >= .10) {
       autoTimer = 0;
       main.executeTurn = true;
     }
 
     // Update engine if it's time to execute a turn
     if (main.executeTurn) {
+      main.turnCount += 1;
+
       main.engine.update(delta);
       main.executeTurn = false;
     }

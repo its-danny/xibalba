@@ -31,6 +31,7 @@ public class Main extends Game {
   public State state;
   public AssetManager assets;
   public Skin skin;
+  public int turnCount;
   public ActionLog log;
   public Engine engine;
   public World world;

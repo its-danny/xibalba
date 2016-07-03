@@ -5,10 +5,10 @@ import com.badlogic.ashley.core.Family;
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.actions.MeleeComponent;
-import me.dannytatom.xibalba.systems.ActionSystem;
+import me.dannytatom.xibalba.systems.UsesEnergySystem;
 import me.dannytatom.xibalba.utils.ComponentMappers;
 
-public class MeleeSystem extends ActionSystem {
+public class MeleeSystem extends UsesEnergySystem {
   private final Main main;
 
   /**

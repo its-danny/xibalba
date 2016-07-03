@@ -5,12 +5,12 @@ import com.badlogic.ashley.core.Family;
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.actions.RangeComponent;
-import me.dannytatom.xibalba.systems.ActionSystem;
+import me.dannytatom.xibalba.systems.UsesEnergySystem;
 import me.dannytatom.xibalba.utils.ComponentMappers;
 
 import java.util.Objects;
 
-public class RangeSystem extends ActionSystem {
+public class RangeSystem extends UsesEnergySystem {
   private final Main main;
 
   /**
