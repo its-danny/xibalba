@@ -55,7 +55,7 @@ public class InventoryHelpers {
   public void removeItem(Entity entity, Entity item) {
     InventoryComponent inventory = ComponentMappers.inventory.get(entity);
 
-    if (ComponentMappers.inventory.get(entity) != null) {
+    if (ComponentMappers.inventory.has(entity)) {
       if (item != null) {
         inventory.items.remove(item);
         main.engine.removeEntity(item);
@@ -81,7 +81,7 @@ public class InventoryHelpers {
       item.add(new PositionComponent(main.world.currentMapIndex, position));
       inventory.items.remove(item);
 
-      if (ComponentMappers.player.get(entity) != null) {
+      if (ComponentMappers.player.has(entity)) {
         main.log.add("You dropped a " + ComponentMappers.item.get(item).name);
       }
     }
@@ -94,7 +94,7 @@ public class InventoryHelpers {
    * @param item   What we're dropping
    */
   public void dropItem(Entity entity, Entity item) {
-    if (ComponentMappers.inventory.get(entity) != null) {
+    if (ComponentMappers.inventory.has(entity)) {
       dropItem(entity, item, ComponentMappers.position.get(entity).pos);
     }
   }

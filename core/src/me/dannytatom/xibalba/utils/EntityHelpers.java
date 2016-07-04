@@ -239,19 +239,19 @@ public class EntityHelpers {
   }
 
   public boolean isEnemy(Entity entity) {
-    return entity != null && ComponentMappers.enemy.get(entity) != null;
+    return entity != null && ComponentMappers.enemy.has(entity);
   }
 
   public boolean isItem(Entity entity) {
-    return entity != null && ComponentMappers.item.get(entity) != null;
+    return entity != null && ComponentMappers.item.has(entity);
   }
 
   public boolean isEntrance(Entity entity) {
-    return entity != null && ComponentMappers.entrance.get(entity) != null;
+    return entity != null && ComponentMappers.entrance.has(entity);
   }
 
   public boolean isExit(Entity entity) {
-    return entity != null && ComponentMappers.exit.get(entity) != null;
+    return entity != null && ComponentMappers.exit.has(entity);
   }
 
   /**

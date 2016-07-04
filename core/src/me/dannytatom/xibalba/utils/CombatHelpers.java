@@ -1,7 +1,6 @@
 package me.dannytatom.xibalba.utils;
 
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -154,7 +153,7 @@ public class CombatHelpers {
   public void melee(Entity starter, Entity target, String bodyPart) {
     Entity weapon = null;
 
-    if (ComponentMappers.equipment.get(starter) != null) {
+    if (ComponentMappers.equipment.has(starter)) {
       weapon = main.equipmentHelpers.getPrimaryWeapon(starter);
     }
 
@@ -337,7 +336,7 @@ public class CombatHelpers {
       main.engine.addEntity(remains);
       main.engine.removeEntity(target);
 
-      if (ComponentMappers.player.get(starter) != null) {
+      if (ComponentMappers.player.has(starter)) {
         main.log.add("[GREEN]You killed " + targetAttributes.name + "!");
       } else {
         main.log.add("[RED]You have been killed by " + starterAttributes.name);

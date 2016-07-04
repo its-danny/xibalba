@@ -49,7 +49,7 @@ public class MovementSystem extends UsesEnergySystem {
       position.pos = movement.pos;
     } else {
       // If we can't, and the entity is the player, figure out what to do instead
-      if (ComponentMappers.player.get(entity) != null) {
+      if (ComponentMappers.player.has(entity)) {
         Entity thing = main.entityHelpers.getEntityAt(movement.pos);
 
         if (main.entityHelpers.isItem(thing)) {

@@ -30,7 +30,7 @@ public class SkillHelpers {
       skills.levels.put(skill, skillLevel == 0 ? 4 : skillLevel + 2);
       skills.counters.put(skill, 0);
 
-      if (ComponentMappers.player.get(entity) != null) {
+      if (ComponentMappers.player.has(entity)) {
         main.log.add("[YELLOW]You feel better at " + skill);
       }
     }
