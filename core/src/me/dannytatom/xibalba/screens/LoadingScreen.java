@@ -21,6 +21,7 @@ import me.dannytatom.xibalba.systems.actions.RangeSystem;
 import me.dannytatom.xibalba.systems.ai.BrainSystem;
 import me.dannytatom.xibalba.systems.ai.TargetSystem;
 import me.dannytatom.xibalba.systems.ai.WanderSystem;
+import me.dannytatom.xibalba.systems.statuses.BleedingSystem;
 import me.dannytatom.xibalba.systems.statuses.CrippledSystem;
 import me.dannytatom.xibalba.utils.CombatHelpers;
 import me.dannytatom.xibalba.utils.EntityHelpers;
@@ -98,7 +99,6 @@ public class LoadingScreen implements Screen {
     // Setup engine (systems are run in order added)
     main.engine = new Engine();
     main.engine.addSystem(new AttributesSystem());
-    main.engine.addSystem(new CrippledSystem());
     main.engine.addSystem(new MouseMovementSystem(main));
     main.engine.addSystem(new BrainSystem(main));
     main.engine.addSystem(new WanderSystem(main));
@@ -106,6 +106,8 @@ public class LoadingScreen implements Screen {
     main.engine.addSystem(new MeleeSystem(main));
     main.engine.addSystem(new RangeSystem(main));
     main.engine.addSystem(new MovementSystem(main));
+    main.engine.addSystem(new CrippledSystem());
+    main.engine.addSystem(new BleedingSystem());
   }
 
   private void generateWorld() {

@@ -15,6 +15,7 @@ import me.dannytatom.xibalba.components.SkillsComponent;
 import me.dannytatom.xibalba.components.VisualComponent;
 import me.dannytatom.xibalba.components.actions.MeleeComponent;
 import me.dannytatom.xibalba.components.actions.RangeComponent;
+import me.dannytatom.xibalba.components.statuses.BleedingComponent;
 import me.dannytatom.xibalba.components.statuses.CrippledComponent;
 
 import java.util.Objects;
@@ -307,10 +308,14 @@ public class CombatHelpers {
       );
 
       // If you've done damage to the body part equal to or more than a third their health,
-      // apply statuses effect
+      // apply statuses effect.
+      //
+      // TODO: Probably change this to make more sense
       if (targetBody.damage.get(bodyPart) > (targetAttributes.maxHealth / 3)) {
         if (bodyPart.contains("leg") && !main.entityHelpers.isCrippled(target)) {
           target.add(new CrippledComponent());
+        } else if (bodyPart.contains("body") && !main.entityHelpers.isBleeding(target)) {
+          target.add(new BleedingComponent());
         }
       }
     } else {

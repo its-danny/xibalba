@@ -255,6 +255,10 @@ public class EntityHelpers {
     return entity != null && ComponentMappers.crippled.has(entity);
   }
 
+  boolean isBleeding(Entity entity) {
+    return entity != null && ComponentMappers.bleeding.has(entity);
+  }
+
   public boolean skipTurn(Entity entity) {
     return isCrippled(entity) && !ComponentMappers.crippled.get(entity).instance.canAct();
   }

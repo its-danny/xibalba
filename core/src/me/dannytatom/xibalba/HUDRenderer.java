@@ -209,6 +209,10 @@ public class HudRenderer {
       areaDetails.addActor(new Label("[DARK_GRAY]CRIPPLED[]", main.skin));
     }
 
+    if (ComponentMappers.bleeding.has(main.player)) {
+      areaDetails.addActor(new Label("[DARK_GRAY]BLEEDING[]", main.skin));
+    }
+
     // Enemies visible in area
 
     ImmutableArray<Entity> enemies =
@@ -243,7 +247,11 @@ public class HudRenderer {
         );
 
         if (ComponentMappers.crippled.has(enemy)) {
-          areaDetails.addActor(new Label("[DARK_GRAY][CRIPPLED][]", main.skin));
+          areaDetails.addActor(new Label("[DARK_GRAY]CRIPPLED[]", main.skin));
+        }
+
+        if (ComponentMappers.bleeding.has(enemy)) {
+          areaDetails.addActor(new Label("[DARK_GRAY]BLEEDING[]", main.skin));
         }
       }
     }
