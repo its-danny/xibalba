@@ -125,6 +125,9 @@ public class PlayerInput implements InputProcessor {
             if (itemDetails.usesAmmunition) {
               if (main.inventoryHelpers.hasAmmunitionOfType(main.player,
                   itemDetails.ammunitionType)) {
+                playerDetails.target = null;
+                playerDetails.path = null;
+                
                 main.state = Main.State.TARGETING;
               } else {
                 main.log.add("You aren't carrying any ammunition for this");
@@ -144,6 +147,9 @@ public class PlayerInput implements InputProcessor {
 
             if (itemDetails.actions.get("canThrow")) {
               itemDetails.throwing = true;
+
+              playerDetails.target = null;
+              playerDetails.path = null;
 
               main.state = Main.State.TARGETING;
             } else {
@@ -165,8 +171,7 @@ public class PlayerInput implements InputProcessor {
       }
       case Keys.Q:
         playerDetails.target = null;
-        playerDetails.lookingPath = null;
-        playerDetails.targetingPath = null;
+        playerDetails.path = null;
 
         if (main.state == Main.State.MOVING) {
           main.player.remove(MouseMovementComponent.class);
@@ -271,7 +276,7 @@ public class PlayerInput implements InputProcessor {
 
     if (main.state == Main.State.PLAYING) {
       playerDetails.target = null;
-      playerDetails.lookingPath = null;
+      playerDetails.path = null;
 
       if (main.mapHelpers.cellExists(mousePosition)) {
         handleLooking(relativeToPlayer, true);
@@ -280,7 +285,7 @@ public class PlayerInput implements InputProcessor {
       }
     } else if (main.state == Main.State.LOOKING) {
       playerDetails.target = null;
-      playerDetails.lookingPath = null;
+      playerDetails.path = null;
 
       if (main.mapHelpers.cellExists(mousePosition)) {
         handleLooking(relativeToPlayer, false);
@@ -289,7 +294,7 @@ public class PlayerInput implements InputProcessor {
       }
     } else if (main.state == Main.State.TARGETING) {
       playerDetails.target = null;
-      playerDetails.targetingPath = null;
+      playerDetails.path = null;
 
       if (main.mapHelpers.cellExists(mousePosition)) {
         handleTargeting(relativeToPlayer);
@@ -338,18 +343,26 @@ public class PlayerInput implements InputProcessor {
 
     PlayerComponent playerDetails = ComponentMappers.player.get(main.player);
 
-    playerDetails.target = null;
-    playerDetails.lookingPath = null;
-    playerDetails.targetingPath = null;
+    playerDetails.path = null;
   }
 
   private void handleTargeting(Vector2 pos) {
+    PlayerComponent playerDetails = ComponentMappers.player.get(main.player);
+
+    playerDetails.target = null;
+    playerDetails.path = null;
+
     main.mapHelpers.createTargetingPath(
         ComponentMappers.position.get(main.player).pos, pos
     );
   }
 
   private void handleLooking(Vector2 pos, boolean careAboutWalls) {
+    PlayerComponent playerDetails = ComponentMappers.player.get(main.player);
+
+    playerDetails.target = null;
+    playerDetails.path = null;
+
     main.mapHelpers.createLookingPath(
         ComponentMappers.position.get(main.player).pos, pos, careAboutWalls
     );
@@ -378,9 +391,6 @@ public class PlayerInput implements InputProcessor {
 
       main.state = Main.State.PLAYING;
     }
-
-    playerDetails.target = null;
-    playerDetails.targetingPath = null;
   }
 
   private void handleRange() {
@@ -406,8 +416,5 @@ public class PlayerInput implements InputProcessor {
 
       main.state = Main.State.PLAYING;
     }
-
-    playerDetails.target = null;
-    playerDetails.targetingPath = null;
   }
 }

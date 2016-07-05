@@ -157,17 +157,17 @@ public class MapHelpers {
       playerDetails.target = playerDetails.target.add(end);
     }
 
-    playerDetails.targetingPath = finder.findPath(
+    playerDetails.path = finder.findPath(
         (int) start.x, (int) start.y,
         (int) playerDetails.target.x, (int) playerDetails.target.y, grid
     );
 
     // TODO: Instead of 5, range should be determined by strength
-    if (playerDetails.targetingPath == null || playerDetails.targetingPath.size() > 5) {
+    if (playerDetails.path == null || playerDetails.path.size() > 5) {
       playerDetails.target = oldTarget;
 
       if (playerDetails.target != null) {
-        playerDetails.targetingPath = finder.findPath(
+        playerDetails.path = finder.findPath(
             (int) start.x, (int) start.y,
             (int) playerDetails.target.x, (int) playerDetails.target.y, grid
         );
@@ -216,16 +216,16 @@ public class MapHelpers {
       playerDetails.target = playerDetails.target.add(end);
     }
 
-    playerDetails.lookingPath = finder.findPath(
+    playerDetails.path = finder.findPath(
         (int) start.x, (int) start.y,
         (int) playerDetails.target.x, (int) playerDetails.target.y, grid
     );
 
-    if (playerDetails.lookingPath == null) {
+    if (playerDetails.path == null) {
       playerDetails.target = oldTarget;
 
       if (playerDetails.target != null) {
-        playerDetails.lookingPath = finder.findPath(
+        playerDetails.path = finder.findPath(
             (int) start.x, (int) start.y,
             (int) playerDetails.target.x, (int) playerDetails.target.y, grid
         );

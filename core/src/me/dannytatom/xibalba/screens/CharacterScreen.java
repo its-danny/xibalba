@@ -20,6 +20,7 @@ import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.EquipmentComponent;
 import me.dannytatom.xibalba.components.ItemComponent;
+import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.SkillsComponent;
 import me.dannytatom.xibalba.ui.ActionButton;
 import me.dannytatom.xibalba.utils.ComponentMappers;
@@ -616,6 +617,11 @@ public class CharacterScreen implements Screen {
 
   private void handleThrow() {
     ComponentMappers.item.get(inventoryItems.get(itemSelected)).throwing = true;
+
+    PlayerComponent playerDetails = ComponentMappers.player.get(main.player);
+
+    playerDetails.target = null;
+    playerDetails.path = null;
 
     main.state = Main.State.TARGETING;
     main.setScreen(main.playScreen);

@@ -39,19 +39,19 @@ public class MouseMovementSystem extends EntitySystem {
       PlayerComponent playerDetails = ComponentMappers.player.get(main.player);
 
       // Remove mouse movement component once path is empty
-      if (playerDetails.lookingPath == null || playerDetails.lookingPath.isEmpty()) {
+      if (playerDetails.path == null || playerDetails.path.isEmpty()) {
         entity.remove(MouseMovementComponent.class);
         main.state = Main.State.PLAYING;
       } else {
         // Start walking
-        GridCell cell = playerDetails.lookingPath.get(0);
+        GridCell cell = playerDetails.path.get(0);
 
         entity.add(new MovementComponent(new Vector2(cell.getX(), cell.getY())));
 
-        List<GridCell> newPath = new ArrayList<>(playerDetails.lookingPath);
+        List<GridCell> newPath = new ArrayList<>(playerDetails.path);
         newPath.remove(cell);
 
-        playerDetails.lookingPath = newPath;
+        playerDetails.path = newPath;
       }
     }
   }
