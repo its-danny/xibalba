@@ -3,7 +3,7 @@ package me.dannytatom.xibalba.systems.ai;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.math.Vector2;
-import me.dannytatom.xibalba.Main;
+import me.dannytatom.xibalba.WorldManager;
 import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.actions.MovementComponent;
 import me.dannytatom.xibalba.components.ai.BrainComponent;
@@ -18,17 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WanderSystem extends UsesEnergySystem {
-  private final Main main;
-
-  /**
-   * Handles AI wandering around.
-   *
-   * @param main Instance of Main class
-   */
-  public WanderSystem(Main main) {
+  public WanderSystem() {
     super(Family.all(WanderComponent.class, PositionComponent.class).get());
-
-    this.main = main;
   }
 
   @Override
@@ -41,11 +32,11 @@ public class WanderSystem extends UsesEnergySystem {
       PositionComponent position = ComponentMappers.position.get(entity);
 
       NavigationGrid<GridCell> grid =
-          new NavigationGrid<>(main.mapHelpers.createPathfindingMap(), false);
+          new NavigationGrid<>(WorldManager.mapHelpers.createPathfindingMap(), false);
       AStarGridFinder<GridCell> finder = new AStarGridFinder<>(GridCell.class);
 
       do {
-        Vector2 randomPosition = main.mapHelpers.getRandomOpenPosition();
+        Vector2 randomPosition = WorldManager.mapHelpers.getRandomOpenPosition();
         brain.path = finder.findPath((int) position.pos.x, (int) position.pos.y,
             (int) randomPosition.x, (int) randomPosition.y, grid);
       } while (brain.path == null);

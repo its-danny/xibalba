@@ -5,7 +5,7 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import me.dannytatom.xibalba.Main;
+import me.dannytatom.xibalba.WorldManager;
 import me.dannytatom.xibalba.components.DecorationComponent;
 import me.dannytatom.xibalba.components.EntranceComponent;
 import me.dannytatom.xibalba.components.ExitComponent;
@@ -18,10 +18,8 @@ import org.xguzm.pathfinding.grid.NavigationGrid;
 import org.xguzm.pathfinding.grid.finders.AStarGridFinder;
 
 public class MapHelpers {
-  private final Main main;
+  public MapHelpers() {
 
-  public MapHelpers(Main main) {
-    this.main = main;
   }
 
   /**
@@ -32,7 +30,7 @@ public class MapHelpers {
    * @return If it does indeed exist
    */
   public boolean cellExists(Vector2 position) {
-    Cell[][] map = main.world.getCurrentMap().getCellMap();
+    Cell[][] map = WorldManager.world.getCurrentMap().getCellMap();
 
     return position.x > 0 && position.x < map.length
         && position.y > 0 && position.y < map[0].length
@@ -40,15 +38,15 @@ public class MapHelpers {
   }
 
   private Cell getCell(int mapIndex, int cellX, int cellY) {
-    return main.world.getMap(mapIndex).getCellMap()[cellX][cellY];
+    return WorldManager.world.getMap(mapIndex).getCellMap()[cellX][cellY];
   }
 
   public Cell getCell(int cellX, int cellY) {
-    return getCell(main.world.currentMapIndex, cellX, cellY);
+    return getCell(WorldManager.world.currentMapIndex, cellX, cellY);
   }
 
   public Cell getCell(float cellX, float cellY) {
-    return getCell(main.world.currentMapIndex, (int) cellX, (int) cellY);
+    return getCell(WorldManager.world.currentMapIndex, (int) cellX, (int) cellY);
   }
 
   /**
@@ -59,14 +57,14 @@ public class MapHelpers {
    * @return Is it blocked?
    */
   public boolean isBlocked(int mapIndex, Vector2 position) {
-    Cell[][] map = main.world.getMap(mapIndex).getCellMap();
+    Cell[][] map = WorldManager.world.getMap(mapIndex).getCellMap();
 
     boolean blocked = map[(int) position.x][(int) position.y].isWall
         || map[(int) position.x][(int) position.y].isNothing;
 
     if (!blocked) {
       ImmutableArray<Entity> entities =
-          main.engine.getEntitiesFor(
+          WorldManager.engine.getEntitiesFor(
               Family.all(PositionComponent.class).exclude(DecorationComponent.class).get()
           );
 
@@ -89,12 +87,14 @@ public class MapHelpers {
    * @return 2d array of GridCells
    */
   public GridCell[][] createPathfindingMap() {
-    Map map = main.world.getCurrentMap();
+    Map map = WorldManager.world.getCurrentMap();
     GridCell[][] cells = new GridCell[map.width][map.height];
 
     for (int x = 0; x < map.width; x++) {
       for (int y = 0; y < map.height; y++) {
-        cells[x][y] = new GridCell(x, y, !isBlocked(main.world.currentMapIndex, new Vector2(x, y)));
+        cells[x][y] = new GridCell(
+            x, y, !isBlocked(WorldManager.world.currentMapIndex, new Vector2(x, y))
+        );
       }
     }
 
@@ -109,7 +109,7 @@ public class MapHelpers {
    * @return Resistance map
    */
   public float[][] createFovMap() {
-    Map map = main.world.getCurrentMap();
+    Map map = WorldManager.world.getCurrentMap();
     float[][] resistanceMap = new float[map.width][map.height];
 
     for (int x = 0; x < map.width; x++) {
@@ -128,7 +128,7 @@ public class MapHelpers {
    * @param end   Where they're throwing to
    */
   public void createTargetingPath(Vector2 start, Vector2 end) {
-    Map map = main.world.getCurrentMap();
+    Map map = WorldManager.world.getCurrentMap();
 
     Vector2 oldTarget;
     GridCell[][] cells = new GridCell[map.width][map.height];
@@ -147,7 +147,7 @@ public class MapHelpers {
     NavigationGrid<GridCell> grid = new NavigationGrid<>(cells, false);
     AStarGridFinder<GridCell> finder = new AStarGridFinder<>(GridCell.class);
 
-    PlayerComponent playerDetails = ComponentMappers.player.get(main.player);
+    PlayerComponent playerDetails = ComponentMappers.player.get(WorldManager.player);
 
     if (playerDetails.target == null) {
       oldTarget = null;
@@ -182,7 +182,7 @@ public class MapHelpers {
    * @param end   End position
    */
   public void createLookingPath(Vector2 start, Vector2 end, boolean careAboutWalls) {
-    Map map = main.world.getCurrentMap();
+    Map map = WorldManager.world.getCurrentMap();
 
     Vector2 oldTarget;
     GridCell[][] cells = new GridCell[map.width][map.height];
@@ -206,7 +206,7 @@ public class MapHelpers {
     NavigationGrid<GridCell> grid = new NavigationGrid<>(cells, false);
     AStarGridFinder<GridCell> finder = new AStarGridFinder<>(GridCell.class);
 
-    PlayerComponent playerDetails = ComponentMappers.player.get(main.player);
+    PlayerComponent playerDetails = ComponentMappers.player.get(WorldManager.player);
 
     if (playerDetails.target == null) {
       oldTarget = null;
@@ -242,7 +242,7 @@ public class MapHelpers {
    * @return Whether or not they are
    */
   public boolean isNearPlayer(Entity entity, int radius) {
-    PositionComponent playerPosition = ComponentMappers.position.get(main.player);
+    PositionComponent playerPosition = ComponentMappers.position.get(WorldManager.player);
     PositionComponent entityPosition = ComponentMappers.position.get(entity);
 
     return (entityPosition.pos.x == playerPosition.pos.x - radius
@@ -259,7 +259,7 @@ public class MapHelpers {
    * @return Player position
    */
   public Vector2 getOpenSpaceNearPlayer() {
-    return getOpenSpaceNearEntity(ComponentMappers.position.get(main.player).pos);
+    return getOpenSpaceNearEntity(ComponentMappers.position.get(WorldManager.player).pos);
   }
 
   /**
@@ -270,13 +270,13 @@ public class MapHelpers {
   private Vector2 getOpenSpaceNearEntity(Vector2 pos) {
     Vector2 position;
 
-    if (!isBlocked(main.world.currentMapIndex, new Vector2(pos.x + 1, pos.y))) {
+    if (!isBlocked(WorldManager.world.currentMapIndex, new Vector2(pos.x + 1, pos.y))) {
       position = new Vector2(pos.x + 1, pos.y);
-    } else if (!isBlocked(main.world.currentMapIndex, new Vector2(pos.x - 1, pos.y))) {
+    } else if (!isBlocked(WorldManager.world.currentMapIndex, new Vector2(pos.x - 1, pos.y))) {
       position = new Vector2(pos.x - 1, pos.y);
-    } else if (!isBlocked(main.world.currentMapIndex, new Vector2(pos.x, pos.y + 1))) {
+    } else if (!isBlocked(WorldManager.world.currentMapIndex, new Vector2(pos.x, pos.y + 1))) {
       position = new Vector2(pos.x, pos.y + 1);
-    } else if (!isBlocked(main.world.currentMapIndex, new Vector2(pos.x, pos.y - 1))) {
+    } else if (!isBlocked(WorldManager.world.currentMapIndex, new Vector2(pos.x, pos.y - 1))) {
       position = new Vector2(pos.x, pos.y - 1);
     } else {
       position = null;
@@ -292,17 +292,17 @@ public class MapHelpers {
    */
   public Vector2 getEntrancePosition() {
     ImmutableArray<Entity> entrances =
-        main.engine.getEntitiesFor(Family.all(EntranceComponent.class).get());
+        WorldManager.engine.getEntitiesFor(Family.all(EntranceComponent.class).get());
 
     for (Entity entrance : entrances) {
       PositionComponent position = ComponentMappers.position.get(entrance);
 
-      if (position.map == main.world.currentMapIndex) {
+      if (position.map == WorldManager.world.currentMapIndex) {
         return position.pos;
       }
     }
 
-    return getRandomOpenPositionOnMap(main.world.currentMapIndex);
+    return getRandomOpenPositionOnMap(WorldManager.world.currentMapIndex);
   }
 
   /**
@@ -312,17 +312,17 @@ public class MapHelpers {
    */
   public Vector2 getExitPosition() {
     ImmutableArray<Entity> exits =
-        main.engine.getEntitiesFor(Family.all(ExitComponent.class).get());
+        WorldManager.engine.getEntitiesFor(Family.all(ExitComponent.class).get());
 
     for (Entity exit : exits) {
       PositionComponent position = ComponentMappers.position.get(exit);
 
-      if (position.map == main.world.currentMapIndex) {
+      if (position.map == WorldManager.world.currentMapIndex) {
         return position.pos;
       }
     }
 
-    return getRandomOpenPositionOnMap(main.world.currentMapIndex);
+    return getRandomOpenPositionOnMap(WorldManager.world.currentMapIndex);
   }
 
   /**
@@ -331,7 +331,7 @@ public class MapHelpers {
    * @return Random open cell
    */
   public Vector2 getRandomOpenPositionOnMap(int index) {
-    Map map = main.world.getMap(index);
+    Map map = WorldManager.world.getMap(index);
     int cellX;
     int cellY;
 
@@ -349,7 +349,7 @@ public class MapHelpers {
    * @return Random open cell
    */
   public Vector2 getRandomOpenPosition() {
-    return getRandomOpenPositionOnMap(main.world.currentMapIndex);
+    return getRandomOpenPositionOnMap(WorldManager.world.currentMapIndex);
   }
 
   /**
@@ -364,7 +364,7 @@ public class MapHelpers {
   public int getWallNeighbours(int mapIndex, int cellX, int cellY) {
     int count = 0;
 
-    boolean[][] geometry = main.world.getMap(mapIndex).geometry;
+    boolean[][] geometry = WorldManager.world.getMap(mapIndex).geometry;
 
     for (int i = -1; i < 2; i++) {
       for (int j = -1; j < 2; j++) {

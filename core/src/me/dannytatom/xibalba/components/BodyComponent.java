@@ -8,6 +8,11 @@ public class BodyComponent implements Component {
   public final HashMap<String, Integer> parts;
   public final HashMap<String, Integer> damage;
 
+  /**
+   * Body parts.
+   *
+   * @param parts HashMap of parts
+   */
   public BodyComponent(HashMap<String, Integer> parts) {
     this.parts = parts;
     this.damage = new HashMap<>();

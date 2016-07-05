@@ -3,7 +3,7 @@ package me.dannytatom.xibalba.systems.ai;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.math.Vector2;
-import me.dannytatom.xibalba.Main;
+import me.dannytatom.xibalba.WorldManager;
 import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.actions.MeleeComponent;
@@ -16,17 +16,8 @@ import me.dannytatom.xibalba.systems.UsesEnergySystem;
 import me.dannytatom.xibalba.utils.ComponentMappers;
 
 public class BrainSystem extends UsesEnergySystem {
-  private final Main main;
-
-  /**
-   * Handles AI states.
-   *
-   * @param main Instance of Main class
-   */
-  public BrainSystem(Main main) {
+  public BrainSystem() {
     super(Family.all(BrainComponent.class).get());
-
-    this.main = main;
   }
 
   @Override
@@ -34,7 +25,7 @@ public class BrainSystem extends UsesEnergySystem {
     BrainComponent brain = ComponentMappers.brain.get(entity);
     PositionComponent position = ComponentMappers.position.get(entity);
 
-    if (position.map == main.world.currentMapIndex) {
+    if (position.map == WorldManager.world.currentMapIndex) {
       switch (brain.state) {
         case WAITING:
           handleWaiting(entity);
@@ -64,7 +55,7 @@ public class BrainSystem extends UsesEnergySystem {
   private void handleWaiting(Entity entity) {
     AttributesComponent attributes = ComponentMappers.attributes.get(entity);
 
-    if (main.entityHelpers.isNearPlayer(entity)) {
+    if (WorldManager.entityHelpers.isNearPlayer(entity)) {
       if (attributes.energy >= MeleeComponent.COST) {
         switchToAttack(entity);
       } else if (attributes.energy >= MovementComponent.COST) {
@@ -72,8 +63,8 @@ public class BrainSystem extends UsesEnergySystem {
       }
     } else {
       if (attributes.energy >= MovementComponent.COST) {
-        if (main.entityHelpers.canSeePlayer(entity, attributes.vision)) {
-          switchToTarget(entity, main.mapHelpers.getOpenSpaceNearPlayer());
+        if (WorldManager.entityHelpers.canSeePlayer(entity, attributes.vision)) {
+          switchToTarget(entity, WorldManager.mapHelpers.getOpenSpaceNearPlayer());
         } else {
           switchToWander(entity);
         }
@@ -84,7 +75,7 @@ public class BrainSystem extends UsesEnergySystem {
   private void handleWander(Entity entity) {
     AttributesComponent attributes = ComponentMappers.attributes.get(entity);
 
-    if (main.entityHelpers.isNearPlayer(entity)) {
+    if (WorldManager.entityHelpers.isNearPlayer(entity)) {
       if (attributes.energy >= MeleeComponent.COST) {
         switchToAttack(entity);
       } else if (attributes.energy >= MovementComponent.COST) {
@@ -94,8 +85,8 @@ public class BrainSystem extends UsesEnergySystem {
       }
     } else {
       if (attributes.energy >= MovementComponent.COST) {
-        if (main.entityHelpers.canSeePlayer(entity, attributes.vision)) {
-          switchToTarget(entity, main.mapHelpers.getOpenSpaceNearPlayer());
+        if (WorldManager.entityHelpers.canSeePlayer(entity, attributes.vision)) {
+          switchToTarget(entity, WorldManager.mapHelpers.getOpenSpaceNearPlayer());
         } else {
           switchToWander(entity);
         }
@@ -108,9 +99,9 @@ public class BrainSystem extends UsesEnergySystem {
   private void handleTarget(Entity entity) {
     AttributesComponent attributes = ComponentMappers.attributes.get(entity);
     TargetComponent target = ComponentMappers.target.get(entity);
-    Vector2 playerPosition = ComponentMappers.position.get(main.player).pos;
+    Vector2 playerPosition = ComponentMappers.position.get(WorldManager.player).pos;
 
-    if (main.entityHelpers.isNearPlayer(entity)) {
+    if (WorldManager.entityHelpers.isNearPlayer(entity)) {
       if (attributes.energy >= MeleeComponent.COST) {
         switchToAttack(entity);
       } else {
@@ -118,9 +109,9 @@ public class BrainSystem extends UsesEnergySystem {
       }
     } else {
       if (attributes.energy >= MovementComponent.COST) {
-        if (main.entityHelpers.canSeePlayer(entity, attributes.vision)) {
+        if (WorldManager.entityHelpers.canSeePlayer(entity, attributes.vision)) {
           if (playerPosition != target.pos) {
-            switchToTarget(entity, main.mapHelpers.getOpenSpaceNearPlayer());
+            switchToTarget(entity, WorldManager.mapHelpers.getOpenSpaceNearPlayer());
           }
         } else {
           switchToWander(entity);
@@ -134,16 +125,16 @@ public class BrainSystem extends UsesEnergySystem {
   private void handleAttack(Entity entity) {
     AttributesComponent attributes = ComponentMappers.attributes.get(entity);
 
-    if (main.entityHelpers.isNearPlayer(entity)) {
+    if (WorldManager.entityHelpers.isNearPlayer(entity)) {
       if (attributes.energy >= MeleeComponent.COST) {
-        entity.add(new MeleeComponent(main.player, "body"));
+        entity.add(new MeleeComponent(WorldManager.player, "body"));
       } else if (attributes.energy >= MovementComponent.COST) {
         switchToWander(entity);
       }
     } else {
       if (attributes.energy >= MovementComponent.COST) {
-        if (main.entityHelpers.canSeePlayer(entity, attributes.vision)) {
-          switchToTarget(entity, main.mapHelpers.getOpenSpaceNearPlayer());
+        if (WorldManager.entityHelpers.canSeePlayer(entity, attributes.vision)) {
+          switchToTarget(entity, WorldManager.mapHelpers.getOpenSpaceNearPlayer());
         } else {
           switchToWander(entity);
         }
@@ -164,7 +155,7 @@ public class BrainSystem extends UsesEnergySystem {
   private void switchToWander(Entity entity) {
     BrainComponent brain = ComponentMappers.brain.get(entity);
 
-    if (main.entityHelpers.skipTurn(entity)) {
+    if (WorldManager.entityHelpers.skipTurn(entity)) {
       switchToWaiting(entity);
 
       return;
@@ -184,7 +175,7 @@ public class BrainSystem extends UsesEnergySystem {
   private void switchToTarget(Entity entity, Vector2 target) {
     BrainComponent brain = ComponentMappers.brain.get(entity);
 
-    if (main.entityHelpers.skipTurn(entity)) {
+    if (WorldManager.entityHelpers.skipTurn(entity)) {
       switchToWaiting(entity);
 
       return;

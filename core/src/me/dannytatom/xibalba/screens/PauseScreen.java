@@ -26,24 +26,22 @@ public class PauseScreen implements Screen {
     table.setFillParent(true);
     stage.addActor(table);
 
-    ActionButton returnToGameButton = new ActionButton("ESC", "Return to Game", main.skin);
+    ActionButton returnToGameButton = new ActionButton("ESC", "Return to Game");
     returnToGameButton.setKeys(Input.Keys.ESCAPE);
-    returnToGameButton.setAction(table, () -> main.setScreen(main.playScreen));
+    returnToGameButton.setAction(table, () -> main.setScreen(Main.playScreen));
 
-    ActionButton mainMenuButton = new ActionButton("M", "Main Menu", main.skin);
+    ActionButton mainMenuButton = new ActionButton("M", "Main Menu");
     mainMenuButton.setKeys(Input.Keys.M);
     mainMenuButton.setAction(table, () -> {
-      main.playScreen.dispose();
-      main.playScreen = null;
-
+      Main.playScreen.dispose();
       main.setScreen(new MainMenuScreen(main));
     });
 
-    ActionButton quitButton = new ActionButton("Q", "Quit", main.skin);
+    ActionButton quitButton = new ActionButton("Q", "Quit");
     quitButton.setKeys(Input.Keys.Q);
     quitButton.setAction(table, () -> Gdx.app.exit());
 
-    table.add(new Label("[LIGHT_GRAY]PAUSED[]", main.skin)).pad(0, 0, 10, 0);
+    table.add(new Label("[LIGHT_GRAY]PAUSED[]", Main.skin)).pad(0, 0, 10, 0);
     table.row();
     table.add(returnToGameButton).pad(0, 0, 10, 0);
     table.row();

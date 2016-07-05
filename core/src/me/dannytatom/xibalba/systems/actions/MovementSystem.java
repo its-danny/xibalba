@@ -2,28 +2,18 @@ package me.dannytatom.xibalba.systems.actions;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
-import me.dannytatom.xibalba.Main;
+import me.dannytatom.xibalba.WorldManager;
 import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.MouseMovementComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.VisualComponent;
 import me.dannytatom.xibalba.components.actions.MovementComponent;
-import me.dannytatom.xibalba.screens.PlayScreen;
 import me.dannytatom.xibalba.systems.UsesEnergySystem;
 import me.dannytatom.xibalba.utils.ComponentMappers;
 
 public class MovementSystem extends UsesEnergySystem {
-  private final Main main;
-
-  /**
-   * Handles movement.
-   *
-   * @param main Instance of Main class
-   */
-  public MovementSystem(Main main) {
+  public MovementSystem() {
     super(Family.all(MovementComponent.class).get());
-
-    this.main = main;
   }
 
   /**
@@ -45,33 +35,29 @@ public class MovementSystem extends UsesEnergySystem {
     }
 
     // If we can move, move
-    if (!main.mapHelpers.isBlocked(main.world.currentMapIndex, movement.pos)) {
+    if (!WorldManager.mapHelpers.isBlocked(WorldManager.world.currentMapIndex, movement.pos)) {
       position.pos = movement.pos;
     } else {
       // If we can't, and the entity is the player, figure out what to do instead
       if (ComponentMappers.player.has(entity)) {
-        Entity thing = main.entityHelpers.getEntityAt(movement.pos);
+        Entity thing = WorldManager.entityHelpers.getEntityAt(movement.pos);
 
-        if (main.entityHelpers.isItem(thing)) {
-          main.inventoryHelpers.addItem(main.player, thing);
+        if (WorldManager.entityHelpers.isItem(thing)) {
+          WorldManager.inventoryHelpers.addItem(WorldManager.player, thing);
 
           position.pos = movement.pos;
-        } else if (main.entityHelpers.isEnemy(thing)) {
-          main.combatHelpers.preparePlayerForMelee(thing, "body");
-        } else if (main.entityHelpers.isExit(thing)) {
-          main.world.currentMapIndex += 1;
-          main.playScreen = new PlayScreen(main);
-          main.setScreen(main.playScreen);
+        } else if (WorldManager.entityHelpers.isEnemy(thing)) {
+          WorldManager.combatHelpers.preparePlayerForMelee(thing, "body");
+        } else if (WorldManager.entityHelpers.isExit(thing)) {
+          WorldManager.world.currentMapIndex += 1;
 
           entity.remove(MouseMovementComponent.class);
-          position.map = main.world.currentMapIndex;
-        } else if (main.entityHelpers.isEntrance(thing)) {
-          main.world.currentMapIndex -= 1;
-          main.playScreen = new PlayScreen(main);
-          main.setScreen(main.playScreen);
+          position.map = WorldManager.world.currentMapIndex;
+        } else if (WorldManager.entityHelpers.isEntrance(thing)) {
+          WorldManager.world.currentMapIndex -= 1;
 
           entity.remove(MouseMovementComponent.class);
-          position.map = main.world.currentMapIndex;
+          position.map = WorldManager.world.currentMapIndex;
         }
       }
     }

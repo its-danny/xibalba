@@ -2,7 +2,7 @@ package me.dannytatom.xibalba.utils;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.Vector2;
-import me.dannytatom.xibalba.Main;
+import me.dannytatom.xibalba.WorldManager;
 import me.dannytatom.xibalba.components.EquipmentComponent;
 import me.dannytatom.xibalba.components.InventoryComponent;
 import me.dannytatom.xibalba.components.ItemComponent;
@@ -14,10 +14,8 @@ import java.util.Map;
 import java.util.Objects;
 
 public class InventoryHelpers {
-  private final Main main;
+  public InventoryHelpers() {
 
-  public InventoryHelpers(Main main) {
-    this.main = main;
   }
 
   /**
@@ -37,12 +35,16 @@ public class InventoryHelpers {
         EquipmentComponent equipment = ComponentMappers.equipment.get(entity);
         ItemComponent itemDetails = ComponentMappers.item.get(item);
 
-        main.log.add("You picked up a " + main.entityHelpers.getItemName(entity, item));
+        WorldManager.log.add(
+            "You picked up a " + WorldManager.entityHelpers.getItemName(entity, item)
+        );
 
         if (Objects.equals(itemDetails.type, "weapon")
             && equipment.slots.get("right hand") == null) {
-          main.equipmentHelpers.holdItem(entity, item);
-          main.log.add("You are now holding a " + main.entityHelpers.getItemName(entity, item));
+          WorldManager.equipmentHelpers.holdItem(entity, item);
+          WorldManager.log.add(
+              "You are now holding a " + WorldManager.entityHelpers.getItemName(entity, item)
+          );
         }
       }
     }
@@ -53,11 +55,13 @@ public class InventoryHelpers {
       ItemComponent itemDetails = ComponentMappers.item.get(item);
 
       if (itemDetails.attributes.get("raiseHealth") != null) {
-        main.entityHelpers.raiseHealth(entity, itemDetails.attributes.get("raiseHealth"));
+        WorldManager.entityHelpers.raiseHealth(entity, itemDetails.attributes.get("raiseHealth"));
       }
 
       if (itemDetails.attributes.get("raiseStrength") != null) {
-        main.entityHelpers.raiseStrength(entity, itemDetails.attributes.get("raiseStrength"));
+        WorldManager.entityHelpers.raiseStrength(
+            entity, itemDetails.attributes.get("raiseStrength")
+        );
       }
 
       PlayerComponent player = ComponentMappers.player.get(entity);
@@ -82,7 +86,9 @@ public class InventoryHelpers {
         if (targetItemDetails.attributes.get(attribute) == null) {
           targetItemDetails.attributes.put(attribute, value);
         } else {
-          targetItemDetails.attributes.put(attribute, targetItemDetails.attributes.get(attribute) + value);
+          targetItemDetails.attributes.put(
+              attribute, targetItemDetails.attributes.get(attribute) + value
+          );
         }
 
         removeItem(entity, applyingItem);
@@ -101,7 +107,7 @@ public class InventoryHelpers {
 
     if (inventory != null && item != null) {
       inventory.items.remove(item);
-      main.engine.removeEntity(item);
+      WorldManager.engine.removeEntity(item);
     }
   }
 
@@ -116,15 +122,17 @@ public class InventoryHelpers {
     InventoryComponent inventory = ComponentMappers.inventory.get(entity);
 
     if (inventory != null) {
-      if (main.equipmentHelpers.isEquipped(entity, item)) {
-        main.equipmentHelpers.removeItem(entity, item);
+      if (WorldManager.equipmentHelpers.isEquipped(entity, item)) {
+        WorldManager.equipmentHelpers.removeItem(entity, item);
       }
 
-      item.add(new PositionComponent(main.world.currentMapIndex, position));
+      item.add(new PositionComponent(WorldManager.world.currentMapIndex, position));
       inventory.items.remove(item);
 
       if (ComponentMappers.player.has(entity)) {
-        main.log.add("You dropped a " + main.entityHelpers.getItemName(entity, item));
+        WorldManager.log.add(
+            "You dropped a " + WorldManager.entityHelpers.getItemName(entity, item)
+        );
       }
     }
   }

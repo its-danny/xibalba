@@ -56,7 +56,7 @@ public class HudRenderer {
 
     viewport = new FitViewport(960, 540, new OrthographicCamera());
     stage = new Stage(viewport, batch);
-    playerDetails = ComponentMappers.player.get(main.player);
+    playerDetails = ComponentMappers.player.get(WorldManager.player);
 
     topTable = new Table();
     topTable.top().left();
@@ -104,20 +104,20 @@ public class HudRenderer {
   private void setupBottomTable() {
     // Bottom buttons
 
-    AttributesComponent playerAttributes = ComponentMappers.attributes.get(main.player);
-    ActionButton characterButton = new ActionButton("C", playerAttributes.name, main.skin);
+    AttributesComponent playerAttributes = ComponentMappers.attributes.get(WorldManager.player);
+    ActionButton characterButton = new ActionButton("C", playerAttributes.name);
     characterButton.setKeys(Input.Keys.C);
     characterButton.setAction(bottomTable, () -> main.setScreen(new CharacterScreen(main)));
 
-    ActionButton inventoryButton = new ActionButton("I", "Inventory", main.skin);
+    ActionButton inventoryButton = new ActionButton("I", "Inventory");
     inventoryButton.setKeys(Input.Keys.I);
     inventoryButton.setAction(bottomTable, () -> main.setScreen(new CharacterScreen(main)));
 
-    ActionButton restButton = new ActionButton("Z", "Rest", main.skin);
+    ActionButton restButton = new ActionButton("Z", "Rest");
     restButton.setKeys(Input.Keys.Z);
-    restButton.setAction(bottomTable, () -> main.executeTurn = true);
+    restButton.setAction(bottomTable, () -> WorldManager.executeTurn = true);
 
-    ActionButton pauseButton = new ActionButton("ESC", "Pause", main.skin);
+    ActionButton pauseButton = new ActionButton("ESC", "Pause");
     pauseButton.setKeys(Input.Keys.ESCAPE);
     pauseButton.setAction(bottomTable, () -> main.setScreen(new PauseScreen(main)));
 
@@ -129,14 +129,14 @@ public class HudRenderer {
 
     // Look details
 
-    lookDetails = new Label(null, main.skin);
+    lookDetails = new Label(null, Main.skin);
     bottomTable.add(lookDetails).pad(0, 0, 10, 0);
     bottomTable.row();
     bottomTable.add(buttons).pad(0, 0, 10, 0);
 
     // Look Dialog
 
-    lookDialog = new Dialog("", main.skin);
+    lookDialog = new Dialog("", Main.skin);
     lookDialog.pad(5, 5, 10, 10);
     lookDialog.setModal(false);
     lookDialog.setMovable(false);
@@ -145,7 +145,7 @@ public class HudRenderer {
 
     // Focused Dialog
 
-    focusedDialog = new Dialog("", main.skin);
+    focusedDialog = new Dialog("", Main.skin);
     focusedDialog.pad(5, 0, 10, 5);
     focusedDialog.setModal(false);
     focusedDialog.setMovable(false);
@@ -156,9 +156,9 @@ public class HudRenderer {
   private void renderActionLog() {
     actionLog.clear();
 
-    for (int i = 0; i < main.log.things.size(); i++) {
-      String action = WordUtils.wrap(main.log.things.get(i), 100);
-      Label label = new Label(action, main.skin);
+    for (int i = 0; i < WorldManager.log.things.size(); i++) {
+      String action = WordUtils.wrap(WorldManager.log.things.get(i), 100);
+      Label label = new Label(action, Main.skin);
       label.setColor(1f, 1f, 1f, i == 0 ? 1f : 0.5f);
 
       actionLog.addActor(label);
@@ -170,25 +170,26 @@ public class HudRenderer {
 
     // Depth & turn count
     areaDetails.addActor(
-        new Label("[DARK_GRAY]Depth " + (main.world.currentMapIndex + 1) + ", Turn " + main.turnCount, main.skin)
+        new Label("[DARK_GRAY]Depth " + (WorldManager.world.currentMapIndex + 1)
+            + ", Turn " + WorldManager.turnCount, Main.skin)
     );
-    areaDetails.addActor(new Label("", main.skin));
+    areaDetails.addActor(new Label("", Main.skin));
 
     // Player area
 
-    AttributesComponent playerAttributes = ComponentMappers.attributes.get(main.player);
+    AttributesComponent playerAttributes = ComponentMappers.attributes.get(WorldManager.player);
 
     String name = playerAttributes.name;
 
-    if (main.state == Main.State.LOOKING) {
+    if (WorldManager.state == WorldManager.State.LOOKING) {
       name += " [DARK_GRAY][LOOKING][]";
-    } else if (main.state == Main.State.TARGETING) {
+    } else if (WorldManager.state == WorldManager.State.TARGETING) {
       name += " [DARK_GRAY][TARGETING][]";
-    } else if (main.state == Main.State.FOCUSED) {
+    } else if (WorldManager.state == WorldManager.State.FOCUSED) {
       name += " [DARK_GRAY][FOCUSED][]";
     }
 
-    areaDetails.addActor(new Label(name, main.skin));
+    areaDetails.addActor(new Label(name, Main.skin));
 
     String playerHealthColor;
 
@@ -201,35 +202,35 @@ public class HudRenderer {
     areaDetails.addActor(
         new Label(
             playerHealthColor + playerAttributes.health
-                + "[LIGHT_GRAY]/" + playerAttributes.maxHealth, main.skin
+                + "[LIGHT_GRAY]/" + playerAttributes.maxHealth, Main.skin
         )
     );
 
-    if (ComponentMappers.crippled.has(main.player)) {
-      areaDetails.addActor(new Label("[DARK_GRAY]CRIPPLED[]", main.skin));
+    if (ComponentMappers.crippled.has(WorldManager.player)) {
+      areaDetails.addActor(new Label("[DARK_GRAY]CRIPPLED[]", Main.skin));
     }
 
-    if (ComponentMappers.bleeding.has(main.player)) {
-      areaDetails.addActor(new Label("[DARK_GRAY]BLEEDING[]", main.skin));
+    if (ComponentMappers.bleeding.has(WorldManager.player)) {
+      areaDetails.addActor(new Label("[DARK_GRAY]BLEEDING[]", Main.skin));
     }
 
     // Enemies visible in area
 
     ImmutableArray<Entity> enemies =
-        main.engine.getEntitiesFor(Family.all(EnemyComponent.class).get());
+        WorldManager.engine.getEntitiesFor(Family.all(EnemyComponent.class).get());
 
     boolean showingEnemyBreak = false;
 
     for (Entity enemy : enemies) {
-      if (main.entityHelpers.isVisibleToPlayer(enemy)) {
+      if (WorldManager.entityHelpers.isVisibleToPlayer(enemy)) {
         if (!showingEnemyBreak) {
-          areaDetails.addActor(new Label("", main.skin));
+          areaDetails.addActor(new Label("", Main.skin));
           showingEnemyBreak = true;
         }
 
         AttributesComponent enemyAttributes = ComponentMappers.attributes.get(enemy);
 
-        areaDetails.addActor(new Label("[RED]" + enemyAttributes.name + "[]", main.skin));
+        areaDetails.addActor(new Label("[RED]" + enemyAttributes.name + "[]", Main.skin));
 
         String enemyHealthColor;
 
@@ -242,16 +243,16 @@ public class HudRenderer {
         areaDetails.addActor(
             new Label(
                 enemyHealthColor + enemyAttributes.health
-                    + "[LIGHT_GRAY]/" + enemyAttributes.maxHealth, main.skin
+                    + "[LIGHT_GRAY]/" + enemyAttributes.maxHealth, Main.skin
             )
         );
 
         if (ComponentMappers.crippled.has(enemy)) {
-          areaDetails.addActor(new Label("[DARK_GRAY]CRIPPLED[]", main.skin));
+          areaDetails.addActor(new Label("[DARK_GRAY]CRIPPLED[]", Main.skin));
         }
 
         if (ComponentMappers.bleeding.has(enemy)) {
-          areaDetails.addActor(new Label("[DARK_GRAY]BLEEDING[]", main.skin));
+          areaDetails.addActor(new Label("[DARK_GRAY]BLEEDING[]", Main.skin));
         }
       }
     }
@@ -259,20 +260,20 @@ public class HudRenderer {
     // Items visible in area
 
     ImmutableArray<Entity> items =
-        main.engine.getEntitiesFor(Family.all(ItemComponent.class).get());
+        WorldManager.engine.getEntitiesFor(Family.all(ItemComponent.class).get());
 
     boolean showingItemBreak = false;
 
     for (Entity item : items) {
-      if (main.entityHelpers.isVisibleToPlayer(item)) {
+      if (WorldManager.entityHelpers.isVisibleToPlayer(item)) {
         if (!showingItemBreak) {
-          areaDetails.addActor(new Label("", main.skin));
+          areaDetails.addActor(new Label("", Main.skin));
           showingItemBreak = true;
         }
 
-        ItemComponent itemDetails = ComponentMappers.item.get(item);
-
-        areaDetails.addActor(new Label("[YELLOW]" + main.entityHelpers.getItemName(main.player, item) + "[]", main.skin));
+        areaDetails.addActor(new Label("[YELLOW]"
+            + WorldManager.entityHelpers.getItemName(WorldManager.player, item)
+            + "[]", Main.skin));
       }
     }
   }
@@ -293,7 +294,7 @@ public class HudRenderer {
   }
 
   private void renderLookDetails(Vector2 position) {
-    Cell cell = main.mapHelpers.getCell(position.x, position.y);
+    Cell cell = WorldManager.mapHelpers.getCell(position.x, position.y);
 
     if (cell.forgotten) {
       lookDetails.setText("You remember seeing " + cell.description + ".");
@@ -302,40 +303,43 @@ public class HudRenderer {
 
       boolean showLookDialog = false;
 
-      Entity item = main.entityHelpers.getItemAt(position);
+      Entity item = WorldManager.entityHelpers.getItemAt(position);
 
       if (item != null) {
         showLookDialog = true;
         ItemComponent itemDetails = ComponentMappers.item.get(item);
 
         lookDialogGroup.addActor(
-            new Label("[YELLOW]" + main.entityHelpers.getItemName(main.player, item), main.skin)
+            new Label(
+                "[YELLOW]" + WorldManager.entityHelpers.getItemName(WorldManager.player, item),
+                Main.skin
+            )
         );
 
         String description = WordUtils.wrap(itemDetails.description, 50);
 
         lookDialogGroup.addActor(
-            new Label("[LIGHT_GRAY]" + description, main.skin)
+            new Label("[LIGHT_GRAY]" + description, Main.skin)
         );
       }
 
-      Entity enemy = main.entityHelpers.getEnemyAt(position);
+      Entity enemy = WorldManager.entityHelpers.getEnemyAt(position);
 
       if (enemy != null) {
         showLookDialog = true;
         AttributesComponent enemyAttributes = ComponentMappers.attributes.get(enemy);
 
         lookDialogGroup.addActor(
-            new Label("[RED]" + enemyAttributes.name, main.skin)
+            new Label("[RED]" + enemyAttributes.name, Main.skin)
         );
 
         String description = WordUtils.wrap(enemyAttributes.description, 50);
 
         lookDialogGroup.addActor(
-            new Label("[LIGHT_GRAY]" + description, main.skin)
+            new Label("[LIGHT_GRAY]" + description, Main.skin)
         );
 
-        lookDialogGroup.addActor(new Label("", main.skin));
+        lookDialogGroup.addActor(new Label("", Main.skin));
 
         String enemyHealthColor;
 
@@ -348,7 +352,7 @@ public class HudRenderer {
         lookDialogGroup.addActor(
             new Label(
                 "[LIGHT_GRAY]HP " + enemyHealthColor + enemyAttributes.health
-                    + "[LIGHT_GRAY]/" + enemyAttributes.maxHealth, main.skin
+                    + "[LIGHT_GRAY]/" + enemyAttributes.maxHealth, Main.skin
             )
         );
       }
@@ -372,7 +376,7 @@ public class HudRenderer {
   }
 
   private void checkAndRenderFocused() {
-    if (main.state == Main.State.FOCUSED) {
+    if (WorldManager.state == WorldManager.State.FOCUSED) {
       if (lookDialogShowing) {
         lookDialogShowing = false;
         lookDialog.hide(null);
@@ -381,7 +385,8 @@ public class HudRenderer {
       if (!focusedDialogShowing) {
         focusedDialogTable.clear();
 
-        BodyComponent body = ComponentMappers.body.get(main.focusedEntity);
+        PlayerComponent player = ComponentMappers.player.get(WorldManager.player);
+        BodyComponent body = ComponentMappers.body.get(player.focusedEntity);
 
         int actionNumber = 0;
         for (String part : body.parts.keySet()) {
@@ -389,7 +394,7 @@ public class HudRenderer {
 
           // If you look at the docs for Input.Keys, number keys are offset by 7
           // (e.g. 0 = 7, 1 = 8, etc)
-          ActionButton button = new ActionButton(actionNumber, WordUtils.capitalize(part), main.skin);
+          ActionButton button = new ActionButton(actionNumber, WordUtils.capitalize(part));
           button.setKeys(actionNumber + 7);
           button.setAction(focusedDialogTable, () -> handleFocusedAttack(part));
 
@@ -415,18 +420,18 @@ public class HudRenderer {
   }
 
   private void handleFocusedAttack(String part) {
-    PlayerComponent playerDetails = ComponentMappers.player.get(main.player);
-    PositionComponent focusedPosition = ComponentMappers.position.get(main.focusedEntity);
+    PlayerComponent playerDetails = ComponentMappers.player.get(WorldManager.player);
+    PositionComponent focusedPosition = ComponentMappers.position.get(playerDetails.focusedEntity);
 
     if (playerDetails.focusedAction == PlayerComponent.FocusedAction.MELEE) {
-      main.combatHelpers.preparePlayerForMelee(main.focusedEntity, part);
+      WorldManager.combatHelpers.preparePlayerForMelee(playerDetails.focusedEntity, part);
     } else if (playerDetails.focusedAction == PlayerComponent.FocusedAction.THROWING) {
-      main.combatHelpers.preparePlayerForThrowing(focusedPosition.pos, part);
+      WorldManager.combatHelpers.preparePlayerForThrowing(focusedPosition.pos, part);
     } else if (playerDetails.focusedAction == PlayerComponent.FocusedAction.RANGED) {
-      main.combatHelpers.preparePlayerForRanged(focusedPosition.pos, part);
+      WorldManager.combatHelpers.preparePlayerForRanged(focusedPosition.pos, part);
     }
 
-    main.state = Main.State.PLAYING;
-    main.executeTurn = true;
+    WorldManager.state = WorldManager.State.PLAYING;
+    WorldManager.executeTurn = true;
   }
 }

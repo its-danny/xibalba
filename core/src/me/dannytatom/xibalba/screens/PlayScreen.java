@@ -8,15 +8,15 @@ import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import me.dannytatom.xibalba.ActionLog;
 import me.dannytatom.xibalba.HudRenderer;
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.PlayerInput;
+import me.dannytatom.xibalba.WorldManager;
 import me.dannytatom.xibalba.WorldRenderer;
 import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.utils.ComponentMappers;
 
-public class PlayScreen implements Screen {
+class PlayScreen implements Screen {
   private final Main main;
 
   private final FPSLogger fps;
@@ -35,31 +35,26 @@ public class PlayScreen implements Screen {
   public PlayScreen(Main main) {
     this.main = main;
 
-    main.turnCount = 0;
-
     autoTimer = 0;
     fps = new FPSLogger();
     batch = new SpriteBatch();
 
-    // Setup action log
-    main.log = new ActionLog();
-
     // Add player entity
-    PositionComponent playerPosition = ComponentMappers.position.get(main.player);
-    playerPosition.pos = main.mapHelpers.getEntrancePosition();
+    PositionComponent playerPosition = ComponentMappers.position.get(WorldManager.player);
+    playerPosition.pos = WorldManager.mapHelpers.getEntrancePosition();
 
     // Setup renderers
     OrthographicCamera worldCamera = new OrthographicCamera();
-    worldRenderer = new WorldRenderer(main, worldCamera, batch);
+    worldRenderer = new WorldRenderer(worldCamera, batch);
     hudRenderer = new HudRenderer(main, batch);
 
     // Setup input
     multiplexer = new InputMultiplexer();
     multiplexer.addProcessor(hudRenderer.stage);
-    multiplexer.addProcessor(new PlayerInput(main, worldCamera));
+    multiplexer.addProcessor(new PlayerInput(worldCamera));
 
     // Change state to playing
-    main.state = Main.State.PLAYING;
+    WorldManager.state = WorldManager.State.PLAYING;
 
     Gdx.app.log("PlayScreen", "Game Started");
   }
@@ -80,23 +75,23 @@ public class PlayScreen implements Screen {
     autoTimer += delta;
 
     // In some cases, we want the game to take turns on it's own
-    if ((main.state == Main.State.MOVING || main.entityHelpers.skipTurn(main.player)) && autoTimer >= .10) {
+    if ((WorldManager.state == WorldManager.State.MOVING || WorldManager.entityHelpers.skipTurn(WorldManager.player)) && autoTimer >= .10) {
       autoTimer = 0;
-      main.executeTurn = true;
+      WorldManager.executeTurn = true;
     }
 
     // Update engine if it's time to execute a turn
-    if (main.executeTurn) {
-      main.turnCount += 1;
+    if (WorldManager.executeTurn) {
+      WorldManager.turnCount += 1;
 
-      main.engine.update(delta);
-      main.executeTurn = false;
+      WorldManager.engine.update(delta);
+      WorldManager.executeTurn = false;
     }
 
-    if (ComponentMappers.attributes.get(main.player).health <= 0) {
-      main.world.currentMapIndex = 0;
+    if (ComponentMappers.attributes.get(WorldManager.player).health <= 0) {
+      WorldManager.world.currentMapIndex = 0;
 
-      main.getScreen().dispose();
+      Main.playScreen.dispose();
       main.setScreen(new MainMenuScreen(main));
     } else {
       worldRenderer.render();
@@ -134,7 +129,6 @@ public class PlayScreen implements Screen {
   public void dispose() {
     batch.dispose();
 
-    main.log = null;
-    main.state = null;
+    WorldManager.state = null;
   }
 }

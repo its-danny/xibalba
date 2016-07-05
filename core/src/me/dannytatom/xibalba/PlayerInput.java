@@ -16,131 +16,126 @@ import me.dannytatom.xibalba.components.actions.RangeComponent;
 import me.dannytatom.xibalba.utils.ComponentMappers;
 
 public class PlayerInput implements InputProcessor {
-  private final Main main;
   private final OrthographicCamera worldCamera;
 
   private boolean holdingShift = false;
 
-  /**
-   * Handle player input.
-   *
-   * @param main Instance of the main class
-   */
-  public PlayerInput(Main main, OrthographicCamera worldCamera) {
-    this.main = main;
+  public PlayerInput(OrthographicCamera worldCamera) {
     this.worldCamera = worldCamera;
   }
 
   @Override
   public boolean keyDown(int keycode) {
-    AttributesComponent attributes = ComponentMappers.attributes.get(main.player);
-    PositionComponent position = ComponentMappers.position.get(main.player);
-    PlayerComponent playerDetails = ComponentMappers.player.get(main.player);
+    AttributesComponent attributes = ComponentMappers.attributes.get(WorldManager.player);
+    PositionComponent position = ComponentMappers.position.get(WorldManager.player);
+    PlayerComponent playerDetails = ComponentMappers.player.get(WorldManager.player);
 
     switch (keycode) {
       case Keys.K:
-        if (main.state == Main.State.PLAYING) {
+        if (WorldManager.state == WorldManager.State.PLAYING) {
           handleMovement(attributes.energy, new Vector2(position.pos.x, position.pos.y + 1));
-        } else if (main.state == Main.State.TARGETING) {
+        } else if (WorldManager.state == WorldManager.State.TARGETING) {
           handleTargeting(new Vector2(0, 1));
-        } else if (main.state == Main.State.LOOKING) {
+        } else if (WorldManager.state == WorldManager.State.LOOKING) {
           handleLooking(new Vector2(0, 1), false);
         }
         break;
       case Keys.U:
-        if (main.state == Main.State.PLAYING) {
+        if (WorldManager.state == WorldManager.State.PLAYING) {
           handleMovement(attributes.energy, new Vector2(position.pos.x + 1, position.pos.y + 1));
-        } else if (main.state == Main.State.TARGETING) {
+        } else if (WorldManager.state == WorldManager.State.TARGETING) {
           handleTargeting(new Vector2(1, 1));
-        } else if (main.state == Main.State.LOOKING) {
+        } else if (WorldManager.state == WorldManager.State.LOOKING) {
           handleLooking(new Vector2(1, 1), false);
         }
         break;
       case Keys.L:
-        if (main.state == Main.State.PLAYING) {
+        if (WorldManager.state == WorldManager.State.PLAYING) {
           handleMovement(attributes.energy, new Vector2(position.pos.x + 1, position.pos.y));
-        } else if (main.state == Main.State.TARGETING) {
+        } else if (WorldManager.state == WorldManager.State.TARGETING) {
           handleTargeting(new Vector2(1, 0));
-        } else if (main.state == Main.State.LOOKING) {
+        } else if (WorldManager.state == WorldManager.State.LOOKING) {
           handleLooking(new Vector2(1, 0), false);
         }
         break;
       case Keys.N:
-        if (main.state == Main.State.PLAYING) {
+        if (WorldManager.state == WorldManager.State.PLAYING) {
           handleMovement(attributes.energy, new Vector2(position.pos.x + 1, position.pos.y - 1));
-        } else if (main.state == Main.State.TARGETING) {
+        } else if (WorldManager.state == WorldManager.State.TARGETING) {
           handleTargeting(new Vector2(1, -1));
-        } else if (main.state == Main.State.LOOKING) {
+        } else if (WorldManager.state == WorldManager.State.LOOKING) {
           handleLooking(new Vector2(1, -1), false);
         }
         break;
       case Keys.J:
-        if (main.state == Main.State.PLAYING) {
+        if (WorldManager.state == WorldManager.State.PLAYING) {
           handleMovement(attributes.energy, new Vector2(position.pos.x, position.pos.y - 1));
-        } else if (main.state == Main.State.TARGETING) {
+        } else if (WorldManager.state == WorldManager.State.TARGETING) {
           handleTargeting(new Vector2(0, -1));
-        } else if (main.state == Main.State.LOOKING) {
+        } else if (WorldManager.state == WorldManager.State.LOOKING) {
           handleLooking(new Vector2(0, -1), false);
         }
         break;
       case Keys.B:
-        if (main.state == Main.State.PLAYING) {
+        if (WorldManager.state == WorldManager.State.PLAYING) {
           handleMovement(attributes.energy, new Vector2(position.pos.x - 1, position.pos.y - 1));
-        } else if (main.state == Main.State.TARGETING) {
+        } else if (WorldManager.state == WorldManager.State.TARGETING) {
           handleTargeting(new Vector2(-1, -1));
-        } else if (main.state == Main.State.LOOKING) {
+        } else if (WorldManager.state == WorldManager.State.LOOKING) {
           handleLooking(new Vector2(-1, -1), false);
         }
         break;
       case Keys.H:
-        if (main.state == Main.State.PLAYING) {
+        if (WorldManager.state == WorldManager.State.PLAYING) {
           handleMovement(attributes.energy, new Vector2(position.pos.x - 1, position.pos.y));
-        } else if (main.state == Main.State.TARGETING) {
+        } else if (WorldManager.state == WorldManager.State.TARGETING) {
           handleTargeting(new Vector2(-1, 0));
-        } else if (main.state == Main.State.LOOKING) {
+        } else if (WorldManager.state == WorldManager.State.LOOKING) {
           handleLooking(new Vector2(-1, 0), false);
         }
         break;
       case Keys.Y:
-        if (main.state == Main.State.PLAYING) {
+        if (WorldManager.state == WorldManager.State.PLAYING) {
           handleMovement(attributes.energy, new Vector2(position.pos.x - 1, position.pos.y + 1));
-        } else if (main.state == Main.State.TARGETING) {
+        } else if (WorldManager.state == WorldManager.State.TARGETING) {
           handleTargeting(new Vector2(-1, 1));
-        } else if (main.state == Main.State.LOOKING) {
+        } else if (WorldManager.state == WorldManager.State.LOOKING) {
           handleLooking(new Vector2(-1, 1), false);
         }
         break;
       case Keys.S:
-        if (main.state == Main.State.PLAYING) {
-          main.state = Main.State.LOOKING;
+        if (WorldManager.state == WorldManager.State.PLAYING) {
+          WorldManager.state = WorldManager.State.LOOKING;
         }
         break;
       case Keys.R:
-        if (main.state == Main.State.PLAYING) {
-          Entity primaryWeapon = main.equipmentHelpers.getPrimaryWeapon(main.player);
+        if (WorldManager.state == WorldManager.State.PLAYING) {
+          Entity primaryWeapon
+              = WorldManager.equipmentHelpers.getPrimaryWeapon(WorldManager.player);
 
           if (primaryWeapon != null) {
             ItemComponent itemDetails = ComponentMappers.item.get(primaryWeapon);
 
             if (itemDetails.usesAmmunition) {
-              if (main.inventoryHelpers.hasAmmunitionOfType(main.player,
+              if (WorldManager.inventoryHelpers.hasAmmunitionOfType(WorldManager.player,
                   itemDetails.ammunitionType)) {
                 playerDetails.target = null;
                 playerDetails.path = null;
-                
-                main.state = Main.State.TARGETING;
+
+                WorldManager.state = WorldManager.State.TARGETING;
               } else {
-                main.log.add("You aren't carrying any ammunition for this");
+                WorldManager.log.add("You aren't carrying any ammunition for this");
               }
             } else {
-              main.log.add("This weapon doesn't take ammunition");
+              WorldManager.log.add("This weapon doesn't take ammunition");
             }
           }
         }
         break;
       case Keys.T: {
-        if (main.state == Main.State.PLAYING) {
-          Entity primaryWeapon = main.equipmentHelpers.getPrimaryWeapon(main.player);
+        if (WorldManager.state == WorldManager.State.PLAYING) {
+          Entity primaryWeapon
+              = WorldManager.equipmentHelpers.getPrimaryWeapon(WorldManager.player);
 
           if (primaryWeapon != null) {
             ItemComponent itemDetails = ComponentMappers.item.get(primaryWeapon);
@@ -151,20 +146,21 @@ public class PlayerInput implements InputProcessor {
               playerDetails.target = null;
               playerDetails.path = null;
 
-              main.state = Main.State.TARGETING;
+              WorldManager.state = WorldManager.State.TARGETING;
             } else {
-              main.log.add("You can't throw that");
+              WorldManager.log.add("You can't throw that");
             }
           }
         }
         break;
       }
       case Keys.D: {
-        if (main.state == Main.State.PLAYING) {
-          Entity primaryWeapon = main.equipmentHelpers.getPrimaryWeapon(main.player);
+        if (WorldManager.state == WorldManager.State.PLAYING) {
+          Entity primaryWeapon
+              = WorldManager.equipmentHelpers.getPrimaryWeapon(WorldManager.player);
 
           if (primaryWeapon != null) {
-            main.inventoryHelpers.dropItem(main.player, primaryWeapon);
+            WorldManager.inventoryHelpers.dropItem(WorldManager.player, primaryWeapon);
           }
         }
         break;
@@ -173,16 +169,16 @@ public class PlayerInput implements InputProcessor {
         playerDetails.target = null;
         playerDetails.path = null;
 
-        if (main.state == Main.State.MOVING) {
-          main.player.remove(MouseMovementComponent.class);
-          main.player.remove(MovementComponent.class);
+        if (WorldManager.state == WorldManager.State.MOVING) {
+          WorldManager.player.remove(MouseMovementComponent.class);
+          WorldManager.player.remove(MovementComponent.class);
         }
 
-        main.state = Main.State.PLAYING;
+        WorldManager.state = WorldManager.State.PLAYING;
         break;
       case Keys.SPACE:
-        if (main.state == Main.State.TARGETING) {
-          if (main.inventoryHelpers.getThrowingItem(main.player) == null) {
+        if (WorldManager.state == WorldManager.State.TARGETING) {
+          if (WorldManager.inventoryHelpers.getThrowingItem(WorldManager.player) == null) {
             handleRange();
           } else {
             handleThrow();
@@ -224,35 +220,36 @@ public class PlayerInput implements InputProcessor {
 
   @Override
   public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-    if (main.state == Main.State.PLAYING) {
-      Vector2 mousePosition = main.mousePositionToWorld(worldCamera);
+    if (WorldManager.state == WorldManager.State.PLAYING) {
+      Vector2 mousePosition = Main.mousePositionToWorld(worldCamera);
 
       if (holdingShift) {
-        Entity enemy = main.entityHelpers.getEnemyAt(mousePosition);
+        Entity enemy = WorldManager.entityHelpers.getEnemyAt(mousePosition);
+        PlayerComponent player = ComponentMappers.player.get(WorldManager.player);
 
-        if (enemy != null && main.mapHelpers.isNearPlayer(enemy, 1)) {
-          ComponentMappers.player.get(main.player).focusedAction =
-              PlayerComponent.FocusedAction.MELEE;
-          main.state = Main.State.FOCUSED;
-          main.focusedEntity = enemy;
+        if (enemy != null && WorldManager.mapHelpers.isNearPlayer(enemy, 1)) {
+          player.focusedAction = PlayerComponent.FocusedAction.MELEE;
+          player.focusedEntity = enemy;
+
+          WorldManager.state = WorldManager.State.FOCUSED;
 
           return true;
         }
       } else {
-        if (ComponentMappers.mouseMovement.get(main.player) == null) {
-          if (main.mapHelpers.cellExists(mousePosition)
-              && !main.mapHelpers.getCell(mousePosition.x, mousePosition.y).hidden) {
-            main.player.add(new MouseMovementComponent());
+        if (ComponentMappers.mouseMovement.get(WorldManager.player) == null) {
+          if (WorldManager.mapHelpers.cellExists(mousePosition)
+              && !WorldManager.mapHelpers.getCell(mousePosition.x, mousePosition.y).hidden) {
+            WorldManager.player.add(new MouseMovementComponent());
 
-            main.state = Main.State.MOVING;
-            main.executeTurn = true;
+            WorldManager.state = WorldManager.State.MOVING;
+            WorldManager.executeTurn = true;
 
             return true;
           }
         }
       }
-    } else if (main.state == Main.State.TARGETING) {
-      if (main.inventoryHelpers.getThrowingItem(main.player) == null) {
+    } else if (WorldManager.state == WorldManager.State.TARGETING) {
+      if (WorldManager.inventoryHelpers.getThrowingItem(WorldManager.player) == null) {
         handleRange();
       } else {
         handleThrow();
@@ -269,34 +266,34 @@ public class PlayerInput implements InputProcessor {
 
   @Override
   public boolean mouseMoved(int screenX, int screenY) {
-    PlayerComponent playerDetails = ComponentMappers.player.get(main.player);
-    PositionComponent playerPosition = ComponentMappers.position.get(main.player);
-    Vector2 mousePosition = main.mousePositionToWorld(worldCamera);
+    PlayerComponent playerDetails = ComponentMappers.player.get(WorldManager.player);
+    PositionComponent playerPosition = ComponentMappers.position.get(WorldManager.player);
+    Vector2 mousePosition = Main.mousePositionToWorld(worldCamera);
     Vector2 relativeToPlayer = mousePosition.cpy().sub(playerPosition.pos);
 
-    if (main.state == Main.State.PLAYING) {
+    if (WorldManager.state == WorldManager.State.PLAYING) {
       playerDetails.target = null;
       playerDetails.path = null;
 
-      if (main.mapHelpers.cellExists(mousePosition)) {
+      if (WorldManager.mapHelpers.cellExists(mousePosition)) {
         handleLooking(relativeToPlayer, true);
 
         return true;
       }
-    } else if (main.state == Main.State.LOOKING) {
+    } else if (WorldManager.state == WorldManager.State.LOOKING) {
       playerDetails.target = null;
       playerDetails.path = null;
 
-      if (main.mapHelpers.cellExists(mousePosition)) {
+      if (WorldManager.mapHelpers.cellExists(mousePosition)) {
         handleLooking(relativeToPlayer, false);
 
         return true;
       }
-    } else if (main.state == Main.State.TARGETING) {
+    } else if (WorldManager.state == WorldManager.State.TARGETING) {
       playerDetails.target = null;
       playerDetails.path = null;
 
-      if (main.mapHelpers.cellExists(mousePosition)) {
+      if (WorldManager.mapHelpers.cellExists(mousePosition)) {
         handleTargeting(relativeToPlayer);
 
         return true;
@@ -327,94 +324,97 @@ public class PlayerInput implements InputProcessor {
    */
   private void handleMovement(int energy, Vector2 pos) {
     if (holdingShift) {
-      Entity enemy = main.entityHelpers.getEnemyAt(pos);
+      Entity enemy = WorldManager.entityHelpers.getEnemyAt(pos);
+      PlayerComponent player = ComponentMappers.player.get(WorldManager.player);
 
       if (enemy != null) {
-        main.state = Main.State.FOCUSED;
-        main.focusedEntity = enemy;
+        WorldManager.state = WorldManager.State.FOCUSED;
+        player.focusedEntity = enemy;
       }
     } else {
       if (energy >= MovementComponent.COST) {
-        main.player.add(new MovementComponent(pos));
+        WorldManager.player.add(new MovementComponent(pos));
 
-        main.executeTurn = true;
+        WorldManager.executeTurn = true;
       }
     }
 
-    PlayerComponent playerDetails = ComponentMappers.player.get(main.player);
+    PlayerComponent playerDetails = ComponentMappers.player.get(WorldManager.player);
 
     playerDetails.path = null;
   }
 
   private void handleTargeting(Vector2 pos) {
-    PlayerComponent playerDetails = ComponentMappers.player.get(main.player);
+    PlayerComponent playerDetails = ComponentMappers.player.get(WorldManager.player);
 
     playerDetails.target = null;
     playerDetails.path = null;
 
-    main.mapHelpers.createTargetingPath(
-        ComponentMappers.position.get(main.player).pos, pos
+    WorldManager.mapHelpers.createTargetingPath(
+        ComponentMappers.position.get(WorldManager.player).pos, pos
     );
   }
 
   private void handleLooking(Vector2 pos, boolean careAboutWalls) {
-    PlayerComponent playerDetails = ComponentMappers.player.get(main.player);
+    PlayerComponent playerDetails = ComponentMappers.player.get(WorldManager.player);
 
     playerDetails.target = null;
     playerDetails.path = null;
 
-    main.mapHelpers.createLookingPath(
-        ComponentMappers.position.get(main.player).pos, pos, careAboutWalls
+    WorldManager.mapHelpers.createLookingPath(
+        ComponentMappers.position.get(WorldManager.player).pos, pos, careAboutWalls
     );
   }
 
   private void handleThrow() {
-    AttributesComponent attributes = ComponentMappers.attributes.get(main.player);
+    AttributesComponent attributes = ComponentMappers.attributes.get(WorldManager.player);
 
     if (attributes.energy < RangeComponent.COST) {
       return;
     }
 
-    PlayerComponent playerDetails = ComponentMappers.player.get(main.player);
+    PlayerComponent playerDetails = ComponentMappers.player.get(WorldManager.player);
 
     if (holdingShift) {
-      Entity enemy = main.entityHelpers.getEnemyAt(playerDetails.target);
+      Entity enemy = WorldManager.entityHelpers.getEnemyAt(playerDetails.target);
+      PlayerComponent player = ComponentMappers.player.get(WorldManager.player);
 
       if (enemy != null) {
         playerDetails.focusedAction = PlayerComponent.FocusedAction.THROWING;
-        main.state = Main.State.FOCUSED;
-        main.focusedEntity = enemy;
+        WorldManager.state = WorldManager.State.FOCUSED;
+        player.focusedEntity = enemy;
       }
     } else {
-      main.combatHelpers.preparePlayerForThrowing(playerDetails.target, "body");
-      main.executeTurn = true;
+      WorldManager.combatHelpers.preparePlayerForThrowing(playerDetails.target, "body");
+      WorldManager.executeTurn = true;
 
-      main.state = Main.State.PLAYING;
+      WorldManager.state = WorldManager.State.PLAYING;
     }
   }
 
   private void handleRange() {
-    AttributesComponent attributes = ComponentMappers.attributes.get(main.player);
+    AttributesComponent attributes = ComponentMappers.attributes.get(WorldManager.player);
 
     if (attributes.energy < RangeComponent.COST) {
       return;
     }
 
-    PlayerComponent playerDetails = ComponentMappers.player.get(main.player);
+    PlayerComponent playerDetails = ComponentMappers.player.get(WorldManager.player);
 
     if (holdingShift) {
-      Entity enemy = main.entityHelpers.getEnemyAt(playerDetails.target);
+      Entity enemy = WorldManager.entityHelpers.getEnemyAt(playerDetails.target);
+      PlayerComponent player = ComponentMappers.player.get(WorldManager.player);
 
       if (enemy != null) {
         playerDetails.focusedAction = PlayerComponent.FocusedAction.RANGED;
-        main.state = Main.State.FOCUSED;
-        main.focusedEntity = enemy;
+        WorldManager.state = WorldManager.State.FOCUSED;
+        player.focusedEntity = enemy;
       }
     } else {
-      main.combatHelpers.preparePlayerForRanged(playerDetails.target, "body");
-      main.executeTurn = true;
+      WorldManager.combatHelpers.preparePlayerForRanged(playerDetails.target, "body");
+      WorldManager.executeTurn = true;
 
-      main.state = Main.State.PLAYING;
+      WorldManager.state = WorldManager.State.PLAYING;
     }
   }
 }

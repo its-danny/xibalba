@@ -3,9 +3,9 @@ package me.dannytatom.xibalba.ui;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import me.dannytatom.xibalba.Main;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,20 +13,38 @@ import java.util.List;
 public class ActionButton extends TextButton {
   private List<Integer> keys = null;
 
-  public ActionButton(String letter, String text, Skin skin) {
-    super(null, skin);
+  /**
+   * Create an action button with letter and text.
+   *
+   * @param letter The key you press to do the action
+   * @param text   Button text
+   */
+  public ActionButton(String letter, String text) {
+    super(null, Main.skin);
 
     setText(createText(text, letter));
     pad(5);
   }
 
-  public ActionButton(int number, String text, Skin skin) {
-    super(null, skin);
+  /**
+   * Create an action button with number and text.
+   *
+   * @param number The key you press to do the action
+   * @param text   Button text
+   */
+  public ActionButton(int number, String text) {
+    super(null, Main.skin);
 
     setText(createText(text, number + ""));
     pad(5);
   }
 
+  /**
+   * Set action for this button to perform.
+   *
+   * @param parent The actor to attach the listener to
+   * @param action The action
+   */
   public void setAction(Actor parent, Runnable action) {
     addListener(new ClickListener() {
       @Override

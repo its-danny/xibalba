@@ -1,7 +1,5 @@
 package me.dannytatom.xibalba;
 
-import com.badlogic.ashley.core.Engine;
-import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -18,33 +16,30 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import me.dannytatom.xibalba.screens.MainMenuScreen;
-import me.dannytatom.xibalba.utils.CombatHelpers;
-import me.dannytatom.xibalba.utils.EntityHelpers;
-import me.dannytatom.xibalba.utils.EquipmentHelpers;
-import me.dannytatom.xibalba.utils.InventoryHelpers;
-import me.dannytatom.xibalba.utils.MapHelpers;
-import me.dannytatom.xibalba.utils.SkillHelpers;
 
 public class Main extends Game {
   static final int SPRITE_WIDTH = 16;
   static final int SPRITE_HEIGHT = 16;
-  public State state;
-  public AssetManager assets;
-  public Skin skin;
-  public int turnCount;
-  public ActionLog log;
-  public Engine engine;
-  public World world;
-  public MapHelpers mapHelpers;
-  public CombatHelpers combatHelpers;
-  public EntityHelpers entityHelpers;
-  public InventoryHelpers inventoryHelpers;
-  public EquipmentHelpers equipmentHelpers;
-  public SkillHelpers skillHelpers;
-  public Screen playScreen;
-  public Entity player;
-  public boolean executeTurn = false;
-  public Entity focusedEntity;
+  public static AssetManager assets;
+  public static Skin skin;
+  public static Screen playScreen;
+
+  /**
+   * From mouse position to tile position.
+   *
+   * @param camera Main world camera
+   *
+   * @return A vector2 of the hovered tile position
+   */
+  public static Vector2 mousePositionToWorld(OrthographicCamera camera) {
+    Vector3 position = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
+    camera.unproject(position);
+
+    return new Vector2(
+        Math.round(position.x) / Main.SPRITE_WIDTH,
+        Math.round(position.y) / Main.SPRITE_HEIGHT
+    );
+  }
 
   /**
    * Setup & load the main menu.
@@ -83,28 +78,8 @@ public class Main extends Game {
     // Map background colors
     Colors.put("CAVE_BACKGROUND", parseColor("293033"));
 
-    // Setup world
-    world = new World();
-
     // Start the main menu
     setScreen(new MainMenuScreen(this));
-  }
-
-  /**
-   * From mouse position to tile position.
-   *
-   * @param camera Main world camera
-   *
-   * @return A vector2 of the hovered tile position
-   */
-  public Vector2 mousePositionToWorld(OrthographicCamera camera) {
-    Vector3 position = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
-    camera.unproject(position);
-
-    return new Vector2(
-        Math.round(position.x) / Main.SPRITE_WIDTH,
-        Math.round(position.y) / Main.SPRITE_HEIGHT
-    );
   }
 
   /**
@@ -125,9 +100,5 @@ public class Main extends Game {
     int v3 = Integer.parseInt(s3, 16);
     float f3 = (float) v3 / 255f;
     return new Color(f1, f2, f3, 1);
-  }
-
-  public enum State {
-    PLAYING, TARGETING, LOOKING, MOVING, FOCUSED
   }
 }

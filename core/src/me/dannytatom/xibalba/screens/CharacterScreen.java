@@ -17,6 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import me.dannytatom.xibalba.Main;
+import me.dannytatom.xibalba.WorldManager;
 import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.EquipmentComponent;
 import me.dannytatom.xibalba.components.ItemComponent;
@@ -67,10 +68,10 @@ public class CharacterScreen implements Screen {
     this.main = main;
 
     fps = new FPSLogger();
-    attributes = ComponentMappers.attributes.get(main.player);
-    skills = ComponentMappers.skills.get(main.player);
-    equipment = ComponentMappers.equipment.get(main.player);
-    inventoryItems = ComponentMappers.inventory.get(main.player).items;
+    attributes = ComponentMappers.attributes.get(WorldManager.player);
+    skills = ComponentMappers.skills.get(WorldManager.player);
+    equipment = ComponentMappers.equipment.get(WorldManager.player);
+    inventoryItems = ComponentMappers.inventory.get(WorldManager.player).items;
 
     stage = new Stage();
 
@@ -82,12 +83,12 @@ public class CharacterScreen implements Screen {
     HorizontalGroup titleGroup = new HorizontalGroup().align(Align.center | Align.left);
     titleGroup.space(10);
 
-    ActionButton backButton = new ActionButton("ESC", null, main.skin);
+    ActionButton backButton = new ActionButton("ESC", null);
     backButton.setKeys(Input.Keys.ESCAPE);
-    backButton.setAction(table, () -> main.setScreen(main.playScreen));
+    backButton.setAction(table, () -> main.setScreen(Main.playScreen));
     titleGroup.addActor(backButton);
 
-    Label title = new Label(attributes.name + " Character Sheet", main.skin);
+    Label title = new Label(attributes.name + " Character Sheet", Main.skin);
     titleGroup.addActor(title);
 
     Table titleTable = new Table();
@@ -175,7 +176,7 @@ public class CharacterScreen implements Screen {
 
     for (int i = 0; i < inventoryItems.size(); i++) {
       Entity item = inventoryItems.get(i);
-      Label label = new Label(main.entityHelpers.getItemName(main.player, item), main.skin);
+      Label label = new Label(WorldManager.entityHelpers.getItemName(WorldManager.player, item), Main.skin);
       int index = i;
       label.addListener(new ClickListener() {
         @Override
@@ -211,39 +212,39 @@ public class CharacterScreen implements Screen {
   private void setupActionButtons() {
     itemActionGroup = new HorizontalGroup().space(5).align(Align.top | Align.left);
 
-    cancelButton = new ActionButton("Q", "Cancel", main.skin);
+    cancelButton = new ActionButton("Q", "Cancel");
     cancelButton.setKeys(Input.Keys.Q);
     cancelButton.setAction(itemActionGroup, this::handleCancel);
 
-    holdButton = new ActionButton("H", "Hold", main.skin);
+    holdButton = new ActionButton("H", "Hold");
     holdButton.setKeys(Input.Keys.H);
     holdButton.setAction(itemActionGroup, this::handleHold);
 
-    wearButton = new ActionButton("W", "Wear", main.skin);
+    wearButton = new ActionButton("W", "Wear");
     wearButton.setKeys(Input.Keys.W);
     wearButton.setAction(itemActionGroup, this::handleWear);
 
-    throwButton = new ActionButton("T", "Throw", main.skin);
+    throwButton = new ActionButton("T", "Throw");
     throwButton.setKeys(Input.Keys.T);
     throwButton.setAction(itemActionGroup, this::handleThrow);
 
-    eatButton = new ActionButton("E", "Eat", main.skin);
+    eatButton = new ActionButton("E", "Eat");
     eatButton.setKeys(Input.Keys.E);
     eatButton.setAction(itemActionGroup, this::handleEat);
 
-    applyButton = new ActionButton("A", "Apply", main.skin);
+    applyButton = new ActionButton("A", "Apply");
     applyButton.setKeys(Input.Keys.A);
     applyButton.setAction(itemActionGroup, this::handleApply);
 
-    confirmApplyButton = new ActionButton("ENTER", "Apply to this", main.skin);
+    confirmApplyButton = new ActionButton("ENTER", "Apply to this");
     confirmApplyButton.setKeys(Input.Keys.ENTER);
     confirmApplyButton.setAction(itemActionGroup, this::handleConfirmApply);
 
-    removeButton = new ActionButton("R", "Remove", main.skin);
+    removeButton = new ActionButton("R", "Remove");
     removeButton.setKeys(Input.Keys.R);
     removeButton.setAction(itemActionGroup, this::handleRemove);
 
-    dropButton = new ActionButton("D", "Drop", main.skin);
+    dropButton = new ActionButton("D", "Drop");
     dropButton.setKeys(Input.Keys.D);
     dropButton.setAction(itemActionGroup, this::handleDrop);
   }
@@ -251,8 +252,8 @@ public class CharacterScreen implements Screen {
   private void renderAttributes() {
     attributesGroup.clear();
 
-    attributesGroup.addActor(new Label("[DARK_GRAY]-[] Attributes", main.skin));
-    attributesGroup.addActor(new Label("", main.skin));
+    attributesGroup.addActor(new Label("[DARK_GRAY]-[] Attributes", Main.skin));
+    attributesGroup.addActor(new Label("", Main.skin));
 
     // Health
 
@@ -267,7 +268,7 @@ public class CharacterScreen implements Screen {
     attributesGroup.addActor(
         new Label(
             "[LIGHT_GRAY]HP[] " + healthColor + attributes.health
-                + "[LIGHT_GRAY]/" + attributes.maxHealth, main.skin
+                + "[LIGHT_GRAY]/" + attributes.maxHealth, Main.skin
         )
     );
 
@@ -280,16 +281,16 @@ public class CharacterScreen implements Screen {
         new Label(
             "[LIGHT_GRAY]TUF " + "[YELLOW]" + toughness + "[DARK_GRAY]d "
                 + "[LIGHT_GRAY]STR " + "[CYAN]" + strength + "[DARK_GRAY]d",
-            main.skin
+            Main.skin
         )
     );
 
     // Defense & damage
 
-    int defense = main.combatHelpers.getArmorDefense(main.player);
+    int defense = WorldManager.combatHelpers.getArmorDefense(WorldManager.player);
     int damage = 0;
 
-    Entity primaryWeapon = main.equipmentHelpers.getPrimaryWeapon(main.player);
+    Entity primaryWeapon = WorldManager.equipmentHelpers.getPrimaryWeapon(WorldManager.player);
 
     if (primaryWeapon != null) {
       damage = ComponentMappers.item.get(primaryWeapon).attributes.get("hitDamage");
@@ -301,7 +302,7 @@ public class CharacterScreen implements Screen {
                 + (defense > 0 ? "[LIGHT_GRAY]+ " + "[GREEN]" + defense + "[DARK_GRAY] " : "")
                 + "[LIGHT_GRAY]DMG " + "[CYAN]" + strength + "[DARK_GRAY]d "
                 + (damage > 0 ? "[LIGHT_GRAY]+ " + "[RED]" + damage + "[DARK_GRAY]d" : ""),
-            main.skin
+            Main.skin
         )
     );
   }
@@ -309,8 +310,8 @@ public class CharacterScreen implements Screen {
   private void renderSkills() {
     skillsGroup.clear();
 
-    skillsGroup.addActor(new Label("[DARK_GRAY]-[] Skills", main.skin));
-    skillsGroup.addActor(new Label("", main.skin));
+    skillsGroup.addActor(new Label("[DARK_GRAY]-[] Skills", Main.skin));
+    skillsGroup.addActor(new Label("", Main.skin));
 
     if (skills.levels.get("unarmed") > 0) {
       skillsGroup.addActor(makeSkillLine("Unarmed", skills.levels.get("unarmed")));
@@ -340,8 +341,8 @@ public class CharacterScreen implements Screen {
   private void renderInventory() {
     inventoryGroup.clear();
 
-    inventoryGroup.addActor(new Label("[DARK_GRAY]-[] Inventory", main.skin));
-    inventoryGroup.addActor(new Label("", main.skin));
+    inventoryGroup.addActor(new Label("[DARK_GRAY]-[] Inventory", Main.skin));
+    inventoryGroup.addActor(new Label("", Main.skin));
 
     for (int i = 0; i < inventoryItems.size(); i++) {
       Entity item = inventoryItems.get(i);
@@ -349,14 +350,14 @@ public class CharacterScreen implements Screen {
       String name;
 
       if (i == itemSelected) {
-        name = "[DARK_GRAY]> [WHITE]" + main.entityHelpers.getItemName(main.player, item);
+        name = "[DARK_GRAY]> [WHITE]" + WorldManager.entityHelpers.getItemName(WorldManager.player, item);
       } else if (i == itemHovered) {
-        name = "[LIGHT_GRAY]" + main.entityHelpers.getItemName(main.player, item);
+        name = "[LIGHT_GRAY]" + WorldManager.entityHelpers.getItemName(WorldManager.player, item);
       } else {
-        name = "[DARK_GRAY]" + main.entityHelpers.getItemName(main.player, item);
+        name = "[DARK_GRAY]" + WorldManager.entityHelpers.getItemName(WorldManager.player, item);
       }
 
-      if (main.equipmentHelpers.isEquipped(main.player, item)) {
+      if (WorldManager.equipmentHelpers.isEquipped(WorldManager.player, item)) {
         name += " [YELLOW]*";
       }
 
@@ -390,47 +391,47 @@ public class CharacterScreen implements Screen {
 
       statsGroup.addActor(
           new Label(
-              "[DARK_GRAY]-[] " + main.entityHelpers.getItemName(main.player, selectedItem)
+              "[DARK_GRAY]-[] " + WorldManager.entityHelpers.getItemName(WorldManager.player, selectedItem)
                   + " [DARK_GRAY](" + selectedItemDetails.type + ")",
-              main.skin
+              Main.skin
           )
       );
 
-      statsGroup.addActor(new Label("", main.skin));
+      statsGroup.addActor(new Label("", Main.skin));
 
       // Description
 
-      if (main.entityHelpers.itemIsIdentified(main.player, selectedItem)) {
+      if (WorldManager.entityHelpers.itemIsIdentified(WorldManager.player, selectedItem)) {
         String description = "[LIGHT_GRAY]" + selectedItemDetails.description;
         description = WordUtils.wrap(description, 50);
-        Label descriptionLabel = new Label(description, main.skin);
+        Label descriptionLabel = new Label(description, Main.skin);
         statsGroup.addActor(descriptionLabel);
 
-        statsGroup.addActor(new Label("", main.skin));
+        statsGroup.addActor(new Label("", Main.skin));
       }
 
       // Where the item is equipped if it is equipped
 
-      if (main.equipmentHelpers.isEquipped(main.player, selectedItem)) {
+      if (WorldManager.equipmentHelpers.isEquipped(WorldManager.player, selectedItem)) {
         statsGroup.addActor(
             new Label(
                 "[YELLOW]* [LIGHT_GRAY]Using in "
-                    + main.equipmentHelpers.getLocation(main.player, selectedItem),
-                main.skin
+                    + WorldManager.equipmentHelpers.getLocation(WorldManager.player, selectedItem),
+                Main.skin
             )
         );
 
-        statsGroup.addActor(new Label("", main.skin));
+        statsGroup.addActor(new Label("", Main.skin));
       }
 
       // Item stats
 
-      if (main.entityHelpers.itemIsIdentified(main.player, selectedItem)) {
+      if (WorldManager.entityHelpers.itemIsIdentified(WorldManager.player, selectedItem)) {
         if (selectedItemDetails.attributes.get("defense") != null) {
           String string = "[LIGHT_GRAY]DEF " + "[GREEN]"
               + selectedItemDetails.attributes.get("defense");
 
-          if (!main.equipmentHelpers.isEquipped(main.player, selectedItem)) {
+          if (!WorldManager.equipmentHelpers.isEquipped(WorldManager.player, selectedItem)) {
             Entity itemInSlot = equipment.slots.get(selectedItemDetails.location);
 
             if (itemInSlot != null) {
@@ -442,28 +443,28 @@ public class CharacterScreen implements Screen {
             }
           }
 
-          statsGroup.addActor(new Label(string, main.skin));
+          statsGroup.addActor(new Label(string, Main.skin));
         }
 
         if (selectedItemDetails.attributes.get("raiseHealth") != null) {
           String string = "[LIGHT_GRAY]HP + " + "[CYAN]"
               + selectedItemDetails.attributes.get("raiseHealth");
 
-          statsGroup.addActor(new Label(string, main.skin));
+          statsGroup.addActor(new Label(string, Main.skin));
         }
 
         if (selectedItemDetails.attributes.get("raiseStrength") != null) {
           String string = "[LIGHT_GRAY]STR + " + "[CYAN]"
               + selectedItemDetails.attributes.get("raiseStrength");
 
-          statsGroup.addActor(new Label(string, main.skin));
+          statsGroup.addActor(new Label(string, Main.skin));
         }
 
         if (selectedItemDetails.attributes.get("hitDamage") != null) {
           String string = "[LIGHT_GRAY]HIT DMG " + "[RED]"
               + selectedItemDetails.attributes.get("hitDamage") + "[DARK_GRAY]d";
 
-          if (!main.equipmentHelpers.isEquipped(main.player, selectedItem)) {
+          if (!WorldManager.equipmentHelpers.isEquipped(WorldManager.player, selectedItem)) {
             Entity itemInSlot = equipment.slots.get(selectedItemDetails.location);
 
             if (itemInSlot != null) {
@@ -476,14 +477,14 @@ public class CharacterScreen implements Screen {
             }
           }
 
-          statsGroup.addActor(new Label(string, main.skin));
+          statsGroup.addActor(new Label(string, Main.skin));
         }
 
         if (selectedItemDetails.attributes.get("throwDamage") != null) {
           String string = "[LIGHT_GRAY]THR DMG " + "[RED]"
               + selectedItemDetails.attributes.get("throwDamage") + "[DARK_GRAY]d";
 
-          if (!main.equipmentHelpers.isEquipped(main.player, selectedItem)) {
+          if (!WorldManager.equipmentHelpers.isEquipped(WorldManager.player, selectedItem)) {
             Entity itemInSlot = equipment.slots.get(selectedItemDetails.location);
 
             if (itemInSlot != null) {
@@ -496,32 +497,32 @@ public class CharacterScreen implements Screen {
             }
           }
 
-          statsGroup.addActor(new Label(string, main.skin));
+          statsGroup.addActor(new Label(string, Main.skin));
         }
 
-        statsGroup.addActor(new Label("", main.skin));
+        statsGroup.addActor(new Label("", Main.skin));
       }
 
       // Item actions
 
       if (applying == null) {
         if (selectedItemDetails.actions.get("canHold")
-            && !main.equipmentHelpers.isEquipped(main.player, selectedItem)) {
+            && !WorldManager.equipmentHelpers.isEquipped(WorldManager.player, selectedItem)) {
           itemActionGroup.addActor(holdButton);
         }
 
         if (selectedItemDetails.actions.get("canWear")
-            && !main.equipmentHelpers.isEquipped(main.player, selectedItem)) {
+            && !WorldManager.equipmentHelpers.isEquipped(WorldManager.player, selectedItem)) {
           itemActionGroup.addActor(wearButton);
         }
 
         if (selectedItemDetails.actions.get("canThrow")
-            && !main.equipmentHelpers.isEquipped(main.player, selectedItem)) {
+            && !WorldManager.equipmentHelpers.isEquipped(WorldManager.player, selectedItem)) {
           itemActionGroup.addActor(throwButton);
         }
 
         if (selectedItemDetails.actions.get("canEat")
-            && !main.equipmentHelpers.isEquipped(main.player, selectedItem)) {
+            && !WorldManager.equipmentHelpers.isEquipped(WorldManager.player, selectedItem)) {
           itemActionGroup.addActor(eatButton);
         }
 
@@ -529,11 +530,11 @@ public class CharacterScreen implements Screen {
           itemActionGroup.addActor(applyButton);
         }
 
-        if (main.equipmentHelpers.isEquipped(main.player, selectedItem)) {
+        if (WorldManager.equipmentHelpers.isEquipped(WorldManager.player, selectedItem)) {
           itemActionGroup.addActor(removeButton);
         }
 
-        if (!main.equipmentHelpers.isEquipped(main.player, selectedItem)) {
+        if (!WorldManager.equipmentHelpers.isEquipped(WorldManager.player, selectedItem)) {
           itemActionGroup.addActor(dropButton);
         }
       } else {
@@ -549,8 +550,8 @@ public class CharacterScreen implements Screen {
   private void renderEquipment() {
     equipmentGroup.clear();
 
-    equipmentGroup.addActor(new Label("[DARK_GRAY]-[] Equipment", main.skin));
-    equipmentGroup.addActor(new Label("", main.skin));
+    equipmentGroup.addActor(new Label("[DARK_GRAY]-[] Equipment", Main.skin));
+    equipmentGroup.addActor(new Label("", Main.skin));
 
     for (java.util.Map.Entry<String, Entity> slot : equipment.slots.entrySet()) {
       String key = WordUtils.capitalize(slot.getKey());
@@ -558,13 +559,13 @@ public class CharacterScreen implements Screen {
 
       if (item == null) {
         equipmentGroup.addActor(
-            new Label("[LIGHT_GRAY]" + key + ": [DARK_GRAY]Nothing", main.skin)
+            new Label("[LIGHT_GRAY]" + key + ": [DARK_GRAY]Nothing", Main.skin)
         );
       } else {
         String slotName = "[LIGHT_GRAY]" + key + ":[] ";
-        String itemName = main.entityHelpers.getItemName(main.player, item);
+        String itemName = WorldManager.entityHelpers.getItemName(WorldManager.player, item);
 
-        equipmentGroup.addActor(new Label(slotName + itemName, main.skin));
+        equipmentGroup.addActor(new Label(slotName + itemName, Main.skin));
       }
     }
   }
@@ -597,7 +598,7 @@ public class CharacterScreen implements Screen {
     str += "[DARK_GRAY]]";
 
     return new Label(
-        str + " [LIGHT_GRAY]" + skill + " [DARK_GRAY]([YELLOW]" + level + "[DARK_GRAY]d)", main.skin
+        str + " [LIGHT_GRAY]" + skill + " [DARK_GRAY]([YELLOW]" + level + "[DARK_GRAY]d)", Main.skin
     );
   }
 
@@ -608,27 +609,27 @@ public class CharacterScreen implements Screen {
   }
 
   private void handleHold() {
-    main.equipmentHelpers.holdItem(main.player, inventoryItems.get(itemSelected));
+    WorldManager.equipmentHelpers.holdItem(WorldManager.player, inventoryItems.get(itemSelected));
   }
 
   private void handleWear() {
-    main.equipmentHelpers.wearItem(main.player, inventoryItems.get(itemSelected));
+    WorldManager.equipmentHelpers.wearItem(WorldManager.player, inventoryItems.get(itemSelected));
   }
 
   private void handleThrow() {
     ComponentMappers.item.get(inventoryItems.get(itemSelected)).throwing = true;
 
-    PlayerComponent playerDetails = ComponentMappers.player.get(main.player);
+    PlayerComponent playerDetails = ComponentMappers.player.get(WorldManager.player);
 
     playerDetails.target = null;
     playerDetails.path = null;
 
-    main.state = Main.State.TARGETING;
-    main.setScreen(main.playScreen);
+    WorldManager.state = WorldManager.State.TARGETING;
+    main.setScreen(Main.playScreen);
   }
 
   private void handleEat() {
-    main.inventoryHelpers.eatItem(main.player, inventoryItems.get(itemSelected));
+    WorldManager.inventoryHelpers.eatItem(WorldManager.player, inventoryItems.get(itemSelected));
     itemSelected = 0;
   }
 
@@ -637,17 +638,17 @@ public class CharacterScreen implements Screen {
   }
 
   private void handleConfirmApply() {
-    main.inventoryHelpers.applyItem(main.player, applying, inventoryItems.get(itemSelected));
+    WorldManager.inventoryHelpers.applyItem(WorldManager.player, applying, inventoryItems.get(itemSelected));
     itemSelected = 0;
     applying = null;
   }
 
   private void handleRemove() {
-    main.equipmentHelpers.removeItem(main.player, inventoryItems.get(itemSelected));
+    WorldManager.equipmentHelpers.removeItem(WorldManager.player, inventoryItems.get(itemSelected));
   }
 
   private void handleDrop() {
-    main.inventoryHelpers.dropItem(main.player, inventoryItems.get(itemSelected));
+    WorldManager.inventoryHelpers.dropItem(WorldManager.player, inventoryItems.get(itemSelected));
     itemSelected = 0;
   }
 

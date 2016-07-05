@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import me.dannytatom.xibalba.Main;
+import me.dannytatom.xibalba.WorldManager;
 import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.BodyComponent;
 import me.dannytatom.xibalba.components.DecorationComponent;
@@ -45,15 +46,8 @@ import java.util.Objects;
 //
 
 public class CombatHelpers {
-  private final Main main;
+  public CombatHelpers() {
 
-  /**
-   * Initialize action log.
-   *
-   * @param main Instance of the main class
-   */
-  public CombatHelpers(Main main) {
-    this.main = main;
   }
 
   /**
@@ -63,10 +57,10 @@ public class CombatHelpers {
    * @param bodyPart Where ya hitting them at
    */
   public void preparePlayerForMelee(Entity enemy, String bodyPart) {
-    AttributesComponent attributes = ComponentMappers.attributes.get(main.player);
+    AttributesComponent attributes = ComponentMappers.attributes.get(WorldManager.player);
 
     if (attributes.energy >= MeleeComponent.COST) {
-      main.player.add(new MeleeComponent(enemy, bodyPart));
+      WorldManager.player.add(new MeleeComponent(enemy, bodyPart));
     }
   }
 
@@ -77,12 +71,12 @@ public class CombatHelpers {
    * @param bodyPart Where you trying to hit em
    */
   public void preparePlayerForThrowing(Vector2 position, String bodyPart) {
-    AttributesComponent attributes = ComponentMappers.attributes.get(main.player);
+    AttributesComponent attributes = ComponentMappers.attributes.get(WorldManager.player);
 
     if (attributes.energy >= RangeComponent.COST) {
-      Entity item = main.inventoryHelpers.getThrowingItem(main.player);
+      Entity item = WorldManager.inventoryHelpers.getThrowingItem(WorldManager.player);
 
-      main.player.add(new RangeComponent(position, item, "throwing", bodyPart));
+      WorldManager.player.add(new RangeComponent(position, item, "throwing", bodyPart));
     }
   }
 
@@ -93,17 +87,19 @@ public class CombatHelpers {
    * @param bodyPart Where you trying to hit em
    */
   public void preparePlayerForRanged(Vector2 position, String bodyPart) {
-    AttributesComponent attributes = ComponentMappers.attributes.get(main.player);
+    AttributesComponent attributes = ComponentMappers.attributes.get(WorldManager.player);
 
     if (attributes.energy >= RangeComponent.COST) {
-      Entity primaryWeapon = main.equipmentHelpers.getPrimaryWeapon(main.player);
+      Entity primaryWeapon = WorldManager.equipmentHelpers.getPrimaryWeapon(WorldManager.player);
       ItemComponent primaryWeaponDetails = ComponentMappers.item.get(primaryWeapon);
 
-      Entity item = main.inventoryHelpers.getAmmunitionOfType(
-          main.player, primaryWeaponDetails.ammunitionType
+      Entity item = WorldManager.inventoryHelpers.getAmmunitionOfType(
+          WorldManager.player, primaryWeaponDetails.ammunitionType
       );
 
-      main.player.add(new RangeComponent(position, item, primaryWeaponDetails.skill, bodyPart));
+      WorldManager.player.add(
+          new RangeComponent(position, item, primaryWeaponDetails.skill, bodyPart)
+      );
     }
   }
 
@@ -157,7 +153,7 @@ public class CombatHelpers {
     Entity weapon = null;
 
     if (ComponentMappers.equipment.has(starter)) {
-      weapon = main.equipmentHelpers.getPrimaryWeapon(starter);
+      weapon = WorldManager.equipmentHelpers.getPrimaryWeapon(starter);
     }
 
     String skillName;
@@ -203,11 +199,11 @@ public class CombatHelpers {
 
       applyDamage(starter, target, weapon, damage, verb, bodyPart);
 
-      main.skillHelpers.levelSkill(starter, skillName, skillLevelAmount);
+      WorldManager.skillHelpers.levelSkill(starter, skillName, skillLevelAmount);
     } else {
       AttributesComponent targetAttributes = ComponentMappers.attributes.get(target);
 
-      main.log.add(
+      WorldManager.log.add(
           starterAttributes.name + " tried to hit " + targetAttributes.name + " but missed"
       );
     }
@@ -230,7 +226,7 @@ public class CombatHelpers {
       verb = "hit";
     } else {
       ItemComponent firingWeapon =
-          ComponentMappers.item.get(main.equipmentHelpers.getPrimaryWeapon(starter));
+          ComponentMappers.item.get(WorldManager.equipmentHelpers.getPrimaryWeapon(starter));
       verb = firingWeapon.verbs.get(MathUtils.random(0, firingWeapon.verbs.size() - 1));
     }
 
@@ -262,11 +258,11 @@ public class CombatHelpers {
 
       applyDamage(starter, target, item, damage, verb, bodyPart);
 
-      main.skillHelpers.levelSkill(starter, skill, skillLevelAmount);
+      WorldManager.skillHelpers.levelSkill(starter, skill, skillLevelAmount);
     } else {
       AttributesComponent targetAttributes = ComponentMappers.attributes.get(target);
 
-      main.log.add(
+      WorldManager.log.add(
           starterAttributes.name + " tried to hit " + targetAttributes.name + " but missed"
       );
     }
@@ -301,12 +297,14 @@ public class CombatHelpers {
       ItemComponent itemDetails = ComponentMappers.item.get(item);
 
       if (itemDetails.attributes.get("raiseHealth") != null) {
-        main.entityHelpers.raiseHealth(target, itemDetails.attributes.get("raiseHealth"));
+        WorldManager.entityHelpers.raiseHealth(target, itemDetails.attributes.get("raiseHealth"));
         itemDetails.attributes.remove("raiseHealth");
       }
 
       if (itemDetails.attributes.get("raiseStrength") != null) {
-        main.entityHelpers.raiseStrength(target, itemDetails.attributes.get("raiseStrength"));
+        WorldManager.entityHelpers.raiseStrength(
+            target, itemDetails.attributes.get("raiseStrength")
+        );
         itemDetails.attributes.remove("raiseStrength");
       }
 
@@ -325,7 +323,7 @@ public class CombatHelpers {
       targetAttributes.health -= totalDamage;
       targetBody.damage.put(bodyPart, targetBody.damage.get(bodyPart) + totalDamage);
 
-      main.log.add(
+      WorldManager.log.add(
           starterAttributes.name + " " + verb + " "
               + targetAttributes.name + " in the " + bodyPart + " for " + totalDamage + " damage"
       );
@@ -335,37 +333,37 @@ public class CombatHelpers {
       //
       // TODO: Probably change this to make more sense
       if (targetBody.damage.get(bodyPart) > (targetAttributes.maxHealth / 3)) {
-        if (bodyPart.contains("leg") && !main.entityHelpers.isCrippled(target)) {
+        if (bodyPart.contains("leg") && !WorldManager.entityHelpers.isCrippled(target)) {
           target.add(new CrippledComponent());
-        } else if (bodyPart.contains("body") && !main.entityHelpers.isBleeding(target)) {
+        } else if (bodyPart.contains("body") && !WorldManager.entityHelpers.isBleeding(target)) {
           target.add(new BleedingComponent());
         }
       }
     } else {
-      main.log.add(
+      WorldManager.log.add(
           starterAttributes.name + " " + verb + " "
               + targetAttributes.name + " in the " + bodyPart + " but did no damage"
       );
     }
 
     if (targetAttributes.health <= 0) {
-      TextureAtlas atlas = main.assets.get("sprites/main.atlas");
+      TextureAtlas atlas = Main.assets.get("sprites/main.atlas");
       Entity remains = new Entity();
       remains.add(new DecorationComponent());
       remains.add(new PositionComponent(
-          main.world.currentMapIndex, ComponentMappers.position.get(target).pos
+          WorldManager.world.currentMapIndex, ComponentMappers.position.get(target).pos
       ));
       remains.add(new VisualComponent(
           atlas.createSprite("Level/Cave/Environment/Object/Remains-1")
       ));
 
-      main.engine.addEntity(remains);
-      main.engine.removeEntity(target);
+      WorldManager.engine.addEntity(remains);
+      WorldManager.engine.removeEntity(target);
 
       if (ComponentMappers.player.has(starter)) {
-        main.log.add("[GREEN]You killed " + targetAttributes.name + "!");
+        WorldManager.log.add("[GREEN]You killed " + targetAttributes.name + "!");
       } else {
-        main.log.add("[RED]You have been killed by " + starterAttributes.name);
+        WorldManager.log.add("[RED]You have been killed by " + starterAttributes.name);
       }
     }
   }

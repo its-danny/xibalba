@@ -25,20 +25,12 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.xguzm.pathfinding.grid.GridCell;
 
 public class WorldRenderer {
-  private final Main main;
   private final SpriteBatch batch;
   private final ShadowCaster caster;
   private final Viewport viewport;
   private final OrthographicCamera worldCamera;
 
-  /**
-   * Renders the game world.
-   *
-   * @param main  Instance of Main class
-   * @param batch The sprite batch to use (set in PlayScreen)
-   */
-  public WorldRenderer(Main main, OrthographicCamera worldCamera, SpriteBatch batch) {
-    this.main = main;
+  public WorldRenderer(OrthographicCamera worldCamera, SpriteBatch batch) {
     this.worldCamera = worldCamera;
     this.batch = batch;
 
@@ -52,7 +44,7 @@ public class WorldRenderer {
    */
   public void render() {
     // Get playerDetails position
-    PositionComponent playerPosition = ComponentMappers.position.get(main.player);
+    PositionComponent playerPosition = ComponentMappers.position.get(WorldManager.player);
 
     // Set worldCamera to follow playerDetails
     worldCamera.position.set(
@@ -65,19 +57,19 @@ public class WorldRenderer {
     batch.setProjectionMatrix(worldCamera.combined);
     batch.begin();
 
-    AttributesComponent playerAttributes = ComponentMappers.attributes.get(main.player);
+    AttributesComponent playerAttributes = ComponentMappers.attributes.get(WorldManager.player);
 
-    Map map = main.world.getCurrentMap();
+    Map map = WorldManager.world.getCurrentMap();
 
     float[][] lightMap = caster.calculateFov(
-        main.mapHelpers.createFovMap(),
+        WorldManager.mapHelpers.createFovMap(),
         (int) playerPosition.pos.x, (int) playerPosition.pos.y,
         playerAttributes.vision
     );
 
     for (int x = 0; x < map.width; x++) {
       for (int y = 0; y < map.height; y++) {
-        Cell cell = main.mapHelpers.getCell(x, y);
+        Cell cell = WorldManager.mapHelpers.getCell(x, y);
 
         if (lightMap[x][y] > 0) {
           cell.hidden = false;
@@ -93,10 +85,10 @@ public class WorldRenderer {
       }
     }
 
-    TextureAtlas atlas = main.assets.get("sprites/main.atlas");
-    PlayerComponent playerDetails = ComponentMappers.player.get(main.player);
+    TextureAtlas atlas = Main.assets.get("sprites/main.atlas");
+    PlayerComponent playerDetails = ComponentMappers.player.get(WorldManager.player);
 
-    String targetSprite = main.state == Main.State.TARGETING
+    String targetSprite = WorldManager.state == WorldManager.State.TARGETING
         ? "Level/Cave/UI/Target-Throw-1" : "Level/Cave/UI/Target-1";
 
     if (playerDetails.path != null && playerDetails.target != null) {
@@ -125,9 +117,9 @@ public class WorldRenderer {
 
   private void renderStairs(float[][] lightMap) {
     ImmutableArray<Entity> entrances =
-        main.engine.getEntitiesFor(Family.all(EntranceComponent.class).get());
+        WorldManager.engine.getEntitiesFor(Family.all(EntranceComponent.class).get());
     ImmutableArray<Entity> exits =
-        main.engine.getEntitiesFor(Family.all(ExitComponent.class).get());
+        WorldManager.engine.getEntitiesFor(Family.all(ExitComponent.class).get());
 
     Object[] entities = ArrayUtils.addAll(entrances.toArray(), exits.toArray());
 
@@ -135,7 +127,7 @@ public class WorldRenderer {
       Entity entity = (Entity) e;
       PositionComponent position = ComponentMappers.position.get(entity);
 
-      if (main.entityHelpers.isVisible(entity)) {
+      if (WorldManager.entityHelpers.isVisible(entity)) {
         VisualComponent visual = ComponentMappers.visual.get(entity);
 
         batch.setColor(1f, 1f, 1f, lightMap[(int) position.pos.x][(int) position.pos.y]);
@@ -149,12 +141,12 @@ public class WorldRenderer {
 
   private void renderDecorations(float[][] lightMap) {
     ImmutableArray<Entity> entities =
-        main.engine.getEntitiesFor(Family.all(DecorationComponent.class).get());
+        WorldManager.engine.getEntitiesFor(Family.all(DecorationComponent.class).get());
 
     for (Entity entity : entities) {
       PositionComponent position = ComponentMappers.position.get(entity);
 
-      if (main.entityHelpers.isVisible(entity)) {
+      if (WorldManager.entityHelpers.isVisible(entity)) {
         VisualComponent visual = ComponentMappers.visual.get(entity);
 
         batch.setColor(1f, 1f, 1f, lightMap[(int) position.pos.x][(int) position.pos.y]);
@@ -168,14 +160,14 @@ public class WorldRenderer {
 
   private void renderItems(float[][] lightMap) {
     ImmutableArray<Entity> entities =
-        main.engine.getEntitiesFor(
+        WorldManager.engine.getEntitiesFor(
             Family.all(ItemComponent.class, PositionComponent.class, VisualComponent.class).get()
         );
 
     for (Entity entity : entities) {
       PositionComponent position = ComponentMappers.position.get(entity);
 
-      if (main.entityHelpers.isVisible(entity)) {
+      if (WorldManager.entityHelpers.isVisible(entity)) {
         VisualComponent visual = ComponentMappers.visual.get(entity);
 
         batch.setColor(1f, 1f, 1f, lightMap[(int) position.pos.x][(int) position.pos.y]);
@@ -189,12 +181,12 @@ public class WorldRenderer {
 
   private void renderEnemies(float[][] lightMap) {
     ImmutableArray<Entity> entities =
-        main.engine.getEntitiesFor(Family.all(EnemyComponent.class).get());
+        WorldManager.engine.getEntitiesFor(Family.all(EnemyComponent.class).get());
 
     for (Entity entity : entities) {
       PositionComponent position = ComponentMappers.position.get(entity);
 
-      if (main.entityHelpers.isVisible(entity)) {
+      if (WorldManager.entityHelpers.isVisible(entity)) {
         VisualComponent visual = ComponentMappers.visual.get(entity);
 
         batch.setColor(1f, 1f, 1f, lightMap[(int) position.pos.x][(int) position.pos.y]);
@@ -210,12 +202,12 @@ public class WorldRenderer {
 
   private void renderPlayer(float[][] lightMap) {
     ImmutableArray<Entity> entities =
-        main.engine.getEntitiesFor(Family.all(PlayerComponent.class).get());
+        WorldManager.engine.getEntitiesFor(Family.all(PlayerComponent.class).get());
 
     for (Entity entity : entities) {
       PositionComponent position = ComponentMappers.position.get(entity);
 
-      if (main.entityHelpers.isVisible(entity)) {
+      if (WorldManager.entityHelpers.isVisible(entity)) {
         VisualComponent visual = ComponentMappers.visual.get(entity);
 
         batch.setColor(1f, 1f, 1f, lightMap[(int) position.pos.x][(int) position.pos.y]);

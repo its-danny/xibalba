@@ -3,7 +3,7 @@ package me.dannytatom.xibalba.systems.ai;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.math.Vector2;
-import me.dannytatom.xibalba.Main;
+import me.dannytatom.xibalba.WorldManager;
 import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.actions.MovementComponent;
 import me.dannytatom.xibalba.components.ai.BrainComponent;
@@ -18,17 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TargetSystem extends UsesEnergySystem {
-  private final Main main;
-
-  /**
-   * TargetSystem constructor.
-   *
-   * @param main Instance of Main class
-   */
-  public TargetSystem(Main main) {
+  public TargetSystem() {
     super(Family.all(TargetComponent.class, PositionComponent.class).get());
-
-    this.main = main;
   }
 
   @Override
@@ -42,7 +33,7 @@ public class TargetSystem extends UsesEnergySystem {
       PositionComponent position = ComponentMappers.position.get(entity);
 
       NavigationGrid<GridCell> grid =
-          new NavigationGrid<>(main.mapHelpers.createPathfindingMap(), false);
+          new NavigationGrid<>(WorldManager.mapHelpers.createPathfindingMap(), false);
       AStarGridFinder<GridCell> finder = new AStarGridFinder<>(GridCell.class);
 
       brain.path = finder.findPath((int) position.pos.x, (int) position.pos.y,

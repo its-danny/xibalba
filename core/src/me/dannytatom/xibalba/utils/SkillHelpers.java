@@ -1,14 +1,12 @@
 package me.dannytatom.xibalba.utils;
 
 import com.badlogic.ashley.core.Entity;
-import me.dannytatom.xibalba.Main;
+import me.dannytatom.xibalba.WorldManager;
 import me.dannytatom.xibalba.components.SkillsComponent;
 
 public class SkillHelpers {
-  private final Main main;
+  public SkillHelpers() {
 
-  public SkillHelpers(Main main) {
-    this.main = main;
   }
 
   /**
@@ -31,7 +29,7 @@ public class SkillHelpers {
       skills.counters.put(skill, 0);
 
       if (ComponentMappers.player.has(entity)) {
-        main.log.add("[YELLOW]You feel better at " + skill);
+        WorldManager.log.add("[YELLOW]You feel better at " + skill);
       }
     }
   }

@@ -11,6 +11,11 @@ public class Bleeding {
 
   }
 
+  /**
+   * What to do each turn.
+   *
+   * @param entity The entity that's bleeding
+   */
   public void onTurn(Entity entity) {
     AttributesComponent attributes = ComponentMappers.attributes.get(entity);
     attributes.health -= 5;

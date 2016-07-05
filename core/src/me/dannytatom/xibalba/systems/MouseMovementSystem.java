@@ -6,7 +6,7 @@ import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.Vector2;
-import me.dannytatom.xibalba.Main;
+import me.dannytatom.xibalba.WorldManager;
 import me.dannytatom.xibalba.components.MouseMovementComponent;
 import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.actions.MovementComponent;
@@ -17,12 +17,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MouseMovementSystem extends EntitySystem {
-  private final Main main;
-
   private ImmutableArray<Entity> entities;
 
-  public MouseMovementSystem(Main main) {
-    this.main = main;
+  public MouseMovementSystem() {
+
   }
 
   public void addedToEngine(Engine engine) {
@@ -36,12 +34,12 @@ public class MouseMovementSystem extends EntitySystem {
    */
   public void update(float deltaTime) {
     for (Entity entity : entities) {
-      PlayerComponent playerDetails = ComponentMappers.player.get(main.player);
+      PlayerComponent playerDetails = ComponentMappers.player.get(WorldManager.player);
 
       // Remove mouse movement component once path is empty
       if (playerDetails.path == null || playerDetails.path.isEmpty()) {
         entity.remove(MouseMovementComponent.class);
-        main.state = Main.State.PLAYING;
+        WorldManager.state = WorldManager.State.PLAYING;
       } else {
         // Start walking
         GridCell cell = playerDetails.path.get(0);
