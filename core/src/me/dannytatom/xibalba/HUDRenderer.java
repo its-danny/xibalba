@@ -1,8 +1,6 @@
 package me.dannytatom.xibalba;
 
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.ashley.core.Family;
-import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -17,7 +15,6 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.BodyComponent;
-import me.dannytatom.xibalba.components.EnemyComponent;
 import me.dannytatom.xibalba.components.ItemComponent;
 import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
@@ -33,6 +30,7 @@ public class HudRenderer {
   private final Main main;
   private final Viewport viewport;
   private final PlayerComponent playerDetails;
+  private final AttributesComponent playerAttributes;
   private final Table topTable;
   private final Table bottomTable;
   private VerticalGroup actionLog;
@@ -56,7 +54,9 @@ public class HudRenderer {
 
     viewport = new FitViewport(960, 540, new OrthographicCamera());
     stage = new Stage(viewport, batch);
+
     playerDetails = ComponentMappers.player.get(WorldManager.player);
+    playerAttributes = ComponentMappers.attributes.get(WorldManager.player);
 
     topTable = new Table();
     topTable.top().left();
@@ -104,7 +104,6 @@ public class HudRenderer {
   private void setupBottomTable() {
     // Bottom buttons
 
-    AttributesComponent playerAttributes = ComponentMappers.attributes.get(WorldManager.player);
     ActionButton characterButton = new ActionButton("C", playerAttributes.name);
     characterButton.setKeys(Input.Keys.C);
     characterButton.setAction(bottomTable, () -> main.setScreen(new CharacterScreen(main)));
@@ -177,8 +176,6 @@ public class HudRenderer {
 
     // Player area
 
-    AttributesComponent playerAttributes = ComponentMappers.attributes.get(WorldManager.player);
-
     String name = playerAttributes.name;
 
     if (WorldManager.state == WorldManager.State.LOOKING) {
@@ -213,74 +210,9 @@ public class HudRenderer {
     if (ComponentMappers.bleeding.has(WorldManager.player)) {
       areaDetails.addActor(new Label("[DARK_GRAY]BLEEDING[]", Main.skin));
     }
-
-    // Enemies visible in area
-
-    ImmutableArray<Entity> enemies =
-        WorldManager.engine.getEntitiesFor(Family.all(EnemyComponent.class).get());
-
-    boolean showingEnemyBreak = false;
-
-    for (Entity enemy : enemies) {
-      if (WorldManager.entityHelpers.isVisibleToPlayer(enemy)) {
-        if (!showingEnemyBreak) {
-          areaDetails.addActor(new Label("", Main.skin));
-          showingEnemyBreak = true;
-        }
-
-        AttributesComponent enemyAttributes = ComponentMappers.attributes.get(enemy);
-
-        areaDetails.addActor(new Label("[RED]" + enemyAttributes.name + "[]", Main.skin));
-
-        String enemyHealthColor;
-
-        if (enemyAttributes.health / enemyAttributes.maxHealth <= 0.5f) {
-          enemyHealthColor = "[RED]";
-        } else {
-          enemyHealthColor = "[WHITE]";
-        }
-
-        areaDetails.addActor(
-            new Label(
-                enemyHealthColor + enemyAttributes.health
-                    + "[LIGHT_GRAY]/" + enemyAttributes.maxHealth, Main.skin
-            )
-        );
-
-        if (ComponentMappers.crippled.has(enemy)) {
-          areaDetails.addActor(new Label("[DARK_GRAY]CRIPPLED[]", Main.skin));
-        }
-
-        if (ComponentMappers.bleeding.has(enemy)) {
-          areaDetails.addActor(new Label("[DARK_GRAY]BLEEDING[]", Main.skin));
-        }
-      }
-    }
-
-    // Items visible in area
-
-    ImmutableArray<Entity> items =
-        WorldManager.engine.getEntitiesFor(Family.all(ItemComponent.class).get());
-
-    boolean showingItemBreak = false;
-
-    for (Entity item : items) {
-      if (WorldManager.entityHelpers.isVisibleToPlayer(item)) {
-        if (!showingItemBreak) {
-          areaDetails.addActor(new Label("", Main.skin));
-          showingItemBreak = true;
-        }
-
-        areaDetails.addActor(new Label("[YELLOW]"
-            + WorldManager.entityHelpers.getItemName(WorldManager.player, item)
-            + "[]", Main.skin));
-      }
-    }
   }
 
   private void checkAndRenderLookDetails() {
-    lookDialogGroup.clear();
-
     if (playerDetails.target == null) {
       lookDetails.setText("");
 
@@ -294,6 +226,8 @@ public class HudRenderer {
   }
 
   private void renderLookDetails(Vector2 position) {
+    lookDialogGroup.clear();
+
     Cell cell = WorldManager.mapHelpers.getCell(position.x, position.y);
 
     if (cell.forgotten) {
@@ -316,11 +250,13 @@ public class HudRenderer {
             )
         );
 
-        String description = WordUtils.wrap(itemDetails.description, 50);
+        if (WorldManager.entityHelpers.itemIsIdentified(WorldManager.player, item)) {
+          String description = WordUtils.wrap(itemDetails.description, 50);
 
-        lookDialogGroup.addActor(
-            new Label("[LIGHT_GRAY]" + description, Main.skin)
-        );
+          lookDialogGroup.addActor(
+              new Label("[LIGHT_GRAY]" + description, Main.skin)
+          );
+        }
       }
 
       Entity enemy = WorldManager.entityHelpers.getEnemyAt(position);
