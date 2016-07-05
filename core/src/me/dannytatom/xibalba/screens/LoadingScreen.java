@@ -198,6 +198,20 @@ public class LoadingScreen implements Screen {
       );
     }
 
+    for (int i = 0; i < 20; i++) {
+      main.engine.addEntity(
+          main.entityHelpers.spawnItem("healthPlant",
+              mapIndex, main.mapHelpers.getRandomOpenPositionOnMap(mapIndex))
+      );
+    }
+
+    for (int i = 0; i < 20; i++) {
+      main.engine.addEntity(
+          main.entityHelpers.spawnItem("strengthPlant",
+              mapIndex, main.mapHelpers.getRandomOpenPositionOnMap(mapIndex))
+      );
+    }
+
     for (int i = 0; i < 50; i++) {
       main.engine.addEntity(
           main.entityHelpers.spawnRandomDecoration(

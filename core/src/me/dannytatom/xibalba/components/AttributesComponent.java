@@ -8,7 +8,7 @@ public class AttributesComponent implements Component {
   public final int speed;
   public final int vision;
   public final int toughness;
-  public final int strength;
+  public int strength;
   public final int maxHealth;
   public int health;
   public int energy;

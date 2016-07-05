@@ -15,6 +15,6 @@
     "canThrow": true,
     "canWear": false,
     "canHold": false,
-    "canUse": false
+    "canEat": false
   }
 }

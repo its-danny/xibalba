@@ -414,4 +414,20 @@ public class EntityHelpers {
 
     return null;
   }
+
+  public void raiseHealth(Entity entity, int amount) {
+    AttributesComponent attributes = ComponentMappers.attributes.get(entity);
+
+    if (attributes.health + amount < attributes.maxHealth) {
+      attributes.health += amount;
+    }
+  }
+
+  public void raiseStrength(Entity entity, int amount) {
+    AttributesComponent attributes = ComponentMappers.attributes.get(entity);
+
+    if (attributes.strength < 12) {
+      attributes.strength += amount;
+    }
+  }
 }

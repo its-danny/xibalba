@@ -1,0 +1,21 @@
+{
+  "name": "Health Plant",
+  "description": "It heals you some",
+  "type": "plant",
+  "visual": {
+    "sprites": [
+      "Level/Cave/FX/Heal-1"
+    ]
+  },
+  "attributes": {
+    "hitDamage": 4,
+    "throwDamage": 4,
+    "raiseHealth": 5
+  },
+  "actions": {
+    "canThrow": false,
+    "canWear": false,
+    "canHold": false,
+    "canEat": true
+  }
+}

@@ -47,6 +47,7 @@ public class CharacterScreen implements Screen {
   private ActionButton holdButton;
   private ActionButton wearButton;
   private ActionButton throwButton;
+  private ActionButton eatButton;
   private ActionButton removeButton;
   private ActionButton dropButton;
   private int itemSelected = 0;
@@ -217,6 +218,10 @@ public class CharacterScreen implements Screen {
     throwButton = new ActionButton("T", "Throw", main.skin);
     throwButton.setKeys(Input.Keys.T);
     throwButton.setAction(itemActionGroup, this::handleThrow);
+
+    eatButton = new ActionButton("E", "Eat", main.skin);
+    eatButton.setKeys(Input.Keys.E);
+    eatButton.setAction(itemActionGroup, this::handleEat);
 
     removeButton = new ActionButton("R", "Remove", main.skin);
     removeButton.setKeys(Input.Keys.R);
@@ -420,6 +425,13 @@ public class CharacterScreen implements Screen {
         statsGroup.addActor(new Label(string, main.skin));
       }
 
+      if (selectedItemDetails.attributes.get("raiseHealth") != null) {
+        String string = "[LIGHT_GRAY]HP + " + "[CYAN]"
+            + selectedItemDetails.attributes.get("raiseHealth");
+
+        statsGroup.addActor(new Label(string, main.skin));
+      }
+
       if (selectedItemDetails.attributes.get("hitDamage") != null) {
         String string = "[LIGHT_GRAY]HIT DMG " + "[RED]"
             + selectedItemDetails.attributes.get("hitDamage") + "[DARK_GRAY]d";
@@ -477,6 +489,11 @@ public class CharacterScreen implements Screen {
       if (selectedItemDetails.actions.get("canThrow")
           && !main.equipmentHelpers.isEquipped(main.player, selectedItem)) {
         itemActionGroup.addActor(throwButton);
+      }
+
+      if (selectedItemDetails.actions.get("canEat")
+          && !main.equipmentHelpers.isEquipped(main.player, selectedItem)) {
+        itemActionGroup.addActor(eatButton);
       }
 
       if (main.equipmentHelpers.isEquipped(main.player, selectedItem)) {
@@ -559,6 +576,11 @@ public class CharacterScreen implements Screen {
 
     main.state = Main.State.TARGETING;
     main.setScreen(main.playScreen);
+  }
+
+  private void handleEat() {
+    main.inventoryHelpers.eatItem(main.player, inventoryItems.get(itemSelected));
+    itemSelected = 0;
   }
 
   private void handleRemove() {

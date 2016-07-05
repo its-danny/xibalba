@@ -46,6 +46,22 @@ public class InventoryHelpers {
     }
   }
 
+  public void eatItem(Entity entity, Entity item) {
+    if (item != null) {
+      ItemComponent itemDetails = ComponentMappers.item.get(item);
+
+      if (itemDetails.attributes.get("raiseHealth") != null) {
+        main.entityHelpers.raiseHealth(entity, itemDetails.attributes.get("raiseHealth"));
+      }
+
+      if (itemDetails.attributes.get("raiseStrength") != null) {
+        main.entityHelpers.raiseStrength(entity, itemDetails.attributes.get("raiseStrength"));
+      }
+
+      removeItem(entity, item);
+    }
+  }
+
   /**
    * It's like drop except we remove it 100%.
    *
@@ -55,11 +71,9 @@ public class InventoryHelpers {
   public void removeItem(Entity entity, Entity item) {
     InventoryComponent inventory = ComponentMappers.inventory.get(entity);
 
-    if (ComponentMappers.inventory.has(entity)) {
-      if (item != null) {
-        inventory.items.remove(item);
-        main.engine.removeEntity(item);
-      }
+    if (inventory != null && item != null) {
+      inventory.items.remove(item);
+      main.engine.removeEntity(item);
     }
   }
 
