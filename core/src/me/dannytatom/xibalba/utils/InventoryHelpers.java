@@ -6,6 +6,7 @@ import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.components.EquipmentComponent;
 import me.dannytatom.xibalba.components.InventoryComponent;
 import me.dannytatom.xibalba.components.ItemComponent;
+import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
 
 import java.util.ArrayList;
@@ -36,12 +37,12 @@ public class InventoryHelpers {
         EquipmentComponent equipment = ComponentMappers.equipment.get(entity);
         ItemComponent itemDetails = ComponentMappers.item.get(item);
 
-        main.log.add("You picked up a " + itemDetails.name);
+        main.log.add("You picked up a " + main.entityHelpers.getItemName(entity, item));
 
         if (Objects.equals(itemDetails.type, "weapon")
             && equipment.slots.get("right hand") == null) {
           main.equipmentHelpers.holdItem(entity, item);
-          main.log.add("You are now holding a " + itemDetails.name);
+          main.log.add("You are now holding a " + main.entityHelpers.getItemName(entity, item));
         }
       }
     }
@@ -57,6 +58,12 @@ public class InventoryHelpers {
 
       if (itemDetails.attributes.get("raiseStrength") != null) {
         main.entityHelpers.raiseStrength(entity, itemDetails.attributes.get("raiseStrength"));
+      }
+
+      PlayerComponent player = ComponentMappers.player.get(entity);
+
+      if (player != null && !player.identifiedItems.contains(itemDetails.name, true)) {
+        player.identifiedItems.add(itemDetails.name);
       }
 
       removeItem(entity, item);
@@ -117,7 +124,7 @@ public class InventoryHelpers {
       inventory.items.remove(item);
 
       if (ComponentMappers.player.has(entity)) {
-        main.log.add("You dropped a " + ComponentMappers.item.get(item).name);
+        main.log.add("You dropped a " + main.entityHelpers.getItemName(entity, item));
       }
     }
   }

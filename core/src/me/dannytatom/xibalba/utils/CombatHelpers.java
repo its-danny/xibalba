@@ -10,6 +10,7 @@ import me.dannytatom.xibalba.components.BodyComponent;
 import me.dannytatom.xibalba.components.DecorationComponent;
 import me.dannytatom.xibalba.components.EquipmentComponent;
 import me.dannytatom.xibalba.components.ItemComponent;
+import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.SkillsComponent;
 import me.dannytatom.xibalba.components.VisualComponent;
@@ -307,6 +308,12 @@ public class CombatHelpers {
       if (itemDetails.attributes.get("raiseStrength") != null) {
         main.entityHelpers.raiseStrength(target, itemDetails.attributes.get("raiseStrength"));
         itemDetails.attributes.remove("raiseStrength");
+      }
+
+      PlayerComponent player = ComponentMappers.player.get(starter);
+
+      if (player != null && !player.identifiedItems.contains(itemDetails.name, true)) {
+        player.identifiedItems.add(itemDetails.name);
       }
     }
 

@@ -173,9 +173,8 @@ public class CharacterScreen implements Screen {
     inventoryItemLabels = new ArrayList<>();
 
     for (int i = 0; i < inventoryItems.size(); i++) {
-      Entity entity = inventoryItems.get(i);
-      ItemComponent item = ComponentMappers.item.get(entity);
-      Label label = new Label(item.name, main.skin);
+      Entity item = inventoryItems.get(i);
+      Label label = new Label(main.entityHelpers.getItemName(main.player, item), main.skin);
       int index = i;
       label.addListener(new ClickListener() {
         @Override
@@ -344,20 +343,19 @@ public class CharacterScreen implements Screen {
     inventoryGroup.addActor(new Label("", main.skin));
 
     for (int i = 0; i < inventoryItems.size(); i++) {
-      Entity entity = inventoryItems.get(i);
-      ItemComponent item = ComponentMappers.item.get(entity);
+      Entity item = inventoryItems.get(i);
 
       String name;
 
       if (i == itemSelected) {
-        name = "[DARK_GRAY]> [WHITE]" + item.name;
+        name = "[DARK_GRAY]> [WHITE]" + main.entityHelpers.getItemName(main.player, item);
       } else if (i == itemHovered) {
-        name = "[LIGHT_GRAY]" + item.name;
+        name = "[LIGHT_GRAY]" + main.entityHelpers.getItemName(main.player, item);
       } else {
-        name = "[DARK_GRAY]" + item.name;
+        name = "[DARK_GRAY]" + main.entityHelpers.getItemName(main.player, item);
       }
 
-      if (main.equipmentHelpers.isEquipped(main.player, entity)) {
+      if (main.equipmentHelpers.isEquipped(main.player, item)) {
         name += " [YELLOW]*";
       }
 
@@ -387,24 +385,28 @@ public class CharacterScreen implements Screen {
       Entity selectedItem = inventoryItems.get(itemSelected);
       ItemComponent selectedItemDetails = ComponentMappers.item.get(selectedItem);
 
-      // Area name is item name
+      // Item name and it's location name
 
       statsGroup.addActor(
           new Label(
-              "[DARK_GRAY]-[] " + selectedItemDetails.name
+              "[DARK_GRAY]-[] " + main.entityHelpers.getItemName(main.player, selectedItem)
                   + " [DARK_GRAY](" + selectedItemDetails.type + ")",
               main.skin
           )
       );
 
+      statsGroup.addActor(new Label("", main.skin));
+
       // Description
 
-      String description = "[LIGHT_GRAY]" + selectedItemDetails.description;
-      description = WordUtils.wrap(description, 50);
-      Label descriptionLabel = new Label(description, main.skin);
-      statsGroup.addActor(descriptionLabel);
+      if (main.entityHelpers.itemIsIdentified(main.player, selectedItem)) {
+        String description = "[LIGHT_GRAY]" + selectedItemDetails.description;
+        description = WordUtils.wrap(description, 50);
+        Label descriptionLabel = new Label(description, main.skin);
+        statsGroup.addActor(descriptionLabel);
 
-      statsGroup.addActor(new Label("", main.skin));
+        statsGroup.addActor(new Label("", main.skin));
+      }
 
       // Where the item is equipped if it is equipped
 
@@ -422,80 +424,82 @@ public class CharacterScreen implements Screen {
 
       // Item stats
 
-      if (selectedItemDetails.attributes.get("defense") != null) {
-        String string = "[LIGHT_GRAY]DEF " + "[GREEN]"
-            + selectedItemDetails.attributes.get("defense");
+      if (main.entityHelpers.itemIsIdentified(main.player, selectedItem)) {
+        if (selectedItemDetails.attributes.get("defense") != null) {
+          String string = "[LIGHT_GRAY]DEF " + "[GREEN]"
+              + selectedItemDetails.attributes.get("defense");
 
-        if (!main.equipmentHelpers.isEquipped(main.player, selectedItem)) {
-          Entity itemInSlot = equipment.slots.get(selectedItemDetails.location);
+          if (!main.equipmentHelpers.isEquipped(main.player, selectedItem)) {
+            Entity itemInSlot = equipment.slots.get(selectedItemDetails.location);
 
-          if (itemInSlot != null) {
-            ItemComponent itemInSlotDetails = ComponentMappers.item.get(itemInSlot);
+            if (itemInSlot != null) {
+              ItemComponent itemInSlotDetails = ComponentMappers.item.get(itemInSlot);
 
-            if (itemInSlotDetails.attributes.get("defense") != null) {
-              string += "[DARK_GRAY] -> [GREEN]" + itemInSlotDetails.attributes.get("defense");
+              if (itemInSlotDetails.attributes.get("defense") != null) {
+                string += "[DARK_GRAY] -> [GREEN]" + itemInSlotDetails.attributes.get("defense");
+              }
             }
           }
+
+          statsGroup.addActor(new Label(string, main.skin));
         }
 
-        statsGroup.addActor(new Label(string, main.skin));
-      }
+        if (selectedItemDetails.attributes.get("raiseHealth") != null) {
+          String string = "[LIGHT_GRAY]HP + " + "[CYAN]"
+              + selectedItemDetails.attributes.get("raiseHealth");
 
-      if (selectedItemDetails.attributes.get("raiseHealth") != null) {
-        String string = "[LIGHT_GRAY]HP + " + "[CYAN]"
-            + selectedItemDetails.attributes.get("raiseHealth");
+          statsGroup.addActor(new Label(string, main.skin));
+        }
 
-        statsGroup.addActor(new Label(string, main.skin));
-      }
+        if (selectedItemDetails.attributes.get("raiseStrength") != null) {
+          String string = "[LIGHT_GRAY]STR + " + "[CYAN]"
+              + selectedItemDetails.attributes.get("raiseStrength");
 
-      if (selectedItemDetails.attributes.get("raiseStrength") != null) {
-        String string = "[LIGHT_GRAY]STR + " + "[CYAN]"
-            + selectedItemDetails.attributes.get("raiseStrength");
+          statsGroup.addActor(new Label(string, main.skin));
+        }
 
-        statsGroup.addActor(new Label(string, main.skin));
-      }
+        if (selectedItemDetails.attributes.get("hitDamage") != null) {
+          String string = "[LIGHT_GRAY]HIT DMG " + "[RED]"
+              + selectedItemDetails.attributes.get("hitDamage") + "[DARK_GRAY]d";
 
-      if (selectedItemDetails.attributes.get("hitDamage") != null) {
-        String string = "[LIGHT_GRAY]HIT DMG " + "[RED]"
-            + selectedItemDetails.attributes.get("hitDamage") + "[DARK_GRAY]d";
+          if (!main.equipmentHelpers.isEquipped(main.player, selectedItem)) {
+            Entity itemInSlot = equipment.slots.get(selectedItemDetails.location);
 
-        if (!main.equipmentHelpers.isEquipped(main.player, selectedItem)) {
-          Entity itemInSlot = equipment.slots.get(selectedItemDetails.location);
+            if (itemInSlot != null) {
+              ItemComponent itemInSlotDetails = ComponentMappers.item.get(itemInSlot);
 
-          if (itemInSlot != null) {
-            ItemComponent itemInSlotDetails = ComponentMappers.item.get(itemInSlot);
-
-            if (itemInSlotDetails.attributes.get("hitDamage") != null) {
-              string += "[DARK_GRAY] -> [RED]"
-                  + itemInSlotDetails.attributes.get("hitDamage") + "[DARK_GRAY]d";
+              if (itemInSlotDetails.attributes.get("hitDamage") != null) {
+                string += "[DARK_GRAY] -> [RED]"
+                    + itemInSlotDetails.attributes.get("hitDamage") + "[DARK_GRAY]d";
+              }
             }
           }
+
+          statsGroup.addActor(new Label(string, main.skin));
         }
 
-        statsGroup.addActor(new Label(string, main.skin));
-      }
+        if (selectedItemDetails.attributes.get("throwDamage") != null) {
+          String string = "[LIGHT_GRAY]THR DMG " + "[RED]"
+              + selectedItemDetails.attributes.get("throwDamage") + "[DARK_GRAY]d";
 
-      if (selectedItemDetails.attributes.get("throwDamage") != null) {
-        String string = "[LIGHT_GRAY]THR DMG " + "[RED]"
-            + selectedItemDetails.attributes.get("throwDamage") + "[DARK_GRAY]d";
+          if (!main.equipmentHelpers.isEquipped(main.player, selectedItem)) {
+            Entity itemInSlot = equipment.slots.get(selectedItemDetails.location);
 
-        if (!main.equipmentHelpers.isEquipped(main.player, selectedItem)) {
-          Entity itemInSlot = equipment.slots.get(selectedItemDetails.location);
+            if (itemInSlot != null) {
+              ItemComponent itemInSlotDetails = ComponentMappers.item.get(itemInSlot);
 
-          if (itemInSlot != null) {
-            ItemComponent itemInSlotDetails = ComponentMappers.item.get(itemInSlot);
-
-            if (itemInSlotDetails.attributes.get("throwDamage") != null) {
-              string += "[DARK_GRAY] -> [RED]"
-                  + itemInSlotDetails.attributes.get("throwDamage") + "[DARK_GRAY]d";
+              if (itemInSlotDetails.attributes.get("throwDamage") != null) {
+                string += "[DARK_GRAY] -> [RED]"
+                    + itemInSlotDetails.attributes.get("throwDamage") + "[DARK_GRAY]d";
+              }
             }
           }
+
+          statsGroup.addActor(new Label(string, main.skin));
         }
 
-        statsGroup.addActor(new Label(string, main.skin));
+        statsGroup.addActor(new Label("", main.skin));
       }
-
-      statsGroup.addActor(new Label("", main.skin));
 
       // Item actions
 
@@ -556,10 +560,8 @@ public class CharacterScreen implements Screen {
             new Label("[LIGHT_GRAY]" + key + ": [DARK_GRAY]Nothing", main.skin)
         );
       } else {
-        ItemComponent itemDetails = ComponentMappers.item.get(item);
-
         String slotName = "[LIGHT_GRAY]" + key + ":[] ";
-        String itemName = itemDetails.name;
+        String itemName = main.entityHelpers.getItemName(main.player, item);
 
         equipmentGroup.addActor(new Label(slotName + itemName, main.skin));
       }

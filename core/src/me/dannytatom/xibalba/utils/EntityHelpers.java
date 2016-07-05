@@ -28,6 +28,7 @@ import me.dannytatom.xibalba.map.Map;
 import me.dannytatom.xibalba.map.ShadowCaster;
 
 import java.util.HashMap;
+import java.util.Objects;
 
 public class EntityHelpers {
   private final Main main;
@@ -413,6 +414,25 @@ public class EntityHelpers {
     }
 
     return null;
+  }
+
+  public boolean itemIsIdentified(Entity entity, Entity item) {
+    PlayerComponent player = ComponentMappers.player.get(entity);
+    ItemComponent details = ComponentMappers.item.get(item);
+
+    return player == null
+        || !(Objects.equals(details.type, "plant")
+        && !player.identifiedItems.contains(details.name, false));
+  }
+
+  public String getItemName(Entity entity, Entity item) {
+    ItemComponent details = ComponentMappers.item.get(item);
+
+    if (itemIsIdentified(entity, item)) {
+      return details.name;
+    } else {
+      return "???";
+    }
   }
 
   public void raiseHealth(Entity entity, int amount) {

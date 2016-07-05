@@ -272,7 +272,7 @@ public class HudRenderer {
 
         ItemComponent itemDetails = ComponentMappers.item.get(item);
 
-        areaDetails.addActor(new Label("[YELLOW]" + itemDetails.name + "[]", main.skin));
+        areaDetails.addActor(new Label("[YELLOW]" + main.entityHelpers.getItemName(main.player, item) + "[]", main.skin));
       }
     }
   }
@@ -309,7 +309,7 @@ public class HudRenderer {
         ItemComponent itemDetails = ComponentMappers.item.get(item);
 
         lookDialogGroup.addActor(
-            new Label("[YELLOW]" + itemDetails.name, main.skin)
+            new Label("[YELLOW]" + main.entityHelpers.getItemName(main.player, item), main.skin)
         );
 
         String description = WordUtils.wrap(itemDetails.description, 50);
