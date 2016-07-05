@@ -14,6 +14,8 @@
     "canThrow": false,
     "canWear": false,
     "canHold": false,
-    "canEat": true
+    "canEat": true,
+    "canApply": true,
+    "canBeAppliedTo": false
   }
 }

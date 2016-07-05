@@ -420,6 +420,12 @@ public class EntityHelpers {
 
     if (attributes.health + amount < attributes.maxHealth) {
       attributes.health += amount;
+
+      if (ComponentMappers.player.has(entity)) {
+        main.log.add("You gain " + amount + " health");
+      } else {
+        main.log.add(attributes.name + " gained " + amount + " health");
+      }
     }
   }
 
@@ -428,6 +434,12 @@ public class EntityHelpers {
 
     if (attributes.strength < 12) {
       attributes.strength += amount;
+
+      if (ComponentMappers.player.has(entity)) {
+        main.log.add("Your strength has improved to " + attributes.strength + "d");
+      } else {
+        main.log.add(attributes.name + " strength has improved to " + attributes.strength + "d");
+      }
     }
   }
 }

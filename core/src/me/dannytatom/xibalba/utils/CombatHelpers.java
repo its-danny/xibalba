@@ -33,6 +33,7 @@ import java.util.Objects;
 // - If the hit roll result is the target number or higher, you hit
 //
 // Damage
+// - Before damage, apply weapon effects if any
 // - Melee damage is strength roll + the weapon's damage roll
 // - Ranged damage is just the weapon's damage roll
 //   - If thrown, use throwDamage, otherwise hitDamage
@@ -199,7 +200,7 @@ public class CombatHelpers {
 
       int damage = strengthRoll + weaponRoll + critRoll;
 
-      applyDamage(starter, target, damage, verb, bodyPart);
+      applyDamage(starter, target, weapon, damage, verb, bodyPart);
 
       main.skillHelpers.levelSkill(starter, skillName, skillLevelAmount);
     } else {
@@ -258,7 +259,7 @@ public class CombatHelpers {
 
       int damage = weaponRoll + critRoll;
 
-      applyDamage(starter, target, damage, verb, bodyPart);
+      applyDamage(starter, target, item, damage, verb, bodyPart);
 
       main.skillHelpers.levelSkill(starter, skill, skillLevelAmount);
     } else {
@@ -289,10 +290,25 @@ public class CombatHelpers {
     }
   }
 
-  private void applyDamage(Entity starter, Entity target, int damage,
+  private void applyDamage(Entity starter, Entity target, Entity item, int damage,
                            String verb, String bodyPart) {
     AttributesComponent starterAttributes = ComponentMappers.attributes.get(starter);
     AttributesComponent targetAttributes = ComponentMappers.attributes.get(target);
+
+    // Apply weapon effects
+    if (item != null) {
+      ItemComponent itemDetails = ComponentMappers.item.get(item);
+
+      if (itemDetails.attributes.get("raiseHealth") != null) {
+        main.entityHelpers.raiseHealth(target, itemDetails.attributes.get("raiseHealth"));
+        itemDetails.attributes.remove("raiseHealth");
+      }
+
+      if (itemDetails.attributes.get("raiseStrength") != null) {
+        main.entityHelpers.raiseStrength(target, itemDetails.attributes.get("raiseStrength"));
+        itemDetails.attributes.remove("raiseStrength");
+      }
+    }
 
     int totalDamage = damage - getCombinedDefense(target);
 

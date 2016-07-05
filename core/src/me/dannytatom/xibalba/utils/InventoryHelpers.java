@@ -9,6 +9,7 @@ import me.dannytatom.xibalba.components.ItemComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
 
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Objects;
 
 public class InventoryHelpers {
@@ -59,6 +60,26 @@ public class InventoryHelpers {
       }
 
       removeItem(entity, item);
+    }
+  }
+
+  public void applyItem(Entity entity, Entity applyingItem, Entity targetItem) {
+    if (applyingItem != null && targetItem != null) {
+      ItemComponent applyingItemDetails = ComponentMappers.item.get(applyingItem);
+      ItemComponent targetItemDetails = ComponentMappers.item.get(targetItem);
+
+      for (Map.Entry<String, Integer> entry : applyingItemDetails.attributes.entrySet()) {
+        String attribute = entry.getKey();
+        Integer value = entry.getValue();
+
+        if (targetItemDetails.attributes.get(attribute) == null) {
+          targetItemDetails.attributes.put(attribute, value);
+        } else {
+          targetItemDetails.attributes.put(attribute, targetItemDetails.attributes.get(attribute) + value);
+        }
+
+        removeItem(entity, applyingItem);
+      }
     }
   }
 

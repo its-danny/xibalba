@@ -44,14 +44,18 @@ public class CharacterScreen implements Screen {
   private final ArrayList<Entity> inventoryItems;
   private HorizontalGroup itemActionGroup;
   private ArrayList<Label> inventoryItemLabels;
+  private ActionButton cancelButton;
   private ActionButton holdButton;
   private ActionButton wearButton;
   private ActionButton throwButton;
   private ActionButton eatButton;
+  private ActionButton applyButton;
+  private ActionButton confirmApplyButton;
   private ActionButton removeButton;
   private ActionButton dropButton;
   private int itemSelected = 0;
   private int itemHovered = 0;
+  private Entity applying = null;
 
   /**
    * View and manage inventory.
@@ -75,10 +79,10 @@ public class CharacterScreen implements Screen {
     stage.addActor(table);
 
     HorizontalGroup titleGroup = new HorizontalGroup().align(Align.center | Align.left);
-    titleGroup.space(5);
+    titleGroup.space(10);
 
-    ActionButton backButton = new ActionButton("Q", null, main.skin);
-    backButton.setKeys(Input.Keys.Q);
+    ActionButton backButton = new ActionButton("ESC", null, main.skin);
+    backButton.setKeys(Input.Keys.ESCAPE);
     backButton.setAction(table, () -> main.setScreen(main.playScreen));
     titleGroup.addActor(backButton);
 
@@ -207,6 +211,10 @@ public class CharacterScreen implements Screen {
   private void setupActionButtons() {
     itemActionGroup = new HorizontalGroup().space(5).align(Align.top | Align.left);
 
+    cancelButton = new ActionButton("Q", "Cancel", main.skin);
+    cancelButton.setKeys(Input.Keys.Q);
+    cancelButton.setAction(itemActionGroup, this::handleCancel);
+
     holdButton = new ActionButton("H", "Hold", main.skin);
     holdButton.setKeys(Input.Keys.H);
     holdButton.setAction(itemActionGroup, this::handleHold);
@@ -222,6 +230,14 @@ public class CharacterScreen implements Screen {
     eatButton = new ActionButton("E", "Eat", main.skin);
     eatButton.setKeys(Input.Keys.E);
     eatButton.setAction(itemActionGroup, this::handleEat);
+
+    applyButton = new ActionButton("A", "Apply", main.skin);
+    applyButton.setKeys(Input.Keys.A);
+    applyButton.setAction(itemActionGroup, this::handleApply);
+
+    confirmApplyButton = new ActionButton("ENTER", "Apply to this", main.skin);
+    confirmApplyButton.setKeys(Input.Keys.ENTER);
+    confirmApplyButton.setAction(itemActionGroup, this::handleConfirmApply);
 
     removeButton = new ActionButton("R", "Remove", main.skin);
     removeButton.setKeys(Input.Keys.R);
@@ -432,6 +448,13 @@ public class CharacterScreen implements Screen {
         statsGroup.addActor(new Label(string, main.skin));
       }
 
+      if (selectedItemDetails.attributes.get("raiseStrength") != null) {
+        String string = "[LIGHT_GRAY]STR + " + "[CYAN]"
+            + selectedItemDetails.attributes.get("raiseStrength");
+
+        statsGroup.addActor(new Label(string, main.skin));
+      }
+
       if (selectedItemDetails.attributes.get("hitDamage") != null) {
         String string = "[LIGHT_GRAY]HIT DMG " + "[RED]"
             + selectedItemDetails.attributes.get("hitDamage") + "[DARK_GRAY]d";
@@ -476,32 +499,44 @@ public class CharacterScreen implements Screen {
 
       // Item actions
 
-      if (selectedItemDetails.actions.get("canHold")
-          && !main.equipmentHelpers.isEquipped(main.player, selectedItem)) {
-        itemActionGroup.addActor(holdButton);
-      }
+      if (applying == null) {
+        if (selectedItemDetails.actions.get("canHold")
+            && !main.equipmentHelpers.isEquipped(main.player, selectedItem)) {
+          itemActionGroup.addActor(holdButton);
+        }
 
-      if (selectedItemDetails.actions.get("canWear")
-          && !main.equipmentHelpers.isEquipped(main.player, selectedItem)) {
-        itemActionGroup.addActor(wearButton);
-      }
+        if (selectedItemDetails.actions.get("canWear")
+            && !main.equipmentHelpers.isEquipped(main.player, selectedItem)) {
+          itemActionGroup.addActor(wearButton);
+        }
 
-      if (selectedItemDetails.actions.get("canThrow")
-          && !main.equipmentHelpers.isEquipped(main.player, selectedItem)) {
-        itemActionGroup.addActor(throwButton);
-      }
+        if (selectedItemDetails.actions.get("canThrow")
+            && !main.equipmentHelpers.isEquipped(main.player, selectedItem)) {
+          itemActionGroup.addActor(throwButton);
+        }
 
-      if (selectedItemDetails.actions.get("canEat")
-          && !main.equipmentHelpers.isEquipped(main.player, selectedItem)) {
-        itemActionGroup.addActor(eatButton);
-      }
+        if (selectedItemDetails.actions.get("canEat")
+            && !main.equipmentHelpers.isEquipped(main.player, selectedItem)) {
+          itemActionGroup.addActor(eatButton);
+        }
 
-      if (main.equipmentHelpers.isEquipped(main.player, selectedItem)) {
-        itemActionGroup.addActor(removeButton);
-      }
+        if (selectedItemDetails.actions.get("canApply")) {
+          itemActionGroup.addActor(applyButton);
+        }
 
-      if (!main.equipmentHelpers.isEquipped(main.player, selectedItem)) {
-        itemActionGroup.addActor(dropButton);
+        if (main.equipmentHelpers.isEquipped(main.player, selectedItem)) {
+          itemActionGroup.addActor(removeButton);
+        }
+
+        if (!main.equipmentHelpers.isEquipped(main.player, selectedItem)) {
+          itemActionGroup.addActor(dropButton);
+        }
+      } else {
+        itemActionGroup.addActor(cancelButton);
+
+        if (applying != selectedItem && selectedItemDetails.actions.get("canBeAppliedTo")) {
+          itemActionGroup.addActor(confirmApplyButton);
+        }
       }
     }
   }
@@ -563,6 +598,12 @@ public class CharacterScreen implements Screen {
     );
   }
 
+  private void handleCancel() {
+    if (applying != null) {
+      applying = null;
+    }
+  }
+
   private void handleHold() {
     main.equipmentHelpers.holdItem(main.player, inventoryItems.get(itemSelected));
   }
@@ -581,6 +622,16 @@ public class CharacterScreen implements Screen {
   private void handleEat() {
     main.inventoryHelpers.eatItem(main.player, inventoryItems.get(itemSelected));
     itemSelected = 0;
+  }
+
+  private void handleApply() {
+    applying = inventoryItems.get(itemSelected);
+  }
+
+  private void handleConfirmApply() {
+    main.inventoryHelpers.applyItem(main.player, applying, inventoryItems.get(itemSelected));
+    itemSelected = 0;
+    applying = null;
   }
 
   private void handleRemove() {
