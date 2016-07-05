@@ -15,13 +15,13 @@ import me.dannytatom.xibalba.map.CaveGenerator;
 import me.dannytatom.xibalba.map.Map;
 import me.dannytatom.xibalba.systems.AttributesSystem;
 import me.dannytatom.xibalba.systems.MouseMovementSystem;
-import me.dannytatom.xibalba.systems.StatusSystem;
 import me.dannytatom.xibalba.systems.actions.MeleeSystem;
 import me.dannytatom.xibalba.systems.actions.MovementSystem;
 import me.dannytatom.xibalba.systems.actions.RangeSystem;
 import me.dannytatom.xibalba.systems.ai.BrainSystem;
 import me.dannytatom.xibalba.systems.ai.TargetSystem;
 import me.dannytatom.xibalba.systems.ai.WanderSystem;
+import me.dannytatom.xibalba.systems.statuses.CrippledSystem;
 import me.dannytatom.xibalba.utils.CombatHelpers;
 import me.dannytatom.xibalba.utils.EntityHelpers;
 import me.dannytatom.xibalba.utils.EquipmentHelpers;
@@ -98,7 +98,7 @@ public class LoadingScreen implements Screen {
     // Setup engine (systems are run in order added)
     main.engine = new Engine();
     main.engine.addSystem(new AttributesSystem());
-    main.engine.addSystem(new StatusSystem());
+    main.engine.addSystem(new CrippledSystem());
     main.engine.addSystem(new MouseMovementSystem(main));
     main.engine.addSystem(new BrainSystem(main));
     main.engine.addSystem(new WanderSystem(main));

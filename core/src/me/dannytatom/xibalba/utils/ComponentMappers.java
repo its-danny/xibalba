@@ -13,13 +13,13 @@ import me.dannytatom.xibalba.components.MouseMovementComponent;
 import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.SkillsComponent;
-import me.dannytatom.xibalba.components.StatusComponent;
 import me.dannytatom.xibalba.components.VisualComponent;
 import me.dannytatom.xibalba.components.actions.MeleeComponent;
 import me.dannytatom.xibalba.components.actions.MovementComponent;
 import me.dannytatom.xibalba.components.actions.RangeComponent;
 import me.dannytatom.xibalba.components.ai.BrainComponent;
 import me.dannytatom.xibalba.components.ai.TargetComponent;
+import me.dannytatom.xibalba.components.statuses.CrippledComponent;
 
 public final class ComponentMappers {
   public static final ComponentMapper<BrainComponent> brain =
@@ -46,8 +46,8 @@ public final class ComponentMappers {
   public static final ComponentMapper<SkillsComponent> skills =
       ComponentMapper.getFor(SkillsComponent.class);
 
-  public static final ComponentMapper<StatusComponent> status =
-      ComponentMapper.getFor(StatusComponent.class);
+  public static final ComponentMapper<CrippledComponent> crippled =
+      ComponentMapper.getFor(CrippledComponent.class);
 
   public static final ComponentMapper<TargetComponent> target =
       ComponentMapper.getFor(TargetComponent.class);

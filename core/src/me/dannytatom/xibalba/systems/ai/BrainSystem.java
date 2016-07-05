@@ -6,7 +6,6 @@ import com.badlogic.gdx.math.Vector2;
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
-import me.dannytatom.xibalba.components.StatusComponent;
 import me.dannytatom.xibalba.components.actions.MeleeComponent;
 import me.dannytatom.xibalba.components.actions.MovementComponent;
 import me.dannytatom.xibalba.components.ai.AttackComponent;
@@ -164,9 +163,8 @@ public class BrainSystem extends UsesEnergySystem {
 
   private void switchToWander(Entity entity) {
     BrainComponent brain = ComponentMappers.brain.get(entity);
-    StatusComponent status = ComponentMappers.status.get(entity);
 
-    if (status.crippled && status.crippledTurnCounter > 0) {
+    if (main.entityHelpers.skipTurn(entity)) {
       switchToWaiting(entity);
 
       return;
@@ -185,9 +183,8 @@ public class BrainSystem extends UsesEnergySystem {
 
   private void switchToTarget(Entity entity, Vector2 target) {
     BrainComponent brain = ComponentMappers.brain.get(entity);
-    StatusComponent status = ComponentMappers.status.get(entity);
 
-    if (status.crippled && status.crippledTurnCounter > 0) {
+    if (main.entityHelpers.skipTurn(entity)) {
       switchToWaiting(entity);
 
       return;

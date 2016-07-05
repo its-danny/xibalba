@@ -21,7 +21,6 @@ import me.dannytatom.xibalba.components.EnemyComponent;
 import me.dannytatom.xibalba.components.ItemComponent;
 import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
-import me.dannytatom.xibalba.components.StatusComponent;
 import me.dannytatom.xibalba.map.Cell;
 import me.dannytatom.xibalba.screens.CharacterScreen;
 import me.dannytatom.xibalba.screens.PauseScreen;
@@ -206,9 +205,7 @@ public class HudRenderer {
         )
     );
 
-    StatusComponent playerStatus = ComponentMappers.status.get(main.player);
-
-    if (playerStatus.crippled) {
+    if (ComponentMappers.crippled.has(main.player)) {
       areaDetails.addActor(new Label("[DARK_GRAY]CRIPPLED[]", main.skin));
     }
 
@@ -245,9 +242,7 @@ public class HudRenderer {
             )
         );
 
-        StatusComponent enemyStatus = ComponentMappers.status.get(enemy);
-
-        if (enemyStatus.crippled) {
+        if (ComponentMappers.crippled.has(enemy)) {
           areaDetails.addActor(new Label("[DARK_GRAY][CRIPPLED][]", main.skin));
         }
       }

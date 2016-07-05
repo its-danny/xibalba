@@ -12,10 +12,10 @@ import me.dannytatom.xibalba.components.EquipmentComponent;
 import me.dannytatom.xibalba.components.ItemComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.SkillsComponent;
-import me.dannytatom.xibalba.components.StatusComponent;
 import me.dannytatom.xibalba.components.VisualComponent;
 import me.dannytatom.xibalba.components.actions.MeleeComponent;
 import me.dannytatom.xibalba.components.actions.RangeComponent;
+import me.dannytatom.xibalba.components.statuses.CrippledComponent;
 
 import java.util.Objects;
 
@@ -38,7 +38,7 @@ import java.util.Objects;
 // - If your hit roll was double the target number, you critical (add a 6 roll to the damage)
 // - Damage done to the enemy is your total damage over their defense
 //   - This is done to their actual health and to the body part damage
-// - Body part damage is checked, add status effects to entity if necessary
+// - Body part damage is checked, add statuses effects to entity if necessary
 //
 
 public class CombatHelpers {
@@ -307,12 +307,10 @@ public class CombatHelpers {
       );
 
       // If you've done damage to the body part equal to or more than a third their health,
-      // apply status effect
+      // apply statuses effect
       if (targetBody.damage.get(bodyPart) > (targetAttributes.maxHealth / 3)) {
-        StatusComponent targetStatus = ComponentMappers.status.get(target);
-
-        if (bodyPart.contains("leg")) {
-          targetStatus.crippled = true;
+        if (bodyPart.contains("leg") && !main.entityHelpers.isCrippled(target)) {
+          target.add(new CrippledComponent());
         }
       }
     } else {

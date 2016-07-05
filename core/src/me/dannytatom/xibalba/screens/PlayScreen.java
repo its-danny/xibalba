@@ -14,7 +14,6 @@ import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.PlayerInput;
 import me.dannytatom.xibalba.WorldRenderer;
 import me.dannytatom.xibalba.components.PositionComponent;
-import me.dannytatom.xibalba.components.StatusComponent;
 import me.dannytatom.xibalba.utils.ComponentMappers;
 
 public class PlayScreen implements Screen {
@@ -81,8 +80,7 @@ public class PlayScreen implements Screen {
     autoTimer += delta;
 
     // In some cases, we want the game to take turns on it's own
-    StatusComponent status = ComponentMappers.status.get(main.player);
-    if ((main.state == Main.State.MOVING || status.crippled && status.crippledTurnCounter > 0) && autoTimer >= .10) {
+    if ((main.state == Main.State.MOVING || main.entityHelpers.skipTurn(main.player)) && autoTimer >= .10) {
       autoTimer = 0;
       main.executeTurn = true;
     }
