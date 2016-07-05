@@ -8,8 +8,6 @@
     ]
   },
   "attributes": {
-    "hitDamage": 4,
-    "throwDamage": 4,
     "raiseHealth": 5
   },
   "actions": {
