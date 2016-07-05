@@ -143,6 +143,27 @@ public class LoadingScreen implements Screen {
 
     for (int i = 0; i < 5; i++) {
       WorldManager.engine.addEntity(
+          WorldManager.entityHelpers.spawnEnemy("bat",
+              mapIndex, WorldManager.mapHelpers.getRandomOpenPositionOnMap(mapIndex))
+      );
+    }
+
+    for (int i = 0; i < 5; i++) {
+      WorldManager.engine.addEntity(
+          WorldManager.entityHelpers.spawnEnemy("jaguar",
+              mapIndex, WorldManager.mapHelpers.getRandomOpenPositionOnMap(mapIndex))
+      );
+    }
+
+    for (int i = 0; i < 5; i++) {
+      WorldManager.engine.addEntity(
+          WorldManager.entityHelpers.spawnEnemy("giantSpider",
+              mapIndex, WorldManager.mapHelpers.getRandomOpenPositionOnMap(mapIndex))
+      );
+    }
+
+    for (int i = 0; i < 5; i++) {
+      WorldManager.engine.addEntity(
           WorldManager.entityHelpers.spawnItem("chippedFlint",
               mapIndex, WorldManager.mapHelpers.getRandomOpenPositionOnMap(mapIndex))
       );

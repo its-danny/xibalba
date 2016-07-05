@@ -1,0 +1,21 @@
+{
+  "name": "Jaguar",
+  "description": "It's a jaguar, bro.",
+  "visual": {
+    "spritePath": "Level/Cave/Enemy/Jaguar-1"
+  },
+  "attributes": {
+    "speed": 120,
+    "vision": 10,
+    "toughness": 8,
+    "strength": 10
+  },
+  "bodyParts": {
+    "head": 8,
+    "body": 6,
+    "left arm": 8,
+    "right arm": 8,
+    "left leg": 8,
+    "right leg": 8
+  }
+}
