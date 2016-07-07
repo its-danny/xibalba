@@ -9,20 +9,15 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.utils.Json;
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.WorldManager;
 import me.dannytatom.xibalba.map.CaveGenerator;
+import me.dannytatom.xibalba.map.Level;
 import me.dannytatom.xibalba.map.Map;
-import me.dannytatom.xibalba.systems.AttributesSystem;
-import me.dannytatom.xibalba.systems.MouseMovementSystem;
-import me.dannytatom.xibalba.systems.actions.MeleeSystem;
-import me.dannytatom.xibalba.systems.actions.MovementSystem;
-import me.dannytatom.xibalba.systems.actions.RangeSystem;
-import me.dannytatom.xibalba.systems.ai.BrainSystem;
-import me.dannytatom.xibalba.systems.ai.TargetSystem;
-import me.dannytatom.xibalba.systems.ai.WanderSystem;
-import me.dannytatom.xibalba.systems.statuses.BleedingSystem;
-import me.dannytatom.xibalba.systems.statuses.CrippledSystem;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class LoadingScreen implements Screen {
   private final Main main;
@@ -65,7 +60,6 @@ public class LoadingScreen implements Screen {
 
     if (Main.assets.update()) {
       if (!generating) {
-        setup();
         generateWorld();
 
         Main.playScreen = new PlayScreen(main);
@@ -81,32 +75,31 @@ public class LoadingScreen implements Screen {
     Main.assets.load("sprites/main.atlas", TextureAtlas.class);
   }
 
-  private void setup() {
-    // Setup engine (systems are run in order added)
-    WorldManager.engine.addSystem(new AttributesSystem());
-    WorldManager.engine.addSystem(new MouseMovementSystem());
-    WorldManager.engine.addSystem(new BrainSystem());
-    WorldManager.engine.addSystem(new WanderSystem());
-    WorldManager.engine.addSystem(new TargetSystem());
-    WorldManager.engine.addSystem(new MeleeSystem());
-    WorldManager.engine.addSystem(new RangeSystem());
-    WorldManager.engine.addSystem(new MovementSystem());
-    WorldManager.engine.addSystem(new CrippledSystem());
-    WorldManager.engine.addSystem(new BleedingSystem());
-  }
-
   private void generateWorld() {
+    ArrayList levels = levelsFromJson();
+
     generating = true;
 
-    for (int i = 0; i < 5; i++) {
-      int mapWidth = MathUtils.random(150, 200);
-      int mapHeight = MathUtils.random(100, 150);
+    for (int i = 0; i < levels.size(); i++) {
+      Level level = (Level) levels.get(i);
+
+      String[] widthRange = level.size.get("width").split(",");
+      String[] heightRange = level.size.get("height").split(",");
+
+      int mapWidth = MathUtils.random(
+          Integer.parseInt(widthRange[0]), Integer.parseInt(widthRange[1])
+      );
+
+      int mapHeight = MathUtils.random(
+          Integer.parseInt(heightRange[0]), Integer.parseInt(heightRange[1])
+      );
 
       Gdx.app.log(
           "CaveGenerator",
           "Starting cave generation for cave " + (i + 1) + ", size " + mapWidth + "x" + mapHeight
       );
 
+      // TODO: Once we have more types, check level.type to figure out which generator to use
       CaveGenerator generator = new CaveGenerator(mapWidth, mapHeight);
       generator.generate();
 
@@ -115,7 +108,7 @@ public class LoadingScreen implements Screen {
 
       WorldManager.world.maps.add(map);
 
-      spawnShit(i);
+      spawnShit(level, i, i == levels.size());
     }
 
     // Add player entity
@@ -123,107 +116,50 @@ public class LoadingScreen implements Screen {
     WorldManager.engine.addEntity(WorldManager.player);
   }
 
-  private void spawnShit(int mapIndex) {
+  private void spawnShit(Level level, int mapIndex, boolean isLast) {
     // Spawn an entrance on every level but first
     if (mapIndex > 0) {
       WorldManager.engine.addEntity(WorldManager.entityHelpers.spawnEntrance(mapIndex));
     }
 
     // Spawn an exit on every level but last
-    if (mapIndex < 4) {
+    if (!isLast) {
       WorldManager.engine.addEntity(WorldManager.entityHelpers.spawnExit(mapIndex));
     }
 
-    for (int i = 0; i < 5; i++) {
-      WorldManager.engine.addEntity(
-          WorldManager.entityHelpers.spawnEnemy("spiderMonkey",
-              mapIndex, WorldManager.mapHelpers.getRandomOpenPositionOnMap(mapIndex))
-      );
+    // Spawn enemies
+    for (int i = 0; i < level.enemies.size; i++) {
+      HashMap<String, String> enemy = level.enemies.get(i);
+      String[] range = enemy.get("spawnRange").split(",");
+      int amount = MathUtils.random(Integer.parseInt(range[0]), Integer.parseInt(range[1]));
+
+      for (int j = 0; j < amount; j++) {
+        WorldManager.engine.addEntity(
+            WorldManager.entityHelpers.spawnEnemy(enemy.get("name"),
+                mapIndex, WorldManager.mapHelpers.getRandomOpenPositionOnMap(mapIndex))
+        );
+      }
     }
 
-    for (int i = 0; i < 5; i++) {
-      WorldManager.engine.addEntity(
-          WorldManager.entityHelpers.spawnEnemy("bat",
-              mapIndex, WorldManager.mapHelpers.getRandomOpenPositionOnMap(mapIndex))
-      );
-    }
+    // Spawn items
+    for (int i = 0; i < level.items.size; i++) {
+      HashMap<String, String> item = level.items.get(i);
+      String[] range = item.get("spawnRange").split(",");
+      int amount = MathUtils.random(Integer.parseInt(range[0]), Integer.parseInt(range[1]));
 
-    for (int i = 0; i < 5; i++) {
-      WorldManager.engine.addEntity(
-          WorldManager.entityHelpers.spawnEnemy("jaguar",
-              mapIndex, WorldManager.mapHelpers.getRandomOpenPositionOnMap(mapIndex))
-      );
+      for (int j = 0; j < amount; j++) {
+        WorldManager.engine.addEntity(
+            WorldManager.entityHelpers.spawnItem(item.get("name"),
+                mapIndex, WorldManager.mapHelpers.getRandomOpenPositionOnMap(mapIndex))
+        );
+      }
     }
+  }
 
-    for (int i = 0; i < 5; i++) {
-      WorldManager.engine.addEntity(
-          WorldManager.entityHelpers.spawnEnemy("giantSpider",
-              mapIndex, WorldManager.mapHelpers.getRandomOpenPositionOnMap(mapIndex))
-      );
-    }
-
-    for (int i = 0; i < 5; i++) {
-      WorldManager.engine.addEntity(
-          WorldManager.entityHelpers.spawnItem("chippedFlint",
-              mapIndex, WorldManager.mapHelpers.getRandomOpenPositionOnMap(mapIndex))
-      );
-    }
-
-    for (int i = 0; i < 5; i++) {
-      WorldManager.engine.addEntity(
-          WorldManager.entityHelpers.spawnItem("macuahuitl",
-              mapIndex, WorldManager.mapHelpers.getRandomOpenPositionOnMap(mapIndex))
-      );
-    }
-
-    for (int i = 0; i < 5; i++) {
-      WorldManager.engine.addEntity(
-          WorldManager.entityHelpers.spawnItem("shield",
-              mapIndex, WorldManager.mapHelpers.getRandomOpenPositionOnMap(mapIndex))
-      );
-    }
-
-    for (int i = 0; i < 5; i++) {
-      WorldManager.engine.addEntity(
-          WorldManager.entityHelpers.spawnItem("spear",
-              mapIndex, WorldManager.mapHelpers.getRandomOpenPositionOnMap(mapIndex))
-      );
-    }
-
-    for (int i = 0; i < 5; i++) {
-      WorldManager.engine.addEntity(
-          WorldManager.entityHelpers.spawnItem("bow",
-              mapIndex, WorldManager.mapHelpers.getRandomOpenPositionOnMap(mapIndex))
-      );
-    }
-
-    for (int i = 0; i < 20; i++) {
-      WorldManager.engine.addEntity(
-          WorldManager.entityHelpers.spawnItem("arrow",
-              mapIndex, WorldManager.mapHelpers.getRandomOpenPositionOnMap(mapIndex))
-      );
-    }
-
-    for (int i = 0; i < 20; i++) {
-      WorldManager.engine.addEntity(
-          WorldManager.entityHelpers.spawnItem("healthPlant",
-              mapIndex, WorldManager.mapHelpers.getRandomOpenPositionOnMap(mapIndex))
-      );
-    }
-
-    for (int i = 0; i < 20; i++) {
-      WorldManager.engine.addEntity(
-          WorldManager.entityHelpers.spawnItem("strengthPlant",
-              mapIndex, WorldManager.mapHelpers.getRandomOpenPositionOnMap(mapIndex))
-      );
-    }
-
-    for (int i = 0; i < 50; i++) {
-      WorldManager.engine.addEntity(
-          WorldManager.entityHelpers.spawnRandomDecoration(
-              mapIndex, WorldManager.mapHelpers.getRandomOpenPositionOnMap(mapIndex))
-      );
-    }
+  private ArrayList levelsFromJson() {
+    return (new Json()).fromJson(
+        ArrayList.class, Level.class, Gdx.files.internal("data/world.json")
+    );
   }
 
   @Override

@@ -2,6 +2,16 @@ package me.dannytatom.xibalba;
 
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
+import me.dannytatom.xibalba.systems.AttributesSystem;
+import me.dannytatom.xibalba.systems.MouseMovementSystem;
+import me.dannytatom.xibalba.systems.actions.MeleeSystem;
+import me.dannytatom.xibalba.systems.actions.MovementSystem;
+import me.dannytatom.xibalba.systems.actions.RangeSystem;
+import me.dannytatom.xibalba.systems.ai.BrainSystem;
+import me.dannytatom.xibalba.systems.ai.TargetSystem;
+import me.dannytatom.xibalba.systems.ai.WanderSystem;
+import me.dannytatom.xibalba.systems.statuses.BleedingSystem;
+import me.dannytatom.xibalba.systems.statuses.CrippledSystem;
 import me.dannytatom.xibalba.utils.CombatHelpers;
 import me.dannytatom.xibalba.utils.EntityHelpers;
 import me.dannytatom.xibalba.utils.EquipmentHelpers;
@@ -41,6 +51,18 @@ public class WorldManager {
     player = new Entity();
     executeTurn = false;
     turnCount = 0;
+
+    // Setup engine (systems are run in order added)
+    WorldManager.engine.addSystem(new AttributesSystem());
+    WorldManager.engine.addSystem(new MouseMovementSystem());
+    WorldManager.engine.addSystem(new BrainSystem());
+    WorldManager.engine.addSystem(new WanderSystem());
+    WorldManager.engine.addSystem(new TargetSystem());
+    WorldManager.engine.addSystem(new MeleeSystem());
+    WorldManager.engine.addSystem(new RangeSystem());
+    WorldManager.engine.addSystem(new MovementSystem());
+    WorldManager.engine.addSystem(new CrippledSystem());
+    WorldManager.engine.addSystem(new BleedingSystem());
   }
 
   public enum State {
