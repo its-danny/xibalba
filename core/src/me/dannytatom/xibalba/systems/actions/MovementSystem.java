@@ -53,11 +53,13 @@ public class MovementSystem extends UsesEnergySystem {
 
           entity.remove(MouseMovementComponent.class);
           position.map = WorldManager.world.currentMapIndex;
+          WorldManager.state = WorldManager.State.PLAYING;
         } else if (WorldManager.entityHelpers.isEntrance(thing)) {
           WorldManager.world.currentMapIndex -= 1;
 
           entity.remove(MouseMovementComponent.class);
           position.map = WorldManager.world.currentMapIndex;
+          WorldManager.state = WorldManager.State.PLAYING;
         }
       }
     }
