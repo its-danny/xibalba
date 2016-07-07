@@ -33,7 +33,7 @@ public class AttributesComponent implements Component {
     this.toughness = toughness;
     this.strength = strength;
 
-    this.maxHealth = toughness * 10;
+    this.maxHealth = toughness * 100;
     this.health = maxHealth;
   }
 }

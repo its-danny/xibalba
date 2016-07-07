@@ -50,16 +50,20 @@ public class MovementSystem extends UsesEnergySystem {
           WorldManager.combatHelpers.preparePlayerForMelee(thing, "body");
         } else if (WorldManager.entityHelpers.isExit(thing)) {
           WorldManager.world.currentMapIndex += 1;
+          WorldManager.state = WorldManager.State.PLAYING;
 
           entity.remove(MouseMovementComponent.class);
+
+          position.pos = WorldManager.mapHelpers.getEntrancePosition();
           position.map = WorldManager.world.currentMapIndex;
-          WorldManager.state = WorldManager.State.PLAYING;
         } else if (WorldManager.entityHelpers.isEntrance(thing)) {
           WorldManager.world.currentMapIndex -= 1;
+          WorldManager.state = WorldManager.State.PLAYING;
 
           entity.remove(MouseMovementComponent.class);
+
+          position.pos = WorldManager.mapHelpers.getExitPosition();
           position.map = WorldManager.world.currentMapIndex;
-          WorldManager.state = WorldManager.State.PLAYING;
         }
       }
     }

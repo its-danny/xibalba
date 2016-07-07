@@ -75,7 +75,8 @@ class PlayScreen implements Screen {
     autoTimer += delta;
 
     // In some cases, we want the game to take turns on it's own
-    if ((WorldManager.state == WorldManager.State.MOVING || WorldManager.entityHelpers.skipTurn(WorldManager.player)) && autoTimer >= .10) {
+    if ((WorldManager.state == WorldManager.State.MOVING
+        || WorldManager.entityHelpers.skipTurn(WorldManager.player)) && autoTimer >= .10) {
       autoTimer = 0;
       WorldManager.executeTurn = true;
     }
@@ -128,7 +129,5 @@ class PlayScreen implements Screen {
   @Override
   public void dispose() {
     batch.dispose();
-
-    WorldManager.state = null;
   }
 }
