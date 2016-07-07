@@ -349,7 +349,7 @@ public class CombatHelpers {
     if (targetAttributes.health <= 0) {
       TextureAtlas atlas = Main.assets.get("sprites/main.atlas");
       Entity remains = new Entity();
-      remains.add(new DecorationComponent());
+      remains.add(new DecorationComponent(false));
       remains.add(new PositionComponent(
           WorldManager.world.currentMapIndex, ComponentMappers.position.get(target).pos
       ));

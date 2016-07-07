@@ -6,7 +6,6 @@ import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import me.dannytatom.xibalba.WorldManager;
-import me.dannytatom.xibalba.components.DecorationComponent;
 import me.dannytatom.xibalba.components.EntranceComponent;
 import me.dannytatom.xibalba.components.ExitComponent;
 import me.dannytatom.xibalba.components.PlayerComponent;
@@ -64,16 +63,21 @@ public class MapHelpers {
 
     if (!blocked) {
       ImmutableArray<Entity> entities =
-          WorldManager.engine.getEntitiesFor(
-              Family.all(PositionComponent.class).exclude(DecorationComponent.class).get()
-          );
+          WorldManager.engine.getEntitiesFor(Family.all(PositionComponent.class).get());
 
       for (Entity entity : entities) {
         PositionComponent ep = ComponentMappers.position.get(entity);
 
         if (ep != null && ep.map == mapIndex && ep.pos.epsilonEquals(position, 0.00001f)) {
-          blocked = true;
-          break;
+          if (ComponentMappers.decoration.has(entity)) {
+            if (ComponentMappers.decoration.get(entity).blocks) {
+              blocked = true;
+              break;
+            }
+          } else {
+            blocked = true;
+            break;
+          }
         }
       }
     }

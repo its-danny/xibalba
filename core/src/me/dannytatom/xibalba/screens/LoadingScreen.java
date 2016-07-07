@@ -154,6 +154,14 @@ public class LoadingScreen implements Screen {
         );
       }
     }
+
+    // Spawn decorations
+    for (int i = 0; i < 50; i++) {
+      WorldManager.engine.addEntity(
+          WorldManager.entityHelpers.spawnRandomDecoration(mapIndex,
+              WorldManager.mapHelpers.getRandomOpenPositionOnMap(mapIndex))
+      );
+    }
   }
 
   private ArrayList levelsFromJson() {

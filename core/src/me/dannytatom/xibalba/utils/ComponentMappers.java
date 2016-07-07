@@ -3,6 +3,7 @@ package me.dannytatom.xibalba.utils;
 import com.badlogic.ashley.core.ComponentMapper;
 import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.BodyComponent;
+import me.dannytatom.xibalba.components.DecorationComponent;
 import me.dannytatom.xibalba.components.EnemyComponent;
 import me.dannytatom.xibalba.components.EntranceComponent;
 import me.dannytatom.xibalba.components.EquipmentComponent;
@@ -70,6 +71,9 @@ public final class ComponentMappers {
 
   public static final ComponentMapper<ItemComponent> item =
       ComponentMapper.getFor(ItemComponent.class);
+
+  public static final ComponentMapper<DecorationComponent> decoration =
+      ComponentMapper.getFor(DecorationComponent.class);
 
   public static final ComponentMapper<PlayerComponent> player =
       ComponentMapper.getFor(PlayerComponent.class);

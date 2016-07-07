@@ -33,9 +33,19 @@ import java.util.Objects;
 
 public class EntityHelpers {
   private final ShadowCaster caster;
+  private Array<String> decorationTypes;
 
   public EntityHelpers() {
     caster = new ShadowCaster();
+
+    decorationTypes = new Array<>();
+    decorationTypes.add("Mushroom-1");
+    decorationTypes.add("Mushroom-2");
+    decorationTypes.add("Rock-1");
+    decorationTypes.add("Rock-2");
+    decorationTypes.add("Rock-3");
+    decorationTypes.add("Rock-4");
+    decorationTypes.add("Vase-1");
   }
 
   /**
@@ -144,24 +154,21 @@ public class EntityHelpers {
    * @return The decoration entity
    */
   public Entity spawnRandomDecoration(int map, Vector2 position) {
-    Array<String> types = new Array<>();
-    types.add("Level/Cave/Environment/Object/Mushroom-1");
-    types.add("Level/Cave/Environment/Object/Mushroom-2");
-    types.add("Level/Cave/Environment/Object/Rock-1");
-    types.add("Level/Cave/Environment/Object/Rock-2");
-    types.add("Level/Cave/Environment/Object/Rock-3");
-    types.add("Level/Cave/Environment/Object/Rock-4");
-    types.add("Level/Cave/Environment/Object/Vase-1");
+    String type = decorationTypes.random();
+    Entity decoration = new Entity();
+
+    if (Objects.equals(type, "Vase-1")) {
+      decoration.add(new DecorationComponent(true));
+    } else {
+      decoration.add(new DecorationComponent(false));
+    }
 
     TextureAtlas atlas = Main.assets.get("sprites/main.atlas");
 
-    Entity decoration = new Entity();
-
-    decoration.add(new DecorationComponent());
     decoration.add(new PositionComponent(map, position));
-    decoration.add(new VisualComponent(
-        atlas.createSprite(types.random())
-    ));
+    decoration.add(
+        new VisualComponent(atlas.createSprite("Level/Cave/Environment/Object/" + type))
+    );
 
     return decoration;
   }
