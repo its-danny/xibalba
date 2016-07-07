@@ -516,8 +516,7 @@ public class CharacterScreen implements Screen {
           itemActionGroup.addActor(wearButton);
         }
 
-        if (selectedItemDetails.actions.get("canThrow")
-            && !WorldManager.equipmentHelpers.isEquipped(WorldManager.player, selectedItem)) {
+        if (selectedItemDetails.actions.get("canThrow")) {
           itemActionGroup.addActor(throwButton);
         }
 

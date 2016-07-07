@@ -345,22 +345,12 @@ public class PlayerInput implements InputProcessor {
   }
 
   private void handleTargeting(Vector2 pos) {
-    PlayerComponent playerDetails = ComponentMappers.player.get(WorldManager.player);
-
-    playerDetails.target = null;
-    playerDetails.path = null;
-
     WorldManager.mapHelpers.createTargetingPath(
         ComponentMappers.position.get(WorldManager.player).pos, pos
     );
   }
 
   private void handleLooking(Vector2 pos, boolean careAboutWalls) {
-    PlayerComponent playerDetails = ComponentMappers.player.get(WorldManager.player);
-
-    playerDetails.target = null;
-    playerDetails.path = null;
-
     WorldManager.mapHelpers.createLookingPath(
         ComponentMappers.position.get(WorldManager.player).pos, pos, careAboutWalls
     );
