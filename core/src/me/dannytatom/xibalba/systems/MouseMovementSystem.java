@@ -7,6 +7,7 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.Vector2;
 import me.dannytatom.xibalba.WorldManager;
+import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.MouseMovementComponent;
 import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.actions.MovementComponent;
@@ -35,21 +36,26 @@ public class MouseMovementSystem extends EntitySystem {
   public void update(float deltaTime) {
     for (Entity entity : entities) {
       PlayerComponent playerDetails = ComponentMappers.player.get(WorldManager.player);
+      AttributesComponent attributes = ComponentMappers.attributes.get(WorldManager.player);
 
       // Remove mouse movement component once path is empty
       if (playerDetails.path == null || playerDetails.path.isEmpty()) {
+        attributes.energy -= MovementComponent.COST;
+
         entity.remove(MouseMovementComponent.class);
         WorldManager.state = WorldManager.State.PLAYING;
       } else {
-        // Start walking
-        GridCell cell = playerDetails.path.get(0);
+        if (attributes.energy >= MovementComponent.COST) {
+          // Start walking
+          GridCell cell = playerDetails.path.get(0);
 
-        entity.add(new MovementComponent(new Vector2(cell.getX(), cell.getY())));
+          entity.add(new MovementComponent(new Vector2(cell.getX(), cell.getY())));
 
-        List<GridCell> newPath = new ArrayList<>(playerDetails.path);
-        newPath.remove(cell);
+          List<GridCell> newPath = new ArrayList<>(playerDetails.path);
+          newPath.remove(cell);
 
-        playerDetails.path = newPath;
+          playerDetails.path = newPath;
+        }
       }
     }
   }

@@ -203,6 +203,10 @@ public class HudRenderer {
         )
     );
 
+    areaDetails.addActor(
+        new Label("[GREEN]" + playerAttributes.energy, Main.skin)
+    );
+
     if (ComponentMappers.crippled.has(WorldManager.player)) {
       areaDetails.addActor(new Label("[DARK_GRAY]CRIPPLED[]", Main.skin));
     }

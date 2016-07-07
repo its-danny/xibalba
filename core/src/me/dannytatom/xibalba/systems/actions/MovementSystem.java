@@ -37,6 +37,7 @@ public class MovementSystem extends UsesEnergySystem {
     // If we can move, move
     if (!WorldManager.mapHelpers.isBlocked(WorldManager.world.currentMapIndex, movement.pos)) {
       position.pos = movement.pos;
+      attributes.energy -= MovementComponent.COST;
     } else {
       // If we can't, and the entity is the player, figure out what to do instead
       if (ComponentMappers.player.has(entity)) {
@@ -46,6 +47,7 @@ public class MovementSystem extends UsesEnergySystem {
           WorldManager.inventoryHelpers.addItem(WorldManager.player, thing);
 
           position.pos = movement.pos;
+          attributes.energy -= MovementComponent.COST;
         } else if (WorldManager.entityHelpers.isEnemy(thing)) {
           WorldManager.combatHelpers.preparePlayerForMelee(thing, "body");
         } else if (WorldManager.entityHelpers.isExit(thing)) {
@@ -56,6 +58,7 @@ public class MovementSystem extends UsesEnergySystem {
 
           position.pos = WorldManager.mapHelpers.getEntrancePosition();
           position.map = WorldManager.world.currentMapIndex;
+          attributes.energy -= MovementComponent.COST;
         } else if (WorldManager.entityHelpers.isEntrance(thing)) {
           WorldManager.world.currentMapIndex -= 1;
           WorldManager.state = WorldManager.State.PLAYING;
@@ -64,11 +67,11 @@ public class MovementSystem extends UsesEnergySystem {
 
           position.pos = WorldManager.mapHelpers.getExitPosition();
           position.map = WorldManager.world.currentMapIndex;
+          attributes.energy -= MovementComponent.COST;
         }
       }
     }
 
-    attributes.energy -= MovementComponent.COST;
     entity.remove(MovementComponent.class);
   }
 }

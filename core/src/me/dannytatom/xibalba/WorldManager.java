@@ -58,9 +58,9 @@ public class WorldManager {
     WorldManager.engine.addSystem(new BrainSystem());
     WorldManager.engine.addSystem(new WanderSystem());
     WorldManager.engine.addSystem(new TargetSystem());
+    WorldManager.engine.addSystem(new MovementSystem());
     WorldManager.engine.addSystem(new MeleeSystem());
     WorldManager.engine.addSystem(new RangeSystem());
-    WorldManager.engine.addSystem(new MovementSystem());
     WorldManager.engine.addSystem(new CrippledSystem());
     WorldManager.engine.addSystem(new BleedingSystem());
   }
