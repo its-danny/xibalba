@@ -107,7 +107,7 @@ public class InventoryHelpers {
 
     if (inventory != null && item != null) {
       inventory.items.remove(item);
-      WorldManager.engine.removeEntity(item);
+      WorldManager.world.removeEntity(item);
     }
   }
 
@@ -126,7 +126,7 @@ public class InventoryHelpers {
         WorldManager.equipmentHelpers.removeItem(entity, item);
       }
 
-      item.add(new PositionComponent(WorldManager.world.currentMapIndex, position));
+      item.add(new PositionComponent(position));
       inventory.items.remove(item);
 
       if (ComponentMappers.player.has(entity)) {

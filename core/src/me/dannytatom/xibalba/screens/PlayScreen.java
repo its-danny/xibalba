@@ -13,7 +13,7 @@ import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.PlayerInput;
 import me.dannytatom.xibalba.WorldManager;
 import me.dannytatom.xibalba.WorldRenderer;
-import me.dannytatom.xibalba.components.PositionComponent;
+import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.utils.ComponentMappers;
 
 class PlayScreen implements Screen {
@@ -26,6 +26,7 @@ class PlayScreen implements Screen {
 
   private final SpriteBatch batch;
   private float autoTimer = 0;
+  private AttributesComponent playerAttributes;
 
   /**
    * Play Screen.
@@ -39,9 +40,8 @@ class PlayScreen implements Screen {
     fps = new FPSLogger();
     batch = new SpriteBatch();
 
-    // Add player entity
-    PositionComponent playerPosition = ComponentMappers.position.get(WorldManager.player);
-    playerPosition.pos = WorldManager.mapHelpers.getEntrancePosition();
+    // Add entities
+    WorldManager.world.setup();
 
     // Setup renderers
     OrthographicCamera worldCamera = new OrthographicCamera();
@@ -52,6 +52,9 @@ class PlayScreen implements Screen {
     multiplexer = new InputMultiplexer();
     multiplexer.addProcessor(hudRenderer.stage);
     multiplexer.addProcessor(new PlayerInput(worldCamera));
+
+    // Player attributes
+    playerAttributes = ComponentMappers.attributes.get(WorldManager.player);
 
     // Change state to playing
     WorldManager.state = WorldManager.State.PLAYING;
@@ -89,9 +92,17 @@ class PlayScreen implements Screen {
       WorldManager.executeTurn = false;
     }
 
-    if (ComponentMappers.attributes.get(WorldManager.player).health <= 0) {
-      WorldManager.world.currentMapIndex = 0;
+    // Check if going up or down levels
+    if (WorldManager.state == WorldManager.State.GOING_DOWN) {
+      WorldManager.world.goDown();
+      WorldManager.state = WorldManager.State.PLAYING;
+    } else if (WorldManager.state == WorldManager.State.GOING_UP) {
+      WorldManager.world.goUp();
+      WorldManager.state = WorldManager.State.PLAYING;
+    }
 
+    // Check player health
+    if (playerAttributes.health <= 0) {
       Main.playScreen.dispose();
       main.setScreen(new MainMenuScreen(main));
     } else {

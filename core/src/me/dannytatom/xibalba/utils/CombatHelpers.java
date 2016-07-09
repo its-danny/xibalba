@@ -350,15 +350,13 @@ public class CombatHelpers {
       TextureAtlas atlas = Main.assets.get("sprites/main.atlas");
       Entity remains = new Entity();
       remains.add(new DecorationComponent(false));
-      remains.add(new PositionComponent(
-          WorldManager.world.currentMapIndex, ComponentMappers.position.get(target).pos
-      ));
+      remains.add(new PositionComponent(ComponentMappers.position.get(target).pos));
       remains.add(new VisualComponent(
           atlas.createSprite("Level/Cave/Environment/Object/Remains-1")
       ));
 
-      WorldManager.engine.addEntity(remains);
-      WorldManager.engine.removeEntity(target);
+      WorldManager.world.addEntity(remains);
+      WorldManager.world.removeEntity(target);
 
       if (ComponentMappers.player.has(starter)) {
         WorldManager.log.add("[GREEN]You killed " + targetAttributes.name + "!");

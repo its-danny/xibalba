@@ -5,7 +5,6 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.math.Vector2;
 import me.dannytatom.xibalba.WorldManager;
 import me.dannytatom.xibalba.components.AttributesComponent;
-import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.actions.MeleeComponent;
 import me.dannytatom.xibalba.components.actions.MovementComponent;
 import me.dannytatom.xibalba.components.ai.AttackComponent;
@@ -23,32 +22,21 @@ public class BrainSystem extends UsesEnergySystem {
   @Override
   protected void processEntity(Entity entity, float deltaTime) {
     BrainComponent brain = ComponentMappers.brain.get(entity);
-    PositionComponent position = ComponentMappers.position.get(entity);
 
-    if (position.map == WorldManager.world.currentMapIndex) {
-      switch (brain.state) {
-        case WAITING:
-          handleWaiting(entity);
-          break;
-        case WANDERING:
-          handleWander(entity);
-          break;
-        case TARGETING:
-          handleTarget(entity);
-          break;
-        case ATTACKING:
-          handleAttack(entity);
-          break;
-        default:
-      }
-    } else {
-      if (brain.state != BrainComponent.State.WAITING) {
-        brain.state = BrainComponent.State.WAITING;
-
-        entity.remove(WanderComponent.class);
-        entity.remove(TargetComponent.class);
-        entity.remove(AttackComponent.class);
-      }
+    switch (brain.state) {
+      case WAITING:
+        handleWaiting(entity);
+        break;
+      case WANDERING:
+        handleWander(entity);
+        break;
+      case TARGETING:
+        handleTarget(entity);
+        break;
+      case ATTACKING:
+        handleAttack(entity);
+        break;
+      default:
     }
   }
 

@@ -32,12 +32,9 @@ import java.util.HashMap;
 import java.util.Objects;
 
 public class EntityHelpers {
-  private final ShadowCaster caster;
-  private Array<String> decorationTypes;
+  private final Array<String> decorationTypes;
 
   public EntityHelpers() {
-    caster = new ShadowCaster();
-
     decorationTypes = new Array<>();
     decorationTypes.add("Mushroom-1");
     decorationTypes.add("Mushroom-2");
@@ -54,7 +51,7 @@ public class EntityHelpers {
    * @param player   The player
    * @param mapIndex Map to spawn em on
    */
-  public void spawnPlayer(Entity player, int mapIndex) {
+  public void setupPlayer(Entity player) {
     Array<String> sprites = new Array<>();
     sprites.addAll("Level/Cave/Character/Ikal-1");
     sprites.addAll("Level/Cave/Character/Iktan-1");
@@ -64,7 +61,7 @@ public class EntityHelpers {
     TextureAtlas atlas = Main.assets.get("sprites/main.atlas");
 
     player.add(new PlayerComponent());
-    player.add(new PositionComponent(mapIndex, WorldManager.mapHelpers.getEntrancePosition()));
+    player.add(new PositionComponent(WorldManager.mapHelpers.getEntrancePosition()));
     player.add(new VisualComponent(
         atlas.createSprite(sprites.random()))
     );
@@ -90,7 +87,7 @@ public class EntityHelpers {
    *
    * @return The enemy
    */
-  public Entity spawnEnemy(String type, int map, Vector2 position) {
+  public Entity spawnEnemy(String type, Vector2 position) {
     JsonToEnemy json = (new Json()).fromJson(JsonToEnemy.class,
         Gdx.files.internal("data/enemies/" + type + ".json"));
     TextureAtlas atlas = Main.assets.get("sprites/main.atlas");
@@ -99,7 +96,7 @@ public class EntityHelpers {
 
     entity.add(new EnemyComponent());
     entity.add(new BrainComponent());
-    entity.add(new PositionComponent(map, position));
+    entity.add(new PositionComponent(position));
     entity.add(new VisualComponent(atlas.createSprite(json.visual.get("spritePath"))));
     entity.add(new SkillsComponent());
     entity.add(new AttributesComponent(
@@ -130,7 +127,7 @@ public class EntityHelpers {
    *
    * @return The item
    */
-  public Entity spawnItem(String type, int map, Vector2 position) {
+  public Entity spawnItem(String type, Vector2 position) {
     TextureAtlas atlas = Main.assets.get("sprites/main.atlas");
     ItemComponent itemDetails = (new Json()).fromJson(ItemComponent.class,
         Gdx.files.internal("data/items/" + type + ".json"));
@@ -138,7 +135,7 @@ public class EntityHelpers {
     Entity entity = new Entity();
 
     entity.add(itemDetails);
-    entity.add(new PositionComponent(map, position));
+    entity.add(new PositionComponent(position));
     entity.add(new VisualComponent(
         atlas.createSprite(itemDetails.visual.get("sprites").random())
     ));
@@ -153,7 +150,7 @@ public class EntityHelpers {
    *
    * @return The decoration entity
    */
-  public Entity spawnRandomDecoration(int map, Vector2 position) {
+  public Entity spawnRandomDecoration(Vector2 position) {
     String type = decorationTypes.random();
     Entity decoration = new Entity();
 
@@ -165,7 +162,7 @@ public class EntityHelpers {
 
     TextureAtlas atlas = Main.assets.get("sprites/main.atlas");
 
-    decoration.add(new PositionComponent(map, position));
+    decoration.add(new PositionComponent(position));
     decoration.add(
         new VisualComponent(atlas.createSprite("Level/Cave/Environment/Object/" + type))
     );
@@ -194,7 +191,7 @@ public class EntityHelpers {
 
     Entity entity = new Entity();
     entity.add(new EntranceComponent());
-    entity.add(new PositionComponent(mapIndex, new Vector2(cellX, cellY)));
+    entity.add(new PositionComponent(new Vector2(cellX, cellY)));
 
     TextureAtlas atlas = Main.assets.get("sprites/main.atlas");
     entity.add(new VisualComponent(
@@ -225,7 +222,7 @@ public class EntityHelpers {
 
     Entity entity = new Entity();
     entity.add(new ExitComponent());
-    entity.add(new PositionComponent(mapIndex, new Vector2(cellX, cellY)));
+    entity.add(new PositionComponent(new Vector2(cellX, cellY)));
 
     TextureAtlas atlas = Main.assets.get("sprites/main.atlas");
     entity.add(new VisualComponent(
@@ -274,7 +271,6 @@ public class EntityHelpers {
     PositionComponent entityPosition = ComponentMappers.position.get(entity);
 
     return entityPosition != null
-        && entityPosition.map == WorldManager.world.currentMapIndex
         && !WorldManager.mapHelpers.getCell(entityPosition.pos.x, entityPosition.pos.y).hidden;
   }
 
@@ -289,8 +285,7 @@ public class EntityHelpers {
     PositionComponent entityPosition = ComponentMappers.position.get(entity);
     PositionComponent playerPosition = ComponentMappers.position.get(WorldManager.player);
 
-    return entityPosition.map == playerPosition.map
-        && entityPosition.pos.x <= playerPosition.pos.x + 1
+    return entityPosition.pos.x <= playerPosition.pos.x + 1
         && entityPosition.pos.x >= playerPosition.pos.x - 1
         && entityPosition.pos.y <= playerPosition.pos.y + 1
         && entityPosition.pos.y >= playerPosition.pos.y - 1;
@@ -308,40 +303,11 @@ public class EntityHelpers {
     PositionComponent entityPosition = ComponentMappers.position.get(entity);
     PositionComponent playerPosition = ComponentMappers.position.get(WorldManager.player);
 
-    if (entityPosition.map != playerPosition.map) {
-      return false;
-    }
-
     ShadowCaster caster = new ShadowCaster();
     float[][] lightMap = caster.calculateFov(WorldManager.mapHelpers.createFovMap(),
         (int) entityPosition.pos.x, (int) entityPosition.pos.y, distance);
 
     return lightMap[(int) playerPosition.pos.x][(int) playerPosition.pos.y] > 0;
-  }
-
-  /**
-   * Checks if an entity is visible to the player or not.
-   *
-   * @param entity Entity to check
-   *
-   * @return Whether or not it's visible to the player
-   */
-  public boolean isVisibleToPlayer(Entity entity) {
-    PositionComponent entityPosition = ComponentMappers.position.get(entity);
-    PositionComponent playerPosition = ComponentMappers.position.get(WorldManager.player);
-    AttributesComponent playerAttributes = ComponentMappers.attributes.get(WorldManager.player);
-
-    if (entityPosition == null || entityPosition.map != playerPosition.map) {
-      return false;
-    }
-
-    float[][] lightMap = caster.calculateFov(
-        WorldManager.mapHelpers.createFovMap(),
-        (int) playerPosition.pos.x, (int) playerPosition.pos.y,
-        playerAttributes.vision
-    );
-
-    return lightMap[(int) entityPosition.pos.x][(int) entityPosition.pos.y] > 0;
   }
 
   /**
@@ -360,8 +326,7 @@ public class EntityHelpers {
     for (Entity entity : entities) {
       PositionComponent entityPosition = ComponentMappers.position.get(entity);
 
-      if (entityPosition.map == WorldManager.world.currentMapIndex
-          && entityPosition.pos.epsilonEquals(position, 0.00001f)) {
+      if (entityPosition.pos.epsilonEquals(position, 0.00001f)) {
         return entity;
       }
     }
@@ -383,8 +348,7 @@ public class EntityHelpers {
     for (Entity entity : entities) {
       PositionComponent entityPosition = ComponentMappers.position.get(entity);
 
-      if (entityPosition.map == WorldManager.world.currentMapIndex
-          && entityPosition.pos.epsilonEquals(position, 0.00001f)) {
+      if (entityPosition.pos.epsilonEquals(position, 0.00001f)) {
         return entity;
       }
     }
@@ -408,8 +372,7 @@ public class EntityHelpers {
     for (Entity entity : entities) {
       PositionComponent entityPosition = ComponentMappers.position.get(entity);
 
-      if (entityPosition.map == WorldManager.world.currentMapIndex
-          && entityPosition.pos.epsilonEquals(position, 0.00001f)) {
+      if (entityPosition.pos.epsilonEquals(position, 0.00001f)) {
         return entity;
       }
     }

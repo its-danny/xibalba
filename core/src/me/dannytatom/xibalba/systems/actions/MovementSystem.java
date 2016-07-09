@@ -4,7 +4,6 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import me.dannytatom.xibalba.WorldManager;
 import me.dannytatom.xibalba.components.AttributesComponent;
-import me.dannytatom.xibalba.components.MouseMovementComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.VisualComponent;
 import me.dannytatom.xibalba.components.actions.MovementComponent;
@@ -51,22 +50,10 @@ public class MovementSystem extends UsesEnergySystem {
         } else if (WorldManager.entityHelpers.isEnemy(thing)) {
           WorldManager.combatHelpers.preparePlayerForMelee(thing, "body");
         } else if (WorldManager.entityHelpers.isExit(thing)) {
-          WorldManager.world.currentMapIndex += 1;
-          WorldManager.state = WorldManager.State.PLAYING;
-
-          entity.remove(MouseMovementComponent.class);
-
-          position.pos = WorldManager.mapHelpers.getEntrancePosition();
-          position.map = WorldManager.world.currentMapIndex;
+          WorldManager.state = WorldManager.State.GOING_DOWN;
           attributes.energy -= MovementComponent.COST;
         } else if (WorldManager.entityHelpers.isEntrance(thing)) {
-          WorldManager.world.currentMapIndex -= 1;
-          WorldManager.state = WorldManager.State.PLAYING;
-
-          entity.remove(MouseMovementComponent.class);
-
-          position.pos = WorldManager.mapHelpers.getExitPosition();
-          position.map = WorldManager.world.currentMapIndex;
+          WorldManager.state = WorldManager.State.GOING_UP;
           attributes.energy -= MovementComponent.COST;
         }
       }

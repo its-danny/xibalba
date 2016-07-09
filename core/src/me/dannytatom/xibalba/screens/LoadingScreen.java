@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.WorldManager;
@@ -112,19 +113,21 @@ public class LoadingScreen implements Screen {
     }
 
     // Add player entity
-    WorldManager.entityHelpers.spawnPlayer(WorldManager.player, WorldManager.world.currentMapIndex);
-    WorldManager.engine.addEntity(WorldManager.player);
+    WorldManager.entityHelpers.setupPlayer(WorldManager.player);
+    WorldManager.world.entities.get(WorldManager.world.currentMapIndex).add(WorldManager.player);
   }
 
   private void spawnShit(Level level, int mapIndex, boolean isLast) {
+    WorldManager.world.entities.put(mapIndex, new Array<>());
+
     // Spawn an entrance on every level but first
     if (mapIndex > 0) {
-      WorldManager.engine.addEntity(WorldManager.entityHelpers.spawnEntrance(mapIndex));
+      WorldManager.world.entities.get(mapIndex).add(WorldManager.entityHelpers.spawnEntrance(mapIndex));
     }
 
     // Spawn an exit on every level but last
     if (!isLast) {
-      WorldManager.engine.addEntity(WorldManager.entityHelpers.spawnExit(mapIndex));
+      WorldManager.world.entities.get(mapIndex).add(WorldManager.entityHelpers.spawnExit(mapIndex));
     }
 
     // Spawn enemies
@@ -134,9 +137,10 @@ public class LoadingScreen implements Screen {
       int amount = MathUtils.random(Integer.parseInt(range[0]), Integer.parseInt(range[1]));
 
       for (int j = 0; j < amount; j++) {
-        WorldManager.engine.addEntity(
+
+        WorldManager.world.entities.get(mapIndex).add(
             WorldManager.entityHelpers.spawnEnemy(enemy.get("name"),
-                mapIndex, WorldManager.mapHelpers.getRandomOpenPositionOnMap(mapIndex))
+                WorldManager.mapHelpers.getRandomOpenPositionOnMap(mapIndex))
         );
       }
     }
@@ -148,18 +152,19 @@ public class LoadingScreen implements Screen {
       int amount = MathUtils.random(Integer.parseInt(range[0]), Integer.parseInt(range[1]));
 
       for (int j = 0; j < amount; j++) {
-        WorldManager.engine.addEntity(
+        WorldManager.world.entities.get(mapIndex).add(
             WorldManager.entityHelpers.spawnItem(item.get("name"),
-                mapIndex, WorldManager.mapHelpers.getRandomOpenPositionOnMap(mapIndex))
+                WorldManager.mapHelpers.getRandomOpenPositionOnMap(mapIndex))
         );
       }
     }
 
     // Spawn decorations
     for (int i = 0; i < 50; i++) {
-      WorldManager.engine.addEntity(
-          WorldManager.entityHelpers.spawnRandomDecoration(mapIndex,
-              WorldManager.mapHelpers.getRandomOpenPositionOnMap(mapIndex))
+      WorldManager.world.entities.get(mapIndex).add(
+          WorldManager.entityHelpers.spawnRandomDecoration(
+              WorldManager.mapHelpers.getRandomOpenPositionOnMap(mapIndex)
+          )
       );
     }
   }

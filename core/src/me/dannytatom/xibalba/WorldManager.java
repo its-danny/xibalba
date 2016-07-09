@@ -53,19 +53,19 @@ public class WorldManager {
     turnCount = 0;
 
     // Setup engine (systems are run in order added)
-    WorldManager.engine.addSystem(new AttributesSystem());
-    WorldManager.engine.addSystem(new MouseMovementSystem());
-    WorldManager.engine.addSystem(new BrainSystem());
-    WorldManager.engine.addSystem(new WanderSystem());
-    WorldManager.engine.addSystem(new TargetSystem());
-    WorldManager.engine.addSystem(new MovementSystem());
-    WorldManager.engine.addSystem(new MeleeSystem());
-    WorldManager.engine.addSystem(new RangeSystem());
-    WorldManager.engine.addSystem(new CrippledSystem());
-    WorldManager.engine.addSystem(new BleedingSystem());
+    engine.addSystem(new AttributesSystem());
+    engine.addSystem(new MouseMovementSystem());
+    engine.addSystem(new BrainSystem());
+    engine.addSystem(new WanderSystem());
+    engine.addSystem(new TargetSystem());
+    engine.addSystem(new MovementSystem());
+    engine.addSystem(new MeleeSystem());
+    engine.addSystem(new RangeSystem());
+    engine.addSystem(new CrippledSystem());
+    engine.addSystem(new BleedingSystem());
   }
 
   public enum State {
-    PLAYING, TARGETING, LOOKING, MOVING, FOCUSED
+    PLAYING, TARGETING, LOOKING, MOVING, GOING_DOWN, GOING_UP, FOCUSED
   }
 }

@@ -68,7 +68,7 @@ public class MapHelpers {
       for (Entity entity : entities) {
         PositionComponent ep = ComponentMappers.position.get(entity);
 
-        if (ep != null && ep.map == mapIndex && ep.pos.epsilonEquals(position, 0.00001f)) {
+        if (ep != null && ep.pos.epsilonEquals(position, 0.00001f)) {
           if (ComponentMappers.decoration.has(entity)) {
             if (ComponentMappers.decoration.get(entity).blocks) {
               blocked = true;
@@ -298,12 +298,10 @@ public class MapHelpers {
     ImmutableArray<Entity> entrances =
         WorldManager.engine.getEntitiesFor(Family.all(EntranceComponent.class).get());
 
-    for (Entity entrance : entrances) {
-      PositionComponent position = ComponentMappers.position.get(entrance);
+    if (entrances.size() > 0) {
+      PositionComponent position = ComponentMappers.position.get(entrances.first());
 
-      if (position.map == WorldManager.world.currentMapIndex) {
-        return position.pos;
-      }
+      return position.pos;
     }
 
     return getRandomOpenPositionOnMap(WorldManager.world.currentMapIndex);
@@ -318,12 +316,10 @@ public class MapHelpers {
     ImmutableArray<Entity> exits =
         WorldManager.engine.getEntitiesFor(Family.all(ExitComponent.class).get());
 
-    for (Entity exit : exits) {
-      PositionComponent position = ComponentMappers.position.get(exit);
+    if (exits.size() > 0) {
+      PositionComponent position = ComponentMappers.position.get(exits.first());
 
-      if (position.map == WorldManager.world.currentMapIndex) {
-        return position.pos;
-      }
+      return position.pos;
     }
 
     return getRandomOpenPositionOnMap(WorldManager.world.currentMapIndex);
