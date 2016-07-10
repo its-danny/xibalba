@@ -1,6 +1,6 @@
 {
   "name": "Wooden Bow",
-  "description": "Writing descriptions is hard.",
+  "description": "The bow and arrow is a projectile weapon system (a bow with arrows) that predates recorded history and is common to most cultures.",
   "skill": "archery",
   "type": "weapon",
   "usesAmmunition": true,

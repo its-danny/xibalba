@@ -1,6 +1,6 @@
 {
   "name": "Wooden Arrow",
-  "description": "It's an arrow dude, idk.",
+  "description": "A shafted projectile that is shot with a bow.",
   "type": "arrow",
   "visual": {
     "sprites": [

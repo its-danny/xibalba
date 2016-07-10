@@ -1,6 +1,6 @@
 {
   "name": "Bat",
-  "description": "It's a bat, bro.",
+  "description": "Bats are mammals of the order Chiroptera whose forelimbs form webbed wings, making them the only mammals naturally capable of true and sustained flight.",
   "visual": {
     "spritePath": "Level/Cave/Enemy/Bat-1"
   },

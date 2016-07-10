@@ -268,6 +268,8 @@ public class HudRenderer {
         if (WorldManager.entityHelpers.itemIsIdentified(WorldManager.player, item)) {
           String description = WordUtils.wrap(itemDetails.description, 50);
 
+          lookDialogGroup.addActor(new Label("", Main.skin));
+          
           lookDialogGroup.addActor(
               new Label("[LIGHT_GRAY]" + description, Main.skin)
           );
@@ -283,6 +285,8 @@ public class HudRenderer {
         lookDialogGroup.addActor(
             new Label("[RED]" + enemyAttributes.name, Main.skin)
         );
+
+        lookDialogGroup.addActor(new Label("", Main.skin));
 
         String description = WordUtils.wrap(enemyAttributes.description, 50);
 

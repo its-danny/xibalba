@@ -1,6 +1,6 @@
 {
   "name": "Wooden Shield",
-  "description": "Not great, but does the job.",
+  "description": "A shield is a type of personal armor, meant to intercept attacks, either by stopping projectiles such as arrows or redirecting a hit from a macuahuitl or similar weapon to the side of the shield-bearer.",
   "skill": "bashing",
   "type": "armor",
   "location": "left hand",

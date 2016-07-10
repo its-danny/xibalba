@@ -7,7 +7,8 @@
     },
     "enemies": [
       { "name": "spiderMonkey", "spawnRange": "3,6"},
-      { "name": "jaguar", "spawnRange": "0,2"}
+      { "name": "jaguar", "spawnRange": "0,2"},
+      { "name": "tarantula", "spawnRange": "1,2" }
     ],
     "items": [
       { "name": "chippedFlint", "spawnRange": "1,1"},
