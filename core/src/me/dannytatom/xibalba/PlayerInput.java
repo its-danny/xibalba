@@ -329,6 +329,7 @@ public class PlayerInput implements InputProcessor {
 
       if (enemy != null) {
         WorldManager.state = WorldManager.State.FOCUSED;
+        player.focusedAction = PlayerComponent.FocusedAction.MELEE;
         player.focusedEntity = enemy;
       }
     } else {

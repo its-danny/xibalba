@@ -336,8 +336,7 @@ public class HudRenderer {
       if (!focusedDialogShowing) {
         focusedDialogTable.clear();
 
-        PlayerComponent player = ComponentMappers.player.get(WorldManager.player);
-        BodyComponent body = ComponentMappers.body.get(player.focusedEntity);
+        BodyComponent body = ComponentMappers.body.get(playerDetails.focusedEntity);
 
         int actionNumber = 0;
         for (String part : body.parts.keySet()) {
@@ -371,7 +370,8 @@ public class HudRenderer {
   }
 
   private void handleFocusedAttack(String part) {
-    PlayerComponent playerDetails = ComponentMappers.player.get(WorldManager.player);
+    Gdx.app.log("HudRenderer", "Focusing attack on " + part);
+
     PositionComponent focusedPosition = ComponentMappers.position.get(playerDetails.focusedEntity);
 
     if (playerDetails.focusedAction == PlayerComponent.FocusedAction.MELEE) {

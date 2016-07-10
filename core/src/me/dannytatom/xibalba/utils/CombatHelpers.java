@@ -1,6 +1,7 @@
 package me.dannytatom.xibalba.utils;
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -57,6 +58,8 @@ public class CombatHelpers {
    * @param bodyPart Where ya hitting them at
    */
   public void preparePlayerForMelee(Entity enemy, String bodyPart) {
+    Gdx.app.log("CombatHelpers", "Preparing for melee");
+
     AttributesComponent attributes = ComponentMappers.attributes.get(WorldManager.player);
 
     if (attributes.energy >= MeleeComponent.COST) {
@@ -71,6 +74,8 @@ public class CombatHelpers {
    * @param bodyPart Where you trying to hit em
    */
   public void preparePlayerForThrowing(Vector2 position, String bodyPart) {
+    Gdx.app.log("CombatHelpers", "Preparing for throwing");
+
     AttributesComponent attributes = ComponentMappers.attributes.get(WorldManager.player);
 
     if (attributes.energy >= RangeComponent.COST) {
@@ -87,6 +92,8 @@ public class CombatHelpers {
    * @param bodyPart Where you trying to hit em
    */
   public void preparePlayerForRanged(Vector2 position, String bodyPart) {
+    Gdx.app.log("CombatHelpers", "Preparing for ranged");
+
     AttributesComponent attributes = ComponentMappers.attributes.get(WorldManager.player);
 
     if (attributes.energy >= RangeComponent.COST) {
@@ -150,6 +157,8 @@ public class CombatHelpers {
    * @param target  Who's getting fought
    */
   public void melee(Entity starter, Entity target, String bodyPart) {
+    Gdx.app.log("CombatHelpers", "Starting melee hit");
+
     Entity weapon = null;
 
     if (ComponentMappers.equipment.has(starter)) {
@@ -175,6 +184,7 @@ public class CombatHelpers {
     BodyComponent body = ComponentMappers.body.get(target);
 
     int hit = determineHit(skillLevel, body.parts.get(bodyPart));
+    Gdx.app.log("CombatHelpers", "Hit roll: " + hit);
 
     AttributesComponent starterAttributes = ComponentMappers.attributes.get(starter);
 
@@ -193,9 +203,13 @@ public class CombatHelpers {
       if (hit >= 8) {
         critRoll = MathUtils.random(1, 6);
         skillLevelAmount = 40;
+
+        Gdx.app.log("CombatHelpers", "Crit roll: " + critRoll);
       }
 
       int damage = strengthRoll + weaponRoll + critRoll;
+
+      Gdx.app.log("CombatHelpers", "Starting damage: " + damage);
 
       applyDamage(starter, target, weapon, damage, verb, bodyPart);
 
@@ -217,6 +231,8 @@ public class CombatHelpers {
    * @param item    What they're being hit with
    */
   public void range(Entity starter, Entity target, String bodyPart, Entity item, String skill) {
+    Gdx.app.log("CombatHelpers", "Starting melee hit");
+
     SkillsComponent skills = ComponentMappers.skills.get(starter);
     ItemComponent itemDetails = ComponentMappers.item.get(item);
 
@@ -234,6 +250,7 @@ public class CombatHelpers {
     BodyComponent body = ComponentMappers.body.get(target);
 
     int hit = determineHit(skillLevel, body.parts.get(bodyPart));
+    Gdx.app.log("CombatHelpers", "Hit roll: " + hit);
 
     AttributesComponent starterAttributes = ComponentMappers.attributes.get(starter);
 
@@ -252,9 +269,13 @@ public class CombatHelpers {
       if (hit >= 8) {
         critRoll = MathUtils.random(1, 6);
         skillLevelAmount = 40;
+
+        Gdx.app.log("CombatHelpers", "Crit roll: " + critRoll);
       }
 
       int damage = weaponRoll + critRoll;
+
+      Gdx.app.log("CombatHelpers", "Starting damage: " + damage);
 
       applyDamage(starter, target, item, damage, verb, bodyPart);
 
@@ -317,6 +338,8 @@ public class CombatHelpers {
 
     int totalDamage = damage - getCombinedDefense(target);
 
+    Gdx.app.log("CombatHelpers", "Final damage after factoring in target defense: " + totalDamage);
+
     if (totalDamage > 0) {
       BodyComponent targetBody = ComponentMappers.body.get(target);
 
@@ -335,8 +358,10 @@ public class CombatHelpers {
       if (targetBody.damage.get(bodyPart) > (targetAttributes.maxHealth / 3)) {
         if (bodyPart.contains("leg") && !WorldManager.entityHelpers.isCrippled(target)) {
           target.add(new CrippledComponent());
+          WorldManager.log.add("[RED]" + targetAttributes.name + " is crippled");
         } else if (bodyPart.contains("body") && !WorldManager.entityHelpers.isBleeding(target)) {
           target.add(new BleedingComponent());
+          WorldManager.log.add("[RED]" + targetAttributes.name + " is bleeding");
         }
       }
     } else {

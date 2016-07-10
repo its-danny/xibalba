@@ -26,23 +26,20 @@ import java.util.Calendar;
 import java.util.TreeMap;
 
 public class WorldManager {
+  private static final TreeMap<Integer, String> rnMap = new TreeMap<>();
   public static Engine engine;
   public static World world;
   public static State state;
   public static ActionLog log;
-
   public static MapHelpers mapHelpers;
   public static CombatHelpers combatHelpers;
   public static EntityHelpers entityHelpers;
   public static InventoryHelpers inventoryHelpers;
   public static EquipmentHelpers equipmentHelpers;
   public static SkillHelpers skillHelpers;
-
   public static Entity player;
   public static boolean executeTurn;
   public static int turnCount;
-
-  private static final TreeMap<Integer, String> rnMap = new TreeMap<>();
 
   /**
    * Setup a whole bunch of shit.
@@ -94,16 +91,11 @@ public class WorldManager {
     player.add(new AttributesComponent(createPlayerName(), "It's you", 100, 10, 4, 4));
   }
 
-  public enum State {
-    PLAYING, TARGETING, LOOKING, MOVING, GOING_DOWN, GOING_UP, FOCUSED
-  }
-
   private static String createPlayerName() {
     String preceding;
     String[] names;
 
     if (MathUtils.randomBoolean()) {
-      Gdx.app.log("x", Calendar.getInstance().get(Calendar.DAY_OF_YEAR) + "");
       preceding = intToRoman(Calendar.getInstance().get(Calendar.DAY_OF_YEAR));
       names = Gdx.files.internal("data/names/male").readString().split("\\r?\\n");
     } else {
@@ -115,12 +107,16 @@ public class WorldManager {
   }
 
   private static String intToRoman(int number) {
-    int floored =  rnMap.floorKey(number);
+    int floored = rnMap.floorKey(number);
 
     if (number == floored) {
       return rnMap.get(number);
     }
 
     return rnMap.get(floored) + intToRoman(number - floored);
+  }
+
+  public enum State {
+    PLAYING, TARGETING, LOOKING, MOVING, GOING_DOWN, GOING_UP, FOCUSED
   }
 }

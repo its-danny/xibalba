@@ -3,12 +3,12 @@ package me.dannytatom.xibalba.components;
 import com.badlogic.ashley.core.Component;
 
 public class AttributesComponent implements Component {
-  public String name;
   public final String description;
   public final int speed;
   public final int vision;
   public final int toughness;
   public final int maxHealth;
+  public String name;
   public int strength;
   public int health;
   public int energy;
@@ -33,7 +33,7 @@ public class AttributesComponent implements Component {
     this.toughness = toughness;
     this.strength = strength;
 
-    this.maxHealth = toughness * 100;
+    this.maxHealth = toughness * 10;
     this.health = maxHealth;
   }
 }
