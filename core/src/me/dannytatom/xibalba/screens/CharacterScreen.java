@@ -35,6 +35,7 @@ public class CharacterScreen implements Screen {
   private final Stage stage;
 
   private final FPSLogger fps;
+  private final Table table;
   private final VerticalGroup attributesGroup;
   private final VerticalGroup skillsGroup;
   private final VerticalGroup inventoryGroup;
@@ -75,7 +76,7 @@ public class CharacterScreen implements Screen {
 
     stage = new Stage();
 
-    Table table = new Table();
+    table = new Table();
     table.setFillParent(true);
     table.left().top();
     stage.addActor(table);
@@ -107,6 +108,7 @@ public class CharacterScreen implements Screen {
 
     inventoryGroup = new VerticalGroup().align(Align.top | Align.left);
     itemDetails = new Table().align(Align.top | Align.left);
+    itemActionGroup = new HorizontalGroup().space(5).align(Align.top | Align.left);
     equipmentGroup = new VerticalGroup().align(Align.top | Align.left);
 
     Table inventoryTable = new Table();
@@ -215,43 +217,77 @@ public class CharacterScreen implements Screen {
   }
 
   private void setupActionButtons() {
-    itemActionGroup = new HorizontalGroup().space(5).align(Align.top | Align.left);
-
     cancelButton = new ActionButton("Q", "Cancel");
     cancelButton.setKeys(Input.Keys.Q);
-    cancelButton.setAction(itemActionGroup, this::handleCancel);
+    cancelButton.setAction(table, () -> {
+      if (itemActionGroup.getChildren().contains(cancelButton, true)) {
+        handleCancel();
+      }
+    });
 
     holdButton = new ActionButton("H", "Hold");
     holdButton.setKeys(Input.Keys.H);
-    holdButton.setAction(itemActionGroup, this::handleHold);
+    holdButton.setAction(table, () -> {
+      if (itemActionGroup.getChildren().contains(holdButton, true)) {
+        handleHold();
+      }
+    });
 
     wearButton = new ActionButton("W", "Wear");
     wearButton.setKeys(Input.Keys.W);
-    wearButton.setAction(itemActionGroup, this::handleWear);
+    wearButton.setAction(table, () -> {
+      if (itemActionGroup.getChildren().contains(wearButton, true)) {
+        handleWear();
+      }
+    });
 
     throwButton = new ActionButton("T", "Throw");
     throwButton.setKeys(Input.Keys.T);
-    throwButton.setAction(itemActionGroup, this::handleThrow);
+    throwButton.setAction(table, () -> {
+      if (itemActionGroup.getChildren().contains(throwButton, true)) {
+        handleThrow();
+      }
+    });
 
     eatButton = new ActionButton("E", "Eat");
     eatButton.setKeys(Input.Keys.E);
-    eatButton.setAction(itemActionGroup, this::handleEat);
+    eatButton.setAction(table, () -> {
+      if (itemActionGroup.getChildren().contains(eatButton, true)) {
+        handleEat();
+      }
+    });
 
     applyButton = new ActionButton("A", "Apply");
     applyButton.setKeys(Input.Keys.A);
-    applyButton.setAction(itemActionGroup, this::handleApply);
+    applyButton.setAction(table, () -> {
+      if (itemActionGroup.getChildren().contains(applyButton, true)) {
+        handleApply();
+      }
+    });
 
     confirmApplyButton = new ActionButton("ENTER", "Apply to this");
     confirmApplyButton.setKeys(Input.Keys.ENTER);
-    confirmApplyButton.setAction(itemActionGroup, this::handleConfirmApply);
+    confirmApplyButton.setAction(table, () -> {
+      if (itemActionGroup.getChildren().contains(confirmApplyButton, true)) {
+        handleConfirmApply();
+      }
+    });
 
     removeButton = new ActionButton("R", "Remove");
     removeButton.setKeys(Input.Keys.R);
-    removeButton.setAction(itemActionGroup, this::handleRemove);
+    removeButton.setAction(table, () -> {
+      if (itemActionGroup.getChildren().contains(removeButton, true)) {
+        handleRemove();
+      }
+    });
 
     dropButton = new ActionButton("D", "Drop");
     dropButton.setKeys(Input.Keys.D);
-    dropButton.setAction(itemActionGroup, this::handleDrop);
+    dropButton.setAction(table, () -> {
+      if (itemActionGroup.getChildren().contains(dropButton, true)) {
+        handleDrop();
+      }
+    });
   }
 
   private void renderAttributes() {
@@ -376,14 +412,9 @@ public class CharacterScreen implements Screen {
 
   private void renderItemDetails() {
     itemDetails.clear();
-
-    // Only clear children,
-    // we don't want to clear listeners 'cause that's what action button events are attached to
-    itemActionGroup.clearChildren();
+    itemActionGroup.clear();
 
     if (!inventoryItems.isEmpty()) {
-      stage.setKeyboardFocus(itemActionGroup);
-
       VerticalGroup statsGroup = new VerticalGroup().align(Align.top | Align.left);
 
       itemDetails.add(statsGroup).width(Gdx.graphics.getWidth() / 3 - 20).top().left();
