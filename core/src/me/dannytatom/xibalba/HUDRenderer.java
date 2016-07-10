@@ -203,9 +203,20 @@ public class HudRenderer {
         )
     );
 
-    areaDetails.addActor(
-        new Label("[GREEN]" + playerAttributes.energy, Main.skin)
-    );
+    if (WorldManager.equipmentHelpers.primaryWeaponUsesAmmo(WorldManager.player)) {
+      Entity primaryWeapon = WorldManager.equipmentHelpers.getPrimaryWeapon(WorldManager.player);
+      ItemComponent weaponDetails = ComponentMappers.item.get(primaryWeapon);
+
+      areaDetails.addActor(
+          new Label(
+              "[LIGHT_GRAY]Ammo:[] "
+                  + WorldManager.inventoryHelpers.amountOfAmmunitionType(
+                      WorldManager.player, weaponDetails.ammunitionType
+                  ),
+              Main.skin
+          )
+      );
+    }
 
     if (ComponentMappers.crippled.has(WorldManager.player)) {
       areaDetails.addActor(new Label("[DARK_GRAY]CRIPPLED[]", Main.skin));

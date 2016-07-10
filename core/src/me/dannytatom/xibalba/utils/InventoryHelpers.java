@@ -192,6 +192,21 @@ public class InventoryHelpers {
     return false;
   }
 
+  public int amountOfAmmunitionType(Entity entity, String type) {
+    ArrayList<Entity> items = ComponentMappers.inventory.get(entity).items;
+    int count = 0;
+
+    for (Entity item : items) {
+      ItemComponent itemDetails = ComponentMappers.item.get(item);
+
+      if (Objects.equals(itemDetails.type, type)) {
+        count += 1;
+      }
+    }
+
+    return count;
+  }
+
   /**
    * Return the first item of ammunition type given.
    *

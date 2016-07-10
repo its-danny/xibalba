@@ -11,6 +11,8 @@
     ],
     "items": [
       { "name": "chippedFlint", "spawnRange": "1,1"},
+      { "name": "bow", "spawnRange": "1,2" },
+      { "name": "arrow", "spawnRange": "10,20" },
       { "name": "healthPlant", "spawnRange": "1,3"}
     ]
   },

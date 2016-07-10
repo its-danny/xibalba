@@ -92,4 +92,10 @@ public class EquipmentHelpers {
   public Entity getPrimaryWeapon(Entity entity) {
     return ComponentMappers.equipment.get(entity).slots.get("right hand");
   }
+
+  public boolean primaryWeaponUsesAmmo(Entity entity) {
+    Entity weapon = getPrimaryWeapon(entity);
+
+    return weapon != null && ComponentMappers.item.get(weapon).usesAmmunition;
+  }
 }
