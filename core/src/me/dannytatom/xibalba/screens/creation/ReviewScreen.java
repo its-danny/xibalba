@@ -16,6 +16,7 @@ import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.screens.LoadingScreen;
 import me.dannytatom.xibalba.screens.MainMenuScreen;
 import me.dannytatom.xibalba.ui.ActionButton;
+import me.dannytatom.xibalba.utils.ComponentMappers;
 
 import java.util.Objects;
 
@@ -25,6 +26,7 @@ public class ReviewScreen implements Screen {
   private final Stage stage;
   private final TextField worldSeedField;
   private final TextField playerNameField;
+  private final AttributesComponent playerAttributes;
 
   /**
    * Character Creation: Review Screen.
@@ -38,6 +40,8 @@ public class ReviewScreen implements Screen {
 
     WorldManager.setup();
     WorldManager.world.seed = System.currentTimeMillis();
+
+    playerAttributes = ComponentMappers.attributes.get(WorldManager.player);
 
     Table table = new Table();
     table.setFillParent(true);
@@ -62,7 +66,7 @@ public class ReviewScreen implements Screen {
     Label playerNameLabel = new Label("Name", Main.skin);
     table.add(playerNameLabel).pad(0, 0, 10, 10).width(Gdx.graphics.getWidth() / 2 - 20);
     table.row();
-    playerNameField = new TextField("Aapo" + "", Main.skin);
+    playerNameField = new TextField(playerAttributes.name, Main.skin);
     table.add(playerNameField).pad(0, 0, 10, 10).width(Gdx.graphics.getWidth() / 2 - 20);
 
     ActionButton continueButton = new ActionButton("ENTER", "Begin Your Journey");
@@ -109,12 +113,7 @@ public class ReviewScreen implements Screen {
 
     // Set player name
     String playerName = playerNameField.getText();
-
-    if (Objects.equals(playerName, "")) {
-      playerName = "Aapo";
-    }
-
-    WorldManager.player.add(new AttributesComponent(playerName, "It's you", 100, 10, 4, 4));
+    playerAttributes.name = Objects.equals(playerName, "") ? playerAttributes.name : playerName;
 
     main.setScreen(new LoadingScreen(main));
   }

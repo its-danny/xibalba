@@ -3,7 +3,7 @@ package me.dannytatom.xibalba.components;
 import com.badlogic.ashley.core.Component;
 
 public class AttributesComponent implements Component {
-  public final String name;
+  public String name;
   public final String description;
   public final int speed;
   public final int vision;
