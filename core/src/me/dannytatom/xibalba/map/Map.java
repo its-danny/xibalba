@@ -74,93 +74,105 @@ public class Map {
         if (map[x][y].isNothing || map[x][y].isWall && neighbours > 0) {
           String spritePath = null;
 
-          Cell cellAbove = getCellAbove(x, y);
-          Cell cellRight = getCellRight(x, y);
-          Cell cellBelow = getCellBelow(x, y);
-          Cell cellLeft = getCellLeft(x, y);
-          Cell cellAboveLeft = getCellAboveLeft(x, y);
-          Cell cellAboveRight = getCellAboveRight(x, y);
-          Cell cellBelowLeft = getCellBelowLeft(x, y);
-          Cell cellBelowRight = getCellBelowRight(x, y);
+          Cell above = getCellAbove(x, y);
+          Cell right = getCellRight(x, y);
+          Cell below = getCellBelow(x, y);
+          Cell left = getCellLeft(x, y);
+          Cell aboveLeft = getCellAboveLeft(x, y);
+          Cell aboveRight = getCellAboveRight(x, y);
+          Cell belowLeft = getCellBelowLeft(x, y);
+          Cell belowRight = getCellBelowRight(x, y);
 
           if (
-              (cellAbove == null || cellAbove.isNothing || cellAbove.isWall)
-                  && (cellBelow != null && !cellBelow.isWall && !cellBelow.isNothing)
-                  && (cellLeft != null && cellLeft.isWall)
-                  && (cellRight != null && cellRight.isWall)) {
-            spritePath = "Level/Cave/Environment/Wall/Front-" + MathUtils.random(1, 6);
+              (above == null || above.isNothing || above.isWall)
+                  && (below != null && !below.isWall && !below.isNothing)
+                  && (left != null && left.isWall)
+                  && (right != null && right.isWall)) {
+            spritePath =
+                "Level/Cave/Environment/Wall/Front-" + MathUtils.random(1, 6);
           } else if (
-              (cellAbove == null || cellAbove.isNothing || cellAbove.isWall)
-                  && (cellBelow != null && cellBelow.isWall)
-                  && (cellLeft == null || cellLeft.isNothing || cellLeft.isWall)
-                  && (cellRight != null && cellRight.isWall)
-                  && (cellBelowRight != null && !cellBelowRight.isNothing && !cellBelowRight.isWall)
-                  && (cellAboveLeft == null || cellAboveLeft.isNothing || cellAboveLeft.isWall)) {
-            spritePath = "Level/Cave/Environment/Wall/Front-Left-Turn-Down-" + MathUtils.random(1, 2);
+              (above == null || above.isNothing || above.isWall)
+                  && (below != null && below.isWall)
+                  && (left == null || left.isNothing || left.isWall)
+                  && (right != null && right.isWall)
+                  && (belowRight != null && !belowRight.isNothing && !belowRight.isWall)
+                  && (aboveLeft == null || aboveLeft.isNothing || aboveLeft.isWall)) {
+            spritePath =
+                "Level/Cave/Environment/Wall/Front-Left-Turn-Down-" + MathUtils.random(1, 2);
           } else if (
-              (cellAbove == null || cellAbove.isNothing || cellAbove.isWall)
-                  && (cellBelow != null && cellBelow.isWall)
-                  && (cellLeft != null && cellLeft.isWall)
-                  && (cellRight == null || cellRight.isNothing || cellRight.isWall)
-                  && (cellBelowLeft != null && !cellBelowLeft.isNothing && !cellBelowLeft.isWall)) {
-            spritePath = "Level/Cave/Environment/Wall/Front-Right-Turn-Down-" + MathUtils.random(1, 2);
+              (above == null || above.isNothing || above.isWall)
+                  && (below != null && below.isWall)
+                  && (left != null && left.isWall)
+                  && (right == null || right.isNothing || right.isWall)
+                  && (belowLeft != null && !belowLeft.isNothing && !belowLeft.isWall)) {
+            spritePath =
+                "Level/Cave/Environment/Wall/Front-Right-Turn-Down-" + MathUtils.random(1, 2);
           } else if (
-              (cellAbove != null && cellAbove.isWall)
-                  && (cellBelow != null && !cellBelow.isWall && !cellBelow.isNothing)
-                  && (cellLeft != null && !cellLeft.isWall && !cellLeft.isNothing)
-                  && (cellRight != null && cellRight.isWall)) {
-            spritePath = "Level/Cave/Environment/Wall/Front-Left-Turn-Up-" + MathUtils.random(1, 2);
+              (above != null && above.isWall)
+                  && (below != null && !below.isWall && !below.isNothing)
+                  && (left != null && !left.isWall && !left.isNothing)
+                  && (right != null && right.isWall)) {
+            spritePath =
+                "Level/Cave/Environment/Wall/Front-Left-Turn-Up-" + MathUtils.random(1, 2);
           } else if (
-              (cellAbove != null && cellAbove.isWall)
-                  && (cellBelow != null && !cellBelow.isWall && !cellBelow.isNothing)
-                  && (cellLeft != null && cellLeft.isWall)
-                  && (cellRight != null && !cellRight.isWall && !cellRight.isNothing)) {
-            spritePath = "Level/Cave/Environment/Wall/Front-Right-Turn-Up-" + MathUtils.random(1, 2);
+              (above != null && above.isWall)
+                  && (below != null && !below.isWall && !below.isNothing)
+                  && (left != null && left.isWall)
+                  && (right != null && !right.isWall && !right.isNothing)) {
+            spritePath =
+                "Level/Cave/Environment/Wall/Front-Right-Turn-Up-" + MathUtils.random(1, 2);
           } else if (
-              (cellAbove != null && cellAbove.isWall)
-                  && (cellBelow != null && cellBelow.isWall)
-                  && (cellLeft == null || cellLeft.isWall || cellLeft.isNothing)
-                  && (cellRight != null && !cellRight.isWall && !cellRight.isNothing)) {
-            spritePath = "Level/Cave/Environment/Wall/Side-with-Floor-Right-1";
+              (above != null && above.isWall)
+                  && (below != null && below.isWall)
+                  && (left == null || left.isWall || left.isNothing)
+                  && (right != null && !right.isWall && !right.isNothing)) {
+            spritePath =
+                "Level/Cave/Environment/Wall/Side-with-Floor-Right-1";
           } else if (
-              (cellAbove != null && cellAbove.isWall)
-                  && (cellBelow != null && cellBelow.isWall)
-                  && (cellLeft != null && !cellLeft.isWall && !cellLeft.isNothing)
-                  && (cellRight == null || cellRight.isWall || cellRight.isNothing)) {
-            spritePath = "Level/Cave/Environment/Wall/Side-with-Floor-Left-" + MathUtils.random(1, 3);
+              (above != null && above.isWall)
+                  && (below != null && below.isWall)
+                  && (left != null && !left.isWall && !left.isNothing)
+                  && (right == null || right.isWall || right.isNothing)) {
+            spritePath =
+                "Level/Cave/Environment/Wall/Side-with-Floor-Left-" + MathUtils.random(1, 3);
           } else if (
-              (cellAbove != null && !cellAbove.isWall && !cellAbove.isNothing)
-                  && (cellBelow == null || cellBelow.isNothing || cellBelow.isWall)
-                  && (cellLeft != null && cellLeft.isWall)
-                  && (cellRight != null && cellRight.isWall)) {
-            spritePath = "Level/Cave/Environment/Wall/Behind-" + MathUtils.random(1, 2);
+              (above != null && !above.isWall && !above.isNothing)
+                  && (below == null || below.isNothing || below.isWall)
+                  && (left != null && left.isWall)
+                  && (right != null && right.isWall)) {
+            spritePath =
+                "Level/Cave/Environment/Wall/Behind-" + MathUtils.random(1, 2);
           } else if (
-              (cellAbove != null && cellAbove.isWall)
-                  && (cellBelow == null || cellBelow.isNothing || cellBelow.isWall)
-                  && (cellLeft == null || cellLeft.isNothing || cellLeft.isWall)
-                  && (cellRight != null && cellRight.isWall)
-                  && (cellAboveRight != null && !cellAboveRight.isNothing && !cellAboveRight.isWall)) {
-            spritePath = "Level/Cave/Environment/Wall/Behind-Left-Turn-Up-1";
+              (above != null && above.isWall)
+                  && (below == null || below.isNothing || below.isWall)
+                  && (left == null || left.isNothing || left.isWall)
+                  && (right != null && right.isWall)
+                  && (aboveRight != null && !aboveRight.isNothing && !aboveRight.isWall)) {
+            spritePath =
+                "Level/Cave/Environment/Wall/Behind-Left-Turn-Up-1";
           } else if (
-              (cellAbove != null && cellAbove.isWall)
-                  && (cellBelow == null || cellBelow.isNothing || cellBelow.isWall)
-                  && (cellLeft != null && cellLeft.isWall)
-                  && (cellRight == null || cellRight.isNothing || cellRight.isWall)
-                  && (cellAboveLeft != null && !cellAboveLeft.isNothing && !cellAboveLeft.isWall)
-                  && (cellBelowRight == null || cellBelowRight.isNothing || cellBelowRight.isWall)) {
-            spritePath = "Level/Cave/Environment/Wall/Behind-Right-Turn-Up-1";
+              (above != null && above.isWall)
+                  && (below == null || below.isNothing || below.isWall)
+                  && (left != null && left.isWall)
+                  && (right == null || right.isNothing || right.isWall)
+                  && (aboveLeft != null && !aboveLeft.isNothing && !aboveLeft.isWall)
+                  && (belowRight == null || belowRight.isNothing || belowRight.isWall)) {
+            spritePath =
+                "Level/Cave/Environment/Wall/Behind-Right-Turn-Up-1";
           } else if (
-              (cellAbove != null && !cellAbove.isWall && !cellAbove.isNothing)
-                  && (cellBelow != null && cellBelow.isWall)
-                  && (cellLeft != null && !cellLeft.isWall && !cellLeft.isNothing)
-                  && (cellRight != null && cellRight.isWall)) {
-            spritePath = "Level/Cave/Environment/Wall/Behind-Left-Turn-Down-1";
+              (above != null && !above.isWall && !above.isNothing)
+                  && (below != null && below.isWall)
+                  && (left != null && !left.isWall && !left.isNothing)
+                  && (right != null && right.isWall)) {
+            spritePath =
+                "Level/Cave/Environment/Wall/Behind-Left-Turn-Down-1";
           } else if (
-              (cellAbove != null && !cellAbove.isWall && !cellAbove.isNothing)
-                  && (cellBelow != null && cellBelow.isWall)
-                  && (cellLeft != null && cellLeft.isWall)
-                  && (cellRight != null && !cellRight.isWall && !cellRight.isNothing)) {
-            spritePath = "Level/Cave/Environment/Wall/Behind-Right-Turn-Down-1";
+              (above != null && !above.isWall && !above.isNothing)
+                  && (below != null && below.isWall)
+                  && (left != null && left.isWall)
+                  && (right != null && !right.isWall && !right.isNothing)) {
+            spritePath =
+                "Level/Cave/Environment/Wall/Behind-Right-Turn-Down-1";
           }
 
           if (spritePath != null) {

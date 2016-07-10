@@ -94,6 +94,11 @@ public class ActionButton extends TextButton {
     });
   }
 
+  /**
+   * Set the input keys associated with this action.
+   *
+   * @param keys List of input keys
+   */
   public void setKeys(int... keys) {
     this.keys = new ArrayList<>();
 

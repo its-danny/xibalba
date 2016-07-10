@@ -36,6 +36,9 @@ public class WorldManager {
   public static boolean executeTurn;
   public static int turnCount;
 
+  /**
+   * Setup a whole bunch of shit.
+   */
   public static void setup() {
     engine = new Engine();
     world = new World();

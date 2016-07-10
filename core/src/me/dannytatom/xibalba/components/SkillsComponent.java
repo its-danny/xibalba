@@ -8,6 +8,9 @@ public class SkillsComponent implements Component {
   public final HashMap<String, Integer> levels;
   public final HashMap<String, Integer> counters;
 
+  /**
+   * Skills Constructor.
+   */
   public SkillsComponent() {
     levels = new HashMap<>();
 

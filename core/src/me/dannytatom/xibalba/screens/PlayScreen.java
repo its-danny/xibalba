@@ -25,8 +25,8 @@ class PlayScreen implements Screen {
   private final InputMultiplexer multiplexer;
 
   private final SpriteBatch batch;
+  private final AttributesComponent playerAttributes;
   private float autoTimer = 0;
-  private AttributesComponent playerAttributes;
 
   /**
    * Play Screen.

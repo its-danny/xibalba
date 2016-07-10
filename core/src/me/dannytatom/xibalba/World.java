@@ -39,6 +39,9 @@ public class World {
     WorldManager.engine.removeEntity(entity);
   }
 
+  /**
+   * Setup starting level.
+   */
   public void setup() {
     for (Entity entity : entities.get(currentMapIndex)) {
       WorldManager.engine.addEntity(entity);
@@ -48,6 +51,9 @@ public class World {
     position.pos = WorldManager.mapHelpers.getEntrancePosition();
   }
 
+  /**
+   * Go down a level.
+   */
   public void goDown() {
     entities.get(currentMapIndex + 1).add(WorldManager.player);
     entities.get(currentMapIndex).removeValue(WorldManager.player, true);
@@ -66,6 +72,9 @@ public class World {
     WorldManager.state = WorldManager.State.PLAYING;
   }
 
+  /**
+   * Go up a level.
+   */
   public void goUp() {
     entities.get(currentMapIndex - 1).add(WorldManager.player);
     entities.get(currentMapIndex).removeValue(WorldManager.player, true);

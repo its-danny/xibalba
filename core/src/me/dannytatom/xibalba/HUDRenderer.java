@@ -211,8 +211,8 @@ public class HudRenderer {
           new Label(
               "[LIGHT_GRAY]Ammo:[] "
                   + WorldManager.inventoryHelpers.amountOfAmmunitionType(
-                      WorldManager.player, weaponDetails.ammunitionType
-                  ),
+                  WorldManager.player, weaponDetails.ammunitionType
+              ),
               Main.skin
           )
       );

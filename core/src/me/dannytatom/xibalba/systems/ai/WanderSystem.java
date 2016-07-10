@@ -39,7 +39,8 @@ public class WanderSystem extends UsesEnergySystem {
         Vector2 randomPosition = WorldManager.mapHelpers.getRandomOpenPosition();
         brain.path = finder.findPath((int) position.pos.x, (int) position.pos.y,
             (int) randomPosition.x, (int) randomPosition.y, grid);
-      } while (brain.path == null);
+      }
+      while (brain.path == null);
     }
 
     // Start walking.

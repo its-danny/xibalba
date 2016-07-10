@@ -93,6 +93,13 @@ public class EquipmentHelpers {
     return ComponentMappers.equipment.get(entity).slots.get("right hand");
   }
 
+  /**
+   * Whether or not their primary weapon uses ammo.
+   *
+   * @param entity Entity we're checking.
+   *
+   * @return Does it?
+   */
   public boolean primaryWeaponUsesAmmo(Entity entity) {
     Entity weapon = getPrimaryWeapon(entity);
 

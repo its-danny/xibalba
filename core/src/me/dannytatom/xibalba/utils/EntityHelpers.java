@@ -34,6 +34,9 @@ import java.util.Objects;
 public class EntityHelpers {
   private final Array<String> decorationTypes;
 
+  /**
+   * EntityHelpers constructor, clearly.
+   */
   public EntityHelpers() {
     decorationTypes = new Array<>();
     decorationTypes.add("Mushroom-1");
@@ -46,10 +49,9 @@ public class EntityHelpers {
   }
 
   /**
-   * Spawn the player somewhere.
+   * Setup player entity.
    *
-   * @param player   The player
-   * @param mapIndex Map to spawn em on
+   * @param player The player
    */
   public void setupPlayer(Entity player) {
     Array<String> sprites = new Array<>();
@@ -80,14 +82,14 @@ public class EntityHelpers {
   }
 
   /**
-   * Spawn an enemy somewhere.
+   * Create an enemy.
    *
-   * @param type     What type of enemy to spawn
-   * @param position Vector2 of where to spawn them
+   * @param type     What type of enemy to create
+   * @param position Vector2 of their position
    *
    * @return The enemy
    */
-  public Entity spawnEnemy(String type, Vector2 position) {
+  public Entity createEnemy(String type, Vector2 position) {
     JsonToEnemy json = (new Json()).fromJson(JsonToEnemy.class,
         Gdx.files.internal("data/enemies/" + type + ".json"));
     TextureAtlas atlas = Main.assets.get("sprites/main.atlas");
@@ -118,16 +120,16 @@ public class EntityHelpers {
   }
 
   /**
-   * Spawn an item somewhere.
+   * Create an item.
    *
    * <p>TODO: This is terrible, fix it pls. See TODO in ItemComponent.
    *
-   * @param type     What type of item to spawn
-   * @param position Vector2 of where to spawn it
+   * @param type     What type of item to create
+   * @param position Vector2 of their position
    *
    * @return The item
    */
-  public Entity spawnItem(String type, Vector2 position) {
+  public Entity createItem(String type, Vector2 position) {
     TextureAtlas atlas = Main.assets.get("sprites/main.atlas");
     ItemComponent itemDetails = (new Json()).fromJson(ItemComponent.class,
         Gdx.files.internal("data/items/" + type + ".json"));
@@ -144,40 +146,40 @@ public class EntityHelpers {
   }
 
   /**
-   * Spawn a random filler decoration.
+   * Create a random decoration.
    *
-   * @param position Where to spawn it
+   * @param position Vector2 of their position
    *
    * @return The decoration entity
    */
-  public Entity spawnRandomDecoration(Vector2 position) {
+  public Entity createRandomDecoration(Vector2 position) {
     String type = decorationTypes.random();
-    Entity decoration = new Entity();
+    Entity entity = new Entity();
 
     if (Objects.equals(type, "Vase-1")) {
-      decoration.add(new DecorationComponent(true));
+      entity.add(new DecorationComponent(true));
     } else {
-      decoration.add(new DecorationComponent(false));
+      entity.add(new DecorationComponent(false));
     }
 
     TextureAtlas atlas = Main.assets.get("sprites/main.atlas");
 
-    decoration.add(new PositionComponent(position));
-    decoration.add(
+    entity.add(new PositionComponent(position));
+    entity.add(
         new VisualComponent(atlas.createSprite("Level/Cave/Environment/Object/" + type))
     );
 
-    return decoration;
+    return entity;
   }
 
   /**
-   * Spawn entrance entity.
+   * Create entrance entity.
    *
-   * @param mapIndex Map to spawn it on
+   * @param mapIndex Map to place it on
    *
    * @return The entrance entity
    */
-  public Entity spawnEntrance(int mapIndex) {
+  public Entity createEntrance(int mapIndex) {
     Map map = WorldManager.world.getMap(mapIndex);
 
     int cellX;
@@ -186,7 +188,8 @@ public class EntityHelpers {
     do {
       cellX = MathUtils.random(0, map.width - 1);
       cellY = MathUtils.random(0, map.height - 1);
-    } while (WorldManager.mapHelpers.isBlocked(mapIndex, new Vector2(cellX, cellY))
+    }
+    while (WorldManager.mapHelpers.isBlocked(mapIndex, new Vector2(cellX, cellY))
         && WorldManager.mapHelpers.getWallNeighbours(mapIndex, cellX, cellY) >= 4);
 
     Entity entity = new Entity();
@@ -202,13 +205,13 @@ public class EntityHelpers {
   }
 
   /**
-   * Spawn exit entity.
+   * Create exit entity.
    *
-   * @param mapIndex Map to spawn it on
+   * @param mapIndex Map to place it on
    *
    * @return The exit entity
    */
-  public Entity spawnExit(int mapIndex) {
+  public Entity createExit(int mapIndex) {
     Map map = WorldManager.world.getMap(mapIndex);
 
     int cellX;
@@ -217,7 +220,8 @@ public class EntityHelpers {
     do {
       cellX = MathUtils.random(0, map.width - 1);
       cellY = MathUtils.random(0, map.height - 1);
-    } while (WorldManager.mapHelpers.isBlocked(mapIndex, new Vector2(cellX, cellY))
+    }
+    while (WorldManager.mapHelpers.isBlocked(mapIndex, new Vector2(cellX, cellY))
         && WorldManager.mapHelpers.getWallNeighbours(mapIndex, cellX, cellY) >= 4);
 
     Entity entity = new Entity();
@@ -380,6 +384,14 @@ public class EntityHelpers {
     return null;
   }
 
+  /**
+   * Whether or not an item is identified.
+   *
+   * @param entity The entity looking
+   * @param item   The item itself
+   *
+   * @return If it is indeed identified
+   */
   public boolean itemIsIdentified(Entity entity, Entity item) {
     PlayerComponent player = ComponentMappers.player.get(entity);
     ItemComponent details = ComponentMappers.item.get(item);
@@ -389,6 +401,14 @@ public class EntityHelpers {
         && !player.identifiedItems.contains(details.name, false));
   }
 
+  /**
+   * Get item name.
+   *
+   * @param entity The entity looking
+   * @param item   The item itself
+   *
+   * @return The item name if identified, ??? otherwise
+   */
   public String getItemName(Entity entity, Entity item) {
     ItemComponent details = ComponentMappers.item.get(item);
 
@@ -399,6 +419,12 @@ public class EntityHelpers {
     }
   }
 
+  /**
+   * Raise health.
+   *
+   * @param entity Entity whose health we're raising
+   * @param amount How much
+   */
   public void raiseHealth(Entity entity, int amount) {
     AttributesComponent attributes = ComponentMappers.attributes.get(entity);
 
@@ -413,6 +439,12 @@ public class EntityHelpers {
     }
   }
 
+  /**
+   * Raise strength.
+   *
+   * @param entity Entity whose strength we're raising
+   * @param amount How much
+   */
   public void raiseStrength(Entity entity, int amount) {
     AttributesComponent attributes = ComponentMappers.attributes.get(entity);
 

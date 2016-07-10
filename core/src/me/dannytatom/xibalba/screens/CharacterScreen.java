@@ -98,9 +98,12 @@ public class CharacterScreen implements Screen {
     skillsGroup = new VerticalGroup().align(Align.top | Align.left);
 
     Table characterTable = new Table();
-    characterTable.add(attributesGroup).pad(10).width(Gdx.graphics.getWidth() / 3 - 20).top().left();
-    characterTable.add(skillsGroup).pad(10).width(Gdx.graphics.getWidth() / 3 - 20).top().left();
-    characterTable.add(new VerticalGroup()).pad(10).width(Gdx.graphics.getWidth() / 3 - 20).top().left();
+    characterTable.add(attributesGroup)
+        .pad(10).width(Gdx.graphics.getWidth() / 3 - 20).top().left();
+    characterTable.add(skillsGroup)
+        .pad(10).width(Gdx.graphics.getWidth() / 3 - 20).top().left();
+    characterTable.add(new VerticalGroup())
+        .pad(10).width(Gdx.graphics.getWidth() / 3 - 20).top().left();
 
     inventoryGroup = new VerticalGroup().align(Align.top | Align.left);
     itemDetails = new Table().align(Align.top | Align.left);
@@ -175,9 +178,11 @@ public class CharacterScreen implements Screen {
     inventoryItemLabels = new ArrayList<>();
 
     for (int i = 0; i < inventoryItems.size(); i++) {
-      Entity item = inventoryItems.get(i);
-      Label label = new Label(WorldManager.entityHelpers.getItemName(WorldManager.player, item), Main.skin);
       int index = i;
+      Entity item = inventoryItems.get(i);
+      Label label = new Label(
+          WorldManager.entityHelpers.getItemName(WorldManager.player, item), Main.skin
+      );
       label.addListener(new ClickListener() {
         @Override
         public void enter(InputEvent event, float positionX, float positionY,
@@ -350,7 +355,8 @@ public class CharacterScreen implements Screen {
       String name;
 
       if (i == itemSelected) {
-        name = "[DARK_GRAY]> [WHITE]" + WorldManager.entityHelpers.getItemName(WorldManager.player, item);
+        name = "[DARK_GRAY]> [WHITE]"
+            + WorldManager.entityHelpers.getItemName(WorldManager.player, item);
       } else if (i == itemHovered) {
         name = "[LIGHT_GRAY]" + WorldManager.entityHelpers.getItemName(WorldManager.player, item);
       } else {
@@ -391,7 +397,8 @@ public class CharacterScreen implements Screen {
 
       statsGroup.addActor(
           new Label(
-              "[DARK_GRAY]-[] " + WorldManager.entityHelpers.getItemName(WorldManager.player, selectedItem)
+              "[DARK_GRAY]-[] "
+                  + WorldManager.entityHelpers.getItemName(WorldManager.player, selectedItem)
                   + " [DARK_GRAY](" + selectedItemDetails.type + ")",
               Main.skin
           )
@@ -629,6 +636,7 @@ public class CharacterScreen implements Screen {
 
   private void handleEat() {
     WorldManager.inventoryHelpers.eatItem(WorldManager.player, inventoryItems.get(itemSelected));
+
     itemSelected = 0;
   }
 
@@ -637,7 +645,10 @@ public class CharacterScreen implements Screen {
   }
 
   private void handleConfirmApply() {
-    WorldManager.inventoryHelpers.applyItem(WorldManager.player, applying, inventoryItems.get(itemSelected));
+    WorldManager.inventoryHelpers.applyItem(
+        WorldManager.player, applying, inventoryItems.get(itemSelected)
+    );
+
     itemSelected = 0;
     applying = null;
   }
@@ -648,6 +659,7 @@ public class CharacterScreen implements Screen {
 
   private void handleDrop() {
     WorldManager.inventoryHelpers.dropItem(WorldManager.player, inventoryItems.get(itemSelected));
+
     itemSelected = 0;
   }
 

@@ -50,6 +50,12 @@ public class InventoryHelpers {
     }
   }
 
+  /**
+   * Eat some shit, bro.
+   *
+   * @param entity Who eating?
+   * @param item   What they eating
+   */
   public void eatItem(Entity entity, Entity item) {
     if (item != null) {
       ItemComponent itemDetails = ComponentMappers.item.get(item);
@@ -74,6 +80,13 @@ public class InventoryHelpers {
     }
   }
 
+  /**
+   * Apply an item to another item.
+   *
+   * @param entity       Who doing this?
+   * @param applyingItem Item we're applying
+   * @param targetItem   What we're applying it to
+   */
   public void applyItem(Entity entity, Entity applyingItem, Entity targetItem) {
     if (applyingItem != null && targetItem != null) {
       ItemComponent applyingItemDetails = ComponentMappers.item.get(applyingItem);
@@ -192,6 +205,14 @@ public class InventoryHelpers {
     return false;
   }
 
+  /**
+   * Get a count of ammo.
+   *
+   * @param entity Who has the ammo?
+   * @param type   What type of ammo?
+   *
+   * @return How much they got
+   */
   public int amountOfAmmunitionType(Entity entity, String type) {
     ArrayList<Entity> items = ComponentMappers.inventory.get(entity).items;
     int count = 0;

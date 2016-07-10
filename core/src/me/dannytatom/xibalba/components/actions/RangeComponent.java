@@ -12,6 +12,14 @@ public class RangeComponent implements Component {
   public final String skill;
   public final String bodyPart;
 
+  /**
+   * It's a constructor, idk wtf I'm supposed to comment here.
+   *
+   * @param position Target position
+   * @param item     Item we're using
+   * @param skill    What skill is associated with that item
+   * @param bodyPart Where we're aiming
+   */
   public RangeComponent(Vector2 position, Entity item, String skill, String bodyPart) {
     this.position = position;
     this.item = item;

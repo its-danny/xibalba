@@ -30,6 +30,12 @@ public class WorldRenderer {
   private final Viewport viewport;
   private final OrthographicCamera worldCamera;
 
+  /**
+   * Setup world renderer.
+   *
+   * @param worldCamera Instance of camera
+   * @param batch       Instance of sprite batch
+   */
   public WorldRenderer(OrthographicCamera worldCamera, SpriteBatch batch) {
     this.worldCamera = worldCamera;
     this.batch = batch;

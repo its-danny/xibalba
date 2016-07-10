@@ -24,8 +24,15 @@ public class MouseMovementSystem extends EntitySystem {
 
   }
 
+  /**
+   * Does this really need a comment? I GUESS SO.
+   *
+   * @param engine Ashley engine
+   */
   public void addedToEngine(Engine engine) {
-    entities = engine.getEntitiesFor(Family.all(PlayerComponent.class, MouseMovementComponent.class).get());
+    entities = engine.getEntitiesFor(
+        Family.all(PlayerComponent.class, MouseMovementComponent.class).get()
+    );
   }
 
   /**

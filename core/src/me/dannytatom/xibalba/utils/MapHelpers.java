@@ -338,7 +338,8 @@ public class MapHelpers {
     do {
       cellX = MathUtils.random(0, map.width - 1);
       cellY = MathUtils.random(0, map.height - 1);
-    } while (isBlocked(index, new Vector2(cellX, cellY)));
+    }
+    while (isBlocked(index, new Vector2(cellX, cellY)));
 
     return new Vector2(cellX, cellY);
   }
