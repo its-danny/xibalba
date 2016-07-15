@@ -31,6 +31,7 @@ public class HudRenderer {
   private final Viewport viewport;
   private final PlayerComponent playerDetails;
   private final AttributesComponent playerAttributes;
+  private final PositionComponent playerPosition;
   private final Table topTable;
   private final Table bottomTable;
   private VerticalGroup actionLog;
@@ -57,6 +58,7 @@ public class HudRenderer {
 
     playerDetails = ComponentMappers.player.get(WorldManager.player);
     playerAttributes = ComponentMappers.attributes.get(WorldManager.player);
+    playerPosition = ComponentMappers.position.get(WorldManager.player);
 
     topTable = new Table();
     topTable.top().left();
@@ -170,7 +172,9 @@ public class HudRenderer {
     // Depth & turn count
     areaDetails.addActor(
         new Label("[DARK_GRAY]Depth " + (WorldManager.world.currentMapIndex + 1)
-            + ", Turn " + WorldManager.turnCount, Main.skin)
+            + ", Turn " + WorldManager.turnCount
+            + ", " + (int) playerPosition.pos.x + ":" + (int) playerPosition.pos.y,
+            Main.skin)
     );
     areaDetails.addActor(new Label("", Main.skin));
 

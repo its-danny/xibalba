@@ -1,5 +1,6 @@
 package me.dannytatom.xibalba.systems.actions;
 
+import aurelienribon.tweenengine.Tween;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import me.dannytatom.xibalba.WorldManager;
@@ -9,6 +10,7 @@ import me.dannytatom.xibalba.components.VisualComponent;
 import me.dannytatom.xibalba.components.actions.MovementComponent;
 import me.dannytatom.xibalba.systems.UsesEnergySystem;
 import me.dannytatom.xibalba.utils.ComponentMappers;
+import me.dannytatom.xibalba.utils.Vector2Accessor;
 
 public class MovementSystem extends UsesEnergySystem {
   public MovementSystem() {
@@ -35,7 +37,9 @@ public class MovementSystem extends UsesEnergySystem {
 
     // If we can move, move
     if (!WorldManager.mapHelpers.isBlocked(WorldManager.world.currentMapIndex, movement.pos)) {
-      position.pos = movement.pos;
+      Tween.to(position.pos, Vector2Accessor.TYPE_XY, .10f)
+          .target(movement.pos.x, movement.pos.y).start(WorldManager.tweenManager);
+
       attributes.energy -= MovementComponent.COST;
     } else {
       // If we can't, and the entity is the player, figure out what to do instead
@@ -45,7 +49,9 @@ public class MovementSystem extends UsesEnergySystem {
         if (WorldManager.entityHelpers.isItem(thing)) {
           WorldManager.inventoryHelpers.addItem(WorldManager.player, thing);
 
-          position.pos = movement.pos;
+          Tween.to(position.pos, Vector2Accessor.TYPE_XY, .10f)
+              .target(movement.pos.x, movement.pos.y).start(WorldManager.tweenManager);
+
           attributes.energy -= MovementComponent.COST;
         } else if (WorldManager.entityHelpers.isEnemy(thing)) {
           WorldManager.combatHelpers.preparePlayerForMelee(thing, "body");

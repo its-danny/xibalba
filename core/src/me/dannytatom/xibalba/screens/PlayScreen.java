@@ -1,5 +1,7 @@
 package me.dannytatom.xibalba.screens;
 
+import aurelienribon.tweenengine.Tween;
+import aurelienribon.tweenengine.TweenManager;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
@@ -8,6 +10,7 @@ import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 import me.dannytatom.xibalba.HudRenderer;
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.PlayerInput;
@@ -15,6 +18,7 @@ import me.dannytatom.xibalba.WorldManager;
 import me.dannytatom.xibalba.WorldRenderer;
 import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.utils.ComponentMappers;
+import me.dannytatom.xibalba.utils.Vector2Accessor;
 
 class PlayScreen implements Screen {
   private final Main main;
@@ -39,6 +43,10 @@ class PlayScreen implements Screen {
     autoTimer = 0;
     fps = new FPSLogger();
     batch = new SpriteBatch();
+
+    // Tween
+    WorldManager.tweenManager = new TweenManager();
+    Tween.registerAccessor(Vector2.class, new Vector2Accessor());
 
     // Add entities
     WorldManager.world.setup();
@@ -79,7 +87,7 @@ class PlayScreen implements Screen {
 
     // In some cases, we want the game to take turns on it's own
     if ((WorldManager.state == WorldManager.State.MOVING
-        || WorldManager.entityHelpers.skipTurn(WorldManager.player)) && autoTimer >= .10) {
+        || WorldManager.entityHelpers.skipTurn(WorldManager.player)) && autoTimer >= .10f) {
       autoTimer = 0;
       WorldManager.executeTurn = true;
     }
@@ -106,6 +114,8 @@ class PlayScreen implements Screen {
       Main.playScreen.dispose();
       main.setScreen(new MainMenuScreen(main));
     } else {
+      WorldManager.tweenManager.update(delta);
+
       worldRenderer.render();
       hudRenderer.render(delta);
     }

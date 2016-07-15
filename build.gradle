@@ -4,6 +4,7 @@ buildscript {
     }
 
     dependencies {
+
     }
 }
 
@@ -48,6 +49,8 @@ project(":core") {
         compile "com.badlogicgames.ashley:ashley:$ashleyVersion"
         compile "org.apache.commons:commons-lang3:3.4"
         compile "com.github.xaguzman:pathfinding:0.2.6"
+
+        compile files('../lib/tween-engine-api.jar')
     }
 }
 
