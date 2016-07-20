@@ -273,7 +273,7 @@ public class HudRenderer {
           String description = WordUtils.wrap(itemDetails.description, 50);
 
           lookDialogGroup.addActor(new Label("", Main.skin));
-          
+
           lookDialogGroup.addActor(
               new Label("[LIGHT_GRAY]" + description, Main.skin)
           );

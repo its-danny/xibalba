@@ -28,6 +28,7 @@ import me.dannytatom.xibalba.components.ai.BrainComponent;
 import me.dannytatom.xibalba.map.Map;
 import me.dannytatom.xibalba.map.ShadowCaster;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
 
@@ -61,12 +62,13 @@ public class EntityHelpers {
     sprites.addAll("Level/Cave/Character/Yatzil-1");
 
     TextureAtlas atlas = Main.assets.get("sprites/main.atlas");
+    Vector2 position = WorldManager.mapHelpers.getEntrancePosition();
 
     player.add(new PlayerComponent());
-    player.add(new PositionComponent(WorldManager.mapHelpers.getEntrancePosition()));
+    player.add(new PositionComponent(position));
     player.add(new VisualComponent(
-        atlas.createSprite(sprites.random()))
-    );
+        atlas.createSprite(sprites.random()), position
+    ));
     player.add(new InventoryComponent());
     player.add(new EquipmentComponent());
     player.add(new SkillsComponent());
@@ -99,7 +101,7 @@ public class EntityHelpers {
     entity.add(new EnemyComponent());
     entity.add(new BrainComponent());
     entity.add(new PositionComponent(position));
-    entity.add(new VisualComponent(atlas.createSprite(json.visual.get("spritePath"))));
+    entity.add(new VisualComponent(atlas.createSprite(json.visual.get("spritePath")), position));
     entity.add(new SkillsComponent());
     entity.add(new AttributesComponent(
         json.name,
@@ -139,7 +141,7 @@ public class EntityHelpers {
     entity.add(itemDetails);
     entity.add(new PositionComponent(position));
     entity.add(new VisualComponent(
-        atlas.createSprite(itemDetails.visual.get("sprites").random())
+        atlas.createSprite(itemDetails.visual.get("sprites").random()), position
     ));
 
     return entity;
@@ -166,7 +168,7 @@ public class EntityHelpers {
 
     entity.add(new PositionComponent(position));
     entity.add(
-        new VisualComponent(atlas.createSprite("Level/Cave/Environment/Object/" + type))
+        new VisualComponent(atlas.createSprite("Level/Cave/Environment/Object/" + type), position)
     );
 
     return entity;
@@ -192,13 +194,14 @@ public class EntityHelpers {
     while (WorldManager.mapHelpers.isBlocked(mapIndex, new Vector2(cellX, cellY))
         && WorldManager.mapHelpers.getWallNeighbours(mapIndex, cellX, cellY) >= 4);
 
+    Vector2 position = new Vector2(cellX, cellY);
     Entity entity = new Entity();
     entity.add(new EntranceComponent());
-    entity.add(new PositionComponent(new Vector2(cellX, cellY)));
+    entity.add(new PositionComponent(position));
 
     TextureAtlas atlas = Main.assets.get("sprites/main.atlas");
     entity.add(new VisualComponent(
-        atlas.createSprite("Level/Cave/Environment/Interact/Ladder-Up-1")
+        atlas.createSprite("Level/Cave/Environment/Interact/Ladder-Up-1"), position
     ));
 
     return entity;
@@ -224,13 +227,14 @@ public class EntityHelpers {
     while (WorldManager.mapHelpers.isBlocked(mapIndex, new Vector2(cellX, cellY))
         && WorldManager.mapHelpers.getWallNeighbours(mapIndex, cellX, cellY) >= 4);
 
+    Vector2 position = new Vector2(cellX, cellY);
     Entity entity = new Entity();
     entity.add(new ExitComponent());
-    entity.add(new PositionComponent(new Vector2(cellX, cellY)));
+    entity.add(new PositionComponent(position));
 
     TextureAtlas atlas = Main.assets.get("sprites/main.atlas");
     entity.add(new VisualComponent(
-        atlas.createSprite("Level/Cave/Environment/Interact/Ladder-Down-1")
+        atlas.createSprite("Level/Cave/Environment/Interact/Ladder-Down-1"), position
     ));
 
     return entity;
@@ -336,6 +340,30 @@ public class EntityHelpers {
     }
 
     return null;
+  }
+
+  /**
+   * Get all entities at a given position.
+   *
+   * @param position Where we're searching
+   *
+   * @return ArrayList of entities
+   */
+  public ArrayList<Entity> getEntitiesAt(Vector2 position) {
+    ArrayList<Entity> list = new ArrayList<>();
+
+    ImmutableArray<Entity> entities =
+        WorldManager.engine.getEntitiesFor(Family.all(PositionComponent.class).get());
+
+    for (Entity entity : entities) {
+      PositionComponent entityPosition = ComponentMappers.position.get(entity);
+
+      if (entityPosition != null && entityPosition.pos.epsilonEquals(position, 0.00001f)) {
+        list.add(entity);
+      }
+    }
+
+    return list;
   }
 
   /**
@@ -459,5 +487,17 @@ public class EntityHelpers {
         );
       }
     }
+  }
+
+  public void updatePosition(Entity entity, Vector2 position) {
+    if (!ComponentMappers.position.has(entity)) {
+      entity.add(new PositionComponent());
+    }
+
+    PositionComponent p = ComponentMappers.position.get(entity);
+    VisualComponent v = ComponentMappers.visual.get(entity);
+
+    p.pos.set(position);
+    v.sprite.setPosition(p.pos.x * Main.SPRITE_WIDTH, p.pos.y * Main.SPRITE_HEIGHT);
   }
 }

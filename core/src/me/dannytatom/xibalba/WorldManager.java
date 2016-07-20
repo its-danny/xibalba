@@ -1,6 +1,5 @@
 package me.dannytatom.xibalba;
 
-import aurelienribon.tweenengine.TweenManager;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
@@ -31,7 +30,6 @@ public class WorldManager {
   public static Engine engine;
   public static World world;
   public static State state;
-  public static TweenManager tweenManager;
   public static ActionLog log;
   public static MapHelpers mapHelpers;
   public static CombatHelpers combatHelpers;

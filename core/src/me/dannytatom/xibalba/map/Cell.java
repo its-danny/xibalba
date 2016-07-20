@@ -6,7 +6,7 @@ public class Cell {
   public final String description;
   public final boolean isWall;
   public final boolean isNothing;
-  public Sprite sprite;
+  public final Sprite sprite;
   public boolean hidden = true;
   public boolean forgotten = false;
 

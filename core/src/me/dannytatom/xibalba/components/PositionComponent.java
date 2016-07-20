@@ -14,4 +14,8 @@ public class PositionComponent implements Component {
   public PositionComponent(Vector2 position) {
     this.pos = position;
   }
+
+  public PositionComponent() {
+    this.pos = new Vector2();
+  }
 }

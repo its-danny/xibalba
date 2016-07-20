@@ -139,7 +139,7 @@ public class InventoryHelpers {
         WorldManager.equipmentHelpers.removeItem(entity, item);
       }
 
-      item.add(new PositionComponent(position));
+      WorldManager.entityHelpers.updatePosition(item, position);
       inventory.items.remove(item);
 
       if (ComponentMappers.player.has(entity)) {

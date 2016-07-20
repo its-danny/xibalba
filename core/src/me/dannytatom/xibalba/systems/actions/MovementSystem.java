@@ -1,6 +1,5 @@
 package me.dannytatom.xibalba.systems.actions;
 
-import aurelienribon.tweenengine.Tween;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import me.dannytatom.xibalba.WorldManager;
@@ -10,7 +9,6 @@ import me.dannytatom.xibalba.components.VisualComponent;
 import me.dannytatom.xibalba.components.actions.MovementComponent;
 import me.dannytatom.xibalba.systems.UsesEnergySystem;
 import me.dannytatom.xibalba.utils.ComponentMappers;
-import me.dannytatom.xibalba.utils.Vector2Accessor;
 
 public class MovementSystem extends UsesEnergySystem {
   public MovementSystem() {
@@ -37,8 +35,7 @@ public class MovementSystem extends UsesEnergySystem {
 
     // If we can move, move
     if (!WorldManager.mapHelpers.isBlocked(WorldManager.world.currentMapIndex, movement.pos)) {
-      Tween.to(position.pos, Vector2Accessor.TYPE_XY, .10f)
-          .target(movement.pos.x, movement.pos.y).start(WorldManager.tweenManager);
+      move(entity, position, movement, visual);
 
       attributes.energy -= MovementComponent.COST;
     } else {
@@ -49,8 +46,7 @@ public class MovementSystem extends UsesEnergySystem {
         if (WorldManager.entityHelpers.isItem(thing)) {
           WorldManager.inventoryHelpers.addItem(WorldManager.player, thing);
 
-          Tween.to(position.pos, Vector2Accessor.TYPE_XY, .10f)
-              .target(movement.pos.x, movement.pos.y).start(WorldManager.tweenManager);
+          move(entity, position, movement, visual);
 
           attributes.energy -= MovementComponent.COST;
         } else if (WorldManager.entityHelpers.isEnemy(thing)) {
@@ -66,5 +62,16 @@ public class MovementSystem extends UsesEnergySystem {
     }
 
     entity.remove(MovementComponent.class);
+  }
+
+  private void move(Entity entity, PositionComponent position,
+                    MovementComponent movement, VisualComponent visual) {
+    WorldManager.entityHelpers.updatePosition(
+        entity, movement.pos
+    );
+
+    if (ComponentMappers.player.has(entity)) {
+      WorldManager.world.updateLighting(movement.pos.x, movement.pos.y);
+    }
   }
 }

@@ -18,8 +18,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import me.dannytatom.xibalba.screens.MainMenuScreen;
 
 public class Main extends Game {
-  static final int SPRITE_WIDTH = 16;
-  static final int SPRITE_HEIGHT = 16;
+  public static final int SPRITE_WIDTH = 16;
+  public static final int SPRITE_HEIGHT = 16;
   public static AssetManager assets;
   public static Skin skin;
   public static Screen playScreen;
