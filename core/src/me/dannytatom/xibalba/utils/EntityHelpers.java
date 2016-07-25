@@ -124,8 +124,6 @@ public class EntityHelpers {
   /**
    * Create an item.
    *
-   * <p>TODO: This is terrible, fix it pls. See TODO in ItemComponent.
-   *
    * @param type     What type of item to create
    * @param position Vector2 of their position
    *

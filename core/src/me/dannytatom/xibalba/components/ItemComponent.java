@@ -10,8 +10,6 @@ public class ItemComponent implements Component {
   public String name;
   public String description;
 
-  // TODO: This is only here 'cause it's in the JSON,
-  // should fix how we load items
   public HashMap<String, Array<String>> visual;
 
   public String skill;
