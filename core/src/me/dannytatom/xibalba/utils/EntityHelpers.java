@@ -489,15 +489,23 @@ public class EntityHelpers {
     }
   }
 
-  public void updatePosition(Entity entity, Vector2 position) {
+  /**
+   * Update an entity's position.
+   *
+   * @param entity The entity
+   * @param newPosition Where they're going
+   */
+  public void updatePosition(Entity entity, Vector2 newPosition) {
     if (!ComponentMappers.position.has(entity)) {
       entity.add(new PositionComponent());
     }
 
-    PositionComponent p = ComponentMappers.position.get(entity);
-    VisualComponent v = ComponentMappers.visual.get(entity);
+    PositionComponent position = ComponentMappers.position.get(entity);
+    VisualComponent visual = ComponentMappers.visual.get(entity);
 
-    p.pos.set(position);
-    v.sprite.setPosition(p.pos.x * Main.SPRITE_WIDTH, p.pos.y * Main.SPRITE_HEIGHT);
+    position.pos.set(newPosition);
+    visual.sprite.setPosition(
+        position.pos.x * Main.SPRITE_WIDTH, position.pos.y * Main.SPRITE_HEIGHT
+    );
   }
 }

@@ -116,9 +116,9 @@ public class PlayerInput implements InputProcessor {
           if (primaryWeapon != null) {
             ItemComponent itemDetails = ComponentMappers.item.get(primaryWeapon);
 
-            if (itemDetails.usesAmmunition) {
+            if (itemDetails.ammunition != null) {
               if (WorldManager.inventoryHelpers.hasAmmunitionOfType(WorldManager.player,
-                  itemDetails.ammunitionType)) {
+                  itemDetails.ammunition)) {
                 playerDetails.target = null;
                 playerDetails.path = null;
 
@@ -140,7 +140,7 @@ public class PlayerInput implements InputProcessor {
           if (primaryWeapon != null) {
             ItemComponent itemDetails = ComponentMappers.item.get(primaryWeapon);
 
-            if (itemDetails.actions.get("canThrow")) {
+            if (itemDetails.actions.contains("throw", false)) {
               itemDetails.throwing = true;
 
               playerDetails.target = null;

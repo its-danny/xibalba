@@ -1,28 +1,22 @@
 {
+  "type": "armor",
   "name": "Wooden Shield",
   "description": "A shield is a type of personal armor, meant to intercept attacks, either by stopping projectiles such as arrows or redirecting a hit from a macuahuitl or similar weapon to the side of the shield-bearer.",
-  "skill": "bashing",
-  "type": "armor",
-  "location": "left hand",
   "visual": {
     "sprites": [
       "Level/Cave/Item/Shield-1"
     ]
   },
-  "verbs": [
-    "bashed", "hit"
-  ],
+
+  "skill": "bashing",
+  "location": "hand",
+
   "attributes": {
     "hitDamage": 6,
     "throwDamage": 6,
     "defense": 20
   },
-  "actions": {
-    "canThrow": true,
-    "canWear": true,
-    "canHold": true,
-    "canEat": false,
-    "canApply": false,
-    "canBeAppliedTo": false
-  }
+
+  "actions": [ "throw", "wear", "hold" ],
+  "verbs": [ "bashed", "hit" ]
 }

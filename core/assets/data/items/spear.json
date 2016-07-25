@@ -1,27 +1,21 @@
 {
+  "type": "melee",
   "name": "Spear",
   "description": "A spear is a pole weapon consisting of a shaft, usually of wood, with a pointed head. The head may be simply the sharpened end of the shaft itself, as is the case with fire hardened spears, or it may be made of a more durable material fastened to the shaft, such as flint, obsidian, or chert.",
-  "skill": "piercing",
-  "type": "weapon",
-  "location": "right hand",
   "visual": {
     "sprites": [
       "Level/Cave/Item/Weapon-Spear-1"
     ]
   },
-  "verbs": [
-    "stabbed", "impaled", "gutted", "pierced"
-  ],
+
+  "skill": "piercing",
+  "location": "hand",
+
   "attributes": {
     "hitDamage": 6,
     "throwDamage": 8
   },
-  "actions": {
-    "canThrow": true,
-    "canWear": false,
-    "canHold": true,
-    "canEat": false,
-    "canApply": false,
-    "canBeAppliedTo": true
-  }
+
+  "actions": [ "throw", "hold", "applyTo" ],
+  "verbs": [ "stabbed", "impaled", "gutted", "pierced" ]
 }

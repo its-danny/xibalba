@@ -21,6 +21,7 @@ import me.dannytatom.xibalba.components.actions.RangeComponent;
 import me.dannytatom.xibalba.components.statuses.BleedingComponent;
 import me.dannytatom.xibalba.components.statuses.CrippledComponent;
 
+import java.util.Map;
 import java.util.Objects;
 
 //
@@ -101,7 +102,7 @@ public class CombatHelpers {
       ItemComponent primaryWeaponDetails = ComponentMappers.item.get(primaryWeapon);
 
       Entity item = WorldManager.inventoryHelpers.getAmmunitionOfType(
-          WorldManager.player, primaryWeaponDetails.ammunitionType
+          WorldManager.player, primaryWeaponDetails.ammunition
       );
 
       WorldManager.player.add(
@@ -175,7 +176,7 @@ public class CombatHelpers {
       ItemComponent weaponItem = ComponentMappers.item.get(weapon);
 
       skillName = weaponItem.skill;
-      verb = weaponItem.verbs.get(MathUtils.random(0, weaponItem.verbs.size() - 1));
+      verb = weaponItem.verbs.get(MathUtils.random(0, weaponItem.verbs.size - 1));
     }
 
     SkillsComponent skills = ComponentMappers.skills.get(starter);
@@ -243,7 +244,7 @@ public class CombatHelpers {
     } else {
       ItemComponent firingWeapon =
           ComponentMappers.item.get(WorldManager.equipmentHelpers.getPrimaryWeapon(starter));
-      verb = firingWeapon.verbs.get(MathUtils.random(0, firingWeapon.verbs.size() - 1));
+      verb = firingWeapon.verbs.get(MathUtils.random(0, firingWeapon.verbs.size - 1));
     }
 
     int skillLevel = skills.levels.get(skill);
@@ -317,16 +318,15 @@ public class CombatHelpers {
     if (item != null) {
       ItemComponent itemDetails = ComponentMappers.item.get(item);
 
-      if (itemDetails.attributes.get("raiseHealth") != null) {
-        WorldManager.entityHelpers.raiseHealth(target, itemDetails.attributes.get("raiseHealth"));
-        itemDetails.attributes.remove("raiseHealth");
-      }
+      if (itemDetails.effects != null) {
+        for (Map.Entry<String, String> entry : itemDetails.effects.entrySet()) {
+          String event = entry.getKey();
+          String action = entry.getValue();
 
-      if (itemDetails.attributes.get("raiseStrength") != null) {
-        WorldManager.entityHelpers.raiseStrength(
-            target, itemDetails.attributes.get("raiseStrength")
-        );
-        itemDetails.attributes.remove("raiseStrength");
+          if (Objects.equals(event, "onHit")) {
+            WorldManager.effectsHelpers.applyEffect(target, action);
+          }
+        }
       }
 
       PlayerComponent player = ComponentMappers.player.get(starter);

@@ -16,6 +16,7 @@ import me.dannytatom.xibalba.systems.ai.WanderSystem;
 import me.dannytatom.xibalba.systems.statuses.BleedingSystem;
 import me.dannytatom.xibalba.systems.statuses.CrippledSystem;
 import me.dannytatom.xibalba.utils.CombatHelpers;
+import me.dannytatom.xibalba.utils.EffectsHelpers;
 import me.dannytatom.xibalba.utils.EntityHelpers;
 import me.dannytatom.xibalba.utils.EquipmentHelpers;
 import me.dannytatom.xibalba.utils.InventoryHelpers;
@@ -37,6 +38,7 @@ public class WorldManager {
   public static InventoryHelpers inventoryHelpers;
   public static EquipmentHelpers equipmentHelpers;
   public static SkillHelpers skillHelpers;
+  public static EffectsHelpers effectsHelpers;
   public static Entity player;
   public static boolean executeTurn;
   public static int turnCount;
@@ -55,6 +57,7 @@ public class WorldManager {
     equipmentHelpers = new EquipmentHelpers();
     skillHelpers = new SkillHelpers();
     combatHelpers = new CombatHelpers();
+    effectsHelpers = new EffectsHelpers();
 
     executeTurn = false;
     turnCount = 0;

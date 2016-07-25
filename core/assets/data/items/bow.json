@@ -1,29 +1,22 @@
 {
+  "type": "ranged",
   "name": "Wooden Bow",
   "description": "The bow and arrow is a projectile weapon system (a bow with arrows) that predates recorded history and is common to most cultures.",
-  "skill": "archery",
-  "type": "weapon",
-  "usesAmmunition": true,
-  "ammunitionType": "arrow",
-  "location": "right hand",
   "visual": {
     "sprites": [
       "Level/Cave/Item/Weapon-Bow-1"
     ]
   },
-  "verbs": [
-    "shot"
-  ],
+
+  "skill": "archery",
+  "location": "hand",
+  "ammunition": "arrow",
+
   "attributes": {
     "throwDamage": 4,
     "hitDamage": 4
   },
-  "actions": {
-    "canThrow": true,
-    "canWear": false,
-    "canHold": true,
-    "canEat": false,
-    "canApply": false,
-    "canBeAppliedTo": true
-  }
+
+  "actions": [ "throw", "hold", "applyTo" ],
+  "verbs": [ "shot" ]
 }

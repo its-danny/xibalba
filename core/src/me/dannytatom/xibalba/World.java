@@ -21,6 +21,9 @@ public class World {
   public long seed;
   public int currentMapIndex = 0;
 
+  /**
+   * Instantiate some shit.
+   */
   public World() {
     maps = new ArrayList<>();
     entities = new HashMap<>();
@@ -105,6 +108,12 @@ public class World {
     WorldManager.state = WorldManager.State.PLAYING;
   }
 
+  /**
+   * Update lighting based on position.
+   *
+   * @param positionX X cell at center of lighting
+   * @param positionY Y cell at center of lighting
+   */
   public void updateLighting(float positionX, float positionY) {
     AttributesComponent attributes = ComponentMappers.attributes.get(WorldManager.player);
 

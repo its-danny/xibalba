@@ -10,6 +10,7 @@ import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
@@ -60,14 +61,15 @@ public class InventoryHelpers {
     if (item != null) {
       ItemComponent itemDetails = ComponentMappers.item.get(item);
 
-      if (itemDetails.attributes.get("raiseHealth") != null) {
-        WorldManager.entityHelpers.raiseHealth(entity, itemDetails.attributes.get("raiseHealth"));
-      }
+      if (itemDetails.effects != null) {
+        for (Map.Entry<String, String> entry : itemDetails.effects.entrySet()) {
+          String event = entry.getKey();
+          String action = entry.getValue();
 
-      if (itemDetails.attributes.get("raiseStrength") != null) {
-        WorldManager.entityHelpers.raiseStrength(
-            entity, itemDetails.attributes.get("raiseStrength")
-        );
+          if (Objects.equals(event, "onConsume")) {
+            WorldManager.effectsHelpers.applyEffect(entity, action);
+          }
+        }
       }
 
       PlayerComponent player = ComponentMappers.player.get(entity);
@@ -92,20 +94,12 @@ public class InventoryHelpers {
       ItemComponent applyingItemDetails = ComponentMappers.item.get(applyingItem);
       ItemComponent targetItemDetails = ComponentMappers.item.get(targetItem);
 
-      for (Map.Entry<String, Integer> entry : applyingItemDetails.attributes.entrySet()) {
-        String attribute = entry.getKey();
-        Integer value = entry.getValue();
-
-        if (targetItemDetails.attributes.get(attribute) == null) {
-          targetItemDetails.attributes.put(attribute, value);
-        } else {
-          targetItemDetails.attributes.put(
-              attribute, targetItemDetails.attributes.get(attribute) + value
-          );
-        }
-
-        removeItem(entity, applyingItem);
+      if (targetItemDetails.effects == null) {
+        targetItemDetails.effects = new HashMap<>();
       }
+
+      targetItemDetails.effects.put("onHit", applyingItemDetails.effects.get("onApply"));
+      removeItem(entity, applyingItem);
     }
   }
 

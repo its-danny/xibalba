@@ -1,7 +1,5 @@
 package me.dannytatom.xibalba.map;
 
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.MathUtils;
 import me.dannytatom.xibalba.Main;

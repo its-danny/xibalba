@@ -28,6 +28,7 @@ import me.dannytatom.xibalba.utils.ComponentMappers;
 import org.apache.commons.lang3.text.WordUtils;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 public class CharacterScreen implements Screen {
   private final Main main;
@@ -45,7 +46,7 @@ public class CharacterScreen implements Screen {
   private final SkillsComponent skills;
   private final EquipmentComponent equipment;
   private final ArrayList<Entity> inventoryItems;
-  private HorizontalGroup itemActionGroup;
+  private final HorizontalGroup itemActionGroup;
   private ArrayList<Label> inventoryItemLabels;
   private ActionButton cancelButton;
   private ActionButton holdButton;
@@ -465,77 +466,85 @@ public class CharacterScreen implements Screen {
       // Item stats
 
       if (WorldManager.entityHelpers.itemIsIdentified(WorldManager.player, selectedItem)) {
-        if (selectedItemDetails.attributes.get("defense") != null) {
-          String string = "[LIGHT_GRAY]DEF " + "[GREEN]"
-              + selectedItemDetails.attributes.get("defense");
+        if (selectedItemDetails.attributes != null) {
+          if (selectedItemDetails.attributes.get("defense") != null) {
+            String string = "[LIGHT_GRAY]DEF " + "[GREEN]"
+                + selectedItemDetails.attributes.get("defense");
 
-          if (!WorldManager.equipmentHelpers.isEquipped(WorldManager.player, selectedItem)) {
-            Entity itemInSlot = equipment.slots.get(selectedItemDetails.location);
+            if (!WorldManager.equipmentHelpers.isEquipped(WorldManager.player, selectedItem)) {
+              Entity itemInSlot = equipment.slots.get(selectedItemDetails.location);
 
-            if (itemInSlot != null) {
-              ItemComponent itemInSlotDetails = ComponentMappers.item.get(itemInSlot);
+              if (itemInSlot != null) {
+                ItemComponent itemInSlotDetails = ComponentMappers.item.get(itemInSlot);
 
-              if (itemInSlotDetails.attributes.get("defense") != null) {
-                string += "[DARK_GRAY] -> [GREEN]" + itemInSlotDetails.attributes.get("defense");
+                if (itemInSlotDetails.attributes.get("defense") != null) {
+                  string += "[DARK_GRAY] -> [GREEN]" + itemInSlotDetails.attributes.get("defense");
+                }
               }
             }
+
+            statsGroup.addActor(new Label(string, Main.skin));
           }
 
-          statsGroup.addActor(new Label(string, Main.skin));
-        }
+          if (selectedItemDetails.attributes.get("hitDamage") != null) {
+            String string = "[LIGHT_GRAY]HIT DMG " + "[RED]"
+                + selectedItemDetails.attributes.get("hitDamage") + "[DARK_GRAY]d";
 
-        if (selectedItemDetails.attributes.get("raiseHealth") != null) {
-          String string = "[LIGHT_GRAY]HP + " + "[CYAN]"
-              + selectedItemDetails.attributes.get("raiseHealth");
+            if (!WorldManager.equipmentHelpers.isEquipped(WorldManager.player, selectedItem)) {
+              Entity itemInSlot = equipment.slots.get(selectedItemDetails.location);
 
-          statsGroup.addActor(new Label(string, Main.skin));
-        }
+              if (itemInSlot != null) {
+                ItemComponent itemInSlotDetails = ComponentMappers.item.get(itemInSlot);
 
-        if (selectedItemDetails.attributes.get("raiseStrength") != null) {
-          String string = "[LIGHT_GRAY]STR + " + "[CYAN]"
-              + selectedItemDetails.attributes.get("raiseStrength");
-
-          statsGroup.addActor(new Label(string, Main.skin));
-        }
-
-        if (selectedItemDetails.attributes.get("hitDamage") != null) {
-          String string = "[LIGHT_GRAY]HIT DMG " + "[RED]"
-              + selectedItemDetails.attributes.get("hitDamage") + "[DARK_GRAY]d";
-
-          if (!WorldManager.equipmentHelpers.isEquipped(WorldManager.player, selectedItem)) {
-            Entity itemInSlot = equipment.slots.get(selectedItemDetails.location);
-
-            if (itemInSlot != null) {
-              ItemComponent itemInSlotDetails = ComponentMappers.item.get(itemInSlot);
-
-              if (itemInSlotDetails.attributes.get("hitDamage") != null) {
-                string += "[DARK_GRAY] -> [RED]"
-                    + itemInSlotDetails.attributes.get("hitDamage") + "[DARK_GRAY]d";
+                if (itemInSlotDetails.attributes.get("hitDamage") != null) {
+                  string += "[DARK_GRAY] -> [RED]"
+                      + itemInSlotDetails.attributes.get("hitDamage") + "[DARK_GRAY]d";
+                }
               }
             }
+
+            statsGroup.addActor(new Label(string, Main.skin));
           }
 
-          statsGroup.addActor(new Label(string, Main.skin));
-        }
+          if (selectedItemDetails.attributes.get("throwDamage") != null) {
+            String string = "[LIGHT_GRAY]THR DMG " + "[RED]"
+                + selectedItemDetails.attributes.get("throwDamage") + "[DARK_GRAY]d";
 
-        if (selectedItemDetails.attributes.get("throwDamage") != null) {
-          String string = "[LIGHT_GRAY]THR DMG " + "[RED]"
-              + selectedItemDetails.attributes.get("throwDamage") + "[DARK_GRAY]d";
+            if (!WorldManager.equipmentHelpers.isEquipped(WorldManager.player, selectedItem)) {
+              Entity itemInSlot = equipment.slots.get(selectedItemDetails.location);
 
-          if (!WorldManager.equipmentHelpers.isEquipped(WorldManager.player, selectedItem)) {
-            Entity itemInSlot = equipment.slots.get(selectedItemDetails.location);
+              if (itemInSlot != null) {
+                ItemComponent itemInSlotDetails = ComponentMappers.item.get(itemInSlot);
 
-            if (itemInSlot != null) {
-              ItemComponent itemInSlotDetails = ComponentMappers.item.get(itemInSlot);
-
-              if (itemInSlotDetails.attributes.get("throwDamage") != null) {
-                string += "[DARK_GRAY] -> [RED]"
-                    + itemInSlotDetails.attributes.get("throwDamage") + "[DARK_GRAY]d";
+                if (itemInSlotDetails.attributes.get("throwDamage") != null) {
+                  string += "[DARK_GRAY] -> [RED]"
+                      + itemInSlotDetails.attributes.get("throwDamage") + "[DARK_GRAY]d";
+                }
               }
             }
-          }
 
-          statsGroup.addActor(new Label(string, Main.skin));
+            statsGroup.addActor(new Label(string, Main.skin));
+          }
+        }
+
+        if (selectedItemDetails.effects != null) {
+          for (Map.Entry<String, String> entry : selectedItemDetails.effects.entrySet()) {
+            String event = entry.getKey();
+            String action = entry.getValue();
+            String[] split = action.split(":");
+
+            String prettyEvent = WordUtils.capitalize(
+                String.join(" ", (CharSequence[]) event.split("(?<=[a-z])(?=[A-Z])"))
+            );
+            String prettyEffect = WordUtils.capitalize(
+                String.join(" ", (CharSequence[]) split[0].split("(?<=[a-z])(?=[A-Z])"))
+            );
+
+            String string = "[DARK_GRAY]" + prettyEvent
+                + " [LIGHT_GRAY]" + prettyEffect + " [CYAN]" + split[1];
+
+            statsGroup.addActor(new Label(string, Main.skin));
+          }
         }
 
         statsGroup.addActor(new Label("", Main.skin));
@@ -544,26 +553,26 @@ public class CharacterScreen implements Screen {
       // Item actions
 
       if (applying == null) {
-        if (selectedItemDetails.actions.get("canHold")
+        if (selectedItemDetails.actions.contains("hold", false)
             && !WorldManager.equipmentHelpers.isEquipped(WorldManager.player, selectedItem)) {
           itemActionGroup.addActor(holdButton);
         }
 
-        if (selectedItemDetails.actions.get("canWear")
+        if (selectedItemDetails.actions.contains("wear", false)
             && !WorldManager.equipmentHelpers.isEquipped(WorldManager.player, selectedItem)) {
           itemActionGroup.addActor(wearButton);
         }
 
-        if (selectedItemDetails.actions.get("canThrow")) {
+        if (selectedItemDetails.actions.contains("throw", false)) {
           itemActionGroup.addActor(throwButton);
         }
 
-        if (selectedItemDetails.actions.get("canEat")
+        if (selectedItemDetails.actions.contains("consume", false)
             && !WorldManager.equipmentHelpers.isEquipped(WorldManager.player, selectedItem)) {
           itemActionGroup.addActor(eatButton);
         }
 
-        if (selectedItemDetails.actions.get("canApply")) {
+        if (selectedItemDetails.actions.contains("apply", false)) {
           itemActionGroup.addActor(applyButton);
         }
 
@@ -577,7 +586,7 @@ public class CharacterScreen implements Screen {
       } else {
         itemActionGroup.addActor(cancelButton);
 
-        if (applying != selectedItem && selectedItemDetails.actions.get("canBeAppliedTo")) {
+        if (applying != selectedItem && selectedItemDetails.actions.contains("applyTo", false)) {
           itemActionGroup.addActor(confirmApplyButton);
         }
       }

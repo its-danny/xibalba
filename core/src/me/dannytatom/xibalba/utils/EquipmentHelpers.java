@@ -54,7 +54,7 @@ public class EquipmentHelpers {
     ItemComponent itemDetails = ComponentMappers.item.get(item);
     EquipmentComponent equipment = ComponentMappers.equipment.get(entity);
 
-    if (itemDetails.actions.get("canHold")) {
+    if (itemDetails.actions.contains("hold", false)) {
       equipment.slots.put("right hand", item);
     }
   }
@@ -103,6 +103,6 @@ public class EquipmentHelpers {
   public boolean primaryWeaponUsesAmmo(Entity entity) {
     Entity weapon = getPrimaryWeapon(entity);
 
-    return weapon != null && ComponentMappers.item.get(weapon).usesAmmunition;
+    return weapon != null && ComponentMappers.item.get(weapon).ammunition != null;
   }
 }

@@ -1,22 +1,17 @@
 {
+  "type": "arrow",
   "name": "Wooden Arrow",
   "description": "A shafted projectile that is shot with a bow.",
-  "type": "arrow",
   "visual": {
     "sprites": [
       "Level/Cave/Item/Weapon-Arrow-1"
     ]
   },
+
   "attributes": {
     "throwDamage": 4,
     "hitDamage": 6
   },
-  "actions": {
-    "canThrow": true,
-    "canWear": false,
-    "canHold": false,
-    "canEat": false,
-    "canApply": false,
-    "canBeAppliedTo": true
-  }
+
+  "actions": [ "throw", "applyTo" ]
 }

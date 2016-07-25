@@ -11,9 +11,9 @@
       { "name": "tarantula", "spawnRange": "1,2" }
     ],
     "items": [
-      { "name": "chippedFlint", "spawnRange": "1,1"},
+      { "name": "chippedFlint", "spawnRange": "3,5"},
       { "name": "bow", "spawnRange": "1,2" },
-      { "name": "arrow", "spawnRange": "10,20" },
+      { "name": "arrow", "spawnRange": "5,10" },
       { "name": "healthPlant", "spawnRange": "1,3"}
     ]
   },

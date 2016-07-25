@@ -35,7 +35,7 @@ public class MovementSystem extends UsesEnergySystem {
 
     // If we can move, move
     if (!WorldManager.mapHelpers.isBlocked(WorldManager.world.currentMapIndex, movement.pos)) {
-      move(entity, position, movement, visual);
+      move(entity, movement);
 
       attributes.energy -= MovementComponent.COST;
     } else {
@@ -46,7 +46,7 @@ public class MovementSystem extends UsesEnergySystem {
         if (WorldManager.entityHelpers.isItem(thing)) {
           WorldManager.inventoryHelpers.addItem(WorldManager.player, thing);
 
-          move(entity, position, movement, visual);
+          move(entity, movement);
 
           attributes.energy -= MovementComponent.COST;
         } else if (WorldManager.entityHelpers.isEnemy(thing)) {
@@ -64,8 +64,7 @@ public class MovementSystem extends UsesEnergySystem {
     entity.remove(MovementComponent.class);
   }
 
-  private void move(Entity entity, PositionComponent position,
-                    MovementComponent movement, VisualComponent visual) {
+  private void move(Entity entity, MovementComponent movement) {
     WorldManager.entityHelpers.updatePosition(
         entity, movement.pos
     );
