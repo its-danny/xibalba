@@ -241,7 +241,7 @@ public class PlayerInput implements InputProcessor {
         Entity enemy = WorldManager.entityHelpers.getEnemyAt(mousePosition);
         PlayerComponent player = ComponentMappers.player.get(WorldManager.player);
 
-        if (enemy != null && WorldManager.mapHelpers.isNearPlayer(enemy, 1)) {
+        if (enemy != null && WorldManager.mapHelpers.isNearPlayer(enemy)) {
           player.focusedAction = PlayerComponent.FocusedAction.MELEE;
           player.focusedEntity = enemy;
 

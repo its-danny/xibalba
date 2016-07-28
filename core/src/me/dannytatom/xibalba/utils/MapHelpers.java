@@ -241,20 +241,19 @@ public class MapHelpers {
    * Find if an entity is near the player.
    *
    * @param entity The entity to check
-   * @param radius How many spaces to check
    *
    * @return Whether or not they are
    */
-  public boolean isNearPlayer(Entity entity, int radius) {
+  public boolean isNearPlayer(Entity entity) {
     PositionComponent playerPosition = ComponentMappers.position.get(WorldManager.player);
     PositionComponent entityPosition = ComponentMappers.position.get(entity);
 
-    return (entityPosition.pos.x == playerPosition.pos.x - radius
+    return (entityPosition.pos.x == playerPosition.pos.x - 1
         || entityPosition.pos.x == playerPosition.pos.x
-        || entityPosition.pos.x == playerPosition.pos.x + radius)
-        && (entityPosition.pos.y == playerPosition.pos.y - radius
+        || entityPosition.pos.x == playerPosition.pos.x + 1)
+        && (entityPosition.pos.y == playerPosition.pos.y - 1
         || entityPosition.pos.y == playerPosition.pos.y
-        || entityPosition.pos.y == playerPosition.pos.y + radius);
+        || entityPosition.pos.y == playerPosition.pos.y + 1);
   }
 
   /**

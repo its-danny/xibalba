@@ -26,7 +26,7 @@ public class EffectsHelpers {
         WorldManager.entityHelpers.raiseHealth(entity, Integer.parseInt(params[0]));
         break;
       case "raiseStrength":
-        WorldManager.entityHelpers.raiseHealth(entity, Integer.parseInt(params[0]));
+        WorldManager.entityHelpers.raiseStrength(entity, Integer.parseInt(params[0]));
         break;
       default:
     }
