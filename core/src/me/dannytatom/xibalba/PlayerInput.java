@@ -31,7 +31,8 @@ public class PlayerInput implements InputProcessor {
     PlayerComponent playerDetails = ComponentMappers.player.get(WorldManager.player);
 
     switch (keycode) {
-      case Keys.K:
+      // North
+      case Keys.NUMPAD_8:
         if (WorldManager.state == WorldManager.State.PLAYING) {
           handleMovement(attributes.energy, new Vector2(position.pos.x, position.pos.y + 1));
         } else if (WorldManager.state == WorldManager.State.TARGETING) {
@@ -40,7 +41,8 @@ public class PlayerInput implements InputProcessor {
           handleLooking(new Vector2(0, 1), false);
         }
         break;
-      case Keys.U:
+      // North East
+      case Keys.NUMPAD_9:
         if (WorldManager.state == WorldManager.State.PLAYING) {
           handleMovement(attributes.energy, new Vector2(position.pos.x + 1, position.pos.y + 1));
         } else if (WorldManager.state == WorldManager.State.TARGETING) {
@@ -49,7 +51,8 @@ public class PlayerInput implements InputProcessor {
           handleLooking(new Vector2(1, 1), false);
         }
         break;
-      case Keys.L:
+      // East
+      case Keys.NUMPAD_6:
         if (WorldManager.state == WorldManager.State.PLAYING) {
           handleMovement(attributes.energy, new Vector2(position.pos.x + 1, position.pos.y));
         } else if (WorldManager.state == WorldManager.State.TARGETING) {
@@ -58,7 +61,8 @@ public class PlayerInput implements InputProcessor {
           handleLooking(new Vector2(1, 0), false);
         }
         break;
-      case Keys.N:
+      // South East
+      case Keys.NUMPAD_3:
         if (WorldManager.state == WorldManager.State.PLAYING) {
           handleMovement(attributes.energy, new Vector2(position.pos.x + 1, position.pos.y - 1));
         } else if (WorldManager.state == WorldManager.State.TARGETING) {
@@ -67,7 +71,8 @@ public class PlayerInput implements InputProcessor {
           handleLooking(new Vector2(1, -1), false);
         }
         break;
-      case Keys.J:
+      // South
+      case Keys.NUMPAD_2:
         if (WorldManager.state == WorldManager.State.PLAYING) {
           handleMovement(attributes.energy, new Vector2(position.pos.x, position.pos.y - 1));
         } else if (WorldManager.state == WorldManager.State.TARGETING) {
@@ -76,7 +81,8 @@ public class PlayerInput implements InputProcessor {
           handleLooking(new Vector2(0, -1), false);
         }
         break;
-      case Keys.B:
+      // South West
+      case Keys.NUMPAD_1:
         if (WorldManager.state == WorldManager.State.PLAYING) {
           handleMovement(attributes.energy, new Vector2(position.pos.x - 1, position.pos.y - 1));
         } else if (WorldManager.state == WorldManager.State.TARGETING) {
@@ -85,7 +91,8 @@ public class PlayerInput implements InputProcessor {
           handleLooking(new Vector2(-1, -1), false);
         }
         break;
-      case Keys.H:
+      // West
+      case Keys.NUMPAD_4:
         if (WorldManager.state == WorldManager.State.PLAYING) {
           handleMovement(attributes.energy, new Vector2(position.pos.x - 1, position.pos.y));
         } else if (WorldManager.state == WorldManager.State.TARGETING) {
@@ -94,7 +101,8 @@ public class PlayerInput implements InputProcessor {
           handleLooking(new Vector2(-1, 0), false);
         }
         break;
-      case Keys.Y:
+      // North West
+      case Keys.NUMPAD_7:
         if (WorldManager.state == WorldManager.State.PLAYING) {
           handleMovement(attributes.energy, new Vector2(position.pos.x - 1, position.pos.y + 1));
         } else if (WorldManager.state == WorldManager.State.TARGETING) {
@@ -103,11 +111,13 @@ public class PlayerInput implements InputProcessor {
           handleLooking(new Vector2(-1, 1), false);
         }
         break;
+      // Look
       case Keys.S:
         if (WorldManager.state == WorldManager.State.PLAYING) {
           WorldManager.state = WorldManager.State.LOOKING;
         }
         break;
+      // Release
       case Keys.R:
         if (WorldManager.state == WorldManager.State.PLAYING) {
           Entity primaryWeapon
@@ -132,6 +142,7 @@ public class PlayerInput implements InputProcessor {
           }
         }
         break;
+      // Target
       case Keys.T: {
         if (WorldManager.state == WorldManager.State.PLAYING) {
           Entity primaryWeapon
@@ -154,6 +165,7 @@ public class PlayerInput implements InputProcessor {
         }
         break;
       }
+      // Drop
       case Keys.D: {
         if (WorldManager.state == WorldManager.State.PLAYING) {
           Entity primaryWeapon
@@ -165,6 +177,7 @@ public class PlayerInput implements InputProcessor {
         }
         break;
       }
+      // Close dialogs or cancel actions
       case Keys.Q:
         playerDetails.target = null;
         playerDetails.path = null;
@@ -176,6 +189,7 @@ public class PlayerInput implements InputProcessor {
 
         WorldManager.state = WorldManager.State.PLAYING;
         break;
+      // Confirm action
       case Keys.SPACE:
         if (WorldManager.state == WorldManager.State.TARGETING) {
           if (WorldManager.inventoryHelpers.getThrowingItem(WorldManager.player) == null) {
