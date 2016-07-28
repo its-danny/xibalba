@@ -9,7 +9,7 @@
   },
 
   "skill": "bashing",
-  "location": "hand",
+  "location": "left hand",
 
   "attributes": {
     "hitDamage": 6,

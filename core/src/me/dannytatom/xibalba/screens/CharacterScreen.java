@@ -446,6 +446,11 @@ public class CharacterScreen implements Screen {
         Label descriptionLabel = new Label(description, Main.skin);
         statsGroup.addActor(descriptionLabel);
 
+        if (selectedItemDetails.twoHanded) {
+          statsGroup.addActor(new Label("", Main.skin));
+          statsGroup.addActor(new Label("[LIGHT_GRAY]Two handed", Main.skin));
+        }
+
         statsGroup.addActor(new Label("", Main.skin));
       }
 

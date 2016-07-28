@@ -56,6 +56,10 @@ public class EquipmentHelpers {
 
     if (itemDetails.actions.contains("hold", false)) {
       equipment.slots.put("right hand", item);
+
+      if (itemDetails.twoHanded) {
+        equipment.slots.put("left hand", null);
+      }
     }
   }
 
@@ -70,6 +74,16 @@ public class EquipmentHelpers {
     ItemComponent itemDetails = ComponentMappers.item.get(item);
 
     equipment.slots.put(itemDetails.location, item);
+
+    Entity primary = getPrimaryWeapon(entity);
+
+    if (primary != null) {
+      ItemComponent primaryDetails = ComponentMappers.item.get(primary);
+
+      if (primaryDetails.twoHanded) {
+        equipment.slots.put(primaryDetails.location, null);
+      }
+    }
   }
 
   /**

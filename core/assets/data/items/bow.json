@@ -8,8 +8,9 @@
     ]
   },
 
+  "twoHanded": true,
   "skill": "archery",
-  "location": "hand",
+  "location": "right hand",
   "ammunition": "arrow",
 
   "attributes": {

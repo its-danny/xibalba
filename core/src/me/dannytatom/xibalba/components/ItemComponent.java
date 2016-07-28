@@ -12,6 +12,7 @@ public class ItemComponent implements Component {
 
   public HashMap<String, Array<String>> visual;
 
+  public boolean twoHanded;
   public String skill;
   public String location;
   public String ammunition;
