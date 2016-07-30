@@ -1,8 +1,9 @@
-package me.dannytatom.xibalba.utils;
+package me.dannytatom.xibalba.helpers;
 
 import com.badlogic.ashley.core.Entity;
 import me.dannytatom.xibalba.components.EquipmentComponent;
 import me.dannytatom.xibalba.components.ItemComponent;
+import me.dannytatom.xibalba.utils.ComponentMappers;
 
 import java.util.Map;
 

@@ -1,4 +1,4 @@
-package me.dannytatom.xibalba.utils;
+package me.dannytatom.xibalba.helpers;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
@@ -12,6 +12,7 @@ import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.map.Cell;
 import me.dannytatom.xibalba.map.Map;
+import me.dannytatom.xibalba.utils.ComponentMappers;
 import org.xguzm.pathfinding.grid.GridCell;
 import org.xguzm.pathfinding.grid.NavigationGrid;
 import org.xguzm.pathfinding.grid.finders.AStarGridFinder;

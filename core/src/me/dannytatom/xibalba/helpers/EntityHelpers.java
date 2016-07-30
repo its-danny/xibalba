@@ -1,4 +1,4 @@
-package me.dannytatom.xibalba.utils;
+package me.dannytatom.xibalba.helpers;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
@@ -25,6 +25,9 @@ import me.dannytatom.xibalba.components.VisualComponent;
 import me.dannytatom.xibalba.components.ai.BrainComponent;
 import me.dannytatom.xibalba.map.Map;
 import me.dannytatom.xibalba.map.ShadowCaster;
+import me.dannytatom.xibalba.utils.ComponentMappers;
+import me.dannytatom.xibalba.utils.YamlToEnemy;
+import me.dannytatom.xibalba.utils.YamlToItem;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 
@@ -255,11 +258,11 @@ public class EntityHelpers {
     return entity != null && ComponentMappers.exit.has(entity);
   }
 
-  boolean isCrippled(Entity entity) {
+  public boolean isCrippled(Entity entity) {
     return entity != null && ComponentMappers.crippled.has(entity);
   }
 
-  boolean isBleeding(Entity entity) {
+  public boolean isBleeding(Entity entity) {
     return entity != null && ComponentMappers.bleeding.has(entity);
   }
 

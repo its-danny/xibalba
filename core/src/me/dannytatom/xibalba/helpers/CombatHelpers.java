@@ -1,4 +1,4 @@
-package me.dannytatom.xibalba.utils;
+package me.dannytatom.xibalba.helpers;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
@@ -19,6 +19,7 @@ import me.dannytatom.xibalba.components.actions.MeleeComponent;
 import me.dannytatom.xibalba.components.actions.RangeComponent;
 import me.dannytatom.xibalba.components.statuses.BleedingComponent;
 import me.dannytatom.xibalba.components.statuses.CrippledComponent;
+import me.dannytatom.xibalba.utils.ComponentMappers;
 
 import java.util.Map;
 import java.util.Objects;

@@ -1,8 +1,9 @@
-package me.dannytatom.xibalba.utils;
+package me.dannytatom.xibalba.helpers;
 
 import com.badlogic.ashley.core.Entity;
 import me.dannytatom.xibalba.WorldManager;
 import me.dannytatom.xibalba.components.SkillsComponent;
+import me.dannytatom.xibalba.utils.ComponentMappers;
 
 public class SkillHelpers {
   public SkillHelpers() {

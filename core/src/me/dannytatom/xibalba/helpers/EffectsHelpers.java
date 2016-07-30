@@ -1,4 +1,4 @@
-package me.dannytatom.xibalba.utils;
+package me.dannytatom.xibalba.helpers;
 
 import com.badlogic.ashley.core.Entity;
 import me.dannytatom.xibalba.WorldManager;

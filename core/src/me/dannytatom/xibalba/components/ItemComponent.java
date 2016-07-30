@@ -18,16 +18,14 @@ public class ItemComponent implements Component {
 
   public final HashMap<String, Integer> attributes;
   public final Array<String> actions;
-  public HashMap<String, String> effects;
   public final Array<String> verbs;
-
+  public HashMap<String, String> effects;
   public boolean throwing = false;
 
   /**
    * Initialize item component from yaml data.
    *
-   * @param yaml YamlToItem instance containing
-   *             data from relevant yaml file
+   * @param yaml YamlToItem instance containing data from relevant yaml file
    */
   public ItemComponent(YamlToItem yaml) {
     this.type = yaml.type;
