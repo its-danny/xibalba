@@ -1,0 +1,15 @@
+---
+type: consumable
+name: Health Plant
+description: It heals you some
+
+sprites:
+  - Level/Cave/FX/Heal-1
+
+actions:
+  - consume
+  - apply
+
+effects:
+  onConsume: raiseHealth:5
+  onApply: raiseHealth:5

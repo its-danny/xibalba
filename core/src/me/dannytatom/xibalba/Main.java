@@ -21,6 +21,7 @@ public class Main extends Game {
   public static final int SPRITE_WIDTH = 16;
   public static final int SPRITE_HEIGHT = 16;
   public static AssetManager assets;
+  public static TextureAtlas atlas;
   public static Skin skin;
   public static Screen playScreen;
 

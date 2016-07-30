@@ -2,7 +2,7 @@ package me.dannytatom.xibalba.utils;
 
 import java.util.HashMap;
 
-class JsonToEnemy {
+class YamlToEnemy {
   public String name;
   public String description;
   public HashMap<String, String> visual;

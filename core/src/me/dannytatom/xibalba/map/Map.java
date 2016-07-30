@@ -1,6 +1,5 @@
 package me.dannytatom.xibalba.map;
 
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.MathUtils;
 import me.dannytatom.xibalba.Main;
 
@@ -8,7 +7,6 @@ public class Map {
   public final int width;
   public final int height;
   public final boolean[][] geometry;
-  private final TextureAtlas atlas;
   public float[][] lightMap;
   private Cell[][] map;
 
@@ -16,11 +14,9 @@ public class Map {
    * Holds logic for dealing with maps.
    *
    * @param geometry The map geometry
-   * @param atlas    TextureAtlas that holds map sprites
    */
-  public Map(boolean[][] geometry, TextureAtlas atlas) {
+  public Map(boolean[][] geometry) {
     this.geometry = geometry;
-    this.atlas = atlas;
 
     this.width = this.geometry.length;
     this.height = this.geometry[0].length;
@@ -45,18 +41,18 @@ public class Map {
     for (int x = 0; x < geometry.length; x++) {
       for (int y = 0; y < geometry[x].length; y++) {
         if (geometry[x][y]) {
-          map[x][y] = new Cell(atlas.createSprite(
+          map[x][y] = new Cell(Main.atlas.createSprite(
               "Level/Cave/Environment/Floor/" + MathUtils.random(1, 2)
           ), false, false, "a cave floor");
         } else {
           int neighbours = getGroundNeighbours(x, y);
 
           if (neighbours > 0) {
-            map[x][y] = new Cell(atlas.createSprite(
+            map[x][y] = new Cell(Main.atlas.createSprite(
                 "Level/Cave/UI/Color/3"
             ), true, false, "a cave wall");
           } else {
-            map[x][y] = new Cell(atlas.createSprite(
+            map[x][y] = new Cell(Main.atlas.createSprite(
                 "Level/Cave/UI/Color/4"
             ), false, true, "nothing");
           }
@@ -178,7 +174,7 @@ public class Map {
           }
 
           if (spritePath != null) {
-            map[x][y].sprite.setRegion(atlas.findRegion(spritePath));
+            map[x][y].sprite.setRegion(Main.atlas.findRegion(spritePath));
           }
         }
       }

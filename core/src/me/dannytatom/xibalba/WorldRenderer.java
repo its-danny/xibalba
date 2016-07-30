@@ -6,7 +6,6 @@ import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import me.dannytatom.xibalba.components.DecorationComponent;
@@ -49,10 +48,9 @@ public class WorldRenderer {
 
     playerDetails = ComponentMappers.player.get(WorldManager.player);
 
-    TextureAtlas atlas = Main.assets.get("sprites/main.atlas");
-    target = atlas.createSprite("Level/Cave/UI/Target-1");
-    targetThrow = atlas.createSprite("Level/Cave/UI/Target-Throw-1");
-    targetPath = atlas.createSprite("Level/Cave/UI/Target-Path-1");
+    target = Main.atlas.createSprite("Level/Cave/UI/Target-1");
+    targetThrow = Main.atlas.createSprite("Level/Cave/UI/Target-Throw-1");
+    targetPath = Main.atlas.createSprite("Level/Cave/UI/Target-Path-1");
   }
 
   /**

@@ -1,0 +1,24 @@
+---
+type: ranged
+name: Wooden Bow
+description: The bow and arrow is a projectile weapon system (a bow with arrows) that
+  predates recorded history and is common to most cultures.
+
+sprites:
+  - Level/Cave/Item/Weapon-Bow-1
+
+twoHanded: true
+skill: archery
+location: right hand
+ammunition: arrow
+
+attributes:
+  throwDamage: 4
+  hitDamage: 4
+
+actions:
+  - throw
+  - hold
+  - applyTo
+verbs:
+  - shot

@@ -1,0 +1,15 @@
+---
+type: consumable
+name: Strength Plant
+description: It ups yo strength you some
+
+sprites:
+  - Level/Cave/FX/Bolt-1
+
+actions:
+  - consume
+  - apply
+
+effects:
+  onConsume: raiseStrength:5
+  onApply: raiseStrength:5

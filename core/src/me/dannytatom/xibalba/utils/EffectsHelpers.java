@@ -12,9 +12,9 @@ public class EffectsHelpers {
    * Apply an effect to an entity.
    *
    * @param entity The entity
-   * @param effect The effect. This is a string like "raiseHealth:5"
-   *               where the part before colon is the method on EffectsHelpers,
-   *               and the part after is the parameters (split by commas)
+   * @param effect The effect. This is a string like "raiseHealth:5" where the part before colon is
+   *               the method on EffectsHelpers, and the part after is the parameters (split by
+   *               commas)
    */
   public void applyEffect(Entity entity, String effect) {
     String[] split = effect.split(":");

@@ -60,6 +60,8 @@ public class LoadingScreen implements Screen {
     label.clear();
 
     if (Main.assets.update()) {
+      Main.atlas = Main.assets.get("sprites/main.atlas");
+
       if (!generating) {
         generateWorld();
 
@@ -104,7 +106,7 @@ public class LoadingScreen implements Screen {
       CaveGenerator generator = new CaveGenerator(mapWidth, mapHeight);
       generator.generate();
 
-      Map map = new Map(generator.geometry, Main.assets.get("sprites/main.atlas"));
+      Map map = new Map(generator.geometry);
       map.paintCave();
 
       WorldManager.world.maps.add(map);
@@ -134,19 +136,13 @@ public class LoadingScreen implements Screen {
       );
     }
 
-    // Spawn enemies
-    for (int i = 0; i < level.enemies.size; i++) {
-      HashMap<String, String> enemy = level.enemies.get(i);
-      String[] range = enemy.get("spawnRange").split(",");
-      int amount = MathUtils.random(Integer.parseInt(range[0]), Integer.parseInt(range[1]));
-
-      for (int j = 0; j < amount; j++) {
-
-        WorldManager.world.entities.get(mapIndex).add(
-            WorldManager.entityHelpers.createEnemy(enemy.get("name"),
-                WorldManager.mapHelpers.getRandomOpenPositionOnMap(mapIndex))
-        );
-      }
+    // Spawn decorations
+    for (int i = 0; i < 50; i++) {
+      WorldManager.world.entities.get(mapIndex).add(
+          WorldManager.entityHelpers.createRandomDecoration(
+              WorldManager.mapHelpers.getRandomOpenPositionOnMap(mapIndex)
+          )
+      );
     }
 
     // Spawn items
@@ -163,13 +159,19 @@ public class LoadingScreen implements Screen {
       }
     }
 
-    // Spawn decorations
-    for (int i = 0; i < 50; i++) {
-      WorldManager.world.entities.get(mapIndex).add(
-          WorldManager.entityHelpers.createRandomDecoration(
-              WorldManager.mapHelpers.getRandomOpenPositionOnMap(mapIndex)
-          )
-      );
+    // Spawn enemies
+    for (int i = 0; i < level.enemies.size; i++) {
+      HashMap<String, String> enemy = level.enemies.get(i);
+      String[] range = enemy.get("spawnRange").split(",");
+      int amount = MathUtils.random(Integer.parseInt(range[0]), Integer.parseInt(range[1]));
+
+      for (int j = 0; j < amount; j++) {
+
+        WorldManager.world.entities.get(mapIndex).add(
+            WorldManager.entityHelpers.createEnemy(enemy.get("name"),
+                WorldManager.mapHelpers.getRandomOpenPositionOnMap(mapIndex))
+        );
+      }
     }
   }
 

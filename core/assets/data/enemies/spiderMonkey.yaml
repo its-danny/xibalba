@@ -1,0 +1,22 @@
+---
+name: Spider Monkey
+description: Spider monkeys of the genus Ateles are New World monkeys in the subfamily
+  Atelinae, family Atelidae. Like other atelines, they are found in tropical forests
+  of Central and South America, from southern Mexico to Brazil.
+
+visual:
+  spritePath: Level/Cave/Enemy/Monkey-1
+
+attributes:
+  speed: 80
+  vision: 10
+  toughness: 4
+  strength: 6
+
+bodyParts:
+  head: 8
+  body: 6
+  left arm: 8
+  right arm: 8
+  left leg: 6
+  right leg: 6

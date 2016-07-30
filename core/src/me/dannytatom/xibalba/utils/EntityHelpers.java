@@ -4,11 +4,9 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Json;
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.WorldManager;
 import me.dannytatom.xibalba.components.AttributesComponent;
@@ -27,6 +25,8 @@ import me.dannytatom.xibalba.components.VisualComponent;
 import me.dannytatom.xibalba.components.ai.BrainComponent;
 import me.dannytatom.xibalba.map.Map;
 import me.dannytatom.xibalba.map.ShadowCaster;
+import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.constructor.Constructor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -61,13 +61,12 @@ public class EntityHelpers {
     sprites.addAll("Level/Cave/Character/Itzel-1");
     sprites.addAll("Level/Cave/Character/Yatzil-1");
 
-    TextureAtlas atlas = Main.assets.get("sprites/main.atlas");
     Vector2 position = WorldManager.mapHelpers.getEntrancePosition();
 
     player.add(new PlayerComponent());
     player.add(new PositionComponent(position));
     player.add(new VisualComponent(
-        atlas.createSprite(sprites.random()), position
+        Main.atlas.createSprite(sprites.random()), position
     ));
     player.add(new InventoryComponent());
     player.add(new EquipmentComponent());
@@ -86,37 +85,37 @@ public class EntityHelpers {
   /**
    * Create an enemy.
    *
-   * @param type     What type of enemy to create
+   * @param name     Name of enemy to create
    * @param position Vector2 of their position
    *
    * @return The enemy
    */
-  public Entity createEnemy(String type, Vector2 position) {
-    JsonToEnemy json = (new Json()).fromJson(JsonToEnemy.class,
-        Gdx.files.internal("data/enemies/" + type + ".json"));
-    TextureAtlas atlas = Main.assets.get("sprites/main.atlas");
+  public Entity createEnemy(String name, Vector2 position) {
+    Yaml yaml = new Yaml(new Constructor(YamlToEnemy.class));
+    YamlToEnemy data = (YamlToEnemy) yaml.load(
+        Gdx.files.internal("data/enemies/" + name + ".yaml").reader()
+    );
 
     Entity entity = new Entity();
 
     entity.add(new EnemyComponent());
     entity.add(new BrainComponent());
     entity.add(new PositionComponent(position));
-    entity.add(new VisualComponent(atlas.createSprite(json.visual.get("spritePath")), position));
     entity.add(new SkillsComponent());
-    entity.add(new AttributesComponent(
-        json.name,
-        json.description,
-        json.attributes.get("speed"),
-        json.attributes.get("vision"),
-        json.attributes.get("toughness"),
-        json.attributes.get("strength")
-    ));
+    entity.add(new BodyComponent(data.bodyParts));
 
-    HashMap<String, Integer> bodyParts = new HashMap<>();
-    for (java.util.Map.Entry<String, Integer> part : json.bodyParts.entrySet()) {
-      bodyParts.put(part.getKey(), part.getValue());
-    }
-    entity.add(new BodyComponent(bodyParts));
+    entity.add(new VisualComponent(
+        Main.atlas.createSprite(data.visual.get("spritePath")), position)
+    );
+
+    entity.add(new AttributesComponent(
+        data.name,
+        data.description,
+        data.attributes.get("speed"),
+        data.attributes.get("vision"),
+        data.attributes.get("toughness"),
+        data.attributes.get("strength")
+    ));
 
     return entity;
   }
@@ -124,22 +123,26 @@ public class EntityHelpers {
   /**
    * Create an item.
    *
-   * @param type     What type of item to create
+   * @param name     Mame of item to create
    * @param position Vector2 of their position
    *
    * @return The item
    */
-  public Entity createItem(String type, Vector2 position) {
-    TextureAtlas atlas = Main.assets.get("sprites/main.atlas");
-    ItemComponent itemDetails = (new Json()).fromJson(ItemComponent.class,
-        Gdx.files.internal("data/items/" + type + ".json"));
+  public Entity createItem(String name, Vector2 position) {
+    Yaml yaml = new Yaml(new Constructor(YamlToItem.class));
+    YamlToItem data = (YamlToItem) yaml.load(
+        Gdx.files.internal("data/items/" + name + ".yaml").reader()
+    );
 
     Entity entity = new Entity();
 
-    entity.add(itemDetails);
     entity.add(new PositionComponent(position));
+    entity.add(new ItemComponent(data));
+
     entity.add(new VisualComponent(
-        atlas.createSprite(itemDetails.visual.get("sprites").random()), position
+        Main.atlas.createSprite(
+            data.sprites.get(MathUtils.random(0, data.sprites.size() - 1))
+        ), position
     ));
 
     return entity;
@@ -162,11 +165,11 @@ public class EntityHelpers {
       entity.add(new DecorationComponent(false));
     }
 
-    TextureAtlas atlas = Main.assets.get("sprites/main.atlas");
-
     entity.add(new PositionComponent(position));
     entity.add(
-        new VisualComponent(atlas.createSprite("Level/Cave/Environment/Object/" + type), position)
+        new VisualComponent(
+            Main.atlas.createSprite("Level/Cave/Environment/Object/" + type), position
+        )
     );
 
     return entity;
@@ -197,9 +200,8 @@ public class EntityHelpers {
     entity.add(new EntranceComponent());
     entity.add(new PositionComponent(position));
 
-    TextureAtlas atlas = Main.assets.get("sprites/main.atlas");
     entity.add(new VisualComponent(
-        atlas.createSprite("Level/Cave/Environment/Interact/Ladder-Up-1"), position
+        Main.atlas.createSprite("Level/Cave/Environment/Interact/Ladder-Up-1"), position
     ));
 
     return entity;
@@ -230,9 +232,8 @@ public class EntityHelpers {
     entity.add(new ExitComponent());
     entity.add(new PositionComponent(position));
 
-    TextureAtlas atlas = Main.assets.get("sprites/main.atlas");
     entity.add(new VisualComponent(
-        atlas.createSprite("Level/Cave/Environment/Interact/Ladder-Down-1"), position
+        Main.atlas.createSprite("Level/Cave/Environment/Interact/Ladder-Down-1"), position
     ));
 
     return entity;
@@ -490,7 +491,7 @@ public class EntityHelpers {
   /**
    * Update an entity's position.
    *
-   * @param entity The entity
+   * @param entity      The entity
    * @param newPosition Where they're going
    */
   public void updatePosition(Entity entity, Vector2 newPosition) {

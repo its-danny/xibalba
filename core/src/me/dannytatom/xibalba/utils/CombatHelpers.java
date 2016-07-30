@@ -2,7 +2,6 @@ package me.dannytatom.xibalba.utils;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import me.dannytatom.xibalba.Main;
@@ -372,14 +371,13 @@ public class CombatHelpers {
     }
 
     if (targetAttributes.health <= 0) {
-      TextureAtlas atlas = Main.assets.get("sprites/main.atlas");
       PositionComponent position = ComponentMappers.position.get(target);
 
       Entity remains = new Entity();
       remains.add(new DecorationComponent(false));
       remains.add(new PositionComponent(position.pos));
       remains.add(new VisualComponent(
-          atlas.createSprite("Level/Cave/Environment/Object/Remains-1"), position.pos
+          Main.atlas.createSprite("Level/Cave/Environment/Object/Remains-1"), position.pos
       ));
 
       WorldManager.world.addEntity(remains);
