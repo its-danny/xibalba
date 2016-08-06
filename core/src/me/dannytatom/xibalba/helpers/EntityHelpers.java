@@ -102,7 +102,6 @@ public class EntityHelpers {
     Entity entity = new Entity();
 
     entity.add(new EnemyComponent());
-    entity.add(new BrainComponent());
     entity.add(new PositionComponent(position));
     entity.add(new SkillsComponent());
     entity.add(new BodyComponent(data.bodyParts));
@@ -119,6 +118,12 @@ public class EntityHelpers {
         data.attributes.get("toughness"),
         data.attributes.get("strength")
     ));
+
+    Array<BrainComponent.Personality> personalities = new Array<>();
+    for (String personality : data.brain.get("personalities")) {
+      personalities.add(BrainComponent.Personality.valueOf(personality));
+    }
+    entity.add(new BrainComponent(personalities));
 
     return entity;
   }

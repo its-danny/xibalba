@@ -20,3 +20,11 @@ bodyParts:
   right arm: 8
   left leg: 6
   right leg: 6
+
+brain:
+  personalities:
+    - PACKS
+  hates:
+    - tarantula
+  avoids:
+    - jaguar

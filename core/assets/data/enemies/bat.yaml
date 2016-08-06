@@ -17,3 +17,7 @@ bodyParts:
   body: 4
   left wing: 6
   right wing: 6
+
+brain:
+  personalities:
+    - PACKS

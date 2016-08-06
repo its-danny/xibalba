@@ -20,3 +20,9 @@ bodyParts:
   right arm: 8
   left leg: 8
   right leg: 8
+
+brain:
+  personalities:
+    - SOLO
+    - STEALTHY
+    - AGGRESSIVE

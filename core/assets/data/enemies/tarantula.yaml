@@ -18,3 +18,9 @@ bodyParts:
   head: 8
   body: 6
   legs: 4
+
+brain:
+  personalities:
+    - SOLO
+    - AGGRESSIVE
+    - SAFE

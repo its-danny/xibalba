@@ -18,6 +18,7 @@ import me.dannytatom.xibalba.components.BodyComponent;
 import me.dannytatom.xibalba.components.ItemComponent;
 import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
+import me.dannytatom.xibalba.components.ai.BrainComponent;
 import me.dannytatom.xibalba.map.Cell;
 import me.dannytatom.xibalba.screens.CharacterScreen;
 import me.dannytatom.xibalba.screens.PauseScreen;
@@ -314,6 +315,12 @@ public class HudRenderer {
                     + "[LIGHT_GRAY]/" + enemyAttributes.maxHealth, Main.skin
             )
         );
+
+        lookDialogGroup.addActor(new Label("", Main.skin));
+
+        BrainComponent brain = ComponentMappers.brain.get(enemy);
+
+        lookDialogGroup.addActor(new Label(brain.personalities.toString(", "), Main.skin));
       }
 
       if (lookDialogShowing) {
