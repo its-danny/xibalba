@@ -1,4 +1,4 @@
-package me.dannytatom.xibalba.map;
+package me.dannytatom.xibalba.world.generators;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
@@ -14,8 +14,8 @@ public class CaveGenerator {
   /**
    * Generates a cave. `true` is ground, `false` is wall.
    *
-   * @param width  How wide the map should be in cells
-   * @param height How long the map should be in cells
+   * @param width  How wide the world should be in cells
+   * @param height How long the world should be in cells
    */
   public CaveGenerator(int width, int height) {
     this.width = width;

@@ -19,6 +19,7 @@ allprojects {
         gdxVersion = '1.9.3'
         roboVMVersion = '2.1.0'
         ashleyVersion = '1.7.0'
+        aiVersion = '1.7.0'
     }
 
     repositories {
@@ -26,6 +27,20 @@ allprojects {
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url "https://oss.sonatype.org/content/repositories/releases/" }
         jcenter()
+    }
+}
+
+project(":core") {
+    apply plugin: "java"
+
+    dependencies {
+        compile "com.badlogicgames.gdx:gdx:$gdxVersion"
+        compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
+        compile "com.badlogicgames.gdx:gdx-ai:$aiVersion"
+        compile "com.badlogicgames.ashley:ashley:$ashleyVersion"
+        compile "org.yaml:snakeyaml:1.16"
+        compile "org.apache.commons:commons-lang3:3.4"
+        compile "com.github.xaguzman:pathfinding:0.2.6"
     }
 }
 
@@ -37,19 +52,6 @@ project(":desktop") {
         compile "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
         compile "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
-    }
-}
-
-project(":core") {
-    apply plugin: "java"
-
-    dependencies {
-        compile "com.badlogicgames.gdx:gdx:$gdxVersion"
-        compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
-        compile "com.badlogicgames.ashley:ashley:$ashleyVersion"
-        compile "org.yaml:snakeyaml:1.16"
-        compile "org.apache.commons:commons-lang3:3.4"
-        compile "com.github.xaguzman:pathfinding:0.2.6"
     }
 }
 

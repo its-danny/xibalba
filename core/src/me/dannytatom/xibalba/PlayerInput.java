@@ -14,6 +14,7 @@ import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.actions.MovementComponent;
 import me.dannytatom.xibalba.components.actions.RangeComponent;
 import me.dannytatom.xibalba.utils.ComponentMappers;
+import me.dannytatom.xibalba.world.WorldManager;
 
 public class PlayerInput implements InputProcessor {
   private final OrthographicCamera worldCamera;
@@ -325,7 +326,7 @@ public class PlayerInput implements InputProcessor {
       worldCamera.zoom -= 0.2f;
     }
 
-    Gdx.app.log("PlayerInput", "Zoom Level: " + worldCamera.zoom + "");
+    Gdx.app.log("PlayerInput", "Zoom level: " + worldCamera.zoom + "");
 
     return true;
   }

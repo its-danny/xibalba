@@ -5,14 +5,14 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import me.dannytatom.xibalba.WorldManager;
 import me.dannytatom.xibalba.components.EntranceComponent;
 import me.dannytatom.xibalba.components.ExitComponent;
 import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
-import me.dannytatom.xibalba.map.Cell;
-import me.dannytatom.xibalba.map.Map;
 import me.dannytatom.xibalba.utils.ComponentMappers;
+import me.dannytatom.xibalba.world.Map;
+import me.dannytatom.xibalba.world.MapCell;
+import me.dannytatom.xibalba.world.WorldManager;
 import org.xguzm.pathfinding.grid.GridCell;
 import org.xguzm.pathfinding.grid.NavigationGrid;
 import org.xguzm.pathfinding.grid.finders.AStarGridFinder;
@@ -23,29 +23,29 @@ public class MapHelpers {
   }
 
   /**
-   * Finding out if a cell exists within the map.
+   * Finding out if a cell exists within the world.
    *
    * @param position Position we're checking
    *
    * @return If it does indeed exist
    */
   public boolean cellExists(Vector2 position) {
-    Cell[][] map = WorldManager.world.getCurrentMap().getCellMap();
+    MapCell[][] map = WorldManager.world.getCurrentMap().getCellMap();
 
     return position.x > 0 && position.x < map.length
         && position.y > 0 && position.y < map[0].length
         && getCell(position.x, position.y) != null;
   }
 
-  private Cell getCell(int mapIndex, int cellX, int cellY) {
+  private MapCell getCell(int mapIndex, int cellX, int cellY) {
     return WorldManager.world.getMap(mapIndex).getCellMap()[cellX][cellY];
   }
 
-  public Cell getCell(int cellX, int cellY) {
+  public MapCell getCell(int cellX, int cellY) {
     return getCell(WorldManager.world.currentMapIndex, cellX, cellY);
   }
 
-  public Cell getCell(float cellX, float cellY) {
+  public MapCell getCell(float cellX, float cellY) {
     return getCell(WorldManager.world.currentMapIndex, (int) cellX, (int) cellY);
   }
 
@@ -57,7 +57,7 @@ public class MapHelpers {
    * @return Is it blocked?
    */
   public boolean isBlocked(int mapIndex, Vector2 position) {
-    Cell[][] map = WorldManager.world.getMap(mapIndex).getCellMap();
+    MapCell[][] map = WorldManager.world.getMap(mapIndex).getCellMap();
 
     boolean blocked = map[(int) position.x][(int) position.y].isWall
         || map[(int) position.x][(int) position.y].isNothing;
@@ -107,11 +107,11 @@ public class MapHelpers {
   }
 
   /**
-   * Get starting light map.
+   * Get starting light world.
    * <p/>
    * 1 is blocked, 0 is not
    *
-   * @return Resistance map
+   * @return Resistance world
    */
   public float[][] createFovMap() {
     Map map = WorldManager.world.getCurrentMap();
@@ -326,7 +326,7 @@ public class MapHelpers {
   }
 
   /**
-   * Find a random open cell on any map.
+   * Find a random open cell on any world.
    *
    * @return Random open cell
    */
@@ -345,7 +345,7 @@ public class MapHelpers {
   }
 
   /**
-   * Find a random open cell on current map.
+   * Find a random open cell on current world.
    *
    * @return Random open cell
    */
@@ -356,7 +356,7 @@ public class MapHelpers {
   /**
    * Get count of wall neighbours.
    *
-   * @param mapIndex Which map to check
+   * @param mapIndex Which world to check
    * @param cellX    X position of cell we're checking around
    * @param cellY    Y position of cell we're checking around
    *

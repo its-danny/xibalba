@@ -1,4 +1,4 @@
-package me.dannytatom.xibalba.map;
+package me.dannytatom.xibalba.world;
 
 public class ShadowCaster {
   private int width;
@@ -12,8 +12,8 @@ public class ShadowCaster {
   /**
    * http://www.roguebasin.com/index.php?title=Improved_Shadowcasting_in_Java
    *
-   * <p>Calculates the Field Of View for the provided map from the given x, y coordinates. Returns a
-   * lightmap for a result where the values represent a percentage of fully lit.
+   * <p>Calculates the Field Of View for the provided world from the given x, y coordinates.
+   * Returns a lightmap for a result where the values represent a percentage of fully lit.
    *
    * <p>A value equal to or below 0 means that cell is not in the field of view, whereas a value
    * equal to or above 1 means that cell is in the field of view.
@@ -101,5 +101,25 @@ public class ShadowCaster {
 
   private float radius(float dx, float dy) {
     return (float) Math.sqrt(dx * dx + dy * dy);
+  }
+
+  // This was stolen from:
+  //
+  // https://github.com/SquidPony/SquidLib/blob/master/src/squidpony/squidgrid/util/DirectionIntercardinal.java
+  private enum Direction {
+    UP(0, -1), DOWN(0, 1), LEFT(-1, 0), RIGHT(1, 0),
+    UP_LEFT(-1, -1), UP_RIGHT(1, -1),
+    DOWN_LEFT(-1, 1), DOWN_RIGHT(1, 1),
+    NONE(0, 0);
+
+    public static final Direction[] DIAGONALS = {UP_LEFT, UP_RIGHT, DOWN_LEFT, DOWN_RIGHT};
+
+    public final int deltaX;
+    public final int deltaY;
+
+    Direction(int deltaX, int deltaY) {
+      this.deltaX = deltaX;
+      this.deltaY = deltaY;
+    }
   }
 }

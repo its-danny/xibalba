@@ -8,13 +8,13 @@ import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import me.dannytatom.xibalba.HudRenderer;
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.PlayerInput;
-import me.dannytatom.xibalba.WorldManager;
-import me.dannytatom.xibalba.WorldRenderer;
 import me.dannytatom.xibalba.components.AttributesComponent;
+import me.dannytatom.xibalba.renderers.HudRenderer;
+import me.dannytatom.xibalba.renderers.WorldRenderer;
 import me.dannytatom.xibalba.utils.ComponentMappers;
+import me.dannytatom.xibalba.world.WorldManager;
 
 class PlayScreen implements Screen {
   private final Main main;

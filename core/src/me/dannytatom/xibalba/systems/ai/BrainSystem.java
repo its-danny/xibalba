@@ -3,7 +3,6 @@ package me.dannytatom.xibalba.systems.ai;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.math.Vector2;
-import me.dannytatom.xibalba.WorldManager;
 import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.actions.MeleeComponent;
 import me.dannytatom.xibalba.components.actions.MovementComponent;
@@ -13,6 +12,7 @@ import me.dannytatom.xibalba.components.ai.TargetComponent;
 import me.dannytatom.xibalba.components.ai.WanderComponent;
 import me.dannytatom.xibalba.systems.UsesEnergySystem;
 import me.dannytatom.xibalba.utils.ComponentMappers;
+import me.dannytatom.xibalba.world.WorldManager;
 
 public class BrainSystem extends UsesEnergySystem {
   public BrainSystem() {

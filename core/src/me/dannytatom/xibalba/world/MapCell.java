@@ -1,8 +1,8 @@
-package me.dannytatom.xibalba.map;
+package me.dannytatom.xibalba.world;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 
-public class Cell {
+public class MapCell {
   public final String description;
   public final boolean isWall;
   public final boolean isNothing;
@@ -11,12 +11,12 @@ public class Cell {
   public boolean forgotten = false;
 
   /**
-   * Holds map cell data.
+   * Holds world cell data.
    *
    * @param sprite tile sprite
    * @param isWall whether or not an entity can move onto this cell
    */
-  Cell(Sprite sprite, boolean isWall, boolean isNothing, String description) {
+  MapCell(Sprite sprite, boolean isWall, boolean isNothing, String description) {
     this.sprite = sprite;
     this.isWall = isWall;
     this.isNothing = isNothing;

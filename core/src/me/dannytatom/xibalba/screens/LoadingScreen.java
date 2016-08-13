@@ -12,10 +12,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import me.dannytatom.xibalba.Main;
-import me.dannytatom.xibalba.WorldManager;
-import me.dannytatom.xibalba.map.CaveGenerator;
-import me.dannytatom.xibalba.map.Level;
-import me.dannytatom.xibalba.map.Map;
+import me.dannytatom.xibalba.utils.JsonToLevel;
+import me.dannytatom.xibalba.world.Map;
+import me.dannytatom.xibalba.world.WorldManager;
+import me.dannytatom.xibalba.world.generators.CaveGenerator;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -79,12 +79,14 @@ public class LoadingScreen implements Screen {
   }
 
   private void generateWorld() {
-    ArrayList levels = levelsFromJson();
+    ArrayList levels = (new Json()).fromJson(
+        ArrayList.class, JsonToLevel.class, Gdx.files.internal("data/world.json")
+    );
 
     generating = true;
 
     for (int i = 0; i < levels.size(); i++) {
-      Level level = (Level) levels.get(i);
+      JsonToLevel level = (JsonToLevel) levels.get(i);
 
       String[] widthRange = level.size.get("width").split(",");
       String[] heightRange = level.size.get("height").split(",");
@@ -119,7 +121,7 @@ public class LoadingScreen implements Screen {
     WorldManager.world.entities.get(WorldManager.world.currentMapIndex).add(WorldManager.player);
   }
 
-  private void spawnShit(Level level, int mapIndex, boolean isLast) {
+  private void spawnShit(JsonToLevel level, int mapIndex, boolean isLast) {
     WorldManager.world.entities.put(mapIndex, new Array<>());
 
     // Spawn an entrance on every level but first
@@ -173,12 +175,6 @@ public class LoadingScreen implements Screen {
         );
       }
     }
-  }
-
-  private ArrayList levelsFromJson() {
-    return (new Json()).fromJson(
-        ArrayList.class, Level.class, Gdx.files.internal("data/world.json")
-    );
   }
 
   @Override

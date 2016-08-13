@@ -8,7 +8,6 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import me.dannytatom.xibalba.Main;
-import me.dannytatom.xibalba.WorldManager;
 import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.BodyComponent;
 import me.dannytatom.xibalba.components.DecorationComponent;
@@ -23,11 +22,12 @@ import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.SkillsComponent;
 import me.dannytatom.xibalba.components.VisualComponent;
 import me.dannytatom.xibalba.components.ai.BrainComponent;
-import me.dannytatom.xibalba.map.Map;
-import me.dannytatom.xibalba.map.ShadowCaster;
 import me.dannytatom.xibalba.utils.ComponentMappers;
 import me.dannytatom.xibalba.utils.YamlToEnemy;
 import me.dannytatom.xibalba.utils.YamlToItem;
+import me.dannytatom.xibalba.world.Map;
+import me.dannytatom.xibalba.world.ShadowCaster;
+import me.dannytatom.xibalba.world.WorldManager;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 
@@ -307,7 +307,7 @@ public class EntityHelpers {
   }
 
   /**
-   * Uses light map to determine if they can see the player.
+   * Uses light world to determine if they can see the player.
    *
    * @param entity   ho we checking
    * @param distance Radius to use

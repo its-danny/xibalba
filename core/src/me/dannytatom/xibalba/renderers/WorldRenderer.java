@@ -1,4 +1,4 @@
-package me.dannytatom.xibalba;
+package me.dannytatom.xibalba.renderers;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.components.DecorationComponent;
 import me.dannytatom.xibalba.components.EnemyComponent;
 import me.dannytatom.xibalba.components.EntranceComponent;
@@ -16,9 +17,10 @@ import me.dannytatom.xibalba.components.ItemComponent;
 import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.VisualComponent;
-import me.dannytatom.xibalba.map.Cell;
-import me.dannytatom.xibalba.map.Map;
 import me.dannytatom.xibalba.utils.ComponentMappers;
+import me.dannytatom.xibalba.world.Map;
+import me.dannytatom.xibalba.world.MapCell;
+import me.dannytatom.xibalba.world.WorldManager;
 import org.apache.commons.lang3.ArrayUtils;
 import org.xguzm.pathfinding.grid.GridCell;
 
@@ -75,7 +77,7 @@ public class WorldRenderer {
 
     for (int x = 0; x < map.width; x++) {
       for (int y = 0; y < map.height; y++) {
-        Cell cell = WorldManager.mapHelpers.getCell(x, y);
+        MapCell cell = WorldManager.mapHelpers.getCell(x, y);
 
         if (map.lightMap[x][y] > 0) {
           cell.hidden = false;

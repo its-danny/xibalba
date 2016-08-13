@@ -1,9 +1,9 @@
 package me.dannytatom.xibalba.helpers;
 
 import com.badlogic.ashley.core.Entity;
-import me.dannytatom.xibalba.WorldManager;
 import me.dannytatom.xibalba.components.SkillsComponent;
 import me.dannytatom.xibalba.utils.ComponentMappers;
+import me.dannytatom.xibalba.world.WorldManager;
 
 public class SkillHelpers {
   public SkillHelpers() {
@@ -11,7 +11,7 @@ public class SkillHelpers {
   }
 
   /**
-   * Level an entity's skill.
+   * JsonToLevel an entity's skill.
    *
    * @param entity Who we're leveling
    * @param skill  The skill we're leveling

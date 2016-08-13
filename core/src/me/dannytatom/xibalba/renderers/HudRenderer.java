@@ -1,4 +1,4 @@
-package me.dannytatom.xibalba;
+package me.dannytatom.xibalba.renderers;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
@@ -13,17 +13,19 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.BodyComponent;
 import me.dannytatom.xibalba.components.ItemComponent;
 import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.ai.BrainComponent;
-import me.dannytatom.xibalba.map.Cell;
 import me.dannytatom.xibalba.screens.CharacterScreen;
 import me.dannytatom.xibalba.screens.PauseScreen;
 import me.dannytatom.xibalba.ui.ActionButton;
 import me.dannytatom.xibalba.utils.ComponentMappers;
+import me.dannytatom.xibalba.world.MapCell;
+import me.dannytatom.xibalba.world.WorldManager;
 import org.apache.commons.lang3.text.WordUtils;
 
 public class HudRenderer {
@@ -248,7 +250,7 @@ public class HudRenderer {
   private void renderLookDetails(Vector2 position) {
     lookDialogGroup.clear();
 
-    Cell cell = WorldManager.mapHelpers.getCell(position.x, position.y);
+    MapCell cell = WorldManager.mapHelpers.getCell(position.x, position.y);
 
     if (cell.forgotten) {
       lookDetails.setText("You remember seeing " + cell.description + ".");

@@ -1,4 +1,4 @@
-package me.dannytatom.xibalba.map;
+package me.dannytatom.xibalba.world;
 
 import com.badlogic.gdx.math.MathUtils;
 import me.dannytatom.xibalba.Main;
@@ -8,12 +8,12 @@ public class Map {
   public final int height;
   public final boolean[][] geometry;
   public float[][] lightMap;
-  private Cell[][] map;
+  private MapCell[][] map;
 
   /**
    * Holds logic for dealing with maps.
    *
-   * @param geometry The map geometry
+   * @param geometry The world geometry
    */
   public Map(boolean[][] geometry) {
     this.geometry = geometry;
@@ -26,13 +26,13 @@ public class Map {
    * Start creating Cells and giving em sprites.
    */
   public void paintCave() {
-    map = new Cell[width][height];
+    map = new MapCell[width][height];
 
     paintFirstCoat();
     paintSecondCoat();
   }
 
-  public Cell[][] getCellMap() {
+  public MapCell[][] getCellMap() {
     return map;
   }
 
@@ -41,18 +41,18 @@ public class Map {
     for (int x = 0; x < geometry.length; x++) {
       for (int y = 0; y < geometry[x].length; y++) {
         if (geometry[x][y]) {
-          map[x][y] = new Cell(Main.atlas.createSprite(
+          map[x][y] = new MapCell(Main.atlas.createSprite(
               "Level/Cave/Environment/Floor/" + MathUtils.random(1, 2)
           ), false, false, "a cave floor");
         } else {
           int neighbours = getGroundNeighbours(x, y);
 
           if (neighbours > 0) {
-            map[x][y] = new Cell(Main.atlas.createSprite(
+            map[x][y] = new MapCell(Main.atlas.createSprite(
                 "Level/Cave/UI/Color/3"
             ), true, false, "a cave wall");
           } else {
-            map[x][y] = new Cell(Main.atlas.createSprite(
+            map[x][y] = new MapCell(Main.atlas.createSprite(
                 "Level/Cave/UI/Color/4"
             ), false, true, "nothing");
           }
@@ -72,14 +72,14 @@ public class Map {
         if (map[x][y].isNothing || map[x][y].isWall && neighbours > 0) {
           String spritePath = null;
 
-          Cell above = getCellAbove(x, y);
-          Cell right = getCellRight(x, y);
-          Cell below = getCellBelow(x, y);
-          Cell left = getCellLeft(x, y);
-          Cell aboveLeft = getCellAboveLeft(x, y);
-          Cell aboveRight = getCellAboveRight(x, y);
-          Cell belowLeft = getCellBelowLeft(x, y);
-          Cell belowRight = getCellBelowRight(x, y);
+          MapCell above = getCellAbove(x, y);
+          MapCell right = getCellRight(x, y);
+          MapCell below = getCellBelow(x, y);
+          MapCell left = getCellLeft(x, y);
+          MapCell aboveLeft = getCellAboveLeft(x, y);
+          MapCell aboveRight = getCellAboveRight(x, y);
+          MapCell belowLeft = getCellBelowLeft(x, y);
+          MapCell belowRight = getCellBelowRight(x, y);
 
           if (
               (above == null || above.isNothing || above.isWall)
@@ -202,7 +202,7 @@ public class Map {
     return count;
   }
 
-  private Cell getCellAbove(int cellX, int cellY) {
+  private MapCell getCellAbove(int cellX, int cellY) {
     if (cellExists(cellX, cellY + 1)) {
       return getCell(cellX, cellY + 1);
     } else {
@@ -210,7 +210,7 @@ public class Map {
     }
   }
 
-  private Cell getCellRight(int cellX, int cellY) {
+  private MapCell getCellRight(int cellX, int cellY) {
     if (cellExists(cellX + 1, cellY)) {
       return getCell(cellX + 1, cellY);
     } else {
@@ -218,7 +218,7 @@ public class Map {
     }
   }
 
-  private Cell getCellBelow(int cellX, int cellY) {
+  private MapCell getCellBelow(int cellX, int cellY) {
     if (cellExists(cellX, cellY - 1)) {
       return getCell(cellX, cellY - 1);
     } else {
@@ -226,7 +226,7 @@ public class Map {
     }
   }
 
-  private Cell getCellLeft(int cellX, int cellY) {
+  private MapCell getCellLeft(int cellX, int cellY) {
     if (cellExists(cellX - 1, cellY)) {
       return getCell(cellX - 1, cellY);
     } else {
@@ -234,7 +234,7 @@ public class Map {
     }
   }
 
-  private Cell getCellAboveLeft(int cellX, int cellY) {
+  private MapCell getCellAboveLeft(int cellX, int cellY) {
     if (cellExists(cellX - 1, cellY + 1)) {
       return getCell(cellX - 1, cellY + 1);
     } else {
@@ -242,7 +242,7 @@ public class Map {
     }
   }
 
-  private Cell getCellAboveRight(int cellX, int cellY) {
+  private MapCell getCellAboveRight(int cellX, int cellY) {
     if (cellExists(cellX + 1, cellY + 1)) {
       return getCell(cellX + 1, cellY + 1);
     } else {
@@ -250,7 +250,7 @@ public class Map {
     }
   }
 
-  private Cell getCellBelowLeft(int cellX, int cellY) {
+  private MapCell getCellBelowLeft(int cellX, int cellY) {
     if (cellExists(cellX - 1, cellY - 1)) {
       return getCell(cellX - 1, cellY - 1);
     } else {
@@ -258,7 +258,7 @@ public class Map {
     }
   }
 
-  private Cell getCellBelowRight(int cellX, int cellY) {
+  private MapCell getCellBelowRight(int cellX, int cellY) {
     if (cellExists(cellX + 1, cellY - 1)) {
       return getCell(cellX + 1, cellY - 1);
     } else {
@@ -272,7 +272,7 @@ public class Map {
         && getCell(cellX, cellY) != null;
   }
 
-  private Cell getCell(int cellX, int cellY) {
+  private MapCell getCell(int cellX, int cellY) {
     return map[cellX][cellY];
   }
 }

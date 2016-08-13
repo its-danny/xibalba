@@ -1,7 +1,7 @@
 package me.dannytatom.xibalba.helpers;
 
 import com.badlogic.ashley.core.Entity;
-import me.dannytatom.xibalba.WorldManager;
+import me.dannytatom.xibalba.world.WorldManager;
 
 public class EffectsHelpers {
   public EffectsHelpers() {

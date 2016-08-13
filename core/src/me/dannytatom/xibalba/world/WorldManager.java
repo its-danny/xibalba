@@ -1,9 +1,10 @@
-package me.dannytatom.xibalba;
+package me.dannytatom.xibalba.world;
 
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
+import me.dannytatom.xibalba.ActionLog;
 import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.helpers.CombatHelpers;
 import me.dannytatom.xibalba.helpers.EffectsHelpers;
@@ -74,7 +75,7 @@ public class WorldManager {
     engine.addSystem(new CrippledSystem());
     engine.addSystem(new BleedingSystem());
 
-    // Roman numeral map
+    // Roman numeral world
     rnMap.put(1000, "M");
     rnMap.put(900, "CM");
     rnMap.put(500, "D");

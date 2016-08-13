@@ -1,4 +1,4 @@
-package me.dannytatom.xibalba;
+package me.dannytatom.xibalba.world;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.Vector2;
@@ -6,9 +6,6 @@ import com.badlogic.gdx.utils.Array;
 import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.MouseMovementComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
-import me.dannytatom.xibalba.map.Cell;
-import me.dannytatom.xibalba.map.Map;
-import me.dannytatom.xibalba.map.ShadowCaster;
 import me.dannytatom.xibalba.utils.ComponentMappers;
 
 import java.util.ArrayList;
@@ -126,7 +123,7 @@ public class World {
 
     for (int x = 0; x < map.lightMap.length; x++) {
       for (int y = 0; y < map.lightMap[0].length; y++) {
-        Cell cell = WorldManager.mapHelpers.getCell(x, y);
+        MapCell cell = WorldManager.mapHelpers.getCell(x, y);
         float alpha = map.lightMap[x][y] <= 0.15f ? 0.15f : map.lightMap[x][y];
         cell.sprite.setAlpha(alpha);
 
