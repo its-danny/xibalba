@@ -107,6 +107,8 @@ class PlayScreen implements Screen {
       Main.playScreen.dispose();
       main.setScreen(new MainMenuScreen(main));
     } else {
+      Main.tweenManager.update(delta);
+
       worldRenderer.render(delta);
       hudRenderer.render(delta);
     }

@@ -42,6 +42,8 @@ project(":core") {
         compile "org.yaml:snakeyaml:1.16"
         compile "org.apache.commons:commons-lang3:3.4"
         compile "com.github.xaguzman:pathfinding:0.2.6"
+
+        compile fileTree(dir: '../libs', include: '*.jar')
     }
 }
 

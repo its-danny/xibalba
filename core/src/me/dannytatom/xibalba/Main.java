@@ -1,5 +1,7 @@
 package me.dannytatom.xibalba;
 
+import aurelienribon.tweenengine.Tween;
+import aurelienribon.tweenengine.TweenManager;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -10,6 +12,7 @@ import com.badlogic.gdx.graphics.Cursor;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.Vector2;
@@ -17,6 +20,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import me.dannytatom.xibalba.screens.MainMenuScreen;
 import me.dannytatom.xibalba.utils.CameraShake;
+import me.dannytatom.xibalba.utils.SpriteAccessor;
 
 public class Main extends Game {
   public static final int SPRITE_WIDTH = 16;
@@ -25,6 +29,7 @@ public class Main extends Game {
   public static TextureAtlas atlas;
   public static Skin skin;
   public static Screen playScreen;
+  public static TweenManager tweenManager;
   public static CameraShake cameraShake;
 
   /**
@@ -80,6 +85,10 @@ public class Main extends Game {
 
     // Map background colors
     Colors.put("CAVE_BACKGROUND", parseColor("293033"));
+
+    // Tween manager
+    tweenManager = new TweenManager();
+    Tween.registerAccessor(Sprite.class, new SpriteAccessor());
 
     // Screen shaker!
     cameraShake = new CameraShake();

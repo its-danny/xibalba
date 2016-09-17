@@ -1,5 +1,6 @@
 package me.dannytatom.xibalba.helpers;
 
+import aurelienribon.tweenengine.Tween;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
@@ -19,6 +20,7 @@ import me.dannytatom.xibalba.components.actions.RangeComponent;
 import me.dannytatom.xibalba.components.statuses.BleedingComponent;
 import me.dannytatom.xibalba.components.statuses.CrippledComponent;
 import me.dannytatom.xibalba.utils.ComponentMappers;
+import me.dannytatom.xibalba.utils.SpriteAccessor;
 import me.dannytatom.xibalba.world.WorldManager;
 
 import java.util.Map;
@@ -190,7 +192,12 @@ public class CombatHelpers {
     AttributesComponent starterAttributes = ComponentMappers.attributes.get(starter);
 
     if (hit >= 4) {
-      Main.cameraShake.shake(.4f, .1f);
+      if (ComponentMappers.player.has(target)) {
+        Main.cameraShake.shake(.4f, .1f);
+      }
+
+      VisualComponent targetVisual = ComponentMappers.visual.get(target);
+      Tween.to(targetVisual.sprite, SpriteAccessor.ALPHA, .1f).target(.5f).repeatYoyo(1, 0f).start(Main.tweenManager);
 
       int strengthRoll = MathUtils.random(1, starterAttributes.strength);
       int weaponRoll = 0;
@@ -258,7 +265,12 @@ public class CombatHelpers {
     AttributesComponent starterAttributes = ComponentMappers.attributes.get(starter);
 
     if (hit >= 4) {
-      Main.cameraShake.shake(.4f, .1f);
+      if (ComponentMappers.player.has(target)) {
+        Main.cameraShake.shake(.4f, .1f);
+      }
+
+      VisualComponent targetVisual = ComponentMappers.visual.get(target);
+      Tween.to(targetVisual.sprite, SpriteAccessor.ALPHA, .1f).target(.5f).repeatYoyo(1, 0f).start(Main.tweenManager);
 
       int weaponRoll;
       int critRoll = 0;
