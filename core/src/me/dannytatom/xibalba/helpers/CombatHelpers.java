@@ -196,6 +196,27 @@ public class CombatHelpers {
         Main.cameraShake.shake(.4f, .1f);
       }
 
+      if (weapon == null) {
+        Main.soundManager.unarmed();
+      } else {
+        String skill = ComponentMappers.item.get(weapon).skill;
+
+        switch (skill) {
+          case "slashing":
+            Main.soundManager.slashing();
+            break;
+          case "piercing":
+            Main.soundManager.piercing();
+            break;
+          case "bashing":
+            Main.soundManager.bashing();
+            break;
+          default:
+            Main.soundManager.unarmed();
+            break;
+        }
+      }
+
       VisualComponent targetVisual = ComponentMappers.visual.get(target);
       Tween.to(targetVisual.sprite, SpriteAccessor.ALPHA, .1f).target(.5f).repeatYoyo(1, 0f).start(Main.tweenManager);
 

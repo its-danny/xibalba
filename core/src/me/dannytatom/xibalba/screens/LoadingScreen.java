@@ -2,6 +2,7 @@ package me.dannytatom.xibalba.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Colors;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -13,6 +14,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.utils.JsonToLevel;
+import me.dannytatom.xibalba.utils.SoundManager;
 import me.dannytatom.xibalba.world.Map;
 import me.dannytatom.xibalba.world.WorldManager;
 import me.dannytatom.xibalba.world.generators.CaveGenerator;
@@ -61,6 +63,7 @@ public class LoadingScreen implements Screen {
 
     if (Main.assets.update()) {
       Main.atlas = Main.assets.get("sprites/main.atlas");
+      Main.soundManager = new SoundManager();
 
       if (!generating) {
         generateWorld();
@@ -76,6 +79,17 @@ public class LoadingScreen implements Screen {
 
   private void loadAssets() {
     Main.assets.load("sprites/main.atlas", TextureAtlas.class);
+
+    Main.assets.load("sounds/Stab_Punch_Hack_12.wav", Sound.class);
+    Main.assets.load("sounds/Stab_Punch_Hack_13.wav", Sound.class);
+    Main.assets.load("sounds/Stab_Punch_Hack_14.wav", Sound.class);
+    Main.assets.load("sounds/Stab_Punch_Hack_15.wav", Sound.class);
+    Main.assets.load("sounds/Stab_Punch_Hack_17.wav", Sound.class);
+    Main.assets.load("sounds/Stab_Punch_Hack_22.wav", Sound.class);
+    Main.assets.load("sounds/Stab_Punch_Hack_09.wav", Sound.class);
+    Main.assets.load("sounds/Stab_Punch_Hack_18.wav", Sound.class);
+    Main.assets.load("sounds/Stab_Punch_Hack_19.wav", Sound.class);
+    Main.assets.load("sounds/Stab_Punch_Hack_63.wav", Sound.class);
   }
 
   private void generateWorld() {

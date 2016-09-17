@@ -20,6 +20,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import me.dannytatom.xibalba.screens.MainMenuScreen;
 import me.dannytatom.xibalba.utils.CameraShake;
+import me.dannytatom.xibalba.utils.SoundManager;
 import me.dannytatom.xibalba.utils.SpriteAccessor;
 
 public class Main extends Game {
@@ -30,6 +31,7 @@ public class Main extends Game {
   public static Skin skin;
   public static Screen playScreen;
   public static TweenManager tweenManager;
+  public static SoundManager soundManager;
   public static CameraShake cameraShake;
 
   /**
