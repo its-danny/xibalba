@@ -190,6 +190,8 @@ public class CombatHelpers {
     AttributesComponent starterAttributes = ComponentMappers.attributes.get(starter);
 
     if (hit >= 4) {
+      Main.cameraShake.shake(.4f, .1f);
+
       int strengthRoll = MathUtils.random(1, starterAttributes.strength);
       int weaponRoll = 0;
       int critRoll = 0;
@@ -256,6 +258,8 @@ public class CombatHelpers {
     AttributesComponent starterAttributes = ComponentMappers.attributes.get(starter);
 
     if (hit >= 4) {
+      Main.cameraShake.shake(.4f, .1f);
+
       int weaponRoll;
       int critRoll = 0;
 

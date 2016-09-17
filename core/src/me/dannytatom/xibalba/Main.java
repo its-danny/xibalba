@@ -16,6 +16,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import me.dannytatom.xibalba.screens.MainMenuScreen;
+import me.dannytatom.xibalba.utils.CameraShake;
 
 public class Main extends Game {
   public static final int SPRITE_WIDTH = 16;
@@ -24,6 +25,7 @@ public class Main extends Game {
   public static TextureAtlas atlas;
   public static Skin skin;
   public static Screen playScreen;
+  public static CameraShake cameraShake;
 
   /**
    * From mouse position to tile position.
@@ -78,6 +80,9 @@ public class Main extends Game {
 
     // Map background colors
     Colors.put("CAVE_BACKGROUND", parseColor("293033"));
+
+    // Screen shaker!
+    cameraShake = new CameraShake();
 
     // Start the main menu
     setScreen(new MainMenuScreen(this));

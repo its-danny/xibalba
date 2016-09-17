@@ -58,15 +58,20 @@ public class WorldRenderer {
   /**
    * Render shit.
    */
-  public void render() {
+  public void render(float delta) {
     // Get playerDetails position
     PositionComponent playerPosition = ComponentMappers.position.get(WorldManager.player);
 
-    // Set worldCamera to follow playerDetails
-    worldCamera.position.set(
-        playerPosition.pos.x * Main.SPRITE_WIDTH,
-        playerPosition.pos.y * Main.SPRITE_HEIGHT, 0
-    );
+    // Handle screen shake
+    if (Main.cameraShake.time > 0) {
+      Main.cameraShake.update(delta, worldCamera, playerPosition.pos);
+    } else {
+      // Set worldCamera to follow playerDetails
+      worldCamera.position.set(
+          playerPosition.pos.x * Main.SPRITE_WIDTH,
+          playerPosition.pos.y * Main.SPRITE_HEIGHT, 0
+      );
+    }
 
     worldCamera.update();
 
