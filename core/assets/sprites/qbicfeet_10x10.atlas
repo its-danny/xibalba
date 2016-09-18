@@ -1,0 +1,166 @@
+qbicfeet_10x10.png
+size: 160, 160
+format: RGBA8888
+filter: Linear,Nearest
+repeat: none
+blank
+  rotate: false
+  xy: 0, 0
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: -1
+player
+  rotate: false
+  xy: 0, 40
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: -1
+floor-1
+  rotate: false
+  xy: 90, 150
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: -1
+floor-2
+  rotate: false
+  xy: 140, 20
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: -1
+floor-3
+  rotate: false
+  xy: 120, 20
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: -1
+wall
+  rotate: false
+  xy: 110, 130
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: -1
+stone
+  rotate: false
+  xy: 150, 140
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: -1
+bat
+  rotate: false
+  xy: 130, 10
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: -1
+jaguar
+  rotate: false
+  xy: 60, 100
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: -1
+monkey
+  rotate: false
+  xy: 130, 60
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: -1
+spider
+  rotate: false
+  xy: 100, 20
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: -1
+arrow
+  rotate: false
+  xy: 80, 10
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: -1
+bow
+  rotate: false
+  xy: 140, 30
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: -1
+chippedFlint
+  rotate: false
+  xy: 70, 20
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: -1
+macuahuitl
+  rotate: false
+  xy: 150, 20
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: -1
+shield
+  rotate: false
+  xy: 90, 20
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: -1
+spear
+  rotate: false
+  xy: 150, 20
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: -1
+plant
+  rotate: false
+  xy: 50, 0
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: -1
+exit
+  rotate: false
+  xy: 150, 100
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: -1
+entrance
+  rotate: false
+  xy: 140, 100
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: -1
+remains
+  rotate: false
+  xy: 100, 90
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: -1
+target
+  rotate: false
+  xy: 150, 150
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: -1
+target-path
+  rotate: false
+  xy: 90, 150
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: -1

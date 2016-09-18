@@ -7,7 +7,7 @@ description: A spear is a pole weapon consisting of a shaft, usually of wood, wi
   fastened to the shaft, such as flint, obsidian, or chert.
 
 sprites:
-  - Level/Cave/Item/Weapon-Spear-1
+  - spear
 
 skill: piercing
 location: right hand

@@ -413,7 +413,7 @@ public class CombatHelpers {
       remains.add(new DecorationComponent(false));
       remains.add(new PositionComponent(position.pos));
       remains.add(new VisualComponent(
-          Main.atlas.createSprite("Level/Cave/Environment/Object/Remains-1"), position.pos
+          Main.terminalAtlas.createSprite("remains"), position.pos
       ));
 
       WorldManager.world.addEntity(remains);

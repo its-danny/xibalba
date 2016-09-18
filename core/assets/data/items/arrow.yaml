@@ -4,7 +4,7 @@ name: Wooden Arrow
 description: A shafted projectile that is shot with a bow.
 
 sprites:
-  - Level/Cave/Item/Weapon-Arrow-1
+  - arrow
 
 attributes:
   throwDamage: 4

@@ -130,7 +130,7 @@ public class World {
         ArrayList<Entity> entities = WorldManager.entityHelpers.getEntitiesAt(new Vector2(x, y));
 
         for (Entity entity : entities) {
-          ComponentMappers.visual.get(entity).sprite.setAlpha(alpha);
+           ComponentMappers.visual.get(entity).sprite.setAlpha(alpha);
         }
       }
     }

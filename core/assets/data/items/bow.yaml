@@ -5,7 +5,7 @@ description: The bow and arrow is a projectile weapon system (a bow with arrows)
   predates recorded history and is common to most cultures.
 
 sprites:
-  - Level/Cave/Item/Weapon-Bow-1
+  - bow
 
 twoHanded: true
 skill: archery

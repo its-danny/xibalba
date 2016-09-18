@@ -24,10 +24,11 @@ import me.dannytatom.xibalba.utils.SoundManager;
 import me.dannytatom.xibalba.utils.SpriteAccessor;
 
 public class Main extends Game {
-  public static final int SPRITE_WIDTH = 16;
-  public static final int SPRITE_HEIGHT = 16;
+  public static final int SPRITE_WIDTH = 10;
+  public static final int SPRITE_HEIGHT = 10;
   public static AssetManager assets;
   public static TextureAtlas atlas;
+  public static TextureAtlas terminalAtlas;
   public static Skin skin;
   public static Screen playScreen;
   public static TweenManager tweenManager;
@@ -84,6 +85,16 @@ public class Main extends Game {
     Colors.put("RED", parseColor("D67474"));
     Colors.put("YELLOW", parseColor("E0DFB1"));
     Colors.put("GREEN", parseColor("67CF8B"));
+
+    // Environment colors
+    Colors.put("caveFloor", parseColor("332F3C"));
+    Colors.put("caveWall", parseColor("4C4A51"));
+
+    // Entity colors
+    Colors.put("bat", parseColor("332F3C"));
+    Colors.put("jaguar", parseColor("D0852B"));
+    Colors.put("spiderMonkey", parseColor("6B3B2A"));
+    Colors.put("tarantula", parseColor("EC950E"));
 
     // Map background colors
     Colors.put("CAVE_BACKGROUND", parseColor("293033"));

@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Colors;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
@@ -58,18 +59,12 @@ public class EntityHelpers {
    * @param player The player
    */
   public void setupPlayer(Entity player) {
-    Array<String> sprites = new Array<>();
-    sprites.addAll("Level/Cave/Character/Ikal-1");
-    sprites.addAll("Level/Cave/Character/Iktan-1");
-    sprites.addAll("Level/Cave/Character/Itzel-1");
-    sprites.addAll("Level/Cave/Character/Yatzil-1");
-
     Vector2 position = WorldManager.mapHelpers.getEntrancePosition();
 
     player.add(new PlayerComponent());
     player.add(new PositionComponent(position));
     player.add(new VisualComponent(
-        Main.atlas.createSprite(sprites.random()), position
+        Main.terminalAtlas.createSprite("player"), position
     ));
     player.add(new InventoryComponent());
     player.add(new EquipmentComponent());
@@ -107,7 +102,7 @@ public class EntityHelpers {
     entity.add(new BodyComponent(data.bodyParts));
 
     entity.add(new VisualComponent(
-        Main.atlas.createSprite(data.visual.get("spritePath")), position)
+        Main.terminalAtlas.createSprite(data.visual.get("spritePath")), position, Colors.get(name))
     );
 
     entity.add(new AttributesComponent(
@@ -148,7 +143,7 @@ public class EntityHelpers {
     entity.add(new ItemComponent(data));
 
     entity.add(new VisualComponent(
-        Main.atlas.createSprite(
+        Main.terminalAtlas.createSprite(
             data.sprites.get(MathUtils.random(0, data.sprites.size() - 1))
         ), position
     ));
@@ -164,19 +159,13 @@ public class EntityHelpers {
    * @return The decoration entity
    */
   public Entity createRandomDecoration(Vector2 position) {
-    String type = decorationTypes.random();
     Entity entity = new Entity();
 
-    if (Objects.equals(type, "Vase-1")) {
-      entity.add(new DecorationComponent(true));
-    } else {
-      entity.add(new DecorationComponent(false));
-    }
-
+    entity.add(new DecorationComponent(true));
     entity.add(new PositionComponent(position));
     entity.add(
         new VisualComponent(
-            Main.atlas.createSprite("Level/Cave/Environment/Object/" + type), position
+            Main.terminalAtlas.createSprite("stone"), position
         )
     );
 
@@ -209,7 +198,7 @@ public class EntityHelpers {
     entity.add(new PositionComponent(position));
 
     entity.add(new VisualComponent(
-        Main.atlas.createSprite("Level/Cave/Environment/Interact/Ladder-Up-1"), position
+        Main.terminalAtlas.createSprite("entrance"), position
     ));
 
     return entity;
@@ -241,7 +230,7 @@ public class EntityHelpers {
     entity.add(new PositionComponent(position));
 
     entity.add(new VisualComponent(
-        Main.atlas.createSprite("Level/Cave/Environment/Interact/Ladder-Down-1"), position
+        Main.terminalAtlas.createSprite("exit"), position
     ));
 
     return entity;

@@ -4,7 +4,7 @@ name: Health Plant
 description: It heals you some
 
 sprites:
-  - Level/Cave/FX/Heal-1
+  - plant
 
 actions:
   - consume

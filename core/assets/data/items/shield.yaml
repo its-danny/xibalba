@@ -6,7 +6,7 @@ description: A shield is a type of personal armor, meant to intercept attacks, e
   similar weapon to the side of the shield-bearer.
 
 sprites:
-  - Level/Cave/Item/Shield-1
+  - shield
 
 skill: bashing
 location: left hand

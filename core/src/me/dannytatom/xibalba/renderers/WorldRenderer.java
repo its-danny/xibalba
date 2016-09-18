@@ -33,7 +33,6 @@ public class WorldRenderer {
 
   // These get reused a ton
   private final Sprite target;
-  private final Sprite targetThrow;
   private final Sprite targetPath;
 
   /**
@@ -50,9 +49,8 @@ public class WorldRenderer {
 
     playerDetails = ComponentMappers.player.get(WorldManager.player);
 
-    target = Main.atlas.createSprite("Level/Cave/UI/Target-1");
-    targetThrow = Main.atlas.createSprite("Level/Cave/UI/Target-Throw-1");
-    targetPath = Main.atlas.createSprite("Level/Cave/UI/Target-Path-1");
+    target = Main.terminalAtlas.createSprite("target");
+    targetPath = Main.terminalAtlas.createSprite("target-path");
   }
 
   /**
@@ -99,19 +97,11 @@ public class WorldRenderer {
       for (int i = 0; i < playerDetails.path.size(); i++) {
         boolean isLast = i == (playerDetails.path.size() - 1);
 
-        Sprite targetSprite;
-
-        if (WorldManager.state == WorldManager.State.TARGETING) {
-          targetSprite = targetThrow;
-        } else {
-          targetSprite = target;
-        }
-
         GridCell cell = playerDetails.path.get(i);
 
         batch.setColor(1f, 1f, 1f, isLast ? 1f : 0.5f);
         batch.draw(
-            isLast ? targetSprite : targetPath,
+            isLast ? target : targetPath,
             cell.x * Main.SPRITE_WIDTH, cell.y * Main.SPRITE_HEIGHT
         );
         batch.setColor(1f, 1f, 1f, 1f);

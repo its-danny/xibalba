@@ -6,7 +6,7 @@ description: A macuahuitl is a wooden sword with obsidian blades. Its sides are 
   edge far sharper than even high quality steel razor blades.
 
 sprites:
-  - Level/Cave/Item/Weapon-Macuahuitl-1
+  - macuahuitl
 
 skill: slashing
 location: hand

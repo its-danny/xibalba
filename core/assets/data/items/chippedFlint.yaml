@@ -4,7 +4,7 @@ name: Chipped Flint
 description: A stone tool also used as a weapon in close range combat.
 
 sprites:
-  - Level/Cave/Item/Weapon-ChippedFlint-1
+  - chippedFlint
 
 skill: piercing
 location: right hand

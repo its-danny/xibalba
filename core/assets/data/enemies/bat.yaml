@@ -4,7 +4,7 @@ description: Bats are mammals of the order Chiroptera whose forelimbs form webbe
   making them the only mammals naturally capable of true and sustained flight.
 
 visual:
-  spritePath: Level/Cave/Enemy/Bat-1
+  spritePath: bat
 
 attributes:
   speed: 100

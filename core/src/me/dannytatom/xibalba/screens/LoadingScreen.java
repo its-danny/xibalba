@@ -63,6 +63,7 @@ public class LoadingScreen implements Screen {
 
     if (Main.assets.update()) {
       Main.atlas = Main.assets.get("sprites/main.atlas");
+      Main.terminalAtlas = Main.assets.get("sprites/qbicfeet_10x10.atlas");
       Main.soundManager = new SoundManager();
 
       if (!generating) {
@@ -79,6 +80,7 @@ public class LoadingScreen implements Screen {
 
   private void loadAssets() {
     Main.assets.load("sprites/main.atlas", TextureAtlas.class);
+    Main.assets.load("sprites/qbicfeet_10x10.atlas", TextureAtlas.class);
 
     Main.assets.load("sounds/Stab_Punch_Hack_12.wav", Sound.class);
     Main.assets.load("sounds/Stab_Punch_Hack_13.wav", Sound.class);

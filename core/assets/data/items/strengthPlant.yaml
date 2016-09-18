@@ -4,7 +4,7 @@ name: Strength Plant
 description: It ups yo strength you some
 
 sprites:
-  - Level/Cave/FX/Bolt-1
+  - plant
 
 actions:
   - consume
