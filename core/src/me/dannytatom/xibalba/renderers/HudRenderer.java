@@ -179,6 +179,9 @@ public class HudRenderer {
             + ", " + (int) playerPosition.pos.x + ":" + (int) playerPosition.pos.y,
             Main.skin)
     );
+    areaDetails.addActor(
+        new Label("[DARK_GRAY]v0.1.0 FPS " + Gdx.graphics.getFramesPerSecond(), Main.skin)
+    );
     areaDetails.addActor(new Label("", Main.skin));
 
     // Player area

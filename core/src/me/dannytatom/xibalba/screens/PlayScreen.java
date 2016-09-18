@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Colors;
-import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -19,7 +18,6 @@ import me.dannytatom.xibalba.world.WorldManager;
 class PlayScreen implements Screen {
   private final Main main;
 
-  private final FPSLogger fps;
   private final WorldRenderer worldRenderer;
   private final HudRenderer hudRenderer;
   private final PlayerInput playerInput;
@@ -40,7 +38,6 @@ class PlayScreen implements Screen {
 
     autoTimer = 0;
     keyHoldTimer = 0;
-    fps = new FPSLogger();
     batch = new SpriteBatch();
 
     // World setup
@@ -76,8 +73,6 @@ class PlayScreen implements Screen {
     );
 
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-    fps.log();
 
     autoTimer += delta;
     keyHoldTimer += delta;
