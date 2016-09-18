@@ -25,17 +25,17 @@ public class MapHelpers {
   /**
    * Finding out if a cell exists within the world.
    *
-   * @param x x of the position we're checking
-   * @param y y of the position we're checking
+   * @param cellX x of the position we're checking
+   * @param cellY y of the position we're checking
    *
    * @return If it does indeed exist
    */
-  public boolean cellExists(int x, int y) {
+  public boolean cellExists(int cellX, int cellY) {
     MapCell[][] map = WorldManager.world.getCurrentMap().getCellMap();
 
-    return x > 0 && x < map.length
-        && y > 0 && y < map[0].length
-        && getCell(x, y) != null;
+    return cellX > 0 && cellX < map.length
+        && cellY > 0 && cellY < map[0].length
+        && getCell(cellX, cellY) != null;
   }
 
   public boolean cellExists(Vector2 position) {

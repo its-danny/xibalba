@@ -18,9 +18,8 @@ import me.dannytatom.xibalba.world.WorldManager;
 
 public class PlayerInput implements InputProcessor {
   private final OrthographicCamera worldCamera;
-
-  private boolean holdingShift = false;
   public int holdingKey = -1;
+  private boolean holdingShift = false;
 
   public PlayerInput(OrthographicCamera worldCamera) {
     this.worldCamera = worldCamera;

@@ -6,9 +6,12 @@ import com.badlogic.gdx.utils.Array;
 import me.dannytatom.xibalba.Main;
 
 public class SoundManager {
-  private Array<Sound> unarmed;
-  private Array<Sound> piercing;
+  private final Array<Sound> unarmed;
+  private final Array<Sound> piercing;
 
+  /**
+   * Handles sound effects, duh.
+   */
   public SoundManager() {
     unarmed = new Array<>();
     unarmed.add(Main.assets.get("sounds/Stab_Punch_Hack_12.wav"));

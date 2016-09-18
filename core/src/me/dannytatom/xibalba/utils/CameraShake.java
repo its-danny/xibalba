@@ -13,6 +13,9 @@ public class CameraShake {
   private float power;
   private float currentPower;
 
+  /**
+   * https://carelesslabs.wordpress.com/2014/05/08/simple-screen-shake/comment-page-1/
+   */
   public CameraShake() {
     time = 0;
     currentTime = 0;
@@ -20,6 +23,12 @@ public class CameraShake {
     currentPower = 0;
   }
 
+  /**
+   * Start shakin', boys.
+   *
+   * @param power Force of the shake
+   * @param time  How long it should last
+   */
   public void shake(float power, float time) {
     random = new Random();
 
@@ -28,13 +37,20 @@ public class CameraShake {
     this.currentTime = 0;
   }
 
+  /**
+   * Called each frame to handle the shaking.
+   *
+   * @param delta    Time since last frame
+   * @param camera   Camera to shake
+   * @param position Position to snap back to afterwards
+   */
   public void update(float delta, Camera camera, Vector2 position) {
     if (currentTime <= time) {
       currentPower = power * ((time - currentTime) / time);
-      float x = (random.nextFloat() - 0.5f) * 2 * currentPower;
-      float y = (random.nextFloat() - 0.5f) * 2 * currentPower;
+      float posX = (random.nextFloat() - 0.5f) * 2 * currentPower;
+      float posY = (random.nextFloat() - 0.5f) * 2 * currentPower;
 
-      camera.translate(-x, -y, 0);
+      camera.translate(-posX, -posY, 0);
 
       currentTime += delta;
     } else {

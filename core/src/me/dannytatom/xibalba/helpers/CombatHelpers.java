@@ -434,7 +434,8 @@ public class CombatHelpers {
 
     PositionComponent starterPosition = ComponentMappers.position.get(starter);
     PositionComponent targetPosition = ComponentMappers.position.get(target);
-    float bumpX, bumpY;
+    float bumpX;
+    float bumpY;
 
     if (starterPosition.pos.x < targetPosition.pos.x) {
       bumpX = targetVisual.sprite.getX() + (Main.SPRITE_WIDTH / 4);

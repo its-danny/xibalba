@@ -7,8 +7,8 @@ import org.xguzm.pathfinding.grid.GridCell;
 import java.util.List;
 
 public class BrainComponent implements Component {
+  public final Array<Personality> personalities;
   public State state;
-  public Array<Personality> personalities;
   public List<GridCell> path = null;
 
   public BrainComponent(Array<Personality> personalities) {
