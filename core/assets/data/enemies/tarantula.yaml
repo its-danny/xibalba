@@ -6,7 +6,8 @@ description: Like most New World tarantulas, they kick urticating hairs from the
   allergies may intensify with any bite.
 
 visual:
-  spritePath: spider
+  character: "1002"
+  color: EC950E
 
 attributes:
   speed: 120

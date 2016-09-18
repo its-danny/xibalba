@@ -2,7 +2,6 @@ package me.dannytatom.xibalba.world;
 
 import com.badlogic.gdx.graphics.Colors;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.math.MathUtils;
 import me.dannytatom.xibalba.Main;
 
 public class Map {
@@ -30,37 +29,34 @@ public class Map {
   public void paintCave() {
     map = new MapCell[width][height];
 
-    paint();
-  }
-
-  public MapCell[][] getCellMap() {
-    return map;
-  }
-
-  // Determine floors & walls
-  private void paint() {
     for (int x = 0; x < geometry.length; x++) {
       for (int y = 0; y < geometry[x].length; y++) {
         if (geometry[x][y]) {
-          Sprite floor = Main.terminalAtlas.createSprite("floor-" + MathUtils.random(1, 3));
+          Sprite floor = Main.asciiAtlas.createSprite("0011");
           floor.setColor(Colors.get("caveFloor"));
           map[x][y] = new MapCell(floor, false, false, "a cave floor");
         } else {
           int neighbours = getGroundNeighbours(x, y);
 
           if (neighbours > 0) {
-            Sprite wall = Main.terminalAtlas.createSprite("wall");
+            Sprite wall = Main.asciiAtlas.createSprite("1113");
             wall.setColor(Colors.get("caveWall"));
             map[x][y] = new MapCell(wall, true, false, "a cave wall");
           } else {
-            Sprite blank = Main.terminalAtlas.createSprite("blank");
-            map[x][y] = new MapCell(blank, false, true, "nothing");
+            Sprite nothing = Main.asciiAtlas.createSprite("0000");
+            map[x][y] = new MapCell(nothing, false, true, "nothing");
           }
         }
 
-        map[x][y].sprite.setPosition(x * Main.SPRITE_WIDTH, y * Main.SPRITE_HEIGHT);
+        if (map[x][y].sprite != null) {
+          map[x][y].sprite.setPosition(x * Main.SPRITE_WIDTH, y * Main.SPRITE_HEIGHT);
+        }
       }
     }
+  }
+
+  public MapCell[][] getCellMap() {
+    return map;
   }
 
   private int getGroundNeighbours(int cellX, int cellY) {

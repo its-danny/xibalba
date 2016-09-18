@@ -6,6 +6,7 @@ import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import me.dannytatom.xibalba.Main;
@@ -49,8 +50,8 @@ public class WorldRenderer {
 
     playerDetails = ComponentMappers.player.get(WorldManager.player);
 
-    target = Main.terminalAtlas.createSprite("target");
-    targetPath = Main.terminalAtlas.createSprite("target-path");
+    target = Main.asciiAtlas.createSprite("0915");
+    targetPath = Main.asciiAtlas.createSprite("0915");
   }
 
   /**
@@ -88,7 +89,10 @@ public class WorldRenderer {
 
         if (!cell.hidden) {
           cell.forgotten = map.lightMap[x][y] <= 0;
-          cell.sprite.draw(batch);
+
+          if (WorldManager.entityHelpers.getEntitiesAt(new Vector2(x, y)).size() == 0) {
+            cell.sprite.draw(batch);
+          }
         }
       }
     }

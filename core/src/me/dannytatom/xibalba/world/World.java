@@ -124,13 +124,14 @@ public class World {
     for (int x = 0; x < map.lightMap.length; x++) {
       for (int y = 0; y < map.lightMap[0].length; y++) {
         MapCell cell = WorldManager.mapHelpers.getCell(x, y);
+
         float alpha = map.lightMap[x][y] <= 0.15f ? 0.15f : map.lightMap[x][y];
         cell.sprite.setAlpha(alpha);
 
         ArrayList<Entity> entities = WorldManager.entityHelpers.getEntitiesAt(new Vector2(x, y));
 
         for (Entity entity : entities) {
-           ComponentMappers.visual.get(entity).sprite.setAlpha(alpha);
+          ComponentMappers.visual.get(entity).sprite.setAlpha(alpha);
         }
       }
     }

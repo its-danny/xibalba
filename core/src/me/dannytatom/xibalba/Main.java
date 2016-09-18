@@ -8,9 +8,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Colors;
-import com.badlogic.gdx.graphics.Cursor;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -27,8 +25,8 @@ public class Main extends Game {
   public static final int SPRITE_WIDTH = 10;
   public static final int SPRITE_HEIGHT = 10;
   public static AssetManager assets;
-  public static TextureAtlas atlas;
-  public static TextureAtlas terminalAtlas;
+  public static TextureAtlas spriteAtlas;
+  public static TextureAtlas asciiAtlas;
   public static Skin skin;
   public static Screen playScreen;
   public static TweenManager tweenManager;
@@ -53,6 +51,26 @@ public class Main extends Game {
   }
 
   /**
+   * Hex to RGBA.
+   *
+   * @param hex The color to parse
+   *
+   * @return A new Color object
+   */
+  public static Color parseColor(String hex) {
+    String s1 = hex.substring(0, 2);
+    int v1 = Integer.parseInt(s1, 16);
+    float f1 = (float) v1 / 255f;
+    String s2 = hex.substring(2, 4);
+    int v2 = Integer.parseInt(s2, 16);
+    float f2 = (float) v2 / 255f;
+    String s3 = hex.substring(4, 6);
+    int v3 = Integer.parseInt(s3, 16);
+    float f3 = (float) v3 / 255f;
+    return new Color(f1, f2, f3, 1);
+  }
+
+  /**
    * Setup & load the main menu.
    */
   public void create() {
@@ -73,11 +91,6 @@ public class Main extends Game {
     skin.load(Gdx.files.internal("ui/uiskin.json"));
     skin.getFont("default-font").getData().markupEnabled = true;
 
-    // Set cursor image
-    Pixmap pm = new Pixmap(Gdx.files.internal("ui/cursor.png"));
-    Cursor cursor = Gdx.graphics.newCursor(pm, 0, 0);
-    Gdx.graphics.setCursor(cursor);
-
     // Setup text colors
     Colors.put("LIGHT_GRAY", parseColor("c2c2c2"));
     Colors.put("DARK_GRAY", parseColor("666666"));
@@ -87,17 +100,16 @@ public class Main extends Game {
     Colors.put("GREEN", parseColor("67CF8B"));
 
     // Environment colors
-    Colors.put("caveFloor", parseColor("332F3C"));
-    Colors.put("caveWall", parseColor("4C4A51"));
+    Colors.put("caveFloor", Colors.get("DARK_GRAY"));
+    Colors.put("caveWall", Colors.get("DARK_GRAY"));
 
-    // Entity colors
-    Colors.put("bat", parseColor("332F3C"));
-    Colors.put("jaguar", parseColor("D0852B"));
-    Colors.put("spiderMonkey", parseColor("6B3B2A"));
-    Colors.put("tarantula", parseColor("EC950E"));
+    // Decoration colors
+    Colors.put("remains", Colors.get("RED"));
+    Colors.put("stone", Colors.get("LIGHT_GRAY"));
 
-    // Map background colors
-    Colors.put("CAVE_BACKGROUND", parseColor("293033"));
+    // Background colors
+    Colors.put("screenBackground", parseColor("293033"));
+    Colors.put("caveBackground", parseColor("293033"));
 
     // Tween manager
     tweenManager = new TweenManager();
@@ -108,25 +120,5 @@ public class Main extends Game {
 
     // Start the main menu
     setScreen(new MainMenuScreen(this));
-  }
-
-  /**
-   * Hex to RGBA.
-   *
-   * @param hex The color to parse
-   *
-   * @return A new Color object
-   */
-  private Color parseColor(String hex) {
-    String s1 = hex.substring(0, 2);
-    int v1 = Integer.parseInt(s1, 16);
-    float f1 = (float) v1 / 255f;
-    String s2 = hex.substring(2, 4);
-    int v2 = Integer.parseInt(s2, 16);
-    float f2 = (float) v2 / 255f;
-    String s3 = hex.substring(4, 6);
-    int v3 = Integer.parseInt(s3, 16);
-    float f3 = (float) v3 / 255f;
-    return new Color(f1, f2, f3, 1);
   }
 }

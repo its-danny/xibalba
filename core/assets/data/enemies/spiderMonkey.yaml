@@ -5,7 +5,8 @@ description: Spider monkeys of the genus Ateles are New World monkeys in the sub
   of Central and South America, from southern Mexico to Brazil.
 
 visual:
-  spritePath: monkey
+  character: "1306"
+  color: 947D6D
 
 attributes:
   speed: 80

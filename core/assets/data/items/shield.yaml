@@ -5,8 +5,9 @@ description: A shield is a type of personal armor, meant to intercept attacks, e
   by stopping projectiles such as arrows or redirecting a hit from a macuahuitl or
   similar weapon to the side of the shield-bearer.
 
-sprites:
-  - shield
+visual:
+  character: "1305"
+  color: BD977D
 
 skill: bashing
 location: left hand

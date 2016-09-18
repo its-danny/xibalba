@@ -3,8 +3,9 @@ type: arrow
 name: Wooden Arrow
 description: A shafted projectile that is shot with a bow.
 
-sprites:
-  - arrow
+visual:
+  character: "1302"
+  color: BD977D
 
 attributes:
   throwDamage: 4

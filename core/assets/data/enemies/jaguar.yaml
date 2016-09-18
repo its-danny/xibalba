@@ -5,7 +5,8 @@ description: The jaguar is a big cat, a feline in the Panthera genus, and is the
   feline after the tiger and the lion, and the largest in the Americas.
 
 visual:
-  spritePath: jaguar
+  character: "1006"
+  color: D0852B
 
 attributes:
   speed: 120

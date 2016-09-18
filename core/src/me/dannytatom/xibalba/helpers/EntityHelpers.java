@@ -37,20 +37,11 @@ import java.util.HashMap;
 import java.util.Objects;
 
 public class EntityHelpers {
-  private final Array<String> decorationTypes;
-
   /**
    * EntityHelpers constructor, clearly.
    */
   public EntityHelpers() {
-    decorationTypes = new Array<>();
-    decorationTypes.add("Mushroom-1");
-    decorationTypes.add("Mushroom-2");
-    decorationTypes.add("Rock-1");
-    decorationTypes.add("Rock-2");
-    decorationTypes.add("Rock-3");
-    decorationTypes.add("Rock-4");
-    decorationTypes.add("Vase-1");
+
   }
 
   /**
@@ -64,7 +55,7 @@ public class EntityHelpers {
     player.add(new PlayerComponent());
     player.add(new PositionComponent(position));
     player.add(new VisualComponent(
-        Main.terminalAtlas.createSprite("player"), position
+        Main.asciiAtlas.createSprite("0100"), position
     ));
     player.add(new InventoryComponent());
     player.add(new EquipmentComponent());
@@ -102,7 +93,9 @@ public class EntityHelpers {
     entity.add(new BodyComponent(data.bodyParts));
 
     entity.add(new VisualComponent(
-        Main.terminalAtlas.createSprite(data.visual.get("spritePath")), position, Colors.get(name))
+            Main.asciiAtlas.createSprite(
+                data.visual.get("character")), position, Main.parseColor(data.visual.get("color"))
+        )
     );
 
     entity.add(new AttributesComponent(
@@ -143,9 +136,8 @@ public class EntityHelpers {
     entity.add(new ItemComponent(data));
 
     entity.add(new VisualComponent(
-        Main.terminalAtlas.createSprite(
-            data.sprites.get(MathUtils.random(0, data.sprites.size() - 1))
-        ), position
+        Main.asciiAtlas.createSprite(data.visual.get("character")),
+        position, Main.parseColor(data.visual.get("color"))
     ));
 
     return entity;
@@ -165,7 +157,7 @@ public class EntityHelpers {
     entity.add(new PositionComponent(position));
     entity.add(
         new VisualComponent(
-            Main.terminalAtlas.createSprite("stone"), position
+            Main.asciiAtlas.createSprite("1214"), position, Colors.get("stone")
         )
     );
 
@@ -198,7 +190,7 @@ public class EntityHelpers {
     entity.add(new PositionComponent(position));
 
     entity.add(new VisualComponent(
-        Main.terminalAtlas.createSprite("entrance"), position
+        Main.asciiAtlas.createSprite("1203"), position
     ));
 
     return entity;
@@ -230,7 +222,7 @@ public class EntityHelpers {
     entity.add(new PositionComponent(position));
 
     entity.add(new VisualComponent(
-        Main.terminalAtlas.createSprite("exit"), position
+        Main.asciiAtlas.createSprite("1403"), position
     ));
 
     return entity;

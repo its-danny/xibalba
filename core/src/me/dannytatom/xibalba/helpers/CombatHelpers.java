@@ -3,6 +3,7 @@ package me.dannytatom.xibalba.helpers;
 import aurelienribon.tweenengine.Tween;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Colors;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import me.dannytatom.xibalba.Main;
@@ -413,7 +414,7 @@ public class CombatHelpers {
       remains.add(new DecorationComponent(false));
       remains.add(new PositionComponent(position.pos));
       remains.add(new VisualComponent(
-          Main.terminalAtlas.createSprite("remains"), position.pos
+          Main.asciiAtlas.createSprite("0109"), position.pos, Colors.get("remains")
       ));
 
       WorldManager.world.addEntity(remains);

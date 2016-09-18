@@ -3,8 +3,9 @@ type: consumable
 name: Health Plant
 description: It heals you some
 
-sprites:
-  - plant
+visual:
+  character: "0500"
+  color: 67CF8B
 
 actions:
   - consume

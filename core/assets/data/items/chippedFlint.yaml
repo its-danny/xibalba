@@ -3,8 +3,9 @@ type: melee
 name: Chipped Flint
 description: A stone tool also used as a weapon in close range combat.
 
-sprites:
-  - chippedFlint
+visual:
+  character: "0702"
+  color: FFFFFF
 
 skill: piercing
 location: right hand

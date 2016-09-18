@@ -5,8 +5,9 @@ description: A macuahuitl is a wooden sword with obsidian blades. Its sides are 
   with prismatic blades traditionally made from obsidian, famous for producing an
   edge far sharper than even high quality steel razor blades.
 
-sprites:
-  - macuahuitl
+visual:
+  character: "1309"
+  color: 532E2A
 
 skill: slashing
 location: hand

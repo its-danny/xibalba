@@ -7,7 +7,7 @@ public class YamlToItem {
   public String type;
   public String name;
   public String description;
-  public ArrayList<String> sprites;
+  public HashMap<String, String> visual;
 
   public boolean twoHanded;
   public String skill;

@@ -6,8 +6,9 @@ description: A spear is a pole weapon consisting of a shaft, usually of wood, wi
   is the case with fire hardened spears, or it may be made of a more durable material
   fastened to the shaft, such as flint, obsidian, or chert.
 
-sprites:
-  - spear
+visual:
+  character: "1502"
+  color: BD977D
 
 skill: piercing
 location: right hand
