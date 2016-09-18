@@ -217,8 +217,7 @@ public class CombatHelpers {
         }
       }
 
-      VisualComponent targetVisual = ComponentMappers.visual.get(target);
-      Tween.to(targetVisual.sprite, SpriteAccessor.ALPHA, .1f).target(.5f).repeatYoyo(1, 0f).start(Main.tweenManager);
+      doHitAnimation(starter, target);
 
       int strengthRoll = MathUtils.random(1, starterAttributes.strength);
       int weaponRoll = 0;
@@ -290,8 +289,7 @@ public class CombatHelpers {
         Main.cameraShake.shake(.4f, .1f);
       }
 
-      VisualComponent targetVisual = ComponentMappers.visual.get(target);
-      Tween.to(targetVisual.sprite, SpriteAccessor.ALPHA, .1f).target(.5f).repeatYoyo(1, 0f).start(Main.tweenManager);
+      doHitAnimation(starter, target);
 
       int weaponRoll;
       int critRoll = 0;
@@ -427,5 +425,34 @@ public class CombatHelpers {
         WorldManager.log.add("[RED]You have been killed by " + starterAttributes.name);
       }
     }
+  }
+
+  private void doHitAnimation(Entity starter, Entity target) {
+    VisualComponent targetVisual = ComponentMappers.visual.get(target);
+    Tween.to(targetVisual.sprite, SpriteAccessor.ALPHA, .05f).target(.5f)
+        .repeatYoyo(1, 0f).start(Main.tweenManager);
+
+    PositionComponent starterPosition = ComponentMappers.position.get(starter);
+    PositionComponent targetPosition = ComponentMappers.position.get(target);
+    float bumpX, bumpY;
+
+    if (starterPosition.pos.x < targetPosition.pos.x) {
+      bumpX = targetVisual.sprite.getX() + (Main.SPRITE_WIDTH / 4);
+    } else if (starterPosition.pos.x > targetPosition.pos.x) {
+      bumpX = targetVisual.sprite.getX() - (Main.SPRITE_WIDTH / 4);
+    } else {
+      bumpX = targetVisual.sprite.getX();
+    }
+
+    if (starterPosition.pos.y < targetPosition.pos.y) {
+      bumpY = targetVisual.sprite.getY() + (Main.SPRITE_HEIGHT / 4);
+    } else if (starterPosition.pos.y > targetPosition.pos.y) {
+      bumpY = targetVisual.sprite.getY() - (Main.SPRITE_HEIGHT / 4);
+    } else {
+      bumpY = targetVisual.sprite.getY();
+    }
+
+    Tween.to(targetVisual.sprite, SpriteAccessor.XY, .05f).target(bumpX, bumpY)
+        .repeatYoyo(1, 0f).start(Main.tweenManager);
   }
 }
