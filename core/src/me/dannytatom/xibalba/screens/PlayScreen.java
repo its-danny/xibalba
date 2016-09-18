@@ -22,11 +22,13 @@ class PlayScreen implements Screen {
   private final FPSLogger fps;
   private final WorldRenderer worldRenderer;
   private final HudRenderer hudRenderer;
+  private final PlayerInput playerInput;
   private final InputMultiplexer multiplexer;
 
   private final SpriteBatch batch;
   private final AttributesComponent playerAttributes;
-  private float autoTimer = 0;
+  private float autoTimer;
+  private float keyHoldTimer;
 
   /**
    * Play Screen.
@@ -37,6 +39,7 @@ class PlayScreen implements Screen {
     this.main = main;
 
     autoTimer = 0;
+    keyHoldTimer = 0;
     fps = new FPSLogger();
     batch = new SpriteBatch();
 
@@ -51,7 +54,8 @@ class PlayScreen implements Screen {
     // Setup input
     multiplexer = new InputMultiplexer();
     multiplexer.addProcessor(hudRenderer.stage);
-    multiplexer.addProcessor(new PlayerInput(worldCamera));
+    playerInput = new PlayerInput(worldCamera);
+    multiplexer.addProcessor(playerInput);
 
     // Player attributes
     playerAttributes = ComponentMappers.attributes.get(WorldManager.player);
@@ -76,6 +80,7 @@ class PlayScreen implements Screen {
     fps.log();
 
     autoTimer += delta;
+    keyHoldTimer += delta;
 
     // In some cases, we want the game to take turns on it's own
     if ((WorldManager.state == WorldManager.State.MOVING
@@ -83,6 +88,12 @@ class PlayScreen implements Screen {
         && autoTimer >= .10f) {
       autoTimer = 0;
       WorldManager.executeTurn = true;
+    }
+
+    // Keep moving if a key is held down
+    if (playerInput.holdingKey != -1 && keyHoldTimer >= .10f) {
+      keyHoldTimer = 0;
+      playerInput.keyDown(playerInput.holdingKey);
     }
 
     // Update engine if it's time to execute a turn
