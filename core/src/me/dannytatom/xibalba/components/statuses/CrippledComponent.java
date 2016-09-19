@@ -1,12 +1,12 @@
 package me.dannytatom.xibalba.components.statuses;
 
 import com.badlogic.ashley.core.Component;
-import me.dannytatom.xibalba.statuses.Crippled;
 
 public class CrippledComponent implements Component {
-  public final Crippled instance;
+  public int counter = 0;
+  public int turnCounter = 0;
 
   public CrippledComponent() {
-    this.instance = new Crippled();
+
   }
 }

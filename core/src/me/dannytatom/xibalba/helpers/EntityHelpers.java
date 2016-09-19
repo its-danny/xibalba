@@ -252,8 +252,12 @@ public class EntityHelpers {
     return entity != null && ComponentMappers.bleeding.has(entity);
   }
 
+  public boolean isDrowning(Entity entity) {
+    return entity != null && ComponentMappers.drowning.has(entity);
+  }
+
   public boolean skipTurn(Entity entity) {
-    return isCrippled(entity) && !ComponentMappers.crippled.get(entity).instance.canAct();
+    return isCrippled(entity) && ComponentMappers.crippled.get(entity).turnCounter != 0;
   }
 
   /**
