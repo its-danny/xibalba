@@ -79,6 +79,9 @@ public class World {
         WorldManager.player, WorldManager.mapHelpers.getEntrancePosition()
     );
 
+    PositionComponent playerPosition = ComponentMappers.position.get(WorldManager.player);
+    WorldManager.world.updateLighting(playerPosition.pos.x, playerPosition.pos.y);
+
     WorldManager.state = WorldManager.State.PLAYING;
   }
 
@@ -98,8 +101,11 @@ public class World {
 
     WorldManager.player.remove(MouseMovementComponent.class);
     WorldManager.entityHelpers.updatePosition(
-        WorldManager.player, WorldManager.mapHelpers.getEntrancePosition()
+        WorldManager.player, WorldManager.mapHelpers.getExitPosition()
     );
+
+    PositionComponent playerPosition = ComponentMappers.position.get(WorldManager.player);
+    WorldManager.world.updateLighting(playerPosition.pos.x, playerPosition.pos.y);
 
     WorldManager.state = WorldManager.State.PLAYING;
   }

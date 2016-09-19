@@ -96,7 +96,7 @@ public class WorldManager {
 
     // Create player
     player = new Entity();
-    player.add(new AttributesComponent(createPlayerName(), "It's you", 100, 10, 4, 6));
+    player.add(new AttributesComponent(createPlayerName(), "It's you", 100, 10, 8, 6));
   }
 
   private static String createPlayerName() {

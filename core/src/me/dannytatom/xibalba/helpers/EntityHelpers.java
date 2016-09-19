@@ -228,6 +228,18 @@ public class EntityHelpers {
     return entity;
   }
 
+  public Entity createRemains(Vector2 position) {
+    Entity entity = new Entity();
+
+    entity.add(new DecorationComponent(false));
+    entity.add(new PositionComponent(position));
+    entity.add(new VisualComponent(
+        Main.asciiAtlas.createSprite("0109"), position, Colors.get("remains")
+    ));
+
+    return entity;
+  }
+
   public boolean isEnemy(Entity entity) {
     return entity != null && ComponentMappers.enemy.has(entity);
   }

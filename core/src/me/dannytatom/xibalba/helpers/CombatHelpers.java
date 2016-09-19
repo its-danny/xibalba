@@ -3,13 +3,11 @@ package me.dannytatom.xibalba.helpers;
 import aurelienribon.tweenengine.Tween;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Colors;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.BodyComponent;
-import me.dannytatom.xibalba.components.DecorationComponent;
 import me.dannytatom.xibalba.components.EquipmentComponent;
 import me.dannytatom.xibalba.components.ItemComponent;
 import me.dannytatom.xibalba.components.PlayerComponent;
@@ -410,14 +408,7 @@ public class CombatHelpers {
     if (targetAttributes.health <= 0) {
       PositionComponent position = ComponentMappers.position.get(target);
 
-      Entity remains = new Entity();
-      remains.add(new DecorationComponent(false));
-      remains.add(new PositionComponent(position.pos));
-      remains.add(new VisualComponent(
-          Main.asciiAtlas.createSprite("0109"), position.pos, Colors.get("remains")
-      ));
-
-      WorldManager.world.addEntity(remains);
+      WorldManager.world.addEntity(WorldManager.entityHelpers.createRemains(position.pos));
       WorldManager.world.removeEntity(target);
 
       if (ComponentMappers.player.has(starter)) {
