@@ -35,7 +35,6 @@ public class CharacterScreen implements Screen {
 
   private final Stage stage;
 
-  private final FPSLogger fps;
   private final Table table;
   private final VerticalGroup attributesGroup;
   private final VerticalGroup skillsGroup;
@@ -69,7 +68,6 @@ public class CharacterScreen implements Screen {
   public CharacterScreen(Main main) {
     this.main = main;
 
-    fps = new FPSLogger();
     attributes = ComponentMappers.attributes.get(WorldManager.player);
     skills = ComponentMappers.skills.get(WorldManager.player);
     equipment = ComponentMappers.equipment.get(WorldManager.player);
@@ -145,8 +143,6 @@ public class CharacterScreen implements Screen {
     );
 
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-    fps.log();
 
     renderAttributes();
     renderSkills();

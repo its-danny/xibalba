@@ -3,6 +3,7 @@ package me.dannytatom.xibalba.renderers;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
+import com.badlogic.gdx.graphics.Colors;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -35,6 +36,7 @@ public class WorldRenderer {
   // These get reused a ton
   private final Sprite target;
   private final Sprite targetPath;
+  private final Sprite shadow;
 
   /**
    * Setup world renderer.
@@ -52,6 +54,9 @@ public class WorldRenderer {
 
     target = Main.asciiAtlas.createSprite("0915");
     targetPath = Main.asciiAtlas.createSprite("0915");
+    targetPath.setColor(Colors.get("YELLOW"));
+    shadow = Main.asciiAtlas.createSprite("1113");
+    shadow.setColor(Colors.get("caveBackground"));
   }
 
   /**
@@ -103,12 +108,10 @@ public class WorldRenderer {
 
         GridCell cell = playerDetails.path.get(i);
 
-        batch.setColor(1f, 1f, 1f, isLast ? 1f : 0.5f);
         batch.draw(
             isLast ? target : targetPath,
             cell.x * Main.SPRITE_WIDTH, cell.y * Main.SPRITE_HEIGHT
         );
-        batch.setColor(1f, 1f, 1f, 1f);
       }
     }
 
@@ -117,6 +120,7 @@ public class WorldRenderer {
     renderItems();
     renderEnemies();
     renderPlayer();
+    renderShadows();
 
     batch.end();
   }
@@ -178,6 +182,21 @@ public class WorldRenderer {
         WorldManager.engine.getEntitiesFor(Family.all(PlayerComponent.class).get());
 
     ComponentMappers.visual.get(entities.first()).sprite.draw(batch);
+  }
+
+  private void renderShadows() {
+    Map map = WorldManager.world.getCurrentMap();
+
+    for (int x = 0; x < map.lightMap.length; x++) {
+      for (int y = 0; y < map.lightMap[0].length; y++) {
+        float alpha = map.lightMap[x][y] <= 0.15f ? 0.15f : map.lightMap[x][y];
+
+        shadow.setAlpha(-alpha);
+        shadow.setPosition(x * Main.SPRITE_WIDTH, y * Main.SPRITE_HEIGHT);
+
+        shadow.draw(batch);
+      }
+    }
   }
 
   public void resize(int width, int height) {

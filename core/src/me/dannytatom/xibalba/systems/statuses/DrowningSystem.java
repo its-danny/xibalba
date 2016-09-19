@@ -9,7 +9,7 @@ import me.dannytatom.xibalba.utils.ComponentMappers;
 
 public class DrowningSystem extends UsesEnergySystem {
   public DrowningSystem() {
-    super(Family.all(DrowningComponent.class).get());
+    super(Family.all(DrowningComponent.class, AttributesComponent.class).get());
   }
 
   @Override

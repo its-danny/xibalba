@@ -1,7 +1,6 @@
 package me.dannytatom.xibalba.world;
 
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.MouseMovementComponent;
@@ -120,20 +119,5 @@ public class World {
         WorldManager.mapHelpers.createFovMap(),
         (int) positionX, (int) positionY, attributes.vision
     );
-
-    for (int x = 0; x < map.lightMap.length; x++) {
-      for (int y = 0; y < map.lightMap[0].length; y++) {
-        MapCell cell = WorldManager.mapHelpers.getCell(x, y);
-
-        float alpha = map.lightMap[x][y] <= 0.15f ? 0.15f : map.lightMap[x][y];
-        cell.sprite.setAlpha(alpha);
-
-        ArrayList<Entity> entities = WorldManager.entityHelpers.getEntitiesAt(new Vector2(x, y));
-
-        for (Entity entity : entities) {
-          ComponentMappers.visual.get(entity).sprite.setAlpha(alpha);
-        }
-      }
-    }
   }
 }
