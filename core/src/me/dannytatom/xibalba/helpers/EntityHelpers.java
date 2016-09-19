@@ -413,7 +413,7 @@ public class EntityHelpers {
     ItemComponent details = ComponentMappers.item.get(item);
 
     return player == null
-        || !(Objects.equals(details.type, "plant")
+        || !(Objects.equals(details.type, "consumable")
         && !player.identifiedItems.contains(details.name, false));
   }
 
