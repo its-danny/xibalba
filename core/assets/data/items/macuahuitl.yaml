@@ -1,5 +1,6 @@
 ---
-type: melee
+type: weapon
+weaponType: melee
 name: Macuahuitl
 description: A macuahuitl is a wooden sword with obsidian blades. Its sides are embedded
   with prismatic blades traditionally made from obsidian, famous for producing an

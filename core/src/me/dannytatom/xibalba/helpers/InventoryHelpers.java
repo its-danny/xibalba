@@ -7,11 +7,13 @@ import me.dannytatom.xibalba.components.InventoryComponent;
 import me.dannytatom.xibalba.components.ItemComponent;
 import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
+import me.dannytatom.xibalba.components.items.AmmunitionComponent;
+import me.dannytatom.xibalba.components.items.ItemEffectsComponent;
+import me.dannytatom.xibalba.components.items.WeaponComponent;
 import me.dannytatom.xibalba.utils.ComponentMappers;
 import me.dannytatom.xibalba.world.WorldManager;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
@@ -64,8 +66,10 @@ public class InventoryHelpers {
 
       WorldManager.log.add("You eat a " + itemDetails.name);
 
-      if (itemDetails.effects != null) {
-        for (Map.Entry<String, String> entry : itemDetails.effects.entrySet()) {
+      ItemEffectsComponent itemEffects = ComponentMappers.itemEffects.get(item);
+
+      if (itemEffects != null) {
+        for (Map.Entry<String, String> entry : itemEffects.effects.entrySet()) {
           String event = entry.getKey();
           String action = entry.getValue();
 
@@ -94,14 +98,17 @@ public class InventoryHelpers {
    */
   public void applyItem(Entity entity, Entity applyingItem, Entity targetItem) {
     if (applyingItem != null && targetItem != null) {
-      ItemComponent applyingItemDetails = ComponentMappers.item.get(applyingItem);
-      ItemComponent targetItemDetails = ComponentMappers.item.get(targetItem);
+      ItemEffectsComponent applyingItemEffects = ComponentMappers.itemEffects.get(applyingItem);
+      ItemEffectsComponent targetItemEffects = ComponentMappers.itemEffects.get(targetItem);
 
-      if (targetItemDetails.effects == null) {
-        targetItemDetails.effects = new HashMap<>();
+      if (targetItemEffects == null) {
+        targetItem.add(new ItemEffectsComponent());
       }
 
-      targetItemDetails.effects.put("onHit", applyingItemDetails.effects.get("onApply"));
+      if (targetItemEffects != null) {
+        targetItemEffects.effects.put("onHit", applyingItemEffects.effects.get("onApply"));
+      }
+
       removeItem(entity, applyingItem);
     }
   }
@@ -192,9 +199,9 @@ public class InventoryHelpers {
     ArrayList<Entity> items = ComponentMappers.inventory.get(entity).items;
 
     for (Entity item : items) {
-      ItemComponent itemDetails = ComponentMappers.item.get(item);
+      AmmunitionComponent ammunition = ComponentMappers.ammunition.get(item);
 
-      if (Objects.equals(itemDetails.type, type)) {
+      if (ammunition != null && Objects.equals(ammunition.type, type)) {
         return true;
       }
     }
@@ -215,9 +222,9 @@ public class InventoryHelpers {
     int count = 0;
 
     for (Entity item : items) {
-      ItemComponent itemDetails = ComponentMappers.item.get(item);
+      AmmunitionComponent ammunition = ComponentMappers.ammunition.get(item);
 
-      if (Objects.equals(itemDetails.type, type)) {
+      if (ammunition != null && Objects.equals(ammunition.type, type)) {
         count += 1;
       }
     }
@@ -237,13 +244,35 @@ public class InventoryHelpers {
     ArrayList<Entity> items = ComponentMappers.inventory.get(entity).items;
 
     for (Entity item : items) {
-      ItemComponent itemDetails = ComponentMappers.item.get(item);
+      AmmunitionComponent ammunition = ComponentMappers.ammunition.get(item);
 
-      if (Objects.equals(itemDetails.type, type)) {
+      if (ammunition != null && Objects.equals(ammunition.type, type)) {
         return item;
       }
     }
 
     return null;
+  }
+
+  public boolean isAmmunition(Entity entity) {
+    return ComponentMappers.ammunition.has(entity);
+  }
+
+  public boolean isArmor(Entity entity) {
+    return ComponentMappers.armor.has(entity);
+  }
+
+  public boolean isWeapon(Entity entity) {
+    return ComponentMappers.weapon.has(entity);
+  }
+
+  public boolean isMeleeWeapon(Entity entity) {
+    WeaponComponent weapon = ComponentMappers.weapon.get(entity);
+    return weapon != null && Objects.equals(weapon.type, "melee");
+  }
+
+  public boolean isRangeWeapon(Entity entity) {
+    WeaponComponent weapon = ComponentMappers.weapon.get(entity);
+    return weapon != null && Objects.equals(weapon.type, "range");
   }
 }

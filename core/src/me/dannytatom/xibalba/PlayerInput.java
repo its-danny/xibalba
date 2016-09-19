@@ -13,6 +13,7 @@ import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.actions.MovementComponent;
 import me.dannytatom.xibalba.components.actions.RangeComponent;
+import me.dannytatom.xibalba.components.items.WeaponComponent;
 import me.dannytatom.xibalba.utils.ComponentMappers;
 import me.dannytatom.xibalba.world.WorldManager;
 
@@ -138,24 +139,22 @@ public class PlayerInput implements InputProcessor {
       case Keys.R:
         if (WorldManager.state == WorldManager.State.PLAYING) {
           Entity primaryWeapon
-              = WorldManager.equipmentHelpers.getPrimaryWeapon(WorldManager.player);
+              = WorldManager.equipmentHelpers.getRightHand(WorldManager.player);
 
-          if (primaryWeapon != null) {
-            ItemComponent itemDetails = ComponentMappers.item.get(primaryWeapon);
+          if (primaryWeapon != null && WorldManager.inventoryHelpers.isRangeWeapon(primaryWeapon)) {
+            WeaponComponent weaponDetails = ComponentMappers.weapon.get(primaryWeapon);
 
-            if (itemDetails.ammunition != null) {
-              if (WorldManager.inventoryHelpers.hasAmmunitionOfType(WorldManager.player,
-                  itemDetails.ammunition)) {
-                playerDetails.target = null;
-                playerDetails.path = null;
+            if (WorldManager.inventoryHelpers.hasAmmunitionOfType(WorldManager.player,
+                weaponDetails.ammunitionType)) {
+              playerDetails.target = null;
+              playerDetails.path = null;
 
-                WorldManager.state = WorldManager.State.TARGETING;
-              } else {
-                WorldManager.log.add("You aren't carrying any ammunition for this");
-              }
+              WorldManager.state = WorldManager.State.TARGETING;
             } else {
-              WorldManager.log.add("This weapon doesn't take ammunition");
+              WorldManager.log.add("You aren't carrying any ammunition for this");
             }
+          } else {
+            WorldManager.log.add("This weapon doesn't take ammunition");
           }
         }
         break;
@@ -163,7 +162,7 @@ public class PlayerInput implements InputProcessor {
       case Keys.T: {
         if (WorldManager.state == WorldManager.State.PLAYING) {
           Entity primaryWeapon
-              = WorldManager.equipmentHelpers.getPrimaryWeapon(WorldManager.player);
+              = WorldManager.equipmentHelpers.getRightHand(WorldManager.player);
 
           if (primaryWeapon != null) {
             ItemComponent itemDetails = ComponentMappers.item.get(primaryWeapon);
@@ -186,7 +185,7 @@ public class PlayerInput implements InputProcessor {
       case Keys.D: {
         if (WorldManager.state == WorldManager.State.PLAYING) {
           Entity primaryWeapon
-              = WorldManager.equipmentHelpers.getPrimaryWeapon(WorldManager.player);
+              = WorldManager.equipmentHelpers.getRightHand(WorldManager.player);
 
           if (primaryWeapon != null) {
             WorldManager.inventoryHelpers.dropItem(WorldManager.player, primaryWeapon);

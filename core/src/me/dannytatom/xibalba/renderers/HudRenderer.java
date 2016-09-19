@@ -21,6 +21,7 @@ import me.dannytatom.xibalba.components.ItemComponent;
 import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.ai.BrainComponent;
+import me.dannytatom.xibalba.components.items.WeaponComponent;
 import me.dannytatom.xibalba.screens.CharacterScreen;
 import me.dannytatom.xibalba.screens.PauseScreen;
 import me.dannytatom.xibalba.ui.ActionButton;
@@ -232,14 +233,14 @@ public class HudRenderer {
     }
 
     if (WorldManager.equipmentHelpers.primaryWeaponUsesAmmo(WorldManager.player)) {
-      Entity primaryWeapon = WorldManager.equipmentHelpers.getPrimaryWeapon(WorldManager.player);
-      ItemComponent weaponDetails = ComponentMappers.item.get(primaryWeapon);
+      Entity primaryWeapon = WorldManager.equipmentHelpers.getRightHand(WorldManager.player);
+      WeaponComponent weaponDetails = ComponentMappers.weapon.get(primaryWeapon);
 
       areaDetails.addActor(
           new Label(
               "[LIGHT_GRAY]Ammo:[] "
                   + WorldManager.inventoryHelpers.amountOfAmmunitionType(
-                  WorldManager.player, weaponDetails.ammunition
+                  WorldManager.player, weaponDetails.ammunitionType
               ),
               Main.skin
           )

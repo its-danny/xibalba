@@ -1,15 +1,18 @@
 ---
-type: arrow
+type: ammunition
+ammunitionType: arrow
 name: Wooden Arrow
 description: A shafted projectile that is shot with a bow.
+skill: archery
 
 visual:
   character: "1302"
   color: BD977D
 
 attributes:
-  throwDamage: 4
-  hitDamage: 6
+  throwDamage: 2
+  hitDamage: 2
+  shotDamage: 8
 
 effects:
   onConsume: dealDamage:16
@@ -17,4 +20,5 @@ effects:
 actions:
   - consume
   - throw
+  - hold
   - applyTo

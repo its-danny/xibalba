@@ -10,36 +10,31 @@ public class ItemComponent implements Component {
   public final String type;
   public final String name;
   public final String description;
-
+  public final String location;
   public final boolean twoHanded;
   public final String skill;
-  public final String location;
-  public final String ammunition;
 
   public final HashMap<String, Integer> attributes;
   public final Array<String> actions;
   public final Array<String> verbs;
-  public HashMap<String, String> effects;
+
   public boolean throwing = false;
 
   /**
    * Initialize item component from yaml data.
    *
-   * @param yaml YamlToItem instance containing data from relevant yaml file
+   * @param data YamlToItem instance containing data from relevant yaml file
    */
-  public ItemComponent(YamlToItem yaml) {
-    this.type = yaml.type;
-    this.name = yaml.name;
-    this.description = yaml.description;
+  public ItemComponent(YamlToItem data) {
+    this.type = data.type;
+    this.name = data.name;
+    this.description = data.description;
+    this.location = data.location;
+    this.twoHanded = data.twoHanded;
+    this.skill = data.skill;
 
-    this.twoHanded = yaml.twoHanded;
-    this.skill = yaml.skill;
-    this.location = yaml.location;
-    this.ammunition = yaml.ammunition;
-
-    this.attributes = yaml.attributes;
-    this.actions = yaml.actions == null ? null : new Array<>(yaml.actions.toArray(new String[0]));
-    this.effects = yaml.effects;
-    this.verbs = yaml.verbs == null ? null : new Array<>(yaml.verbs.toArray(new String[0]));
+    this.attributes = data.attributes;
+    this.actions = data.actions == null ? null : new Array<>(data.actions.toArray(new String[0]));
+    this.verbs = data.verbs == null ? null : new Array<>(data.verbs.toArray(new String[0]));
   }
 }

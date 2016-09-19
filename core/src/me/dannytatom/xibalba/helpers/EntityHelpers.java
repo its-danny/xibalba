@@ -23,6 +23,10 @@ import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.SkillsComponent;
 import me.dannytatom.xibalba.components.VisualComponent;
 import me.dannytatom.xibalba.components.ai.BrainComponent;
+import me.dannytatom.xibalba.components.items.AmmunitionComponent;
+import me.dannytatom.xibalba.components.items.ArmorComponent;
+import me.dannytatom.xibalba.components.items.ItemEffectsComponent;
+import me.dannytatom.xibalba.components.items.WeaponComponent;
 import me.dannytatom.xibalba.utils.ComponentMappers;
 import me.dannytatom.xibalba.utils.YamlToEnemy;
 import me.dannytatom.xibalba.utils.YamlToItem;
@@ -134,6 +138,23 @@ public class EntityHelpers {
 
     entity.add(new PositionComponent(position));
     entity.add(new ItemComponent(data));
+
+    switch (data.type) {
+      case "ammunition":
+        entity.add(new AmmunitionComponent(data));
+        break;
+      case "armor":
+        entity.add(new ArmorComponent(data));
+        break;
+      case "weapon":
+        entity.add(new WeaponComponent(data));
+        break;
+      default:
+    }
+
+    if (data.effects != null) {
+      entity.add(new ItemEffectsComponent(data));
+    }
 
     entity.add(new VisualComponent(
         Main.asciiAtlas.createSprite(data.visual.get("character")),

@@ -20,6 +20,10 @@ import me.dannytatom.xibalba.components.actions.MovementComponent;
 import me.dannytatom.xibalba.components.actions.RangeComponent;
 import me.dannytatom.xibalba.components.ai.BrainComponent;
 import me.dannytatom.xibalba.components.ai.TargetComponent;
+import me.dannytatom.xibalba.components.items.AmmunitionComponent;
+import me.dannytatom.xibalba.components.items.ArmorComponent;
+import me.dannytatom.xibalba.components.items.ItemEffectsComponent;
+import me.dannytatom.xibalba.components.items.WeaponComponent;
 import me.dannytatom.xibalba.components.statuses.BleedingComponent;
 import me.dannytatom.xibalba.components.statuses.CrippledComponent;
 import me.dannytatom.xibalba.components.statuses.DrowningComponent;
@@ -75,6 +79,18 @@ public final class ComponentMappers {
 
   public static final ComponentMapper<ItemComponent> item =
       ComponentMapper.getFor(ItemComponent.class);
+
+  public static final ComponentMapper<AmmunitionComponent> ammunition =
+      ComponentMapper.getFor(AmmunitionComponent.class);
+
+  public static final ComponentMapper<ArmorComponent> armor =
+      ComponentMapper.getFor(ArmorComponent.class);
+
+  public static final ComponentMapper<ItemEffectsComponent> itemEffects =
+      ComponentMapper.getFor(ItemEffectsComponent.class);
+
+  public static final ComponentMapper<WeaponComponent> weapon =
+      ComponentMapper.getFor(WeaponComponent.class);
 
   public static final ComponentMapper<DecorationComponent> decoration =
       ComponentMapper.getFor(DecorationComponent.class);

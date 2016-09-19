@@ -1,5 +1,6 @@
 ---
-type: ranged
+type: weapon
+weaponType: range
 name: Wooden Bow
 description: The bow and arrow is a projectile weapon system (a bow with arrows) that
   predates recorded history and is common to most cultures.
@@ -9,7 +10,7 @@ visual:
   color: BD977D
 
 twoHanded: true
-skill: archery
+skill: bashing
 location: right hand
 ammunition: arrow
 

@@ -3,6 +3,7 @@ package me.dannytatom.xibalba.helpers;
 import com.badlogic.ashley.core.Entity;
 import me.dannytatom.xibalba.components.EquipmentComponent;
 import me.dannytatom.xibalba.components.ItemComponent;
+import me.dannytatom.xibalba.components.items.WeaponComponent;
 import me.dannytatom.xibalba.utils.ComponentMappers;
 
 import java.util.Map;
@@ -71,12 +72,12 @@ public class EquipmentHelpers {
    * @param item   The item itself
    */
   public void wearItem(Entity entity, Entity item) {
-    EquipmentComponent equipment = ComponentMappers.equipment.get(entity);
     ItemComponent itemDetails = ComponentMappers.item.get(item);
+    EquipmentComponent equipment = ComponentMappers.equipment.get(entity);
 
     equipment.slots.put(itemDetails.location, item);
 
-    Entity primary = getPrimaryWeapon(entity);
+    Entity primary = getRightHand(entity);
 
     if (primary != null) {
       ItemComponent primaryDetails = ComponentMappers.item.get(primary);
@@ -104,7 +105,7 @@ public class EquipmentHelpers {
     }
   }
 
-  public Entity getPrimaryWeapon(Entity entity) {
+  public Entity getRightHand(Entity entity) {
     return ComponentMappers.equipment.get(entity).slots.get("right hand");
   }
 
@@ -116,8 +117,14 @@ public class EquipmentHelpers {
    * @return Does it?
    */
   public boolean primaryWeaponUsesAmmo(Entity entity) {
-    Entity weapon = getPrimaryWeapon(entity);
+    Entity item = getRightHand(entity);
 
-    return weapon != null && ComponentMappers.item.get(weapon).ammunition != null;
+    if (item != null) {
+      WeaponComponent weapon = ComponentMappers.weapon.get(item);
+
+      return weapon != null && weapon.ammunitionType != null;
+    } else {
+      return false;
+    }
   }
 }

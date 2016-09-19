@@ -16,6 +16,8 @@ import me.dannytatom.xibalba.components.SkillsComponent;
 import me.dannytatom.xibalba.components.VisualComponent;
 import me.dannytatom.xibalba.components.actions.MeleeComponent;
 import me.dannytatom.xibalba.components.actions.RangeComponent;
+import me.dannytatom.xibalba.components.items.ItemEffectsComponent;
+import me.dannytatom.xibalba.components.items.WeaponComponent;
 import me.dannytatom.xibalba.components.statuses.BleedingComponent;
 import me.dannytatom.xibalba.components.statuses.CrippledComponent;
 import me.dannytatom.xibalba.utils.ComponentMappers;
@@ -99,15 +101,16 @@ public class CombatHelpers {
     AttributesComponent attributes = ComponentMappers.attributes.get(WorldManager.player);
 
     if (attributes.energy >= RangeComponent.COST) {
-      Entity primaryWeapon = WorldManager.equipmentHelpers.getPrimaryWeapon(WorldManager.player);
-      ItemComponent primaryWeaponDetails = ComponentMappers.item.get(primaryWeapon);
+      Entity primaryWeapon = WorldManager.equipmentHelpers.getRightHand(WorldManager.player);
+      WeaponComponent weapon = ComponentMappers.weapon.get(primaryWeapon);
 
       Entity item = WorldManager.inventoryHelpers.getAmmunitionOfType(
-          WorldManager.player, primaryWeaponDetails.ammunition
+          WorldManager.player, weapon.ammunitionType
       );
+      ItemComponent itemDetails = ComponentMappers.item.get(item);
 
       WorldManager.player.add(
-          new RangeComponent(position, item, primaryWeaponDetails.skill, bodyPart)
+          new RangeComponent(position, item, itemDetails.skill, bodyPart)
       );
     }
   }
@@ -161,24 +164,26 @@ public class CombatHelpers {
   public void melee(Entity starter, Entity target, String bodyPart) {
     Gdx.app.log("CombatHelpers", "Starting melee hit");
 
-    Entity weapon = null;
+    Entity item = null;
 
     if (ComponentMappers.equipment.has(starter)) {
-      weapon = WorldManager.equipmentHelpers.getPrimaryWeapon(starter);
+      item = WorldManager.equipmentHelpers.getRightHand(starter);
     }
 
     String skillName;
     String verb;
 
-    if (weapon == null) {
+    if (item == null) {
       skillName = "unarmed";
       verb = "hit";
     } else {
-      ItemComponent weaponItem = ComponentMappers.item.get(weapon);
+      ItemComponent itemDetails = ComponentMappers.item.get(item);
 
-      skillName = weaponItem.skill;
-      verb = weaponItem.verbs.get(MathUtils.random(0, weaponItem.verbs.size - 1));
+      skillName = itemDetails.skill;
+      verb = itemDetails.verbs.get(MathUtils.random(0, itemDetails.verbs.size - 1));
     }
+
+    Gdx.app.log("Skill", skillName);
 
     SkillsComponent skills = ComponentMappers.skills.get(starter);
 
@@ -195,10 +200,10 @@ public class CombatHelpers {
         Main.cameraShake.shake(.4f, .1f);
       }
 
-      if (weapon == null) {
+      if (item == null) {
         Main.soundManager.unarmed();
       } else {
-        String skill = ComponentMappers.item.get(weapon).skill;
+        String skill = ComponentMappers.item.get(item).skill;
 
         switch (skill) {
           case "slashing":
@@ -222,8 +227,8 @@ public class CombatHelpers {
       int weaponRoll = 0;
       int critRoll = 0;
 
-      if (weapon != null) {
-        ItemComponent weaponItem = ComponentMappers.item.get(weapon);
+      if (item != null) {
+        ItemComponent weaponItem = ComponentMappers.item.get(item);
         weaponRoll = MathUtils.random(1, weaponItem.attributes.get("hitDamage"));
       }
 
@@ -240,7 +245,7 @@ public class CombatHelpers {
 
       Gdx.app.log("CombatHelpers", "Starting damage: " + damage);
 
-      applyDamage(starter, target, weapon, damage, verb, bodyPart);
+      applyDamage(starter, target, item, damage, verb, bodyPart);
 
       WorldManager.skillHelpers.levelSkill(starter, skillName, skillLevelAmount);
     } else {
@@ -260,7 +265,8 @@ public class CombatHelpers {
    * @param item    What they're being hit with
    */
   public void range(Entity starter, Entity target, String bodyPart, Entity item, String skill) {
-    Gdx.app.log("CombatHelpers", "Starting melee hit");
+    Gdx.app.log("CombatHelpers", "Starting range hit");
+    Gdx.app.log("Skill", skill);
 
     SkillsComponent skills = ComponentMappers.skills.get(starter);
     ItemComponent itemDetails = ComponentMappers.item.get(item);
@@ -271,7 +277,7 @@ public class CombatHelpers {
       verb = "hit";
     } else {
       ItemComponent firingWeapon =
-          ComponentMappers.item.get(WorldManager.equipmentHelpers.getPrimaryWeapon(starter));
+          ComponentMappers.item.get(WorldManager.equipmentHelpers.getRightHand(starter));
       verb = firingWeapon.verbs.get(MathUtils.random(0, firingWeapon.verbs.size - 1));
     }
 
@@ -295,6 +301,8 @@ public class CombatHelpers {
 
       if (Objects.equals(skill, "throwing")) {
         weaponRoll = MathUtils.random(1, itemDetails.attributes.get("throwDamage"));
+      } else if (Objects.equals(skill, "archery")) {
+        weaponRoll = MathUtils.random(1, itemDetails.attributes.get("shotDamage"));
       } else {
         weaponRoll = MathUtils.random(1, itemDetails.attributes.get("hitDamage"));
       }
@@ -351,9 +359,10 @@ public class CombatHelpers {
     // Apply weapon effects
     if (item != null) {
       ItemComponent itemDetails = ComponentMappers.item.get(item);
+      ItemEffectsComponent itemEffects = ComponentMappers.itemEffects.get(item);
 
-      if (itemDetails.effects != null) {
-        for (Map.Entry<String, String> entry : itemDetails.effects.entrySet()) {
+      if (itemEffects != null) {
+        for (Map.Entry<String, String> entry : itemEffects.effects.entrySet()) {
           String event = entry.getKey();
           String action = entry.getValue();
 

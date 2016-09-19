@@ -5,7 +5,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Colors;
-import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -22,6 +21,7 @@ import me.dannytatom.xibalba.components.EquipmentComponent;
 import me.dannytatom.xibalba.components.ItemComponent;
 import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.SkillsComponent;
+import me.dannytatom.xibalba.components.items.ItemEffectsComponent;
 import me.dannytatom.xibalba.ui.ActionButton;
 import me.dannytatom.xibalba.utils.ComponentMappers;
 import me.dannytatom.xibalba.world.WorldManager;
@@ -328,7 +328,7 @@ public class CharacterScreen implements Screen {
     int defense = WorldManager.combatHelpers.getArmorDefense(WorldManager.player);
     int damage = 0;
 
-    Entity primaryWeapon = WorldManager.equipmentHelpers.getPrimaryWeapon(WorldManager.player);
+    Entity primaryWeapon = WorldManager.equipmentHelpers.getRightHand(WorldManager.player);
 
     if (primaryWeapon != null) {
       damage = ComponentMappers.item.get(primaryWeapon).attributes.get("hitDamage");
@@ -528,8 +528,10 @@ public class CharacterScreen implements Screen {
           }
         }
 
-        if (selectedItemDetails.effects != null) {
-          for (Map.Entry<String, String> entry : selectedItemDetails.effects.entrySet()) {
+        ItemEffectsComponent selectedItemEffects = ComponentMappers.itemEffects.get(selectedItem);
+
+        if (selectedItemEffects != null) {
+          for (Map.Entry<String, String> entry : selectedItemEffects.effects.entrySet()) {
             String event = entry.getKey();
             String action = entry.getValue();
             String[] split = action.split(":");
