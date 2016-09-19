@@ -86,9 +86,9 @@ class PlayScreen implements Screen {
     }
 
     // Keep moving if a key is held down
-    if (playerInput.holdingKey != -1 && keyHoldTimer >= .10f) {
+    if (playerInput.keyHeld != -1 && keyHoldTimer >= .10f) {
       keyHoldTimer = 0;
-      playerInput.keyDown(playerInput.holdingKey);
+      playerInput.keyDown(playerInput.keyHeld);
     }
 
     // Update engine if it's time to execute a turn

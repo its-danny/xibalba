@@ -65,7 +65,7 @@ public class WorldRenderer {
     if (Main.cameraShake.time > 0) {
       Main.cameraShake.update(delta, worldCamera, playerPosition.pos);
     } else {
-      // Set worldCamera to follow playerDetails
+      // Set worldCamera to follow player
       worldCamera.position.set(
           playerPosition.pos.x * Main.SPRITE_WIDTH,
           playerPosition.pos.y * Main.SPRITE_HEIGHT, 0

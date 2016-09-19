@@ -18,7 +18,7 @@ import me.dannytatom.xibalba.world.WorldManager;
 
 public class PlayerInput implements InputProcessor {
   private final OrthographicCamera worldCamera;
-  public int holdingKey = -1;
+  public int keyHeld = -1;
   private boolean holdingShift = false;
 
   public PlayerInput(OrthographicCamera worldCamera) {
@@ -34,7 +34,7 @@ public class PlayerInput implements InputProcessor {
     switch (keycode) {
       // Move North
       case Keys.NUMPAD_8:
-        holdingKey = Keys.NUMPAD_8;
+        keyHeld = Keys.NUMPAD_8;
 
         if (WorldManager.state == WorldManager.State.PLAYING) {
           handleMovement(attributes.energy, new Vector2(position.pos.x, position.pos.y + 1));
@@ -46,7 +46,7 @@ public class PlayerInput implements InputProcessor {
         break;
       // Move North East
       case Keys.NUMPAD_9:
-        holdingKey = Keys.NUMPAD_9;
+        keyHeld = Keys.NUMPAD_9;
 
         if (WorldManager.state == WorldManager.State.PLAYING) {
           handleMovement(attributes.energy, new Vector2(position.pos.x + 1, position.pos.y + 1));
@@ -58,7 +58,7 @@ public class PlayerInput implements InputProcessor {
         break;
       // Move East
       case Keys.NUMPAD_6:
-        holdingKey = Keys.NUMPAD_6;
+        keyHeld = Keys.NUMPAD_6;
 
         if (WorldManager.state == WorldManager.State.PLAYING) {
           handleMovement(attributes.energy, new Vector2(position.pos.x + 1, position.pos.y));
@@ -70,7 +70,7 @@ public class PlayerInput implements InputProcessor {
         break;
       // Move South East
       case Keys.NUMPAD_3:
-        holdingKey = Keys.NUMPAD_3;
+        keyHeld = Keys.NUMPAD_3;
 
         if (WorldManager.state == WorldManager.State.PLAYING) {
           handleMovement(attributes.energy, new Vector2(position.pos.x + 1, position.pos.y - 1));
@@ -82,7 +82,7 @@ public class PlayerInput implements InputProcessor {
         break;
       // Move South
       case Keys.NUMPAD_2:
-        holdingKey = Keys.NUMPAD_2;
+        keyHeld = Keys.NUMPAD_2;
 
         if (WorldManager.state == WorldManager.State.PLAYING) {
           handleMovement(attributes.energy, new Vector2(position.pos.x, position.pos.y - 1));
@@ -94,7 +94,7 @@ public class PlayerInput implements InputProcessor {
         break;
       // Move South West
       case Keys.NUMPAD_1:
-        holdingKey = Keys.NUMPAD_1;
+        keyHeld = Keys.NUMPAD_1;
 
         if (WorldManager.state == WorldManager.State.PLAYING) {
           handleMovement(attributes.energy, new Vector2(position.pos.x - 1, position.pos.y - 1));
@@ -106,7 +106,7 @@ public class PlayerInput implements InputProcessor {
         break;
       // Move West
       case Keys.NUMPAD_4:
-        holdingKey = Keys.NUMPAD_4;
+        keyHeld = Keys.NUMPAD_4;
 
         if (WorldManager.state == WorldManager.State.PLAYING) {
           handleMovement(attributes.energy, new Vector2(position.pos.x - 1, position.pos.y));
@@ -118,7 +118,7 @@ public class PlayerInput implements InputProcessor {
         break;
       // Move North West
       case Keys.NUMPAD_7:
-        holdingKey = Keys.NUMPAD_7;
+        keyHeld = Keys.NUMPAD_7;
 
         if (WorldManager.state == WorldManager.State.PLAYING) {
           handleMovement(attributes.energy, new Vector2(position.pos.x - 1, position.pos.y + 1));
@@ -228,7 +228,7 @@ public class PlayerInput implements InputProcessor {
 
   @Override
   public boolean keyUp(int keycode) {
-    holdingKey = -1;
+    keyHeld = -1;
 
     switch (keycode) {
       case Keys.SHIFT_LEFT:
@@ -253,6 +253,10 @@ public class PlayerInput implements InputProcessor {
 
   @Override
   public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+    if (button == 1) {
+      return false;
+    }
+
     if (WorldManager.state == WorldManager.State.PLAYING) {
       Vector2 mousePosition = Main.mousePositionToWorld(worldCamera);
 
