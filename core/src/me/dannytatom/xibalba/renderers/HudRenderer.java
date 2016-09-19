@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import me.dannytatom.xibalba.Main;
@@ -349,6 +350,28 @@ public class HudRenderer {
         BrainComponent brain = ComponentMappers.brain.get(enemy);
 
         lookDialogGroup.addActor(new Label(brain.personalities.toString(", "), Main.skin));
+
+        Array<String> statuses = new Array<>();
+
+        if (ComponentMappers.crippled.has(enemy)) {
+          statuses.add("CRIPPLED");
+        }
+
+        if (ComponentMappers.bleeding.has(enemy)) {
+          statuses.add("BLEEDING");
+        }
+
+        if (ComponentMappers.drowning.has(enemy)) {
+          statuses.add("DROWNING");
+        }
+
+        if (statuses.size > 0) {
+          lookDialogGroup.addActor(new Label("", Main.skin));
+
+          lookDialogGroup.addActor(
+              new Label("[DARK_GRAY]" + statuses.toString(", "), Main.skin)
+          );
+        }
       }
 
       if (lookDialogShowing) {
