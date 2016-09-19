@@ -79,8 +79,8 @@ public class WorldRenderer {
 
     Map map = WorldManager.world.getCurrentMap();
 
-    for (int x = 0; x < map.width; x++) {
-      for (int y = 0; y < map.height; y++) {
+    for (int x = 0; x < map.width - 1; x++) {
+      for (int y = 0; y < map.height - 1; y++) {
         MapCell cell = WorldManager.mapHelpers.getCell(x, y);
 
         if (map.lightMap[x][y] > 0) {

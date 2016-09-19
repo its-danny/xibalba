@@ -64,8 +64,8 @@ public class MapHelpers {
   public boolean isBlocked(int mapIndex, Vector2 position) {
     MapCell[][] map = WorldManager.world.getMap(mapIndex).getCellMap();
 
-    boolean blocked = map[(int) position.x][(int) position.y].isWall
-        || map[(int) position.x][(int) position.y].isNothing;
+    boolean blocked = map[(int) position.x][(int) position.y].isWall()
+        || map[(int) position.x][(int) position.y].isNothing();
 
     if (!blocked) {
       ImmutableArray<Entity> entities =
@@ -124,7 +124,7 @@ public class MapHelpers {
 
     for (int x = 0; x < map.width; x++) {
       for (int y = 0; y < map.height; y++) {
-        resistanceMap[x][y] = (getCell(x, y).isWall || getCell(x, y).isNothing) ? 1 : 0;
+        resistanceMap[x][y] = (getCell(x, y).isWall() || getCell(x, y).isNothing()) ? 1 : 0;
       }
     }
 
@@ -146,8 +146,8 @@ public class MapHelpers {
     for (int x = 0; x < map.width; x++) {
       for (int y = 0; y < map.height; y++) {
         boolean canTarget = cellExists(new Vector2(x, y))
-            && !getCell(x, y).isWall
-            && !getCell(x, y).isNothing
+            && !getCell(x, y).isWall()
+            && !getCell(x, y).isNothing()
             && !getCell(x, y).hidden;
 
         cells[x][y] = new GridCell(x, y, canTarget);
@@ -204,7 +204,7 @@ public class MapHelpers {
         if (careAboutWalls) {
           canTarget = cellExists(new Vector2(x, y))
               && !getCell(x, y).hidden
-              && !getCell(x, y).isWall;
+              && !getCell(x, y).isWall();
         } else {
           canTarget = cellExists(new Vector2(x, y)) && !getCell(x, y).hidden;
         }

@@ -45,28 +45,28 @@ public class Dijkstra {
       for (int x = 0; x < map.length; x++) {
         for (int y = 0; y < map[x].length; y++) {
           boolean blocked = !WorldManager.mapHelpers.cellExists(new Vector2(x, y))
-              || WorldManager.mapHelpers.getCell(x, y).isWall;
+              || WorldManager.mapHelpers.getCell(x, y).isWall();
 
           if (!blocked) {
             Array<Integer> neighbours = new Array<>();
 
             if (WorldManager.mapHelpers.cellExists(new Vector2(x, y + 1))
-                && !WorldManager.mapHelpers.getCell(x, y + 1).isWall) {
+                && !WorldManager.mapHelpers.getCell(x, y + 1).isWall()) {
               neighbours.add(map[x][y + 1]);
             }
 
             if (WorldManager.mapHelpers.cellExists(new Vector2(x + 1, y))
-                && !WorldManager.mapHelpers.getCell(x + 1, y).isWall) {
+                && !WorldManager.mapHelpers.getCell(x + 1, y).isWall()) {
               neighbours.add(map[x + 1][y]);
             }
 
             if (WorldManager.mapHelpers.cellExists(new Vector2(x, y - 1))
-                && !WorldManager.mapHelpers.getCell(x, y - 1).isWall) {
+                && !WorldManager.mapHelpers.getCell(x, y - 1).isWall()) {
               neighbours.add(map[x][y - 1]);
             }
 
             if (WorldManager.mapHelpers.cellExists(new Vector2(x - 1, y))
-                && !WorldManager.mapHelpers.getCell(x - 1, y).isWall) {
+                && !WorldManager.mapHelpers.getCell(x - 1, y).isWall()) {
               neighbours.add(map[x - 1][y]);
             }
 

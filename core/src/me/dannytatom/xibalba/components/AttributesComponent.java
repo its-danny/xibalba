@@ -5,12 +5,15 @@ import com.badlogic.ashley.core.Component;
 public class AttributesComponent implements Component {
   public final String description;
   public final int speed;
-  public final int vision;
   public final int toughness;
+  public final int maxVision;
   public final int maxHealth;
+  public final int maxOxygen;
   public String name;
+  public int vision;
   public int strength;
   public int health;
+  public int oxygen;
   public int energy;
 
   /**
@@ -29,11 +32,14 @@ public class AttributesComponent implements Component {
     this.description = description;
     this.energy = speed;
     this.speed = speed;
-    this.vision = vision;
     this.toughness = toughness;
     this.strength = strength;
 
+    this.maxVision = vision;
     this.maxHealth = toughness * 10;
+    this.maxOxygen = toughness * 4;
+    this.vision = vision;
     this.health = maxHealth;
+    this.oxygen = maxOxygen;
   }
 }

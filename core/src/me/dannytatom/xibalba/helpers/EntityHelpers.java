@@ -55,7 +55,7 @@ public class EntityHelpers {
     player.add(new PlayerComponent());
     player.add(new PositionComponent(position));
     player.add(new VisualComponent(
-        Main.asciiAtlas.createSprite("0100"), position
+        Main.asciiAtlas.createSprite("0004"), position
     ));
     player.add(new InventoryComponent());
     player.add(new EquipmentComponent());

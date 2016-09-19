@@ -208,10 +208,27 @@ public class HudRenderer {
 
     areaDetails.addActor(
         new Label(
-            playerHealthColor + playerAttributes.health
+            "[DARK_GRAY]Health []" + playerHealthColor + playerAttributes.health
                 + "[LIGHT_GRAY]/" + playerAttributes.maxHealth, Main.skin
         )
     );
+
+    String playerOxygenColor;
+
+    if (playerAttributes.oxygen / playerAttributes.maxOxygen <= 0.5f) {
+      playerOxygenColor = "[RED]";
+    } else {
+      playerOxygenColor = "[CYAN]";
+    }
+
+    if (WorldManager.mapHelpers.getCell(playerPosition.pos.x, playerPosition.pos.y).isDeepWater()) {
+      areaDetails.addActor(
+          new Label(
+              "[DARK_GRAY]Oxygen []" + playerOxygenColor + playerAttributes.oxygen
+                  + "[LIGHT_GRAY]/" + playerAttributes.maxOxygen, Main.skin
+          )
+      );
+    }
 
     if (WorldManager.equipmentHelpers.primaryWeaponUsesAmmo(WorldManager.player)) {
       Entity primaryWeapon = WorldManager.equipmentHelpers.getPrimaryWeapon(WorldManager.player);
@@ -228,12 +245,18 @@ public class HudRenderer {
       );
     }
 
+    areaDetails.addActor(new Label("", Main.skin));
+
     if (ComponentMappers.crippled.has(WorldManager.player)) {
       areaDetails.addActor(new Label("[DARK_GRAY]CRIPPLED[]", Main.skin));
     }
 
     if (ComponentMappers.bleeding.has(WorldManager.player)) {
       areaDetails.addActor(new Label("[DARK_GRAY]BLEEDING[]", Main.skin));
+    }
+
+    if (ComponentMappers.drowning.has(WorldManager.player)) {
+      areaDetails.addActor(new Label("[DARK_GRAY]DROWNING[]", Main.skin));
     }
   }
 

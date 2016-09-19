@@ -13,6 +13,13 @@ public class VisualComponent implements Component {
     this(sprite, position, Color.WHITE);
   }
 
+  /**
+   * VisualComponent...
+   *
+   * @param sprite   All
+   * @param position this
+   * @param color    obvious
+   */
   public VisualComponent(Sprite sprite, Vector2 position, Color color) {
     this.sprite = sprite;
     this.sprite.setPosition(position.x * Main.SPRITE_WIDTH, position.y * Main.SPRITE_HEIGHT);
