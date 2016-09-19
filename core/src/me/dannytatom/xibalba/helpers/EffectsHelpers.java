@@ -28,6 +28,9 @@ public class EffectsHelpers {
       case "raiseStrength":
         WorldManager.entityHelpers.raiseStrength(entity, Integer.parseInt(params[0]));
         break;
+      case "dealDamage":
+        WorldManager.entityHelpers.dealDamage(entity, Integer.parseInt(params[0]));
+        break;
       default:
     }
   }

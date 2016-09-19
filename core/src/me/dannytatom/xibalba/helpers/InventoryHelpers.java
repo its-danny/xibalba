@@ -62,6 +62,8 @@ public class InventoryHelpers {
     if (item != null) {
       ItemComponent itemDetails = ComponentMappers.item.get(item);
 
+      WorldManager.log.add("You eat a " + itemDetails.name);
+
       if (itemDetails.effects != null) {
         for (Map.Entry<String, String> entry : itemDetails.effects.entrySet()) {
           String event = entry.getKey();

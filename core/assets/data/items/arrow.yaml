@@ -11,6 +11,10 @@ attributes:
   throwDamage: 4
   hitDamage: 6
 
+effects:
+  onConsume: dealDamage:16
+
 actions:
+  - consume
   - throw
   - applyTo

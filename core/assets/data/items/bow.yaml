@@ -17,9 +17,14 @@ attributes:
   throwDamage: 4
   hitDamage: 4
 
+effects:
+  onConsume: dealDamage:16
+
 actions:
+  - consume
   - throw
   - hold
   - applyTo
+
 verbs:
   - shot

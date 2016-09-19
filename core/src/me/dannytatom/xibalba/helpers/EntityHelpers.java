@@ -493,6 +493,14 @@ public class EntityHelpers {
     }
   }
 
+  public void dealDamage(Entity entity, int amount) {
+    AttributesComponent attributes = ComponentMappers.attributes.get(entity);
+
+    attributes.health -= amount;
+
+    WorldManager.log.add("You lose " + amount + " health");
+  }
+
   /**
    * Update an entity's position.
    *
