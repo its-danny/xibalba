@@ -19,6 +19,7 @@ public class DrowningSystem extends UsesEnergySystem {
     if (drowning.instance.shouldRemove(entity)) {
       AttributesComponent attributes = ComponentMappers.attributes.get(entity);
       attributes.vision = attributes.maxVision;
+      attributes.oxygen = attributes.maxOxygen;
 
       entity.remove(DrowningComponent.class);
     } else {
