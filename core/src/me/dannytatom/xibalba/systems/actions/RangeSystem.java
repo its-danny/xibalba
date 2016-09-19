@@ -34,7 +34,7 @@ public class RangeSystem extends UsesEnergySystem {
         if (target == null) {
           WorldManager.inventoryHelpers.dropItem(entity, range.item, range.position);
         } else {
-          WorldManager.inventoryHelpers.removeItem(entity, range.item);
+          WorldManager.inventoryHelpers.destroyItem(entity, range.item);
         }
       }
     }

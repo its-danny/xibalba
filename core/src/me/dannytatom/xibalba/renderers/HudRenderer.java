@@ -232,8 +232,8 @@ public class HudRenderer {
       );
     }
 
-    if (WorldManager.equipmentHelpers.primaryWeaponUsesAmmo(WorldManager.player)) {
-      Entity primaryWeapon = WorldManager.equipmentHelpers.getRightHand(WorldManager.player);
+    if (WorldManager.inventoryHelpers.primaryWeaponUsesAmmo(WorldManager.player)) {
+      Entity primaryWeapon = WorldManager.inventoryHelpers.getRightHand(WorldManager.player);
       WeaponComponent weaponDetails = ComponentMappers.weapon.get(primaryWeapon);
 
       areaDetails.addActor(

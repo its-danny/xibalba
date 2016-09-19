@@ -45,11 +45,53 @@ public class InventoryHelpers {
 
         if (Objects.equals(itemDetails.type, "weapon")
             && equipment.slots.get("right hand") == null) {
-          WorldManager.equipmentHelpers.holdItem(entity, item);
+          holdItem(entity, item);
           WorldManager.log.add(
               "You are now holding a " + WorldManager.entityHelpers.getItemName(entity, item)
           );
         }
+      }
+    }
+  }
+
+  /**
+   * Equip item to right hand (primary weapon slot).
+   *
+   * @param entity The entity we want to hold the item
+   * @param item   The item itself
+   */
+  public void holdItem(Entity entity, Entity item) {
+    ItemComponent itemDetails = ComponentMappers.item.get(item);
+    EquipmentComponent equipment = ComponentMappers.equipment.get(entity);
+
+    if (itemDetails.actions.contains("hold", false)) {
+      equipment.slots.put("right hand", item);
+
+      if (itemDetails.twoHanded) {
+        equipment.slots.put("left hand", null);
+      }
+    }
+  }
+
+  /**
+   * Equip an item to that item's location.
+   *
+   * @param entity The entity we want to wear the item
+   * @param item   The item itself
+   */
+  public void wearItem(Entity entity, Entity item) {
+    ItemComponent itemDetails = ComponentMappers.item.get(item);
+    EquipmentComponent equipment = ComponentMappers.equipment.get(entity);
+
+    equipment.slots.put(itemDetails.location, item);
+
+    Entity primary = getRightHand(entity);
+
+    if (primary != null) {
+      ItemComponent primaryDetails = ComponentMappers.item.get(primary);
+
+      if (primaryDetails.twoHanded) {
+        equipment.slots.put(primaryDetails.location, null);
       }
     }
   }
@@ -85,7 +127,7 @@ public class InventoryHelpers {
         player.identifiedItems.add(itemDetails.name);
       }
 
-      removeItem(entity, item);
+      destroyItem(entity, item);
     }
   }
 
@@ -109,22 +151,24 @@ public class InventoryHelpers {
         targetItemEffects.effects.put("onHit", applyingItemEffects.effects.get("onApply"));
       }
 
-      removeItem(entity, applyingItem);
+      destroyItem(entity, applyingItem);
     }
   }
 
   /**
-   * It's like drop except we remove it 100%.
+   * Remove an item from either their right hand or wherever it's slotted.
    *
-   * @param entity Entity we want to take shit from
-   * @param item   The shit we gonna take
+   * @param entity The entity we want to remove the item from
+   * @param item   The item itself
    */
   public void removeItem(Entity entity, Entity item) {
-    InventoryComponent inventory = ComponentMappers.inventory.get(entity);
+    EquipmentComponent equipment = ComponentMappers.equipment.get(entity);
+    ItemComponent itemDetails = ComponentMappers.item.get(item);
 
-    if (inventory != null && item != null) {
-      inventory.items.remove(item);
-      WorldManager.world.removeEntity(item);
+    if (equipment.slots.get("right hand") == item) {
+      equipment.slots.put("right hand", null);
+    } else {
+      equipment.slots.put(itemDetails.location, null);
     }
   }
 
@@ -139,8 +183,8 @@ public class InventoryHelpers {
     InventoryComponent inventory = ComponentMappers.inventory.get(entity);
 
     if (inventory != null) {
-      if (WorldManager.equipmentHelpers.isEquipped(entity, item)) {
-        WorldManager.equipmentHelpers.removeItem(entity, item);
+      if (isEquipped(entity, item)) {
+        removeItem(entity, item);
       }
 
       WorldManager.entityHelpers.updatePosition(item, position);
@@ -167,6 +211,39 @@ public class InventoryHelpers {
   }
 
   /**
+   * It's like drop except we remove it 100%.
+   *
+   * @param entity Entity we want to take shit from
+   * @param item   The shit we gonna take
+   */
+  public void destroyItem(Entity entity, Entity item) {
+    InventoryComponent inventory = ComponentMappers.inventory.get(entity);
+
+    if (inventory != null && item != null) {
+      inventory.items.remove(item);
+      WorldManager.world.removeEntity(item);
+    }
+  }
+
+  /**
+   * Check if an item is equipped.
+   *
+   * @param entity The entity whose equipment we're checking
+   * @param item   The item we want to check
+   *
+   * @return Whether or not it's equipped
+   */
+  public boolean isEquipped(Entity entity, Entity item) {
+    EquipmentComponent equipment = ComponentMappers.equipment.get(entity);
+
+    return equipment.slots.containsValue(item);
+  }
+
+  public Entity getRightHand(Entity entity) {
+    return ComponentMappers.equipment.get(entity).slots.get("right hand");
+  }
+
+  /**
    * Iterate through inventory, return whatever item has the `throwing` flag set to true.
    *
    * @param entity Entity whose throwing things
@@ -185,6 +262,44 @@ public class InventoryHelpers {
     }
 
     return null;
+  }
+
+  /**
+   * Get the slot location of an item.
+   *
+   * @param item The item we want to check
+   *
+   * @return Location of item
+   */
+  public String getItemLocation(Entity entity, Entity item) {
+    EquipmentComponent equipment = ComponentMappers.equipment.get(entity);
+
+    for (Map.Entry<String, Entity> slot : equipment.slots.entrySet()) {
+      if (slot.getValue() == item) {
+        return slot.getKey();
+      }
+    }
+
+    return null;
+  }
+
+  /**
+   * Whether or not their primary weapon uses ammo.
+   *
+   * @param entity Entity we're checking.
+   *
+   * @return Does it?
+   */
+  public boolean primaryWeaponUsesAmmo(Entity entity) {
+    Entity item = getRightHand(entity);
+
+    if (item != null) {
+      WeaponComponent weapon = ComponentMappers.weapon.get(item);
+
+      return weapon != null && weapon.ammunitionType != null;
+    } else {
+      return false;
+    }
   }
 
   /**

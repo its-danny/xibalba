@@ -9,7 +9,6 @@ import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.helpers.CombatHelpers;
 import me.dannytatom.xibalba.helpers.EffectsHelpers;
 import me.dannytatom.xibalba.helpers.EntityHelpers;
-import me.dannytatom.xibalba.helpers.EquipmentHelpers;
 import me.dannytatom.xibalba.helpers.InventoryHelpers;
 import me.dannytatom.xibalba.helpers.MapHelpers;
 import me.dannytatom.xibalba.helpers.SkillHelpers;
@@ -39,7 +38,6 @@ public class WorldManager {
   public static CombatHelpers combatHelpers;
   public static EntityHelpers entityHelpers;
   public static InventoryHelpers inventoryHelpers;
-  public static EquipmentHelpers equipmentHelpers;
   public static SkillHelpers skillHelpers;
   public static EffectsHelpers effectsHelpers;
   public static Entity player;
@@ -57,7 +55,6 @@ public class WorldManager {
     mapHelpers = new MapHelpers();
     entityHelpers = new EntityHelpers();
     inventoryHelpers = new InventoryHelpers();
-    equipmentHelpers = new EquipmentHelpers();
     skillHelpers = new SkillHelpers();
     combatHelpers = new CombatHelpers();
     effectsHelpers = new EffectsHelpers();

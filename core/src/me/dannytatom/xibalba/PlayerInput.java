@@ -139,7 +139,7 @@ public class PlayerInput implements InputProcessor {
       case Keys.R:
         if (WorldManager.state == WorldManager.State.PLAYING) {
           Entity primaryWeapon
-              = WorldManager.equipmentHelpers.getRightHand(WorldManager.player);
+              = WorldManager.inventoryHelpers.getRightHand(WorldManager.player);
 
           if (primaryWeapon != null && WorldManager.inventoryHelpers.isRangeWeapon(primaryWeapon)) {
             WeaponComponent weaponDetails = ComponentMappers.weapon.get(primaryWeapon);
@@ -162,7 +162,7 @@ public class PlayerInput implements InputProcessor {
       case Keys.T: {
         if (WorldManager.state == WorldManager.State.PLAYING) {
           Entity primaryWeapon
-              = WorldManager.equipmentHelpers.getRightHand(WorldManager.player);
+              = WorldManager.inventoryHelpers.getRightHand(WorldManager.player);
 
           if (primaryWeapon != null) {
             ItemComponent itemDetails = ComponentMappers.item.get(primaryWeapon);
@@ -185,7 +185,7 @@ public class PlayerInput implements InputProcessor {
       case Keys.D: {
         if (WorldManager.state == WorldManager.State.PLAYING) {
           Entity primaryWeapon
-              = WorldManager.equipmentHelpers.getRightHand(WorldManager.player);
+              = WorldManager.inventoryHelpers.getRightHand(WorldManager.player);
 
           if (primaryWeapon != null) {
             WorldManager.inventoryHelpers.dropItem(WorldManager.player, primaryWeapon);

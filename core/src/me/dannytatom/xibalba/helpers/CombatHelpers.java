@@ -101,7 +101,7 @@ public class CombatHelpers {
     AttributesComponent attributes = ComponentMappers.attributes.get(WorldManager.player);
 
     if (attributes.energy >= RangeComponent.COST) {
-      Entity primaryWeapon = WorldManager.equipmentHelpers.getRightHand(WorldManager.player);
+      Entity primaryWeapon = WorldManager.inventoryHelpers.getRightHand(WorldManager.player);
       WeaponComponent weapon = ComponentMappers.weapon.get(primaryWeapon);
 
       Entity item = WorldManager.inventoryHelpers.getAmmunitionOfType(
@@ -167,7 +167,7 @@ public class CombatHelpers {
     Entity item = null;
 
     if (ComponentMappers.equipment.has(starter)) {
-      item = WorldManager.equipmentHelpers.getRightHand(starter);
+      item = WorldManager.inventoryHelpers.getRightHand(starter);
     }
 
     String skillName;
@@ -277,7 +277,7 @@ public class CombatHelpers {
       verb = "hit";
     } else {
       ItemComponent firingWeapon =
-          ComponentMappers.item.get(WorldManager.equipmentHelpers.getRightHand(starter));
+          ComponentMappers.item.get(WorldManager.inventoryHelpers.getRightHand(starter));
       verb = firingWeapon.verbs.get(MathUtils.random(0, firingWeapon.verbs.size - 1));
     }
 
