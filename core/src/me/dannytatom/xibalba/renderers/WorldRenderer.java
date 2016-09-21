@@ -18,7 +18,6 @@ import me.dannytatom.xibalba.components.ExitComponent;
 import me.dannytatom.xibalba.components.ItemComponent;
 import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
-import me.dannytatom.xibalba.components.VisualComponent;
 import me.dannytatom.xibalba.utils.ComponentMappers;
 import me.dannytatom.xibalba.world.Map;
 import me.dannytatom.xibalba.world.MapCell;
@@ -156,7 +155,7 @@ public class WorldRenderer {
   private void renderItems() {
     ImmutableArray<Entity> entities =
         WorldManager.engine.getEntitiesFor(
-            Family.all(ItemComponent.class, PositionComponent.class, VisualComponent.class).get()
+            Family.all(ItemComponent.class).get()
         );
 
     for (Entity entity : entities) {
