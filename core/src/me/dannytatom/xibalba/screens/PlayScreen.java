@@ -26,6 +26,7 @@ class PlayScreen implements Screen {
   private final SpriteBatch batch;
   private final AttributesComponent playerAttributes;
   private float autoTimer;
+  private float keyHoldTimerDelay;
   private float keyHoldTimer;
 
   /**
@@ -37,6 +38,7 @@ class PlayScreen implements Screen {
     this.main = main;
 
     autoTimer = 0;
+    keyHoldTimerDelay = 0;
     keyHoldTimer = 0;
     batch = new SpriteBatch();
 
@@ -86,9 +88,17 @@ class PlayScreen implements Screen {
     }
 
     // Keep moving if a key is held down
-    if (playerInput.keyHeld != -1 && keyHoldTimer >= .10f) {
-      keyHoldTimer = 0;
-      playerInput.keyDown(playerInput.keyHeld);
+    if (playerInput.keyHeld != -1) {
+      keyHoldTimerDelay += delta;
+
+      if (keyHoldTimerDelay >= .5f) {
+        if (keyHoldTimer >= .10f) {
+          keyHoldTimer = 0;
+          playerInput.keyDown(playerInput.keyHeld);
+        }
+      }
+    } else {
+      keyHoldTimerDelay = 0;
     }
 
     // Update engine if it's time to execute a turn
