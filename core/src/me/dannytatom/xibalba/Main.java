@@ -103,6 +103,7 @@ public class Main extends Game {
 
     // Environment colors
     Colors.put("caveFloor", Colors.get("DARK_GRAY"));
+    Colors.put("caveFloorWet", parseColor("67979B"));
     Colors.put("caveWall", Colors.get("DARK_GRAY"));
 
     // Decoration colors

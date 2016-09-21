@@ -14,7 +14,7 @@ import me.dannytatom.xibalba.helpers.MapHelpers;
 import me.dannytatom.xibalba.helpers.SkillHelpers;
 import me.dannytatom.xibalba.systems.AttributesSystem;
 import me.dannytatom.xibalba.systems.MouseMovementSystem;
-import me.dannytatom.xibalba.systems.SwimmingSystem;
+import me.dannytatom.xibalba.systems.TileEffectSystem;
 import me.dannytatom.xibalba.systems.actions.MeleeSystem;
 import me.dannytatom.xibalba.systems.actions.MovementSystem;
 import me.dannytatom.xibalba.systems.actions.RangeSystem;
@@ -24,6 +24,7 @@ import me.dannytatom.xibalba.systems.ai.WanderSystem;
 import me.dannytatom.xibalba.systems.statuses.BleedingSystem;
 import me.dannytatom.xibalba.systems.statuses.CrippledSystem;
 import me.dannytatom.xibalba.systems.statuses.DrowningSystem;
+import me.dannytatom.xibalba.systems.statuses.WetSystem;
 
 import java.util.Calendar;
 import java.util.TreeMap;
@@ -71,10 +72,11 @@ public class WorldManager {
     engine.addSystem(new MovementSystem());
     engine.addSystem(new MeleeSystem());
     engine.addSystem(new RangeSystem());
-    engine.addSystem(new SwimmingSystem());
+    engine.addSystem(new TileEffectSystem());
     engine.addSystem(new CrippledSystem());
     engine.addSystem(new BleedingSystem());
     engine.addSystem(new DrowningSystem());
+    engine.addSystem(new WetSystem());
 
     // Roman numeral world
     rnMap.put(1000, "M");

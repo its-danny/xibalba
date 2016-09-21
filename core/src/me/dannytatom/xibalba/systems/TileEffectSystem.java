@@ -5,11 +5,12 @@ import com.badlogic.ashley.core.Family;
 import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.statuses.DrowningComponent;
+import me.dannytatom.xibalba.components.statuses.WetComponent;
 import me.dannytatom.xibalba.utils.ComponentMappers;
 import me.dannytatom.xibalba.world.WorldManager;
 
-public class SwimmingSystem extends UsesEnergySystem {
-  public SwimmingSystem() {
+public class TileEffectSystem extends UsesEnergySystem {
+  public TileEffectSystem() {
     super(Family.all(PositionComponent.class, AttributesComponent.class).get());
   }
 
@@ -17,6 +18,10 @@ public class SwimmingSystem extends UsesEnergySystem {
   protected void processEntity(Entity entity, float deltaTime) {
     PositionComponent position = ComponentMappers.position.get(entity);
     AttributesComponent attributes = ComponentMappers.attributes.get(entity);
+
+    if (WorldManager.mapHelpers.getCell(position.pos.x, position.pos.y).isWater()) {
+      entity.add(new WetComponent());
+    }
 
     if (WorldManager.mapHelpers.getCell(position.pos.x, position.pos.y).isDeepWater()) {
       if (attributes.oxygen >= 2) {

@@ -27,6 +27,7 @@ import me.dannytatom.xibalba.components.items.WeaponComponent;
 import me.dannytatom.xibalba.components.statuses.BleedingComponent;
 import me.dannytatom.xibalba.components.statuses.CrippledComponent;
 import me.dannytatom.xibalba.components.statuses.DrowningComponent;
+import me.dannytatom.xibalba.components.statuses.WetComponent;
 
 public final class ComponentMappers {
   public static final ComponentMapper<BrainComponent> brain =
@@ -61,6 +62,9 @@ public final class ComponentMappers {
 
   public static final ComponentMapper<DrowningComponent> drowning =
       ComponentMapper.getFor(DrowningComponent.class);
+
+  public static final ComponentMapper<WetComponent> wet =
+      ComponentMapper.getFor(WetComponent.class);
 
   public static final ComponentMapper<TargetComponent> target =
       ComponentMapper.getFor(TargetComponent.class);

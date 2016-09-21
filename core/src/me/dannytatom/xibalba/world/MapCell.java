@@ -34,6 +34,10 @@ public class MapCell {
     return type == Type.WALL;
   }
 
+  public boolean isWater() {
+    return type == Type.SHALLOW_WATER || type == Type.DEEP_WATER;
+  }
+
   public boolean isShallowWater() {
     return type == Type.SHALLOW_WATER;
   }

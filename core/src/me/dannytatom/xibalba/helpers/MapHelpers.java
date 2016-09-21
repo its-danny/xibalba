@@ -3,6 +3,7 @@ package me.dannytatom.xibalba.helpers;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
+import com.badlogic.gdx.graphics.Colors;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import me.dannytatom.xibalba.components.EntranceComponent;
@@ -392,5 +393,9 @@ public class MapHelpers {
     }
 
     return count;
+  }
+
+  public void makeFloorWet(Vector2 position) {
+    getCell(position.x, position.y).sprite.setColor(Colors.get("caveFloorWet"));
   }
 }

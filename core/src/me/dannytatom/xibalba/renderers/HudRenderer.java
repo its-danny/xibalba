@@ -257,6 +257,10 @@ public class HudRenderer {
       areaDetails.addActor(new Label("[DARK_GRAY]BLEEDING[]", Main.skin));
     }
 
+    if (ComponentMappers.wet.has(WorldManager.player)) {
+      areaDetails.addActor(new Label("[DARK_GRAY]WET[]", Main.skin));
+    }
+
     if (ComponentMappers.drowning.has(WorldManager.player)) {
       areaDetails.addActor(new Label("[DARK_GRAY]DROWNING[]", Main.skin));
     }

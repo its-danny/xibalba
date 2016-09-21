@@ -42,11 +42,13 @@ class PlayScreen implements Screen {
     keyHoldTimer = 0;
     batch = new SpriteBatch();
 
+    // Setup camera;
+    OrthographicCamera worldCamera = new OrthographicCamera();
+
     // World setup
     WorldManager.world.setup();
 
     // Setup renderers
-    OrthographicCamera worldCamera = new OrthographicCamera();
     worldRenderer = new WorldRenderer(worldCamera, batch);
     hudRenderer = new HudRenderer(main, batch);
 
