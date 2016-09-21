@@ -1,6 +1,7 @@
 buildscript {
     repositories {
         mavenCentral()
+        jcenter()
     }
 
     dependencies {
@@ -44,6 +45,12 @@ project(":core") {
         compile "com.github.xaguzman:pathfinding:0.2.6"
 
         compile fileTree(dir: '../libs', include: '*.jar')
+
+        testCompile "junit:junit:4.12"
+        testCompile "org.mockito:mockito-core:1.+"
+        testCompile "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
+        testCompile "com.badlogicgames.gdx:gdx:$gdxVersion"
+        testCompile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
     }
 }
 
