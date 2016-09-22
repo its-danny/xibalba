@@ -12,5 +12,5 @@ actions:
   - apply
 
 effects:
-  onConsume: raiseStrength:5
-  onApply: raiseStrength:5
+  onConsume: raiseStrength:2
+  onApply: raiseStrength:2

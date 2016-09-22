@@ -12,5 +12,5 @@ actions:
   - apply
 
 effects:
-  onConsume: raiseHealth:5
-  onApply: raiseHealth:5
+  onConsume: raiseHealth:20
+  onApply: raiseHealth:20
