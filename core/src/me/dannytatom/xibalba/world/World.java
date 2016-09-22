@@ -78,8 +78,10 @@ public class World {
         WorldManager.player, WorldManager.mapHelpers.getEntrancePosition()
     );
 
+    getCurrentMap().time.update();
+
     PositionComponent playerPosition = ComponentMappers.position.get(WorldManager.player);
-    WorldManager.world.updateLighting(playerPosition.pos.x, playerPosition.pos.y);
+    updateLighting(playerPosition.pos.x, playerPosition.pos.y);
 
     WorldManager.state = WorldManager.State.PLAYING;
   }
@@ -103,8 +105,10 @@ public class World {
         WorldManager.player, WorldManager.mapHelpers.getExitPosition()
     );
 
+    getCurrentMap().time.update();
+
     PositionComponent playerPosition = ComponentMappers.position.get(WorldManager.player);
-    WorldManager.world.updateLighting(playerPosition.pos.x, playerPosition.pos.y);
+    updateLighting(playerPosition.pos.x, playerPosition.pos.y);
 
     WorldManager.state = WorldManager.State.PLAYING;
   }

@@ -4,7 +4,7 @@ name: Health Plant
 description: It heals you some
 
 visual:
-  character: "0500"
+  character: "1114"
   color: 67CF8B
 
 actions:

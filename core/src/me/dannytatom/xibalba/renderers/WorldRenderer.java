@@ -55,7 +55,6 @@ public class WorldRenderer {
     targetPath = Main.asciiAtlas.createSprite("0915");
     targetPath.setColor(Colors.get("YELLOW"));
     shadow = Main.asciiAtlas.createSprite("1113");
-    shadow.setColor(Colors.get("caveBackground"));
   }
 
   /**
@@ -64,6 +63,9 @@ public class WorldRenderer {
   public void render(float delta) {
     // Get playerDetails position
     PositionComponent playerPosition = ComponentMappers.position.get(WorldManager.player);
+
+    // Update lighting
+    WorldManager.world.updateLighting(playerPosition.pos.x, playerPosition.pos.y);
 
     // Handle screen shake
     if (Main.cameraShake.time > 0) {
@@ -188,8 +190,29 @@ public class WorldRenderer {
 
     for (int x = 0; x < map.lightMap.length; x++) {
       for (int y = 0; y < map.lightMap[0].length; y++) {
-        float alpha = map.lightMap[x][y] <= 0.15f ? 0.15f : map.lightMap[x][y];
+        float minimum;
 
+        switch (WorldManager.world.getCurrentMap().time.time) {
+          case DAWN:
+            minimum = .15f;
+            break;
+          case DAY:
+            minimum = .30f;
+            break;
+          case DUSK:
+            minimum = .15f;
+            break;
+          case NIGHT:
+            minimum = .10f;
+            break;
+          default:
+            minimum = .10f;
+            break;
+        }
+
+        float alpha = map.lightMap[x][y] <= minimum ? minimum : map.lightMap[x][y];
+
+        shadow.setColor(Colors.get(WorldManager.world.getCurrentMap().type + "Background"));
         shadow.setAlpha(-alpha);
         shadow.setPosition(x * Main.SPRITE_WIDTH, y * Main.SPRITE_HEIGHT);
 

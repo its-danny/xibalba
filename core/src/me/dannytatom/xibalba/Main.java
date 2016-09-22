@@ -102,6 +102,10 @@ public class Main extends Game {
     Colors.put("GREEN", parseColor("67CF8B"));
 
     // Environment colors
+    Colors.put("forestFloor", parseColor("78AD8A"));
+    Colors.put("forestTree-1", parseColor("67CF8B"));
+    Colors.put("forestTree-2", parseColor("77E09B"));
+    Colors.put("forestTree-3", parseColor("4AC775"));
     Colors.put("caveFloor", Colors.get("DARK_GRAY"));
     Colors.put("caveFloorWet", parseColor("67979B"));
     Colors.put("caveWall", Colors.get("DARK_GRAY"));
@@ -112,6 +116,7 @@ public class Main extends Game {
 
     // Background colors
     Colors.put("screenBackground", parseColor("293033"));
+    Colors.put("forestBackground", parseColor("29332F"));
     Colors.put("caveBackground", parseColor("293033"));
 
     // Tween manager

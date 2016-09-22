@@ -22,12 +22,12 @@ public class AttributesComponent implements Component {
    * @param name        Name
    * @param description Entity description
    * @param speed       How much energy is gotten back each turn
-   * @param vision      How many cells they see around them
+   * @param maxVision      How many cells they see around them
    * @param toughness   How much strength they can soak up
    * @param strength    How much strength they do
    */
   public AttributesComponent(String name, String description,
-                             int speed, int vision, int toughness, int strength) {
+                             int speed, int maxVision, int toughness, int strength) {
     this.name = name;
     this.description = description;
     this.energy = speed;
@@ -35,10 +35,10 @@ public class AttributesComponent implements Component {
     this.toughness = toughness;
     this.strength = strength;
 
-    this.maxVision = vision;
+    this.maxVision = maxVision;
     this.maxHealth = toughness * 10;
     this.maxOxygen = toughness * 4;
-    this.vision = vision;
+    this.vision = maxVision;
     this.health = maxHealth;
     this.oxygen = maxOxygen;
   }

@@ -1,5 +1,22 @@
 [
   {
+    "type": "forest",
+    "size": {
+      "width": "150,200",
+      "height": "100,200"
+    },
+    "enemies": [
+      { "name": "spiderMonkey", "spawnRange": "3,6"},
+      { "name": "jaguar", "spawnRange": "0,1"}
+    ],
+    "items": [
+      { "name": "chippedFlint", "spawnRange": "1,2"},
+      { "name": "healthPlant", "spawnRange": "2,3"},
+      { "name": "healthPlant", "spawnRange": "1,2"}
+    ]
+  },
+
+  {
     "type": "cave",
     "size": {
       "width": "100,150",

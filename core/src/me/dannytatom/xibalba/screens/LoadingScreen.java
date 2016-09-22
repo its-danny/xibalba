@@ -19,6 +19,7 @@ import me.dannytatom.xibalba.utils.SoundManager;
 import me.dannytatom.xibalba.world.Map;
 import me.dannytatom.xibalba.world.WorldManager;
 import me.dannytatom.xibalba.world.generators.CaveGenerator;
+import me.dannytatom.xibalba.world.generators.ForestGenerator;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -123,18 +124,35 @@ public class LoadingScreen implements Screen {
       );
 
       Gdx.app.log(
-          "CaveGenerator",
-          "Starting cave generation for cave " + (i + 1) + ", size " + mapWidth + "x" + mapHeight
+          "World Generation",
+          "Starting " + level.type + " generation for level " + (i + 1)
+              + ", size " + mapWidth + "x" + mapHeight
       );
 
-      // TODO: Once we have more types, check level.type to figure out which generator to use
-      CaveGenerator generator = new CaveGenerator(mapWidth, mapHeight);
-      generator.generate();
+      switch (level.type) {
+        case "forest":
+          ForestGenerator forestGenerator = new ForestGenerator(mapWidth, mapHeight);
+          forestGenerator.generate();
 
-      Map map = new Map(generator.geometry);
-      map.paintCave();
+          Map forestMap = new Map("forest", forestGenerator.geometry);
+          forestMap.paint();
 
-      WorldManager.world.maps.add(map);
+          WorldManager.world.maps.add(forestMap);
+
+          break;
+        case "cave":
+          CaveGenerator caveGenerator = new CaveGenerator(mapWidth, mapHeight);
+          caveGenerator.generate();
+
+          Map caveMap = new Map("cave", caveGenerator.geometry);
+          caveMap.paint();
+
+          WorldManager.world.maps.add(caveMap);
+
+          break;
+        default:
+          break;
+      }
 
       spawnShit(level, i, i == levels.size());
     }
@@ -158,15 +176,6 @@ public class LoadingScreen implements Screen {
     if (!isLast) {
       WorldManager.world.entities.get(mapIndex).add(
           WorldManager.entityHelpers.createExit(mapIndex)
-      );
-    }
-
-    // Spawn decorations
-    for (int i = 0; i < 10; i++) {
-      WorldManager.world.entities.get(mapIndex).add(
-          WorldManager.entityHelpers.createRandomDecoration(
-              WorldManager.mapHelpers.getRandomOpenPositionOnMap(mapIndex)
-          )
       );
     }
 

@@ -12,6 +12,7 @@ import me.dannytatom.xibalba.helpers.SkillHelpers;
 import me.dannytatom.xibalba.systems.AttributesSystem;
 import me.dannytatom.xibalba.systems.MouseMovementSystem;
 import me.dannytatom.xibalba.systems.TileEffectSystem;
+import me.dannytatom.xibalba.systems.TimeSystem;
 import me.dannytatom.xibalba.systems.actions.MeleeSystem;
 import me.dannytatom.xibalba.systems.actions.MovementSystem;
 import me.dannytatom.xibalba.systems.actions.RangeSystem;
@@ -25,9 +26,9 @@ import me.dannytatom.xibalba.systems.statuses.WetSystem;
 
 public class WorldManager {
   public static Engine engine;
+  public static ActionLog log;
   public static World world;
   public static State state;
-  public static ActionLog log;
   public static MapHelpers mapHelpers;
   public static CombatHelpers combatHelpers;
   public static EntityHelpers entityHelpers;
@@ -43,8 +44,8 @@ public class WorldManager {
    */
   public static void setup() {
     engine = new Engine();
-    world = new World();
     log = new ActionLog();
+    world = new World();
 
     mapHelpers = new MapHelpers();
     entityHelpers = new EntityHelpers();
@@ -63,8 +64,9 @@ public class WorldManager {
     engine.addSystem(new WanderSystem());
     engine.addSystem(new TargetSystem());
     engine.addSystem(new RangeSystem());
-    engine.addSystem(new MovementSystem());
     engine.addSystem(new MeleeSystem());
+    engine.addSystem(new MovementSystem());
+    engine.addSystem(new TimeSystem());
     engine.addSystem(new TileEffectSystem());
     engine.addSystem(new CrippledSystem());
     engine.addSystem(new BleedingSystem());

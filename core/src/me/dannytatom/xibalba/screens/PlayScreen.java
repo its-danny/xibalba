@@ -70,10 +70,10 @@ class PlayScreen implements Screen {
   @Override
   public void render(float delta) {
     Gdx.gl.glClearColor(
-        Colors.get("caveBackground").r,
-        Colors.get("caveBackground").g,
-        Colors.get("caveBackground").b,
-        Colors.get("caveBackground").a
+        Colors.get(WorldManager.world.getCurrentMap().type + "Background").r,
+        Colors.get(WorldManager.world.getCurrentMap().type + "Background").g,
+        Colors.get(WorldManager.world.getCurrentMap().type + "Background").b,
+        Colors.get(WorldManager.world.getCurrentMap().type + "Background").a
     );
 
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -107,6 +107,7 @@ class PlayScreen implements Screen {
     if (WorldManager.executeTurn) {
       WorldManager.turnCount += 1;
 
+      WorldManager.world.getCurrentMap().time.update();
       WorldManager.engine.update(delta);
       WorldManager.executeTurn = false;
     }

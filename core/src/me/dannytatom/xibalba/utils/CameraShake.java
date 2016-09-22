@@ -40,7 +40,7 @@ public class CameraShake {
   /**
    * Called each frame to handle the shaking.
    *
-   * @param delta    Time since last frame
+   * @param delta    MapTime since last frame
    * @param camera   Camera to shake
    * @param position Position to snap back to afterwards
    */

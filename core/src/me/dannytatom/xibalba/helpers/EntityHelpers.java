@@ -135,27 +135,6 @@ public class EntityHelpers {
   }
 
   /**
-   * Create a random decoration.
-   *
-   * @param position Vector2 of their position
-   *
-   * @return The decoration entity
-   */
-  public Entity createRandomDecoration(Vector2 position) {
-    Entity entity = new Entity();
-
-    entity.add(new DecorationComponent(true));
-    entity.add(new PositionComponent(position));
-    entity.add(
-        new VisualComponent(
-            Main.asciiAtlas.createSprite("1214"), position, Colors.get("stone")
-        )
-    );
-
-    return entity;
-  }
-
-  /**
    * Create entrance entity.
    *
    * @param mapIndex Map to place it on
@@ -274,7 +253,8 @@ public class EntityHelpers {
     PositionComponent entityPosition = ComponentMappers.position.get(entity);
 
     return entityPosition != null
-        && !WorldManager.mapHelpers.getCell(entityPosition.pos.x, entityPosition.pos.y).hidden;
+        && !WorldManager.mapHelpers.getCell(entityPosition.pos.x, entityPosition.pos.y).hidden
+        && !WorldManager.mapHelpers.getCell(entityPosition.pos.x, entityPosition.pos.y).forgotten;
   }
 
   /**

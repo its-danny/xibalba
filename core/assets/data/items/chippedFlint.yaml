@@ -5,7 +5,7 @@ name: Chipped Flint
 description: A stone tool also used as a weapon in close range combat.
 
 visual:
-  character: "0702"
+  character: "1405"
   color: FFFFFF
 
 skill: piercing

@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Colors;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.utils.Array;
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.utils.SpriteAccessor;
 
@@ -13,31 +14,72 @@ import java.util.Arrays;
 public class Map {
   public final int width;
   public final int height;
+  public final String type;
   public final boolean[][] geometry;
   public float[][] lightMap;
   private MapCell[][] map;
   private boolean[][] flooded;
   private int floodedCount = 0;
+  public MapTime time;
 
   /**
    * Holds logic for dealing with maps.
    *
    * @param geometry The world geometry
    */
-  public Map(boolean[][] geometry) {
+  public Map(String type, boolean[][] geometry) {
+    this.type = type;
     this.geometry = geometry;
 
     this.width = this.geometry.length;
     this.height = this.geometry[0].length;
+
+    this.time = new MapTime();
   }
 
-  /**
-   * Start creating Cells and giving em sprites.
-   */
-  public void paintCave() {
+  public void paint() {
+    switch (type) {
+      case "forest":
+        paintForest();
+        break;
+      case "cave":
+        paintCave();
+        break;
+      default:
+        break;
+    }
+  }
+
+  public void paintForest() {
     map = new MapCell[width][height];
 
-    // Paint walls
+    Array<String> floorTypes = new Array<>();
+    floorTypes.add("0915");
+    floorTypes.add("1202");
+
+    for (int x = 0; x < geometry.length; x++) {
+      for (int y = 0; y < geometry[x].length; y++) {
+        if (geometry[x][y]) {
+          Sprite floor = Main.asciiAtlas.createSprite(floorTypes.random());
+          floor.setColor(Colors.get("forestFloor"));
+          map[x][y] = new MapCell(floor, MapCell.Type.FLOOR, "the forest floor");
+        } else {
+          Sprite wall = Main.asciiAtlas.createSprite("0" + MathUtils.random(5, 6) + "00");
+          wall.setColor(Colors.get("forestTree-" + MathUtils.random(1, 3)));
+          map[x][y] = new MapCell(wall, MapCell.Type.WALL, "a tree");
+        }
+
+        map[x][y].sprite.setPosition(x * Main.SPRITE_WIDTH, y * Main.SPRITE_HEIGHT);
+      }
+    }
+
+    if (MathUtils.randomBoolean()) {
+      createWater();
+    }
+  }
+
+  public void paintCave() {
+    map = new MapCell[width][height];
 
     for (int x = 0; x < geometry.length; x++) {
       for (int y = 0; y < geometry[x].length; y++) {
@@ -62,8 +104,12 @@ public class Map {
       }
     }
 
-    // Water
+    if (MathUtils.randomBoolean()) {
+      createWater();
+    }
+  }
 
+  private void createWater() {
     flooded = new boolean[width][height];
 
     for (boolean[] row : flooded) {
