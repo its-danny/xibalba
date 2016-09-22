@@ -51,6 +51,8 @@ public class RangeSystem extends UsesEnergySystem {
   }
 
   private void doThrowAnimation(Entity entity, Entity item, Vector2 position, boolean destroy) {
+    WorldManager.state = WorldManager.State.WAITING;
+
     // We have to set the items position before starting the tween since who knows wtf
     // position it had before it ended up in your inventory.
     PositionComponent throwerPosition = ComponentMappers.position.get(entity);
@@ -68,6 +70,8 @@ public class RangeSystem extends UsesEnergySystem {
             } else {
               WorldManager.inventoryHelpers.dropItem(entity, item, position);
             }
+
+            WorldManager.state = WorldManager.State.PLAYING;
           }
         }
     ).start(Main.tweenManager);

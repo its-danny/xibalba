@@ -69,9 +69,9 @@ public class WorldManager {
     engine.addSystem(new BrainSystem());
     engine.addSystem(new WanderSystem());
     engine.addSystem(new TargetSystem());
+    engine.addSystem(new RangeSystem());
     engine.addSystem(new MovementSystem());
     engine.addSystem(new MeleeSystem());
-    engine.addSystem(new RangeSystem());
     engine.addSystem(new TileEffectSystem());
     engine.addSystem(new CrippledSystem());
     engine.addSystem(new BleedingSystem());
@@ -124,6 +124,6 @@ public class WorldManager {
   }
 
   public enum State {
-    PLAYING, TARGETING, LOOKING, MOVING, GOING_DOWN, GOING_UP, FOCUSED
+    PLAYING, TARGETING, LOOKING, MOVING, GOING_DOWN, GOING_UP, FOCUSED, WAITING
   }
 }
