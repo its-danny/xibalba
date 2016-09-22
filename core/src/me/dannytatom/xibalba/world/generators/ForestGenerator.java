@@ -2,17 +2,19 @@ package me.dannytatom.xibalba.world.generators;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
+import me.dannytatom.xibalba.world.MapCell;
 
 import java.util.Arrays;
 
 public class ForestGenerator {
   private final int width;
   private final int height;
-  public boolean[][] geometry;
-  private boolean[][] flooded;
+
+  public MapCell.Type[][] geometry;
+  private MapCell.Type[][] flooded;
 
   /**
-   * Generates a forest. `true` is ground, `false` is wall.
+   * Generates a forest.
    *
    * @param width  How wide the world should be in cells
    * @param height How long the world should be in cells
@@ -41,35 +43,35 @@ public class ForestGenerator {
   }
 
   private void initialize() {
-    geometry = new boolean[width][height];
+    geometry = new MapCell.Type[width][height];
 
-    for (boolean[] row : geometry) {
-      Arrays.fill(row, false);
+    for (MapCell.Type[] row : geometry) {
+      Arrays.fill(row, MapCell.Type.WALL);
     }
 
     for (int x = 0; x < width; x++) {
       for (int y = 0; y < height; y++) {
         float chanceToStartAlive = 0.4f;
         if (MathUtils.random() < chanceToStartAlive) {
-          geometry[x][y] = true;
+          geometry[x][y] = MapCell.Type.FLOOR;
         }
       }
     }
   }
 
-  private boolean[][] step() {
-    boolean[][] newGeo = geometry.clone();
+  private MapCell.Type[][] step() {
+    MapCell.Type[][] newGeo = geometry.clone();
 
     for (int x = 0; x < geometry.length; x++) {
       for (int y = 0; y < geometry[0].length; y++) {
         int neighbours = countLivingNeighbours(x, y);
 
-        if (geometry[x][y]) {
+        if (geometry[x][y] == MapCell.Type.FLOOR) {
           float deathLimit = 3;
-          newGeo[x][y] = neighbours >= deathLimit;
+          newGeo[x][y] = neighbours >= deathLimit ? MapCell.Type.FLOOR : MapCell.Type.WALL;
         } else {
           float birthLimit = 4;
-          newGeo[x][y] = neighbours > birthLimit;
+          newGeo[x][y] = neighbours > birthLimit ? MapCell.Type.FLOOR : MapCell.Type.WALL;
         }
       }
     }
@@ -77,15 +79,15 @@ public class ForestGenerator {
     return newGeo;
   }
 
-  private boolean[][] blank() {
-    boolean[][] newGeo = geometry.clone();
+  private MapCell.Type[][] blank() {
+    MapCell.Type[][] newGeo = geometry.clone();
 
     int rows = 2;
     int start = MathUtils.round(geometry[0].length / 2) - rows;
 
     for (int x = 0; x < geometry.length; x++) {
       for (int y = start; y < start + (rows - 1); y++) {
-        newGeo[x][y] = false;
+        newGeo[x][y] = MapCell.Type.FLOOR;
       }
     }
 
@@ -99,28 +101,28 @@ public class ForestGenerator {
     for (int x = 0; x < geometry.length; x++) {
       for (int y = 0; y < geometry[x].length; y++) {
         if (x == 0 || y == 0 || x == 1 || y == 1) {
-          geometry[x][y] = false;
+          geometry[x][y] = MapCell.Type.WALL;
         }
 
         if (x == geometry.length - 1 || y == geometry[x].length - 1
             || x == geometry.length - 2 || y == geometry[x].length - 2) {
-          geometry[x][y] = false;
+          geometry[x][y] = MapCell.Type.WALL;
         }
       }
     }
   }
 
   private void maybeTryAgain() {
-    flooded = new boolean[width][height];
+    flooded = new MapCell.Type[width][height];
 
-    for (boolean[] row : flooded) {
-      Arrays.fill(row, false);
+    for (MapCell.Type[] row : flooded) {
+      Arrays.fill(row, MapCell.Type.WALL);
     }
 
     search:
     for (int x = 0; x < geometry.length; x++) {
       for (int y = 0; y < geometry[0].length; y++) {
-        if (geometry[x][y]) {
+        if (geometry[x][y] == MapCell.Type.FLOOR) {
           floodFill(x, y);
           break search;
         }
@@ -133,7 +135,7 @@ public class ForestGenerator {
 
     for (int x = 0; x < geometry.length; x++) {
       for (int y = 0; y < geometry[0].length; y++) {
-        if (geometry[x][y]) {
+        if (geometry[x][y] == MapCell.Type.FLOOR) {
           openCount += 1;
         }
       }
@@ -147,8 +149,8 @@ public class ForestGenerator {
   }
 
   private void floodFill(int cellX, int cellY) {
-    if (geometry[cellX][cellY] && !flooded[cellX][cellY]) {
-      flooded[cellX][cellY] = true;
+    if (geometry[cellX][cellY] == MapCell.Type.FLOOR && flooded[cellX][cellY] == MapCell.Type.WALL) {
+      flooded[cellX][cellY] = MapCell.Type.FLOOR;
     } else {
       return;
     }
@@ -171,7 +173,7 @@ public class ForestGenerator {
           if (neighbourX < 0 || neighbourY < 0
               || neighbourX >= geometry.length || neighbourY >= geometry[0].length) {
             count += 1;
-          } else if (geometry[neighbourX][neighbourY]) {
+          } else if (geometry[neighbourX][neighbourY] == MapCell.Type.FLOOR) {
             count += 1;
           }
         }

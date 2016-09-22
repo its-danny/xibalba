@@ -371,7 +371,7 @@ public class MapHelpers {
   public int getWallNeighbours(int mapIndex, int cellX, int cellY) {
     int count = 0;
 
-    boolean[][] geometry = WorldManager.world.getMap(mapIndex).geometry;
+    MapCell.Type[][] geometry = WorldManager.world.getMap(mapIndex).geometry;
 
     for (int i = -1; i < 2; i++) {
       for (int j = -1; j < 2; j++) {
@@ -380,7 +380,7 @@ public class MapHelpers {
 
         if (i != 0 || j != 0) {
           if (nx >= 0 && ny >= 0 && nx < geometry.length && ny < geometry[0].length) {
-            if (!geometry[nx][ny]) {
+            if (geometry[nx][ny] == MapCell.Type.WALL) {
               count += 1;
             }
           } else {

@@ -15,10 +15,10 @@ public class Map {
   public final int width;
   public final int height;
   public final String type;
-  public final boolean[][] geometry;
+  public final MapCell.Type[][] geometry;
   public float[][] lightMap;
   private MapCell[][] map;
-  private boolean[][] flooded;
+  private MapCell.Type[][] flooded;
   private int floodedCount = 0;
   public MapTime time;
 
@@ -27,7 +27,7 @@ public class Map {
    *
    * @param geometry The world geometry
    */
-  public Map(String type, boolean[][] geometry) {
+  public Map(String type, MapCell.Type[][] geometry) {
     this.type = type;
     this.geometry = geometry;
 
@@ -59,7 +59,7 @@ public class Map {
 
     for (int x = 0; x < geometry.length; x++) {
       for (int y = 0; y < geometry[x].length; y++) {
-        if (geometry[x][y]) {
+        if (geometry[x][y] == MapCell.Type.FLOOR) {
           Sprite floor = Main.asciiAtlas.createSprite(floorTypes.random());
           floor.setColor(Colors.get("forestFloor"));
           map[x][y] = new MapCell(floor, MapCell.Type.FLOOR, "the forest floor");
@@ -83,7 +83,7 @@ public class Map {
 
     for (int x = 0; x < geometry.length; x++) {
       for (int y = 0; y < geometry[x].length; y++) {
-        if (geometry[x][y]) {
+        if (geometry[x][y] == MapCell.Type.FLOOR) {
           Sprite floor = Main.asciiAtlas.createSprite("0011");
           floor.setColor(Colors.get("caveFloor"));
           map[x][y] = new MapCell(floor, MapCell.Type.FLOOR, "a cave floor");
@@ -110,10 +110,10 @@ public class Map {
   }
 
   private void createWater() {
-    flooded = new boolean[width][height];
+    flooded = new MapCell.Type[width][height];
 
-    for (boolean[] row : flooded) {
-      Arrays.fill(row, false);
+    for (MapCell.Type[] row : flooded) {
+      Arrays.fill(row, MapCell.Type.WALL);
     }
 
     int floodStartX;
@@ -129,7 +129,7 @@ public class Map {
 
     for (int x = 0; x < flooded.length; x++) {
       for (int y = 0; y < flooded[0].length; y++) {
-        if (flooded[x][y]) {
+        if (flooded[x][y] == MapCell.Type.FLOOR) {
           Sprite water = Main.asciiAtlas.createSprite("0715");
           water.setPosition(x * Main.SPRITE_WIDTH, y * Main.SPRITE_HEIGHT);
 
@@ -172,7 +172,7 @@ public class Map {
 
         if (i != 0 || j != 0) {
           if (nx >= 0 && ny >= 0 && nx < geometry.length && ny < geometry[0].length) {
-            if (geometry[nx][ny]) {
+            if (geometry[nx][ny] == MapCell.Type.FLOOR) {
               count += 1;
             }
           }
@@ -184,8 +184,8 @@ public class Map {
   }
 
   private void flood(int cellX, int cellY) {
-    if (geometry[cellX][cellY] && !flooded[cellX][cellY]) {
-      flooded[cellX][cellY] = true;
+    if (geometry[cellX][cellY] == MapCell.Type.FLOOR && flooded[cellX][cellY] == MapCell.Type.WALL) {
+      flooded[cellX][cellY] = MapCell.Type.FLOOR;
       floodedCount += 1;
     } else {
       return;
