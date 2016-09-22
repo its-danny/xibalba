@@ -78,7 +78,7 @@ public class PlayerSetup {
     return player;
   }
 
-  private String generateName() {
+  private void generateName() {
     String preceding;
     String[] names;
 
@@ -90,6 +90,6 @@ public class PlayerSetup {
       names = Gdx.files.internal("data/names/female").readString().split("\\r?\\n");
     }
 
-    return preceding + " " + names[MathUtils.random(0, names.length - 1)];
+    name = preceding + " " + names[MathUtils.random(0, names.length - 1)];
   }
 }
