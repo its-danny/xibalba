@@ -2,10 +2,7 @@ package me.dannytatom.xibalba.world;
 
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.math.MathUtils;
 import me.dannytatom.xibalba.ActionLog;
-import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.helpers.CombatHelpers;
 import me.dannytatom.xibalba.helpers.EffectsHelpers;
 import me.dannytatom.xibalba.helpers.EntityHelpers;
@@ -26,11 +23,7 @@ import me.dannytatom.xibalba.systems.statuses.CrippledSystem;
 import me.dannytatom.xibalba.systems.statuses.DrowningSystem;
 import me.dannytatom.xibalba.systems.statuses.WetSystem;
 
-import java.util.Calendar;
-import java.util.TreeMap;
-
 public class WorldManager {
-  private static final TreeMap<Integer, String> rnMap = new TreeMap<>();
   public static Engine engine;
   public static World world;
   public static State state;
@@ -77,50 +70,6 @@ public class WorldManager {
     engine.addSystem(new BleedingSystem());
     engine.addSystem(new DrowningSystem());
     engine.addSystem(new WetSystem());
-
-    // Roman numeral world
-    rnMap.put(1000, "M");
-    rnMap.put(900, "CM");
-    rnMap.put(500, "D");
-    rnMap.put(400, "CD");
-    rnMap.put(100, "C");
-    rnMap.put(90, "XC");
-    rnMap.put(50, "L");
-    rnMap.put(40, "XL");
-    rnMap.put(10, "X");
-    rnMap.put(9, "IX");
-    rnMap.put(5, "V");
-    rnMap.put(4, "IV");
-    rnMap.put(1, "I");
-
-    // Create player
-    player = new Entity();
-    player.add(new AttributesComponent(createPlayerName(), "It's you", 100, 10, 8, 6));
-  }
-
-  private static String createPlayerName() {
-    String preceding;
-    String[] names;
-
-    if (MathUtils.randomBoolean()) {
-      preceding = intToRoman(Calendar.getInstance().get(Calendar.DAY_OF_YEAR));
-      names = Gdx.files.internal("data/names/male").readString().split("\\r?\\n");
-    } else {
-      preceding = "IX";
-      names = Gdx.files.internal("data/names/female").readString().split("\\r?\\n");
-    }
-
-    return preceding + " " + names[MathUtils.random(0, names.length - 1)];
-  }
-
-  private static String intToRoman(int number) {
-    int floored = rnMap.floorKey(number);
-
-    if (number == floored) {
-      return rnMap.get(number);
-    }
-
-    return rnMap.get(floored) + intToRoman(number - floored);
   }
 
   public enum State {

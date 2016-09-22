@@ -11,12 +11,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import me.dannytatom.xibalba.Main;
-import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.screens.LoadingScreen;
 import me.dannytatom.xibalba.screens.MainMenuScreen;
 import me.dannytatom.xibalba.ui.ActionButton;
-import me.dannytatom.xibalba.utils.ComponentMappers;
-import me.dannytatom.xibalba.world.WorldManager;
+import me.dannytatom.xibalba.utils.PlayerSetup;
 
 import java.util.Objects;
 
@@ -26,7 +24,8 @@ public class ReviewScreen implements Screen {
   private final Stage stage;
   private final TextField worldSeedField;
   private final TextField playerNameField;
-  private final AttributesComponent playerAttributes;
+  private PlayerSetup playerSetup;
+  private long worldSeed;
 
   /**
    * Character Creation: Review Screen.
@@ -37,11 +36,8 @@ public class ReviewScreen implements Screen {
     this.main = main;
 
     stage = new Stage();
-
-    WorldManager.setup();
-    WorldManager.world.seed = System.currentTimeMillis();
-
-    playerAttributes = ComponentMappers.attributes.get(WorldManager.player);
+    playerSetup = new PlayerSetup();
+    worldSeed = System.currentTimeMillis();
 
     Table table = new Table();
     table.setFillParent(true);
@@ -59,14 +55,14 @@ public class ReviewScreen implements Screen {
     Label worldSeedLabel = new Label("World Seed", Main.skin);
     table.add(worldSeedLabel).pad(0, 0, 10, 10).width(Gdx.graphics.getWidth() / 2 - 20);
     table.row();
-    worldSeedField = new TextField(WorldManager.world.seed + "", Main.skin);
+    worldSeedField = new TextField(worldSeed + "", Main.skin);
     table.add(worldSeedField).pad(0, 0, 10, 10).width(Gdx.graphics.getWidth() / 2 - 20);
 
     table.row();
     Label playerNameLabel = new Label("Name", Main.skin);
     table.add(playerNameLabel).pad(0, 0, 10, 10).width(Gdx.graphics.getWidth() / 2 - 20);
     table.row();
-    playerNameField = new TextField(playerAttributes.name, Main.skin);
+    playerNameField = new TextField(playerSetup.name, Main.skin);
     table.add(playerNameField).pad(0, 0, 10, 10).width(Gdx.graphics.getWidth() / 2 - 20);
 
     ActionButton continueButton = new ActionButton("ENTER", "Begin Your Journey");
@@ -105,17 +101,17 @@ public class ReviewScreen implements Screen {
     String seedInput = worldSeedField.getText();
 
     if (!Objects.equals(seedInput, "")) {
-      WorldManager.world.seed = Long.parseLong(seedInput);
+      worldSeed = Long.parseLong(seedInput);
     }
 
-    Gdx.app.log("World Seed", WorldManager.world.seed + "");
-    MathUtils.random.setSeed(WorldManager.world.seed);
+    Gdx.app.log("World Seed", worldSeed + "");
+    MathUtils.random.setSeed(worldSeed);
 
     // Set player name
     String playerName = playerNameField.getText();
-    playerAttributes.name = Objects.equals(playerName, "") ? playerAttributes.name : playerName;
+    playerSetup.name = Objects.equals(playerName, "") ? playerSetup.name : playerName;
 
-    main.setScreen(new LoadingScreen(main));
+    main.setScreen(new LoadingScreen(main, playerSetup));
   }
 
   @Override

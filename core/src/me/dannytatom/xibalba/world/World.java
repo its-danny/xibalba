@@ -14,7 +14,6 @@ public class World {
   public final ArrayList<Map> maps;
   public final HashMap<Integer, Array<Entity>> entities;
   private final ShadowCaster caster;
-  public long seed;
   public int currentMapIndex = 0;
 
   /**

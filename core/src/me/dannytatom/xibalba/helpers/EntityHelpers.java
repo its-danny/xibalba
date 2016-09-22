@@ -14,9 +14,7 @@ import me.dannytatom.xibalba.components.BodyComponent;
 import me.dannytatom.xibalba.components.DecorationComponent;
 import me.dannytatom.xibalba.components.EnemyComponent;
 import me.dannytatom.xibalba.components.EntranceComponent;
-import me.dannytatom.xibalba.components.EquipmentComponent;
 import me.dannytatom.xibalba.components.ExitComponent;
-import me.dannytatom.xibalba.components.InventoryComponent;
 import me.dannytatom.xibalba.components.ItemComponent;
 import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
@@ -37,7 +35,6 @@ import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Objects;
 
 public class EntityHelpers {
@@ -46,33 +43,6 @@ public class EntityHelpers {
    */
   public EntityHelpers() {
 
-  }
-
-  /**
-   * Setup player entity.
-   *
-   * @param player The player
-   */
-  public void setupPlayer(Entity player) {
-    Vector2 position = WorldManager.mapHelpers.getEntrancePosition();
-
-    player.add(new PlayerComponent());
-    player.add(new PositionComponent(position));
-    player.add(new VisualComponent(
-        Main.asciiAtlas.createSprite("0004"), position
-    ));
-    player.add(new InventoryComponent());
-    player.add(new EquipmentComponent());
-    player.add(new SkillsComponent());
-
-    HashMap<String, Integer> bodyParts = new HashMap<>();
-    bodyParts.put("head", 10);
-    bodyParts.put("body", 8);
-    bodyParts.put("left arm", 10);
-    bodyParts.put("right arm", 10);
-    bodyParts.put("left leg", 10);
-    bodyParts.put("right leg", 10);
-    player.add(new BodyComponent(bodyParts));
   }
 
   /**

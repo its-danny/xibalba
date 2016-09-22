@@ -14,6 +14,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.utils.JsonToLevel;
+import me.dannytatom.xibalba.utils.PlayerSetup;
 import me.dannytatom.xibalba.utils.SoundManager;
 import me.dannytatom.xibalba.world.Map;
 import me.dannytatom.xibalba.world.WorldManager;
@@ -26,6 +27,7 @@ public class LoadingScreen implements Screen {
   private final Main main;
   private final Stage stage;
   private final Label label;
+  private PlayerSetup playerSetup;
   private boolean generating = false;
 
   /**
@@ -33,8 +35,10 @@ public class LoadingScreen implements Screen {
    *
    * @param main Instance of main class
    */
-  public LoadingScreen(Main main) {
+  public LoadingScreen(Main main, PlayerSetup playerSetup) {
     this.main = main;
+    this.playerSetup = playerSetup;
+
     stage = new Stage();
 
     Table table = new Table();
@@ -96,6 +100,8 @@ public class LoadingScreen implements Screen {
   }
 
   private void generateWorld() {
+    WorldManager.setup();
+
     ArrayList levels = (new Json()).fromJson(
         ArrayList.class, JsonToLevel.class, Gdx.files.internal("data/world.json")
     );
@@ -134,7 +140,7 @@ public class LoadingScreen implements Screen {
     }
 
     // Add player entity
-    WorldManager.entityHelpers.setupPlayer(WorldManager.player);
+    WorldManager.player = playerSetup.create();
     WorldManager.world.entities.get(WorldManager.world.currentMapIndex).add(WorldManager.player);
   }
 
