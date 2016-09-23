@@ -246,7 +246,7 @@ public class InventoryHelpers {
   /**
    * Iterate through inventory, return whatever item has the `throwing` flag set to true.
    *
-   * @param entity Entity whose throwing things
+   * @param entity Entity whose throwing actions
    *
    * @return The item being thrown
    */

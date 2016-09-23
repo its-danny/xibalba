@@ -27,6 +27,10 @@ public class MainMenuScreen implements Screen {
     table.setFillParent(true);
     stage.addActor(table);
 
+    ActionButton continueButton = new ActionButton("C", "Continue");
+    continueButton.setKeys(Input.Keys.C);
+    continueButton.setAction(table, () -> main.setScreen(new LoadingScreen(main, false, null)));
+
     ActionButton newGameButton = new ActionButton("N", "New Game");
     newGameButton.setKeys(Input.Keys.N);
     newGameButton.setAction(table, () -> main.setScreen(new ReviewScreen(main)));
@@ -37,6 +41,12 @@ public class MainMenuScreen implements Screen {
 
     table.add(new Label("[LIGHT_GRAY]Xibalba v0.1.0[]", Main.skin)).pad(0, 0, 10, 0);
     table.row();
+
+    if (Gdx.files.local("save").exists()) {
+      table.add(continueButton).pad(0, 0, 10, 0);
+      table.row();
+    }
+
     table.add(newGameButton).pad(0, 0, 10, 0);
     table.row();
     table.add(quitButton);

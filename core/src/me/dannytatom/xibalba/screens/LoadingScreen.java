@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
+import com.esotericsoftware.kryo.io.Input;
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.utils.JsonToLevel;
 import me.dannytatom.xibalba.utils.PlayerSetup;
@@ -26,6 +27,7 @@ import java.util.HashMap;
 
 public class LoadingScreen implements Screen {
   private final Main main;
+  private final boolean newGame;
   private final Stage stage;
   private final Label label;
   private PlayerSetup playerSetup;
@@ -36,8 +38,9 @@ public class LoadingScreen implements Screen {
    *
    * @param main Instance of main class
    */
-  public LoadingScreen(Main main, PlayerSetup playerSetup) {
+  public LoadingScreen(Main main, boolean newGame, PlayerSetup playerSetup) {
     this.main = main;
+    this.newGame = newGame;
     this.playerSetup = playerSetup;
 
     stage = new Stage();
@@ -72,8 +75,19 @@ public class LoadingScreen implements Screen {
 
       Main.soundManager = new SoundManager();
 
-      if (!generating) {
-        generateWorld();
+      WorldManager.setup();
+
+      if (newGame) {
+        if (!generating) {
+          generateWorld();
+
+          Main.playScreen = new PlayScreen(main);
+          main.setScreen(Main.playScreen);
+        }
+      } else {
+        Input input = new Input(Gdx.files.local("save").read());
+        // TODO: Load
+        input.close();
 
         Main.playScreen = new PlayScreen(main);
         main.setScreen(Main.playScreen);
@@ -101,8 +115,6 @@ public class LoadingScreen implements Screen {
   }
 
   private void generateWorld() {
-    WorldManager.setup();
-
     ArrayList levels = (new Json()).fromJson(
         ArrayList.class, JsonToLevel.class, Gdx.files.internal("data/world.json")
     );

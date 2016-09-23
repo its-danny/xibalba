@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.esotericsoftware.kryo.io.Output;
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.ui.ActionButton;
 
@@ -33,13 +34,17 @@ public class PauseScreen implements Screen {
     ActionButton mainMenuButton = new ActionButton("M", "Main Menu");
     mainMenuButton.setKeys(Input.Keys.M);
     mainMenuButton.setAction(table, () -> {
+      save();
       Main.playScreen.dispose();
       main.setScreen(new MainMenuScreen(main));
     });
 
     ActionButton quitButton = new ActionButton("Q", "Quit");
     quitButton.setKeys(Input.Keys.Q);
-    quitButton.setAction(table, () -> Gdx.app.exit());
+    quitButton.setAction(table, () -> {
+      save();
+      Gdx.app.exit();
+    });
 
     table.add(new Label("[LIGHT_GRAY]PAUSED[]", Main.skin)).pad(0, 0, 10, 0);
     table.row();
@@ -76,6 +81,12 @@ public class PauseScreen implements Screen {
   @Override
   public void resize(int width, int height) {
     stage.getViewport().update(width, height, true);
+  }
+
+  private void save() {
+    Output output = new Output(Gdx.files.local("save").write(false));
+    // TODO: Save
+    output.close();
   }
 
   @Override

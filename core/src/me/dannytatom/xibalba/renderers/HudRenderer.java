@@ -162,8 +162,8 @@ public class HudRenderer {
   private void renderActionLog() {
     actionLog.clear();
 
-    for (int i = 0; i < WorldManager.log.things.size(); i++) {
-      String action = WordUtils.wrap(WorldManager.log.things.get(i), 100);
+    for (int i = 0; i < WorldManager.log.actions.size(); i++) {
+      String action = WordUtils.wrap(WorldManager.log.actions.get(i), 100);
       Label label = new Label(action, Main.skin);
       label.setColor(1f, 1f, 1f, i == 0 ? 1f : 0.5f);
 
