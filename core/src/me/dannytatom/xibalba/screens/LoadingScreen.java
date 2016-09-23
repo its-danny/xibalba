@@ -180,14 +180,14 @@ public class LoadingScreen implements Screen {
     // Spawn an entrance on every level but first
     if (mapIndex > 0) {
       WorldManager.world.entities.get(mapIndex).add(
-          WorldManager.entityHelpers.createEntrance(mapIndex)
+          WorldManager.entityFactory.createEntrance(mapIndex)
       );
     }
 
     // Spawn an exit on every level but last
     if (!isLast) {
       WorldManager.world.entities.get(mapIndex).add(
-          WorldManager.entityHelpers.createExit(mapIndex)
+          WorldManager.entityFactory.createExit(mapIndex)
       );
     }
 
@@ -199,7 +199,7 @@ public class LoadingScreen implements Screen {
 
       for (int j = 0; j < amount; j++) {
         WorldManager.world.entities.get(mapIndex).add(
-            WorldManager.entityHelpers.createItem(item.get("name"),
+            WorldManager.entityFactory.createItem(item.get("name"),
                 WorldManager.mapHelpers.getRandomOpenPositionOnMap(mapIndex))
         );
       }
@@ -214,7 +214,7 @@ public class LoadingScreen implements Screen {
       for (int j = 0; j < amount; j++) {
 
         WorldManager.world.entities.get(mapIndex).add(
-            WorldManager.entityHelpers.createEnemy(enemy.get("name"),
+            WorldManager.entityFactory.createEnemy(enemy.get("name"),
                 WorldManager.mapHelpers.getRandomOpenPositionOnMap(mapIndex))
         );
       }

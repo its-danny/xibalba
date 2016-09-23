@@ -417,7 +417,7 @@ public class CombatHelpers {
     if (targetAttributes.health <= 0) {
       PositionComponent position = ComponentMappers.position.get(target);
 
-      WorldManager.world.addEntity(WorldManager.entityHelpers.createRemains(position.pos));
+      WorldManager.world.addEntity(WorldManager.entityFactory.createRemains(position.pos));
       WorldManager.world.removeEntity(target);
 
       if (ComponentMappers.player.has(starter)) {

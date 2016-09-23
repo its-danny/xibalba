@@ -23,12 +23,14 @@ import me.dannytatom.xibalba.systems.statuses.BleedingSystem;
 import me.dannytatom.xibalba.systems.statuses.CrippledSystem;
 import me.dannytatom.xibalba.systems.statuses.DrowningSystem;
 import me.dannytatom.xibalba.systems.statuses.WetSystem;
+import me.dannytatom.xibalba.utils.EntityFactory;
 
 public class WorldManager {
   public static Engine engine;
   public static ActionLog log;
   public static World world;
   public static State state;
+  public static EntityFactory entityFactory;
   public static MapHelpers mapHelpers;
   public static CombatHelpers combatHelpers;
   public static EntityHelpers entityHelpers;
@@ -47,6 +49,7 @@ public class WorldManager {
     log = new ActionLog();
     world = new World();
 
+    entityFactory = new EntityFactory();
     mapHelpers = new MapHelpers();
     entityHelpers = new EntityHelpers();
     inventoryHelpers = new InventoryHelpers();
