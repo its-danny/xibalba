@@ -83,7 +83,7 @@ class PlayScreen implements Screen {
 
     // In some cases, we want the game to take turns on it's own
     if ((WorldManager.state == WorldManager.State.MOVING
-        || WorldManager.entityHelpers.skipTurn(WorldManager.player))
+        || WorldManager.entityHelpers.shouldSkipTurn(WorldManager.player))
         && autoTimer >= .10f) {
       autoTimer = 0;
       WorldManager.executeTurn = true;

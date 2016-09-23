@@ -24,7 +24,7 @@ public class ReviewScreen implements Screen {
   private final Stage stage;
   private final TextField worldSeedField;
   private final TextField playerNameField;
-  private PlayerSetup playerSetup;
+  private final PlayerSetup playerSetup;
   private long worldSeed;
 
   /**

@@ -17,9 +17,44 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.Objects;
 
-public class InventoryHelpers {
-  public InventoryHelpers() {
+public class ItemHelpers {
+  public ItemHelpers() {
 
+  }
+
+  /**
+   * Get item name.
+   *
+   * @param entity The entity looking
+   * @param item   The item itself
+   *
+   * @return The item name if identified, ??? otherwise
+   */
+  public String getName(Entity entity, Entity item) {
+    ItemComponent details = ComponentMappers.item.get(item);
+
+    if (isIdentified(entity, item)) {
+      return details.name;
+    } else {
+      return "???";
+    }
+  }
+
+  /**
+   * Whether or not an item is identified.
+   *
+   * @param entity The entity looking
+   * @param item   The item itself
+   *
+   * @return If it is indeed identified
+   */
+  public boolean isIdentified(Entity entity, Entity item) {
+    PlayerComponent player = ComponentMappers.player.get(entity);
+    ItemComponent details = ComponentMappers.item.get(item);
+
+    return player == null
+        || !(Objects.equals(details.type, "consumable")
+        && !player.identifiedItems.contains(details.name, false));
   }
 
   /**
@@ -28,7 +63,7 @@ public class InventoryHelpers {
    * @param entity Entity we wanna to give shit to
    * @param item   The item itself
    */
-  public void addItem(Entity entity, Entity item) {
+  public void addToInventory(Entity entity, Entity item) {
     InventoryComponent inventory = ComponentMappers.inventory.get(entity);
 
     if (inventory != null) {
@@ -40,14 +75,14 @@ public class InventoryHelpers {
         ItemComponent itemDetails = ComponentMappers.item.get(item);
 
         WorldManager.log.add(
-            "You picked up a " + WorldManager.entityHelpers.getItemName(entity, item)
+            "You picked up a " + WorldManager.itemHelpers.getName(entity, item)
         );
 
         if (Objects.equals(itemDetails.type, "weapon")
             && equipment.slots.get("right hand") == null) {
-          holdItem(entity, item);
+          hold(entity, item);
           WorldManager.log.add(
-              "You are now holding a " + WorldManager.entityHelpers.getItemName(entity, item)
+              "You are now holding a " + WorldManager.itemHelpers.getName(entity, item)
           );
         }
       }
@@ -60,7 +95,7 @@ public class InventoryHelpers {
    * @param entity The entity we want to hold the item
    * @param item   The item itself
    */
-  public void holdItem(Entity entity, Entity item) {
+  public void hold(Entity entity, Entity item) {
     ItemComponent itemDetails = ComponentMappers.item.get(item);
     EquipmentComponent equipment = ComponentMappers.equipment.get(entity);
 
@@ -79,7 +114,7 @@ public class InventoryHelpers {
    * @param entity The entity we want to wear the item
    * @param item   The item itself
    */
-  public void wearItem(Entity entity, Entity item) {
+  public void wear(Entity entity, Entity item) {
     ItemComponent itemDetails = ComponentMappers.item.get(item);
     EquipmentComponent equipment = ComponentMappers.equipment.get(entity);
 
@@ -102,7 +137,7 @@ public class InventoryHelpers {
    * @param entity Who eating?
    * @param item   What they eating
    */
-  public void eatItem(Entity entity, Entity item) {
+  public void eat(Entity entity, Entity item) {
     if (item != null) {
       ItemComponent itemDetails = ComponentMappers.item.get(item);
 
@@ -116,7 +151,7 @@ public class InventoryHelpers {
           String action = entry.getValue();
 
           if (Objects.equals(event, "onConsume")) {
-            WorldManager.effectsHelpers.applyEffect(entity, action);
+            WorldManager.entityHelpers.applyEffect(entity, action);
           }
         }
       }
@@ -127,7 +162,7 @@ public class InventoryHelpers {
         player.identifiedItems.add(itemDetails.name);
       }
 
-      destroyItem(entity, item);
+      destroy(entity, item);
     }
   }
 
@@ -138,7 +173,7 @@ public class InventoryHelpers {
    * @param applyingItem Item we're applying
    * @param targetItem   What we're applying it to
    */
-  public void applyItem(Entity entity, Entity applyingItem, Entity targetItem) {
+  public void apply(Entity entity, Entity applyingItem, Entity targetItem) {
     if (applyingItem != null && targetItem != null) {
       ItemEffectsComponent applyingItemEffects = ComponentMappers.itemEffects.get(applyingItem);
       ItemEffectsComponent targetItemEffects = ComponentMappers.itemEffects.get(targetItem);
@@ -151,7 +186,7 @@ public class InventoryHelpers {
         targetItemEffects.effects.put("onHit", applyingItemEffects.effects.get("onApply"));
       }
 
-      destroyItem(entity, applyingItem);
+      destroy(entity, applyingItem);
     }
   }
 
@@ -161,7 +196,7 @@ public class InventoryHelpers {
    * @param entity The entity we want to remove the item from
    * @param item   The item itself
    */
-  public void removeItem(Entity entity, Entity item) {
+  public void remove(Entity entity, Entity item) {
     EquipmentComponent equipment = ComponentMappers.equipment.get(entity);
     ItemComponent itemDetails = ComponentMappers.item.get(item);
 
@@ -179,12 +214,12 @@ public class InventoryHelpers {
    * @param item     What we're dropping
    * @param position Where we gonna drop it
    */
-  public void dropItem(Entity entity, Entity item, Vector2 position) {
+  public void drop(Entity entity, Entity item, Vector2 position) {
     InventoryComponent inventory = ComponentMappers.inventory.get(entity);
 
     if (inventory != null) {
       if (isEquipped(entity, item)) {
-        removeItem(entity, item);
+        remove(entity, item);
       }
 
       WorldManager.entityHelpers.updatePosition(item, position);
@@ -192,7 +227,7 @@ public class InventoryHelpers {
 
       if (ComponentMappers.player.has(entity)) {
         WorldManager.log.add(
-            "You dropped a " + WorldManager.entityHelpers.getItemName(entity, item)
+            "You dropped a " + WorldManager.itemHelpers.getName(entity, item)
         );
       }
     }
@@ -204,9 +239,9 @@ public class InventoryHelpers {
    * @param entity Whose feet we're dropping shit on
    * @param item   What we're dropping
    */
-  public void dropItem(Entity entity, Entity item) {
+  public void drop(Entity entity, Entity item) {
     if (ComponentMappers.inventory.has(entity)) {
-      dropItem(entity, item, ComponentMappers.position.get(entity).pos);
+      drop(entity, item, ComponentMappers.position.get(entity).pos);
     }
   }
 
@@ -216,7 +251,7 @@ public class InventoryHelpers {
    * @param entity Entity we want to take shit from
    * @param item   The shit we gonna take
    */
-  public void destroyItem(Entity entity, Entity item) {
+  public void destroy(Entity entity, Entity item) {
     InventoryComponent inventory = ComponentMappers.inventory.get(entity);
 
     if (inventory != null && item != null) {
@@ -250,7 +285,7 @@ public class InventoryHelpers {
    *
    * @return The item being thrown
    */
-  public Entity getThrowingItem(Entity entity) {
+  public Entity getThrowing(Entity entity) {
     ArrayList<Entity> items = ComponentMappers.inventory.get(entity).items;
 
     for (Entity item : items) {
@@ -271,7 +306,7 @@ public class InventoryHelpers {
    *
    * @return Location of item
    */
-  public String getItemLocation(Entity entity, Entity item) {
+  public String getLocation(Entity entity, Entity item) {
     EquipmentComponent equipment = ComponentMappers.equipment.get(entity);
 
     for (Map.Entry<String, Entity> slot : equipment.slots.entrySet()) {
@@ -367,27 +402,5 @@ public class InventoryHelpers {
     }
 
     return null;
-  }
-
-  public boolean isAmmunition(Entity entity) {
-    return ComponentMappers.ammunition.has(entity);
-  }
-
-  public boolean isArmor(Entity entity) {
-    return ComponentMappers.armor.has(entity);
-  }
-
-  public boolean isWeapon(Entity entity) {
-    return ComponentMappers.weapon.has(entity);
-  }
-
-  public boolean isMeleeWeapon(Entity entity) {
-    WeaponComponent weapon = ComponentMappers.weapon.get(entity);
-    return weapon != null && Objects.equals(weapon.type, "melee");
-  }
-
-  public boolean isRangeWeapon(Entity entity) {
-    WeaponComponent weapon = ComponentMappers.weapon.get(entity);
-    return weapon != null && Objects.equals(weapon.type, "range");
   }
 }

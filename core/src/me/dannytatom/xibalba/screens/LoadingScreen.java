@@ -30,7 +30,7 @@ public class LoadingScreen implements Screen {
   private final boolean newGame;
   private final Stage stage;
   private final Label label;
-  private PlayerSetup playerSetup;
+  private final PlayerSetup playerSetup;
   private boolean generating = false;
 
   /**
@@ -200,7 +200,7 @@ public class LoadingScreen implements Screen {
       for (int j = 0; j < amount; j++) {
         WorldManager.world.entities.get(mapIndex).add(
             WorldManager.entityFactory.createItem(item.get("name"),
-                WorldManager.mapHelpers.getRandomOpenPositionOnMap(mapIndex))
+                WorldManager.mapHelpers.getRandomOpenPosition(mapIndex))
         );
       }
     }
@@ -215,7 +215,7 @@ public class LoadingScreen implements Screen {
 
         WorldManager.world.entities.get(mapIndex).add(
             WorldManager.entityFactory.createEnemy(enemy.get("name"),
-                WorldManager.mapHelpers.getRandomOpenPositionOnMap(mapIndex))
+                WorldManager.mapHelpers.getRandomOpenPosition(mapIndex))
         );
       }
     }

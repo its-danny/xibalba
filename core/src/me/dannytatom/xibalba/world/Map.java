@@ -16,11 +16,11 @@ public class Map {
   public final int height;
   public final String type;
   public final MapCell.Type[][] geometry;
+  public final MapTime time;
   public float[][] lightMap;
   private MapCell[][] map;
   private MapCell.Type[][] flooded;
   private int floodedCount = 0;
-  public MapTime time;
 
   /**
    * Holds logic for dealing with maps.
@@ -50,7 +50,7 @@ public class Map {
     }
   }
 
-  public void paintForest() {
+  private void paintForest() {
     map = new MapCell[width][height];
 
     Array<String> floorTypes = new Array<>();
@@ -78,7 +78,7 @@ public class Map {
     }
   }
 
-  public void paintCave() {
+  private void paintCave() {
     map = new MapCell[width][height];
 
     for (int x = 0; x < geometry.length; x++) {
@@ -184,7 +184,8 @@ public class Map {
   }
 
   private void flood(int cellX, int cellY) {
-    if (geometry[cellX][cellY] == MapCell.Type.FLOOR && flooded[cellX][cellY] == MapCell.Type.WALL) {
+    if (geometry[cellX][cellY] == MapCell.Type.FLOOR
+        && flooded[cellX][cellY] == MapCell.Type.WALL) {
       flooded[cellX][cellY] = MapCell.Type.FLOOR;
       floodedCount += 1;
     } else {

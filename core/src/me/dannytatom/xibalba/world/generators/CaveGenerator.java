@@ -148,7 +148,8 @@ public class CaveGenerator {
   }
 
   private void floodFill(int cellX, int cellY) {
-    if (geometry[cellX][cellY] == MapCell.Type.FLOOR && flooded[cellX][cellY] == MapCell.Type.WALL) {
+    if (geometry[cellX][cellY] == MapCell.Type.FLOOR
+        && flooded[cellX][cellY] == MapCell.Type.WALL) {
       flooded[cellX][cellY] = MapCell.Type.FLOOR;
     } else {
       return;

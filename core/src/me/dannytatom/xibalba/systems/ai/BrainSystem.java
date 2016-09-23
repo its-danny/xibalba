@@ -143,7 +143,7 @@ public class BrainSystem extends UsesEnergySystem {
   private void switchToWander(Entity entity) {
     BrainComponent brain = ComponentMappers.brain.get(entity);
 
-    if (WorldManager.entityHelpers.skipTurn(entity)) {
+    if (WorldManager.entityHelpers.shouldSkipTurn(entity)) {
       switchToWaiting(entity);
 
       return;
@@ -163,7 +163,7 @@ public class BrainSystem extends UsesEnergySystem {
   private void switchToTarget(Entity entity, Vector2 target) {
     BrainComponent brain = ComponentMappers.brain.get(entity);
 
-    if (WorldManager.entityHelpers.skipTurn(entity)) {
+    if (WorldManager.entityHelpers.shouldSkipTurn(entity)) {
       switchToWaiting(entity);
 
       return;

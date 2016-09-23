@@ -83,7 +83,7 @@ public class CombatHelpers {
     AttributesComponent attributes = ComponentMappers.attributes.get(WorldManager.player);
 
     if (attributes.energy >= RangeComponent.COST) {
-      Entity item = WorldManager.inventoryHelpers.getThrowingItem(WorldManager.player);
+      Entity item = WorldManager.itemHelpers.getThrowing(WorldManager.player);
 
       WorldManager.player.add(new RangeComponent(position, item, "throwing", bodyPart));
     }
@@ -101,10 +101,10 @@ public class CombatHelpers {
     AttributesComponent attributes = ComponentMappers.attributes.get(WorldManager.player);
 
     if (attributes.energy >= RangeComponent.COST) {
-      Entity primaryWeapon = WorldManager.inventoryHelpers.getRightHand(WorldManager.player);
+      Entity primaryWeapon = WorldManager.itemHelpers.getRightHand(WorldManager.player);
       WeaponComponent weapon = ComponentMappers.weapon.get(primaryWeapon);
 
-      Entity item = WorldManager.inventoryHelpers.getAmmunitionOfType(
+      Entity item = WorldManager.itemHelpers.getAmmunitionOfType(
           WorldManager.player, weapon.ammunitionType
       );
       ItemComponent itemDetails = ComponentMappers.item.get(item);
@@ -167,7 +167,7 @@ public class CombatHelpers {
     Entity item = null;
 
     if (ComponentMappers.equipment.has(starter)) {
-      item = WorldManager.inventoryHelpers.getRightHand(starter);
+      item = WorldManager.itemHelpers.getRightHand(starter);
     }
 
     String skillName;
@@ -247,7 +247,7 @@ public class CombatHelpers {
 
       applyDamage(starter, target, item, damage, verb, bodyPart);
 
-      WorldManager.skillHelpers.levelSkill(starter, skillName, skillLevelAmount);
+      levelSkill(starter, skillName, skillLevelAmount);
     } else {
       AttributesComponent targetAttributes = ComponentMappers.attributes.get(target);
 
@@ -277,7 +277,7 @@ public class CombatHelpers {
       verb = "hit";
     } else {
       ItemComponent firingWeapon =
-          ComponentMappers.item.get(WorldManager.inventoryHelpers.getRightHand(starter));
+          ComponentMappers.item.get(WorldManager.itemHelpers.getRightHand(starter));
       verb = firingWeapon.verbs.get(MathUtils.random(0, firingWeapon.verbs.size - 1));
     }
 
@@ -322,7 +322,7 @@ public class CombatHelpers {
 
       applyDamage(starter, target, item, damage, verb, bodyPart);
 
-      WorldManager.skillHelpers.levelSkill(starter, skill, skillLevelAmount);
+      levelSkill(starter, skill, skillLevelAmount);
     } else {
       AttributesComponent targetAttributes = ComponentMappers.attributes.get(target);
 
@@ -367,7 +367,7 @@ public class CombatHelpers {
           String action = entry.getValue();
 
           if (Objects.equals(event, "onHit")) {
-            WorldManager.effectsHelpers.applyEffect(target, action);
+            WorldManager.entityHelpers.applyEffect(target, action);
           }
         }
       }
@@ -399,10 +399,10 @@ public class CombatHelpers {
       //
       // TODO: Probably change this to make more sense
       if (targetBody.damage.get(bodyPart) > (targetAttributes.maxHealth / 3)) {
-        if (bodyPart.contains("leg") && !WorldManager.entityHelpers.isCrippled(target)) {
+        if (bodyPart.contains("leg") && !ComponentMappers.crippled.has(target)) {
           target.add(new CrippledComponent());
           WorldManager.log.add("[RED]" + targetAttributes.name + " is crippled");
-        } else if (bodyPart.contains("body") && !WorldManager.entityHelpers.isBleeding(target)) {
+        } else if (bodyPart.contains("body") && !ComponentMappers.bleeding.has(target)) {
           target.add(new BleedingComponent());
           WorldManager.log.add("[RED]" + targetAttributes.name + " is bleeding");
         }
@@ -424,6 +424,31 @@ public class CombatHelpers {
         WorldManager.log.add("[GREEN]You killed " + targetAttributes.name + "!");
       } else {
         WorldManager.log.add("[RED]You have been killed by " + starterAttributes.name);
+      }
+    }
+  }
+
+  /**
+   * JsonToLevel an entity's skill.
+   *
+   * @param entity Who we're leveling
+   * @param skill  The skill we're leveling
+   * @param amount How much we're giving 'em
+   */
+  private void levelSkill(Entity entity, String skill, int amount) {
+    SkillsComponent skills = ComponentMappers.skills.get(entity);
+
+    skills.counters.put(skill, skills.counters.get(skill) + amount);
+
+    int skillLevel = skills.levels.get(skill);
+    int expNeeded = skillLevel == 0 ? 40 : ((skillLevel + 2) * 10);
+
+    if (skills.counters.get(skill) >= expNeeded && skillLevel < 12) {
+      skills.levels.put(skill, skillLevel == 0 ? 4 : skillLevel + 2);
+      skills.counters.put(skill, 0);
+
+      if (ComponentMappers.player.has(entity)) {
+        WorldManager.log.add("[YELLOW]You feel better at " + skill);
       }
     }
   }

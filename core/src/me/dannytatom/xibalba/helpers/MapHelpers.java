@@ -6,8 +6,11 @@ import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.graphics.Colors;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import me.dannytatom.xibalba.components.DecorationComponent;
+import me.dannytatom.xibalba.components.EnemyComponent;
 import me.dannytatom.xibalba.components.EntranceComponent;
 import me.dannytatom.xibalba.components.ExitComponent;
+import me.dannytatom.xibalba.components.ItemComponent;
 import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.utils.ComponentMappers;
@@ -17,6 +20,8 @@ import me.dannytatom.xibalba.world.WorldManager;
 import org.xguzm.pathfinding.grid.GridCell;
 import org.xguzm.pathfinding.grid.NavigationGrid;
 import org.xguzm.pathfinding.grid.finders.AStarGridFinder;
+
+import java.util.ArrayList;
 
 public class MapHelpers {
   public MapHelpers() {
@@ -245,22 +250,97 @@ public class MapHelpers {
   }
 
   /**
-   * Find if an entity is near the player.
+   * Attempt to get the entity at the given position, returns null if nobody is there.
    *
-   * @param entity The entity to check
+   * @param position The entity's position
    *
-   * @return Whether or not they are
+   * @return The entity
    */
-  public boolean isNearPlayer(Entity entity) {
-    PositionComponent playerPosition = ComponentMappers.position.get(WorldManager.player);
-    PositionComponent entityPosition = ComponentMappers.position.get(entity);
+  public Entity getEntityAt(Vector2 position) {
+    ImmutableArray<Entity> entities =
+        WorldManager.engine.getEntitiesFor(
+            Family.all(PositionComponent.class).exclude(DecorationComponent.class).get()
+        );
 
-    return (entityPosition.pos.x == playerPosition.pos.x - 1
-        || entityPosition.pos.x == playerPosition.pos.x
-        || entityPosition.pos.x == playerPosition.pos.x + 1)
-        && (entityPosition.pos.y == playerPosition.pos.y - 1
-        || entityPosition.pos.y == playerPosition.pos.y
-        || entityPosition.pos.y == playerPosition.pos.y + 1);
+    for (Entity entity : entities) {
+      PositionComponent entityPosition = ComponentMappers.position.get(entity);
+
+      if (entityPosition.pos.epsilonEquals(position, 0.00001f)) {
+        return entity;
+      }
+    }
+
+    return null;
+  }
+
+  /**
+   * Get all entities at a given position.
+   *
+   * @param position Where we're searching
+   *
+   * @return ArrayList of entities
+   */
+  public ArrayList<Entity> getEntitiesAt(Vector2 position) {
+    ArrayList<Entity> list = new ArrayList<>();
+
+    ImmutableArray<Entity> entities =
+        WorldManager.engine.getEntitiesFor(Family.all(PositionComponent.class).get());
+
+    for (Entity entity : entities) {
+      PositionComponent entityPosition = ComponentMappers.position.get(entity);
+
+      if (entityPosition != null && entityPosition.pos.epsilonEquals(position, 0.00001f)) {
+        list.add(entity);
+      }
+    }
+
+    return list;
+  }
+
+  /**
+   * Get enemy from a location.
+   *
+   * @param position Where the enemy is
+   *
+   * @return The enemy
+   */
+  public Entity getEnemyAt(Vector2 position) {
+    ImmutableArray<Entity> entities =
+        WorldManager.engine.getEntitiesFor(Family.all(EnemyComponent.class).get());
+
+    for (Entity entity : entities) {
+      PositionComponent entityPosition = ComponentMappers.position.get(entity);
+
+      if (entityPosition.pos.epsilonEquals(position, 0.00001f)) {
+        return entity;
+      }
+    }
+
+    return null;
+  }
+
+  /**
+   * Get item from a location.
+   *
+   * @param position Where the item is
+   *
+   * @return The item
+   */
+  public Entity getItemAt(Vector2 position) {
+    ImmutableArray<Entity> entities =
+        WorldManager.engine.getEntitiesFor(
+            Family.all(ItemComponent.class, PositionComponent.class).get()
+        );
+
+    for (Entity entity : entities) {
+      PositionComponent entityPosition = ComponentMappers.position.get(entity);
+
+      if (entityPosition.pos.epsilonEquals(position, 0.00001f)) {
+        return entity;
+      }
+    }
+
+    return null;
   }
 
   /**
@@ -270,6 +350,42 @@ public class MapHelpers {
    */
   public Vector2 getOpenSpaceNearPlayer() {
     return getOpenSpaceNearEntity(ComponentMappers.position.get(WorldManager.player).pos);
+  }
+
+  /**
+   * Get position of entrance.
+   *
+   * @return The position
+   */
+  public Vector2 getEntrancePosition() {
+    ImmutableArray<Entity> entrances =
+        WorldManager.engine.getEntitiesFor(Family.all(EntranceComponent.class).get());
+
+    if (entrances.size() > 0) {
+      PositionComponent position = ComponentMappers.position.get(entrances.first());
+
+      return position.pos;
+    }
+
+    return getRandomOpenPosition(WorldManager.world.currentMapIndex);
+  }
+
+  /**
+   * Get position of exit.
+   *
+   * @return The position
+   */
+  public Vector2 getExitPosition() {
+    ImmutableArray<Entity> exits =
+        WorldManager.engine.getEntitiesFor(Family.all(ExitComponent.class).get());
+
+    if (exits.size() > 0) {
+      PositionComponent position = ComponentMappers.position.get(exits.first());
+
+      return position.pos;
+    }
+
+    return getRandomOpenPosition(WorldManager.world.currentMapIndex);
   }
 
   /**
@@ -296,47 +412,11 @@ public class MapHelpers {
   }
 
   /**
-   * Get position of entrance.
-   *
-   * @return The position
-   */
-  public Vector2 getEntrancePosition() {
-    ImmutableArray<Entity> entrances =
-        WorldManager.engine.getEntitiesFor(Family.all(EntranceComponent.class).get());
-
-    if (entrances.size() > 0) {
-      PositionComponent position = ComponentMappers.position.get(entrances.first());
-
-      return position.pos;
-    }
-
-    return getRandomOpenPositionOnMap(WorldManager.world.currentMapIndex);
-  }
-
-  /**
-   * Get position of exit.
-   *
-   * @return The position
-   */
-  public Vector2 getExitPosition() {
-    ImmutableArray<Entity> exits =
-        WorldManager.engine.getEntitiesFor(Family.all(ExitComponent.class).get());
-
-    if (exits.size() > 0) {
-      PositionComponent position = ComponentMappers.position.get(exits.first());
-
-      return position.pos;
-    }
-
-    return getRandomOpenPositionOnMap(WorldManager.world.currentMapIndex);
-  }
-
-  /**
    * Find a random open cell on any world.
    *
    * @return Random open cell
    */
-  public Vector2 getRandomOpenPositionOnMap(int index) {
+  public Vector2 getRandomOpenPosition(int index) {
     Map map = WorldManager.world.getMap(index);
     int cellX;
     int cellY;
@@ -356,7 +436,7 @@ public class MapHelpers {
    * @return Random open cell
    */
   public Vector2 getRandomOpenPosition() {
-    return getRandomOpenPositionOnMap(WorldManager.world.currentMapIndex);
+    return getRandomOpenPosition(WorldManager.world.currentMapIndex);
   }
 
   /**

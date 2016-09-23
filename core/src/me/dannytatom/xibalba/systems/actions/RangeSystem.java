@@ -28,7 +28,7 @@ public class RangeSystem extends UsesEnergySystem {
     AttributesComponent attributes = ComponentMappers.attributes.get(entity);
 
     if (range.position != null && !entity.isScheduledForRemoval()) {
-      Entity target = WorldManager.entityHelpers.getEnemyAt(range.position);
+      Entity target = WorldManager.mapHelpers.getEnemyAt(range.position);
 
       if (target != null) {
         WorldManager.combatHelpers.range(entity, target, range.bodyPart, range.item, range.skill);
@@ -66,9 +66,9 @@ public class RangeSystem extends UsesEnergySystem {
         (type, source) -> {
           if (type == TweenCallback.COMPLETE) {
             if (destroy) {
-              WorldManager.inventoryHelpers.destroyItem(entity, item);
+              WorldManager.itemHelpers.destroy(entity, item);
             } else {
-              WorldManager.inventoryHelpers.dropItem(entity, item, position);
+              WorldManager.itemHelpers.drop(entity, item, position);
             }
 
             WorldManager.state = WorldManager.State.PLAYING;

@@ -41,20 +41,24 @@ public class MovementSystem extends UsesEnergySystem {
     } else {
       // If we can't, and the entity is the player, figure out what to do instead
       if (ComponentMappers.player.has(entity)) {
-        Entity thing = WorldManager.entityHelpers.getEntityAt(movement.pos);
+        Entity thing = WorldManager.mapHelpers.getEntityAt(movement.pos);
 
-        if (WorldManager.entityHelpers.isItem(thing)) {
-          WorldManager.inventoryHelpers.addItem(WorldManager.player, thing);
+        if (thing == null) {
+          return;
+        }
+
+        if (ComponentMappers.item.has(thing)) {
+          WorldManager.itemHelpers.addToInventory(WorldManager.player, thing);
 
           move(entity, movement);
 
           attributes.energy -= MovementComponent.COST;
-        } else if (WorldManager.entityHelpers.isEnemy(thing)) {
+        } else if (ComponentMappers.enemy.has(thing)) {
           WorldManager.combatHelpers.preparePlayerForMelee(thing, "body");
-        } else if (WorldManager.entityHelpers.isExit(thing)) {
+        } else if (ComponentMappers.exit.has(thing)) {
           WorldManager.state = WorldManager.State.GOING_DOWN;
           attributes.energy -= MovementComponent.COST;
-        } else if (WorldManager.entityHelpers.isEntrance(thing)) {
+        } else if (ComponentMappers.entrance.has(thing)) {
           WorldManager.state = WorldManager.State.GOING_UP;
           attributes.energy -= MovementComponent.COST;
         }

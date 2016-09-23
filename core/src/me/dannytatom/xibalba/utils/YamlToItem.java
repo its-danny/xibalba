@@ -7,6 +7,7 @@ public class YamlToItem {
   public String type;
   public String weaponType;
   public String ammunitionType;
+  public String armorType;
   public String name;
   public String description;
   public HashMap<String, String> visual;

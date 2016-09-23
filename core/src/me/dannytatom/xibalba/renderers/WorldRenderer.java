@@ -96,7 +96,7 @@ public class WorldRenderer {
         if (!cell.hidden) {
           cell.forgotten = map.lightMap[x][y] <= 0;
 
-          if (WorldManager.entityHelpers.getEntitiesAt(new Vector2(x, y)).size() == 0) {
+          if (WorldManager.mapHelpers.getEntitiesAt(new Vector2(x, y)).size() == 0) {
             cell.sprite.draw(batch);
           }
         }

@@ -113,7 +113,7 @@ public class Dijkstra {
     return path;
   }
 
-  public int get(int x, int y) {
-    return map[x][y];
+  public int get(int cellX, int cellY) {
+    return map[cellX][cellY];
   }
 }

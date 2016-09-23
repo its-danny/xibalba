@@ -1,5 +1,6 @@
 ---
 type: armor
+armorType: shield
 name: Wooden Shield
 description: A shield is a type of personal armor, meant to intercept attacks, either
   by stopping projectiles such as arrows or redirecting a hit from a macuahuitl or

@@ -3,7 +3,7 @@ package me.dannytatom.xibalba.utils;
 import java.util.HashMap;
 import java.util.List;
 
-public class YamlToEnemy {
+class YamlToEnemy {
   public String name;
   public String description;
   public HashMap<String, String> visual;

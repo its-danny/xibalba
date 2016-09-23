@@ -232,14 +232,14 @@ public class HudRenderer {
       );
     }
 
-    if (WorldManager.inventoryHelpers.primaryWeaponUsesAmmo(WorldManager.player)) {
-      Entity primaryWeapon = WorldManager.inventoryHelpers.getRightHand(WorldManager.player);
+    if (WorldManager.itemHelpers.primaryWeaponUsesAmmo(WorldManager.player)) {
+      Entity primaryWeapon = WorldManager.itemHelpers.getRightHand(WorldManager.player);
       WeaponComponent weaponDetails = ComponentMappers.weapon.get(primaryWeapon);
 
       areaDetails.addActor(
           new Label(
               "[LIGHT_GRAY]Ammo:[] "
-                  + WorldManager.inventoryHelpers.amountOfAmmunitionType(
+                  + WorldManager.itemHelpers.amountOfAmmunitionType(
                   WorldManager.player, weaponDetails.ammunitionType
               ),
               Main.skin
@@ -291,7 +291,7 @@ public class HudRenderer {
 
       boolean showLookDialog = false;
 
-      Entity item = WorldManager.entityHelpers.getItemAt(position);
+      Entity item = WorldManager.mapHelpers.getItemAt(position);
 
       if (item != null) {
         showLookDialog = true;
@@ -299,12 +299,12 @@ public class HudRenderer {
 
         lookDialogGroup.addActor(
             new Label(
-                "[YELLOW]" + WorldManager.entityHelpers.getItemName(WorldManager.player, item),
+                "[YELLOW]" + WorldManager.itemHelpers.getName(WorldManager.player, item),
                 Main.skin
             )
         );
 
-        if (WorldManager.entityHelpers.itemIsIdentified(WorldManager.player, item)) {
+        if (WorldManager.itemHelpers.isIdentified(WorldManager.player, item)) {
           String description = WordUtils.wrap(itemDetails.description, 50);
 
           lookDialogGroup.addActor(new Label("", Main.skin));
@@ -315,7 +315,7 @@ public class HudRenderer {
         }
       }
 
-      Entity enemy = WorldManager.entityHelpers.getEnemyAt(position);
+      Entity enemy = WorldManager.mapHelpers.getEnemyAt(position);
 
       if (enemy != null) {
         showLookDialog = true;

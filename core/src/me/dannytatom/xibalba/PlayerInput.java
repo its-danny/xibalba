@@ -17,6 +17,8 @@ import me.dannytatom.xibalba.components.items.WeaponComponent;
 import me.dannytatom.xibalba.utils.ComponentMappers;
 import me.dannytatom.xibalba.world.WorldManager;
 
+import java.util.Objects;
+
 public class PlayerInput implements InputProcessor {
   private final OrthographicCamera worldCamera;
   public int keyHeld = -1;
@@ -138,23 +140,26 @@ public class PlayerInput implements InputProcessor {
       // Release
       case Keys.R:
         if (WorldManager.state == WorldManager.State.PLAYING) {
-          Entity primaryWeapon
-              = WorldManager.inventoryHelpers.getRightHand(WorldManager.player);
+          Entity primaryWeapon = WorldManager.itemHelpers.getRightHand(WorldManager.player);
 
-          if (primaryWeapon != null && WorldManager.inventoryHelpers.isRangeWeapon(primaryWeapon)) {
+          if (primaryWeapon != null) {
             WeaponComponent weaponDetails = ComponentMappers.weapon.get(primaryWeapon);
 
-            if (WorldManager.inventoryHelpers.hasAmmunitionOfType(WorldManager.player,
-                weaponDetails.ammunitionType)) {
-              playerDetails.target = null;
-              playerDetails.path = null;
+            if (Objects.equals(weaponDetails.type, "ranged")) {
+              if (WorldManager.itemHelpers.hasAmmunitionOfType(WorldManager.player,
+                  weaponDetails.ammunitionType)) {
+                playerDetails.target = null;
+                playerDetails.path = null;
 
-              WorldManager.state = WorldManager.State.TARGETING;
+                WorldManager.state = WorldManager.State.TARGETING;
+              } else {
+                WorldManager.log.add("You aren't carrying any ammunition for this");
+              }
             } else {
-              WorldManager.log.add("You aren't carrying any ammunition for this");
+              WorldManager.log.add("This weapon doesn't take ammunition");
             }
           } else {
-            WorldManager.log.add("This weapon doesn't take ammunition");
+            WorldManager.log.add("You aren't holding a weapon");
           }
         }
         break;
@@ -162,7 +167,7 @@ public class PlayerInput implements InputProcessor {
       case Keys.T: {
         if (WorldManager.state == WorldManager.State.PLAYING) {
           Entity primaryWeapon
-              = WorldManager.inventoryHelpers.getRightHand(WorldManager.player);
+              = WorldManager.itemHelpers.getRightHand(WorldManager.player);
 
           if (primaryWeapon != null) {
             ItemComponent itemDetails = ComponentMappers.item.get(primaryWeapon);
@@ -185,10 +190,10 @@ public class PlayerInput implements InputProcessor {
       case Keys.D: {
         if (WorldManager.state == WorldManager.State.PLAYING) {
           Entity primaryWeapon
-              = WorldManager.inventoryHelpers.getRightHand(WorldManager.player);
+              = WorldManager.itemHelpers.getRightHand(WorldManager.player);
 
           if (primaryWeapon != null) {
-            WorldManager.inventoryHelpers.dropItem(WorldManager.player, primaryWeapon);
+            WorldManager.itemHelpers.drop(WorldManager.player, primaryWeapon);
           }
         }
         break;
@@ -208,7 +213,7 @@ public class PlayerInput implements InputProcessor {
       // Confirm action
       case Keys.SPACE:
         if (WorldManager.state == WorldManager.State.TARGETING) {
-          if (WorldManager.inventoryHelpers.getThrowingItem(WorldManager.player) == null) {
+          if (WorldManager.itemHelpers.getThrowing(WorldManager.player) == null) {
             handleRange();
           } else {
             handleThrow();
@@ -260,10 +265,10 @@ public class PlayerInput implements InputProcessor {
       Vector2 mousePosition = Main.mousePositionToWorld(worldCamera);
 
       if (holdingShift) {
-        Entity enemy = WorldManager.entityHelpers.getEnemyAt(mousePosition);
+        Entity enemy = WorldManager.mapHelpers.getEnemyAt(mousePosition);
         PlayerComponent player = ComponentMappers.player.get(WorldManager.player);
 
-        if (enemy != null && WorldManager.mapHelpers.isNearPlayer(enemy)) {
+        if (enemy != null && WorldManager.entityHelpers.isNearPlayer(enemy)) {
           player.focusedAction = PlayerComponent.FocusedAction.MELEE;
           player.focusedEntity = enemy;
 
@@ -285,7 +290,7 @@ public class PlayerInput implements InputProcessor {
         }
       }
     } else if (WorldManager.state == WorldManager.State.TARGETING) {
-      if (WorldManager.inventoryHelpers.getThrowingItem(WorldManager.player) == null) {
+      if (WorldManager.itemHelpers.getThrowing(WorldManager.player) == null) {
         handleRange();
       } else {
         handleThrow();
@@ -360,7 +365,7 @@ public class PlayerInput implements InputProcessor {
    */
   private void handleMovement(int energy, Vector2 pos) {
     if (holdingShift) {
-      Entity enemy = WorldManager.entityHelpers.getEnemyAt(pos);
+      Entity enemy = WorldManager.mapHelpers.getEnemyAt(pos);
       PlayerComponent player = ComponentMappers.player.get(WorldManager.player);
 
       if (enemy != null) {
@@ -403,7 +408,7 @@ public class PlayerInput implements InputProcessor {
     PlayerComponent playerDetails = ComponentMappers.player.get(WorldManager.player);
 
     if (holdingShift) {
-      Entity enemy = WorldManager.entityHelpers.getEnemyAt(playerDetails.target);
+      Entity enemy = WorldManager.mapHelpers.getEnemyAt(playerDetails.target);
       PlayerComponent player = ComponentMappers.player.get(WorldManager.player);
 
       if (enemy != null) {
@@ -429,7 +434,7 @@ public class PlayerInput implements InputProcessor {
     PlayerComponent playerDetails = ComponentMappers.player.get(WorldManager.player);
 
     if (holdingShift) {
-      Entity enemy = WorldManager.entityHelpers.getEnemyAt(playerDetails.target);
+      Entity enemy = WorldManager.mapHelpers.getEnemyAt(playerDetails.target);
       PlayerComponent player = ComponentMappers.player.get(WorldManager.player);
 
       if (enemy != null) {

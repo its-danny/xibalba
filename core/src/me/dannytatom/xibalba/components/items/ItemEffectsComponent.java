@@ -6,7 +6,7 @@ import me.dannytatom.xibalba.utils.YamlToItem;
 import java.util.HashMap;
 
 public class ItemEffectsComponent implements Component {
-  public HashMap<String, String> effects;
+  public final HashMap<String, String> effects;
 
   public ItemEffectsComponent(YamlToItem data) {
     this.effects = data.effects;

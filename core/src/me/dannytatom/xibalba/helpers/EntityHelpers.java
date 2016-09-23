@@ -1,23 +1,14 @@
 package me.dannytatom.xibalba.helpers;
 
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.ashley.core.Family;
-import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.Vector2;
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.components.AttributesComponent;
-import me.dannytatom.xibalba.components.DecorationComponent;
-import me.dannytatom.xibalba.components.EnemyComponent;
-import me.dannytatom.xibalba.components.ItemComponent;
-import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.VisualComponent;
 import me.dannytatom.xibalba.utils.ComponentMappers;
 import me.dannytatom.xibalba.world.ShadowCaster;
 import me.dannytatom.xibalba.world.WorldManager;
-
-import java.util.ArrayList;
-import java.util.Objects;
 
 public class EntityHelpers {
   /**
@@ -27,36 +18,9 @@ public class EntityHelpers {
 
   }
 
-  public boolean isEnemy(Entity entity) {
-    return entity != null && ComponentMappers.enemy.has(entity);
-  }
-
-  public boolean isItem(Entity entity) {
-    return entity != null && ComponentMappers.item.has(entity);
-  }
-
-  public boolean isEntrance(Entity entity) {
-    return entity != null && ComponentMappers.entrance.has(entity);
-  }
-
-  public boolean isExit(Entity entity) {
-    return entity != null && ComponentMappers.exit.has(entity);
-  }
-
-  public boolean isCrippled(Entity entity) {
-    return entity != null && ComponentMappers.crippled.has(entity);
-  }
-
-  public boolean isBleeding(Entity entity) {
-    return entity != null && ComponentMappers.bleeding.has(entity);
-  }
-
-  public boolean isDrowning(Entity entity) {
-    return entity != null && ComponentMappers.drowning.has(entity);
-  }
-
-  public boolean skipTurn(Entity entity) {
-    return isCrippled(entity) && ComponentMappers.crippled.get(entity).turnCounter != 0;
+  public boolean shouldSkipTurn(Entity entity) {
+    return ComponentMappers.crippled.has(entity)
+        && ComponentMappers.crippled.get(entity).turnCounter != 0;
   }
 
   /**
@@ -75,20 +39,22 @@ public class EntityHelpers {
   }
 
   /**
-   * Check if entity is near the player.
+   * Find if an entity is near the player.
    *
-   * @param entity Who we checking
+   * @param entity The entity to check
    *
-   * @return Whether we're near the player or not
+   * @return Whether or not they are
    */
   public boolean isNearPlayer(Entity entity) {
-    PositionComponent entityPosition = ComponentMappers.position.get(entity);
     PositionComponent playerPosition = ComponentMappers.position.get(WorldManager.player);
+    PositionComponent entityPosition = ComponentMappers.position.get(entity);
 
-    return entityPosition.pos.x <= playerPosition.pos.x + 1
-        && entityPosition.pos.x >= playerPosition.pos.x - 1
-        && entityPosition.pos.y <= playerPosition.pos.y + 1
-        && entityPosition.pos.y >= playerPosition.pos.y - 1;
+    return (entityPosition.pos.x == playerPosition.pos.x - 1
+        || entityPosition.pos.x == playerPosition.pos.x
+        || entityPosition.pos.x == playerPosition.pos.x + 1)
+        && (entityPosition.pos.y == playerPosition.pos.y - 1
+        || entityPosition.pos.y == playerPosition.pos.y
+        || entityPosition.pos.y == playerPosition.pos.y + 1);
   }
 
   /**
@@ -111,131 +77,49 @@ public class EntityHelpers {
   }
 
   /**
-   * Attempt to get the entity at the given position, returns null if nobody is there.
+   * Update an entity's position.
    *
-   * @param position The entity's position
-   *
-   * @return The entity
+   * @param entity      The entity
+   * @param newPosition Where they're going
    */
-  public Entity getEntityAt(Vector2 position) {
-    ImmutableArray<Entity> entities =
-        WorldManager.engine.getEntitiesFor(
-            Family.all(PositionComponent.class).exclude(DecorationComponent.class).get()
-        );
-
-    for (Entity entity : entities) {
-      PositionComponent entityPosition = ComponentMappers.position.get(entity);
-
-      if (entityPosition.pos.epsilonEquals(position, 0.00001f)) {
-        return entity;
-      }
+  public void updatePosition(Entity entity, Vector2 newPosition) {
+    if (!ComponentMappers.position.has(entity)) {
+      entity.add(new PositionComponent());
     }
 
-    return null;
+    PositionComponent position = ComponentMappers.position.get(entity);
+    VisualComponent visual = ComponentMappers.visual.get(entity);
+
+    position.pos.set(newPosition);
+    visual.sprite.setPosition(
+        position.pos.x * Main.SPRITE_WIDTH, position.pos.y * Main.SPRITE_HEIGHT
+    );
   }
 
   /**
-   * Get all entities at a given position.
+   * Apply an effect to an entity.
    *
-   * @param position Where we're searching
-   *
-   * @return ArrayList of entities
+   * @param entity The entity
+   * @param effect The effect. This is a string like "raiseHealth:5" where the part before colon is
+   *               the method on EffectsHelpers, and the part after is the parameters (split by
+   *               commas)
    */
-  public ArrayList<Entity> getEntitiesAt(Vector2 position) {
-    ArrayList<Entity> list = new ArrayList<>();
+  void applyEffect(Entity entity, String effect) {
+    String[] split = effect.split(":");
+    String name = split[0];
+    String[] params = split[1].split(",");
 
-    ImmutableArray<Entity> entities =
-        WorldManager.engine.getEntitiesFor(Family.all(PositionComponent.class).get());
-
-    for (Entity entity : entities) {
-      PositionComponent entityPosition = ComponentMappers.position.get(entity);
-
-      if (entityPosition != null && entityPosition.pos.epsilonEquals(position, 0.00001f)) {
-        list.add(entity);
-      }
-    }
-
-    return list;
-  }
-
-  /**
-   * Get enemy from a location.
-   *
-   * @param position Where the enemy is
-   *
-   * @return The enemy
-   */
-  public Entity getEnemyAt(Vector2 position) {
-    ImmutableArray<Entity> entities =
-        WorldManager.engine.getEntitiesFor(Family.all(EnemyComponent.class).get());
-
-    for (Entity entity : entities) {
-      PositionComponent entityPosition = ComponentMappers.position.get(entity);
-
-      if (entityPosition.pos.epsilonEquals(position, 0.00001f)) {
-        return entity;
-      }
-    }
-
-    return null;
-  }
-
-  /**
-   * Get item from a location.
-   *
-   * @param position Where the item is
-   *
-   * @return The item
-   */
-  public Entity getItemAt(Vector2 position) {
-    ImmutableArray<Entity> entities =
-        WorldManager.engine.getEntitiesFor(
-            Family.all(ItemComponent.class, PositionComponent.class).get()
-        );
-
-    for (Entity entity : entities) {
-      PositionComponent entityPosition = ComponentMappers.position.get(entity);
-
-      if (entityPosition.pos.epsilonEquals(position, 0.00001f)) {
-        return entity;
-      }
-    }
-
-    return null;
-  }
-
-  /**
-   * Whether or not an item is identified.
-   *
-   * @param entity The entity looking
-   * @param item   The item itself
-   *
-   * @return If it is indeed identified
-   */
-  public boolean itemIsIdentified(Entity entity, Entity item) {
-    PlayerComponent player = ComponentMappers.player.get(entity);
-    ItemComponent details = ComponentMappers.item.get(item);
-
-    return player == null
-        || !(Objects.equals(details.type, "consumable")
-        && !player.identifiedItems.contains(details.name, false));
-  }
-
-  /**
-   * Get item name.
-   *
-   * @param entity The entity looking
-   * @param item   The item itself
-   *
-   * @return The item name if identified, ??? otherwise
-   */
-  public String getItemName(Entity entity, Entity item) {
-    ItemComponent details = ComponentMappers.item.get(item);
-
-    if (itemIsIdentified(entity, item)) {
-      return details.name;
-    } else {
-      return "???";
+    switch (name) {
+      case "raiseHealth":
+        raiseHealth(entity, Integer.parseInt(params[0]));
+        break;
+      case "raiseStrength":
+        raiseStrength(entity, Integer.parseInt(params[0]));
+        break;
+      case "dealDamage":
+        dealDamage(entity, Integer.parseInt(params[0]));
+        break;
+      default:
     }
   }
 
@@ -245,7 +129,7 @@ public class EntityHelpers {
    * @param entity Entity whose health we're raising
    * @param amount How much
    */
-  public void raiseHealth(Entity entity, int amount) {
+  private void raiseHealth(Entity entity, int amount) {
     AttributesComponent attributes = ComponentMappers.attributes.get(entity);
 
     if (attributes.health + amount < attributes.maxHealth) {
@@ -265,7 +149,7 @@ public class EntityHelpers {
    * @param entity Entity whose strength we're raising
    * @param amount How much
    */
-  public void raiseStrength(Entity entity, int amount) {
+  private void raiseStrength(Entity entity, int amount) {
     AttributesComponent attributes = ComponentMappers.attributes.get(entity);
 
     if (attributes.strength < 12) {
@@ -281,31 +165,11 @@ public class EntityHelpers {
     }
   }
 
-  public void dealDamage(Entity entity, int amount) {
+  private void dealDamage(Entity entity, int amount) {
     AttributesComponent attributes = ComponentMappers.attributes.get(entity);
 
     attributes.health -= amount;
 
     WorldManager.log.add("You lose " + amount + " health");
-  }
-
-  /**
-   * Update an entity's position.
-   *
-   * @param entity      The entity
-   * @param newPosition Where they're going
-   */
-  public void updatePosition(Entity entity, Vector2 newPosition) {
-    if (!ComponentMappers.position.has(entity)) {
-      entity.add(new PositionComponent());
-    }
-
-    PositionComponent position = ComponentMappers.position.get(entity);
-    VisualComponent visual = ComponentMappers.visual.get(entity);
-
-    position.pos.set(newPosition);
-    visual.sprite.setPosition(
-        position.pos.x * Main.SPRITE_WIDTH, position.pos.y * Main.SPRITE_HEIGHT
-    );
   }
 }

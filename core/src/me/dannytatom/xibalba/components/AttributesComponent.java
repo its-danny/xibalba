@@ -9,7 +9,7 @@ public class AttributesComponent implements Component {
   public final int maxVision;
   public final int maxHealth;
   public final int maxOxygen;
-  public String name;
+  public final String name;
   public int vision;
   public int strength;
   public int health;
@@ -22,7 +22,7 @@ public class AttributesComponent implements Component {
    * @param name        Name
    * @param description Entity description
    * @param speed       How much energy is gotten back each turn
-   * @param maxVision      How many cells they see around them
+   * @param maxVision   How many cells they see around them
    * @param toughness   How much strength they can soak up
    * @param strength    How much strength they do
    */

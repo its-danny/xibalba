@@ -4,11 +4,9 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import me.dannytatom.xibalba.ActionLog;
 import me.dannytatom.xibalba.helpers.CombatHelpers;
-import me.dannytatom.xibalba.helpers.EffectsHelpers;
 import me.dannytatom.xibalba.helpers.EntityHelpers;
-import me.dannytatom.xibalba.helpers.InventoryHelpers;
+import me.dannytatom.xibalba.helpers.ItemHelpers;
 import me.dannytatom.xibalba.helpers.MapHelpers;
-import me.dannytatom.xibalba.helpers.SkillHelpers;
 import me.dannytatom.xibalba.systems.AttributesSystem;
 import me.dannytatom.xibalba.systems.MouseMovementSystem;
 import me.dannytatom.xibalba.systems.TileEffectSystem;
@@ -34,9 +32,7 @@ public class WorldManager {
   public static MapHelpers mapHelpers;
   public static CombatHelpers combatHelpers;
   public static EntityHelpers entityHelpers;
-  public static InventoryHelpers inventoryHelpers;
-  public static SkillHelpers skillHelpers;
-  public static EffectsHelpers effectsHelpers;
+  public static ItemHelpers itemHelpers;
   public static Entity player;
   public static boolean executeTurn;
   public static int turnCount;
@@ -52,10 +48,8 @@ public class WorldManager {
     entityFactory = new EntityFactory();
     mapHelpers = new MapHelpers();
     entityHelpers = new EntityHelpers();
-    inventoryHelpers = new InventoryHelpers();
-    skillHelpers = new SkillHelpers();
+    itemHelpers = new ItemHelpers();
     combatHelpers = new CombatHelpers();
-    effectsHelpers = new EffectsHelpers();
 
     executeTurn = false;
     turnCount = 0;

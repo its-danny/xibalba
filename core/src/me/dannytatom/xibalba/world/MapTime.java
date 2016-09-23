@@ -6,10 +6,6 @@ public class MapTime {
   public Time time;
   private int counter = 0;
 
-  public enum Time {
-    DAWN, DAY, DUSK, NIGHT
-  }
-
   public MapTime() {
     time = Time.DAWN;
   }
@@ -35,5 +31,9 @@ public class MapTime {
       counter = 0;
       time = Time.DAWN;
     }
+  }
+
+  public enum Time {
+    DAWN, DAY, DUSK, NIGHT
   }
 }
