@@ -60,9 +60,9 @@ public class WorldManager {
     engine.addSystem(new BrainSystem());
     engine.addSystem(new WanderSystem());
     engine.addSystem(new TargetSystem());
+    engine.addSystem(new MovementSystem());
     engine.addSystem(new RangeSystem());
     engine.addSystem(new MeleeSystem());
-    engine.addSystem(new MovementSystem());
     engine.addSystem(new TimeSystem());
     engine.addSystem(new TileEffectSystem());
     engine.addSystem(new CrippledSystem());
