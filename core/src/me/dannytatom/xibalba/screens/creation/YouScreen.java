@@ -31,7 +31,6 @@ public class YouScreen implements Screen {
   private VerticalGroup skills;
 
   private Section sectionSelected = Section.ATTRIBUTES;
-  private int itemHovered = 0;
   private int itemSelected = 0;
 
   private enum Section {
@@ -116,14 +115,12 @@ public class YouScreen implements Screen {
       if (sectionSelected == Section.ATTRIBUTES) {
         if (itemSelected > 0) {
           itemSelected -= 1;
-          itemHovered = itemSelected;
 
           updateAttributesGroup();
         }
       } else if (sectionSelected == Section.SKILLS) {
         if (itemSelected > 0) {
           itemSelected -= 1;
-          itemHovered = itemSelected;
 
           updateSkillsGroup();
         }
@@ -134,14 +131,12 @@ public class YouScreen implements Screen {
       if (sectionSelected == Section.ATTRIBUTES) {
         if (itemSelected < attributes.getChildren().size - 6) {
           itemSelected += 1;
-          itemHovered = itemSelected;
 
           updateAttributesGroup();
         }
       } else if (sectionSelected == Section.SKILLS) {
         if (itemSelected < skills.getChildren().size - 6) {
           itemSelected += 1;
-          itemHovered = itemSelected;
 
           updateSkillsGroup();
         }
@@ -152,7 +147,6 @@ public class YouScreen implements Screen {
       if (sectionSelected == Section.ATTRIBUTES) {
         sectionSelected = Section.SKILLS;
         itemSelected = 0;
-        itemHovered = 0;
 
         updateAttributesGroup();
         updateSkillsGroup();
@@ -163,7 +157,6 @@ public class YouScreen implements Screen {
       if (sectionSelected == Section.SKILLS) {
         sectionSelected = Section.ATTRIBUTES;
         itemSelected = 0;
-        itemHovered = 0;
 
         updateAttributesGroup();
         updateSkillsGroup();
@@ -237,10 +230,8 @@ public class YouScreen implements Screen {
   private String createAttributeText(int index, String name, int level) {
     if (sectionSelected == Section.ATTRIBUTES && index == itemSelected) {
       return "[DARK_GRAY]> [WHITE]" + name + " [DARK_GRAY]d[WHITE]" + level;
-    } else if (sectionSelected == Section.ATTRIBUTES && index == itemHovered) {
-      return "[LIGHT_GRAY]" + name + " [DARK_GRAY]d[WHITE]" + level;
     } else {
-      return "[DARK_GRAY]" + name + " [DARK_GRAY]d[WHITE]" + level;
+      return "[LIGHT_GRAY]" + name + " [DARK_GRAY]d[WHITE]" + level;
     }
   }
 
@@ -251,10 +242,8 @@ public class YouScreen implements Screen {
 
     if (sectionSelected == Section.SKILLS && index == itemSelected) {
       return "[DARK_GRAY]> [WHITE]" + capitalizedName + levelString + tiedTo;
-    } else if (sectionSelected == Section.SKILLS && index == itemHovered) {
-      return "[LIGHT_GRAY]" + capitalizedName + levelString + tiedTo;
     } else {
-      return "[DARK_GRAY]" + capitalizedName + levelString + tiedTo;
+      return "[LIGHT_GRAY]" + capitalizedName + levelString + tiedTo;
     }
   }
 
