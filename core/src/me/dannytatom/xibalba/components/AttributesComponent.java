@@ -12,6 +12,7 @@ public class AttributesComponent implements Component {
   public int toughness;
   public int vision;
   public int strength;
+  public int agility;
   public int health;
   public int oxygen;
   public int energy;
@@ -27,13 +28,14 @@ public class AttributesComponent implements Component {
    * @param strength    How much strength they do
    */
   public AttributesComponent(String name, String description,
-                             int speed, int maxVision, int toughness, int strength) {
+                             int speed, int maxVision, int toughness, int strength, int agility) {
     this.name = name;
     this.description = description;
     this.energy = speed;
     this.speed = speed;
     this.toughness = toughness;
     this.strength = strength;
+    this.agility = agility;
 
     this.maxVision = maxVision;
     this.maxHealth = toughness * 10;

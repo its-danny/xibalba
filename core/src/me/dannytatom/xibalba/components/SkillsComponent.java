@@ -15,8 +15,9 @@ public class SkillsComponent implements Component {
   public SkillsComponent() {
     associations = new HashMap<>();
 
-    associations.put("archery", "strength");
+    associations.put("archery", "agility");
     associations.put("bashing", "strength");
+    associations.put("dodge", "agility");
     associations.put("piercing", "strength");
     associations.put("slashing", "strength");
     associations.put("throwing", "strength");

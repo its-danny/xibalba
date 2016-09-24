@@ -13,6 +13,7 @@ attributes:
   vision: 10
   toughness: 8
   strength: 8
+  agility: 10
 
 bodyParts:
   head: 8

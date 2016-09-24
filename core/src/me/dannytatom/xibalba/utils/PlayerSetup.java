@@ -44,7 +44,7 @@ public class PlayerSetup {
 
     generateName();
 
-    attributes = new AttributesComponent(name, "It's you", 100, 10, 4, 4);
+    attributes = new AttributesComponent(name, "It's you", 100, 10, 4, 4, 4);
     skills = new SkillsComponent();
   }
 

@@ -65,7 +65,8 @@ public class EntityFactory {
         data.attributes.get("speed"),
         data.attributes.get("vision"),
         data.attributes.get("toughness"),
-        data.attributes.get("strength")
+        data.attributes.get("strength"),
+        data.attributes.get("agility")
     ));
 
     Array<BrainComponent.Personality> personalities = new Array<>();

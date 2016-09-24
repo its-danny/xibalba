@@ -33,7 +33,7 @@ public class YouScreen implements Screen {
 
   public YouScreen(Main main) {
     attributePoints = 5;
-    skillPoints = 15;
+    skillPoints = 10;
     stage = new Stage(new FitViewport(960, 540));
     playerSetup = new PlayerSetup();
 
@@ -193,8 +193,9 @@ public class YouScreen implements Screen {
     attributes.addActor(pointsLeft);
     attributes.addActor(new Label("", Main.skin));
 
-    attributes.addActor(new Label(createAttributeText(0, "Strength", playerSetup.attributes.strength), Main.skin));
-    attributes.addActor(new Label(createAttributeText(1, "Toughness", playerSetup.attributes.toughness), Main.skin));
+    attributes.addActor(new Label(createAttributeText(0, "Agility", playerSetup.attributes.agility), Main.skin));
+    attributes.addActor(new Label(createAttributeText(1, "Strength", playerSetup.attributes.strength), Main.skin));
+    attributes.addActor(new Label(createAttributeText(2, "Toughness", playerSetup.attributes.toughness), Main.skin));
   }
 
   private void updateSkillsGroup() {
@@ -225,14 +226,19 @@ public class YouScreen implements Screen {
     String details = "";
 
     switch (name) {
-      case "Toughness":
-        details = "\n[DARK_GRAY]Max Health: [LIGHT_GRAY]" + level * 10
-            + "[DARK_GRAY], Max Oxygen: [LIGHT_GRAY]" + level * 4
-            + "[DARK_GRAY], Defense: d[LIGHT_GRAY]" + level;
+      case "Agility":
+        details = "\n[DARK_GRAY]Accuracy: d[LIGHT_GRAY]" + level
+            + "[DARK_GRAY], Dodge: d[LIGHT_GRAY]" + level;
 
         break;
       case "Strength":
         details = "\n[DARK_GRAY]Damage: d[LIGHT_GRAY]" + level;
+
+        break;
+      case "Toughness":
+        details = "\n[DARK_GRAY]Max Health: [LIGHT_GRAY]" + level * 10
+            + "[DARK_GRAY], Max Oxygen: [LIGHT_GRAY]" + level * 4
+            + "[DARK_GRAY], Defense: d[LIGHT_GRAY]" + level;
 
         break;
       default:
@@ -264,20 +270,31 @@ public class YouScreen implements Screen {
 
     switch (itemSelected) {
       case 0:
+        int agilityLevel = playerSetup.attributes.agility;
+
+        if (agilityLevel < 12) {
+          playerSetup.attributes.agility = agilityLevel == 0 ? 4 : agilityLevel + 2;
+          attributePoints -= 1;
+        }
+
+        break;
+      case 1:
         int strengthLevel = playerSetup.attributes.strength;
 
         if (strengthLevel < 12) {
           playerSetup.attributes.strength = strengthLevel == 0 ? 4 : strengthLevel + 2;
           attributePoints -= 1;
         }
+
         break;
-      case 1:
+      case 2:
         int toughnessLevel = playerSetup.attributes.toughness;
 
         if (toughnessLevel < 12) {
           playerSetup.attributes.toughness = toughnessLevel == 0 ? 4 : toughnessLevel + 2;
           attributePoints -= 1;
         }
+
         break;
       default:
     }
@@ -286,20 +303,31 @@ public class YouScreen implements Screen {
   private void decreaseAttribute() {
     switch (itemSelected) {
       case 0:
+        int agilityLevel = playerSetup.attributes.agility;
+
+        if (agilityLevel > 0) {
+          playerSetup.attributes.agility = agilityLevel == 4 ? 0 : agilityLevel - 2;
+          attributePoints += 1;
+        }
+
+        break;
+      case 1:
         int strengthLevel = playerSetup.attributes.strength;
 
         if (strengthLevel > 0) {
           playerSetup.attributes.strength = strengthLevel == 4 ? 0 : strengthLevel - 2;
           attributePoints += 1;
         }
+
         break;
-      case 1:
+      case 2:
         int toughnessLevel = playerSetup.attributes.toughness;
 
         if (toughnessLevel > 0) {
           playerSetup.attributes.toughness = toughnessLevel == 4 ? 0 : toughnessLevel - 2;
           attributePoints += 1;
         }
+
         break;
       default:
     }

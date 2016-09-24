@@ -167,12 +167,12 @@ public class CombatHelpers {
     int skillLevel = skills.levels.get(skillName);
     BodyComponent body = ComponentMappers.body.get(target);
 
-    int hit = determineHit(skillLevel, body.parts.get(bodyPart));
+    int hit = determineHit(starter, target, body.parts.get(bodyPart), skillLevel);
     Gdx.app.log("CombatHelpers", "Hit roll: " + hit);
 
     AttributesComponent starterAttributes = ComponentMappers.attributes.get(starter);
 
-    if (hit >= 4) {
+    if (hit > 0) {
       if (ComponentMappers.player.has(target)) {
         Main.cameraShake.shake(.4f, .1f);
       }
@@ -261,12 +261,12 @@ public class CombatHelpers {
     int skillLevel = skills.levels.get(skill);
     BodyComponent body = ComponentMappers.body.get(target);
 
-    int hit = determineHit(skillLevel, body.parts.get(bodyPart));
+    int hit = determineHit(starter, target, body.parts.get(bodyPart), skillLevel);
     Gdx.app.log("CombatHelpers", "Hit roll: " + hit);
 
     AttributesComponent starterAttributes = ComponentMappers.attributes.get(starter);
 
-    if (hit >= 4) {
+    if (hit > 0) {
       if (ComponentMappers.player.has(target)) {
         Main.cameraShake.shake(.4f, .1f);
       }
@@ -309,23 +309,34 @@ public class CombatHelpers {
     }
   }
 
-  private int determineHit(int skillLevel, int bodyPart) {
+  private int determineHit(Entity starter, Entity target, int bodyPart, int skillLevel) {
     // Roll your skill and a 6
-    int skillRoll = MathUtils.random(1, skillLevel == 0 ? 4 : skillLevel);
+    int skillRoll = skillLevel == 0 ? 0 : MathUtils.random(1, skillLevel);
     int extraRoll = MathUtils.random(1, 6);
 
     // Hit roll is whichever of the 2 is highest
     int hitRoll = extraRoll > skillRoll ? extraRoll : skillLevel;
 
+    // Add accuracy roll to total
+    AttributesComponent starterAttributes = ComponentMappers.attributes.get(starter);
+    hitRoll = hitRoll + MathUtils.random(1, starterAttributes.agility);
+
+    // Roll their dodge
+    AttributesComponent targetAttributes = ComponentMappers.attributes.get(target);
+    int dodgeRoll = MathUtils.random(1, targetAttributes.agility);
+
+    if (hitRoll < dodgeRoll) {
+      return 0;
+    }
+
     // Roll target body part
     int bodyPartRoll = MathUtils.random(1, bodyPart);
 
-    // Return the hit roll if it's above the body part roll
-    if (hitRoll > bodyPartRoll) {
-      return hitRoll;
-    } else {
+    if (hitRoll < bodyPartRoll) {
       return 0;
     }
+
+    return hitRoll;
   }
 
   private void applyDamage(Entity starter, Entity target, Entity item, int damage,
@@ -406,7 +417,7 @@ public class CombatHelpers {
   }
 
   /**
-   * JsonToLevel an entity's skill.
+   * Level an entity's skill.
    *
    * @param entity Who we're leveling
    * @param skill  The skill we're leveling
@@ -418,7 +429,7 @@ public class CombatHelpers {
     skills.counters.put(skill, skills.counters.get(skill) + amount);
 
     int skillLevel = skills.levels.get(skill);
-    int expNeeded = skillLevel == 0 ? 40 : ((skillLevel + 2) * 10);
+    int expNeeded = skillLevel == 0 ? 40 : ((skillLevel + 2) * 100);
 
     if (skills.counters.get(skill) >= expNeeded && skillLevel < 12) {
       skills.levels.put(skill, skillLevel == 0 ? 4 : skillLevel + 2);
