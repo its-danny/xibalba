@@ -27,29 +27,6 @@ import me.dannytatom.xibalba.world.WorldManager;
 import java.util.Map;
 import java.util.Objects;
 
-//
-// How combat works
-// ----------------
-//
-// Hitting
-// - Target number is 4
-// - Roll skill and a 6, highest result is used as your hit roll
-//    - If you have no level in the skill, roll a 4
-// - Roll body part you're attempting to hit
-// - If you roll over their body part roll, continue w/ hit roll
-// - If the hit roll result is the target number or higher, you hit
-//
-// Damage
-// - Before damage, apply weapon effects if any
-// - Melee damage is strength roll + the weapon's damage roll
-// - Ranged damage is just the weapon's damage roll
-//   - If thrown, use throwDamage, otherwise hitDamage
-// - If your hit roll was double the target number, you critical (add a 6 roll to the damage)
-// - Damage done to the enemy is your total damage over their defense
-//   - This is done to their actual health and to the body part damage
-// - Body part damage is checked, add statuses effects to entity if necessary
-//
-
 public class CombatHelpers {
   public CombatHelpers() {
 
