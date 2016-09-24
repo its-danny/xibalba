@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.esotericsoftware.kryo.io.Input;
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.utils.JsonToLevel;
@@ -43,7 +44,7 @@ public class LoadingScreen implements Screen {
     this.newGame = newGame;
     this.playerSetup = playerSetup;
 
-    stage = new Stage();
+    stage = new Stage(new FitViewport(960, 540));
 
     Table table = new Table();
     table.setFillParent(true);

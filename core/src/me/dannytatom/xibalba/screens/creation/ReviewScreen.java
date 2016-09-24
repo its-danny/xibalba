@@ -10,9 +10,9 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.screens.LoadingScreen;
-import me.dannytatom.xibalba.screens.MainMenuScreen;
 import me.dannytatom.xibalba.ui.ActionButton;
 import me.dannytatom.xibalba.utils.PlayerSetup;
 
@@ -20,11 +20,11 @@ import java.util.Objects;
 
 public class ReviewScreen implements Screen {
   private final Main main;
+  private final PlayerSetup playerSetup;
 
   private final Stage stage;
   private final TextField worldSeedField;
   private final TextField playerNameField;
-  private final PlayerSetup playerSetup;
   private long worldSeed;
 
   /**
@@ -32,11 +32,11 @@ public class ReviewScreen implements Screen {
    *
    * @param main Instance of main class
    */
-  public ReviewScreen(Main main) {
+  public ReviewScreen(Main main, PlayerSetup playerSetup) {
     this.main = main;
+    this.playerSetup = playerSetup;
 
-    stage = new Stage();
-    playerSetup = new PlayerSetup();
+    stage = new Stage(new FitViewport(960, 540));
     worldSeed = System.currentTimeMillis();
 
     Table table = new Table();
@@ -45,9 +45,9 @@ public class ReviewScreen implements Screen {
     table.pad(10);
     stage.addActor(table);
 
-    ActionButton backButton = new ActionButton("Q", "Back to Main Menu");
+    ActionButton backButton = new ActionButton("Q", "Back");
     backButton.setKeys(Input.Keys.Q);
-    backButton.setAction(table, () -> main.setScreen(new MainMenuScreen(main)));
+    backButton.setAction(table, () -> main.setScreen(new YouScreen(main)));
     table.add(backButton).pad(0, 0, 10, 0).left();
 
     table.row();

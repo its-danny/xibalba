@@ -15,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.EquipmentComponent;
@@ -73,7 +74,7 @@ public class CharacterScreen implements Screen {
     equipment = ComponentMappers.equipment.get(WorldManager.player);
     inventoryItems = ComponentMappers.inventory.get(WorldManager.player).items;
 
-    stage = new Stage();
+    stage = new Stage(new FitViewport(960, 540));
 
     table = new Table();
     table.setFillParent(true);

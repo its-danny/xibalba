@@ -22,6 +22,9 @@ import java.util.TreeMap;
 public class PlayerSetup {
   private static final TreeMap<Integer, String> rnMap = new TreeMap<>();
 
+  public AttributesComponent attributes;
+  public SkillsComponent skills;
+
   public String name;
 
   public PlayerSetup() {
@@ -40,6 +43,9 @@ public class PlayerSetup {
     rnMap.put(1, "I");
 
     generateName();
+
+    attributes = new AttributesComponent(name, "It's you", 100, 10, 4, 4);
+    skills = new SkillsComponent();
   }
 
   private static String intToRoman(int number) {
@@ -55,16 +61,16 @@ public class PlayerSetup {
   public Entity create() {
     Entity player = new Entity();
 
-    player.add(new PlayerComponent());
-    player.add(new InventoryComponent());
-    player.add(new EquipmentComponent());
-    player.add(new SkillsComponent());
-
-    player.add(new AttributesComponent(name, "It's you", 100, 10, 8, 6));
+    player.add(skills);
+    player.add(attributes);
 
     Vector2 position = WorldManager.mapHelpers.getEntrancePosition();
     player.add(new PositionComponent(position));
     player.add(new VisualComponent(Main.asciiAtlas.createSprite("0004"), position));
+
+    player.add(new PlayerComponent());
+    player.add(new InventoryComponent());
+    player.add(new EquipmentComponent());
 
     HashMap<String, Integer> bodyParts = new HashMap<>();
     bodyParts.put("head", 10);

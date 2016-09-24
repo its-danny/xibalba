@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.esotericsoftware.kryo.io.Output;
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.ui.ActionButton;
@@ -21,7 +22,7 @@ public class PauseScreen implements Screen {
    * @param main Instance of main class
    */
   public PauseScreen(Main main) {
-    stage = new Stage();
+    stage = new Stage(new FitViewport(960, 540));
 
     Table table = new Table();
     table.setFillParent(true);

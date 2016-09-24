@@ -8,8 +8,9 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import me.dannytatom.xibalba.Main;
-import me.dannytatom.xibalba.screens.creation.ReviewScreen;
+import me.dannytatom.xibalba.screens.creation.YouScreen;
 import me.dannytatom.xibalba.ui.ActionButton;
 
 public class MainMenuScreen implements Screen {
@@ -21,7 +22,7 @@ public class MainMenuScreen implements Screen {
    * @param main Instance of main class
    */
   public MainMenuScreen(Main main) {
-    stage = new Stage();
+    stage = new Stage(new FitViewport(960, 540));
 
     Table table = new Table();
     table.setFillParent(true);
@@ -33,7 +34,7 @@ public class MainMenuScreen implements Screen {
 
     ActionButton newGameButton = new ActionButton("N", "New Game");
     newGameButton.setKeys(Input.Keys.N);
-    newGameButton.setAction(table, () -> main.setScreen(new ReviewScreen(main)));
+    newGameButton.setAction(table, () -> main.setScreen(new YouScreen(main)));
 
     ActionButton quitButton = new ActionButton("Q", "Quit");
     quitButton.setKeys(Input.Keys.Q);
