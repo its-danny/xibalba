@@ -228,22 +228,38 @@ public class YouScreen implements Screen {
   }
 
   private String createAttributeText(int index, String name, int level) {
+    String details = "";
+
+    switch (name) {
+      case "Toughness":
+        details = "\n[DARK_GRAY]Max Health: [LIGHT_GRAY]" + level * 10
+            + "[DARK_GRAY], Max Oxygen: [LIGHT_GRAY]" + level * 4
+            + "[DARK_GRAY], Defense: d[LIGHT_GRAY]" + level;
+
+        break;
+      case "Strength":
+        details = "\n[DARK_GRAY]Damage: d[LIGHT_GRAY]" + level;
+
+        break;
+      default:
+    }
+
     if (sectionSelected == Section.ATTRIBUTES && index == itemSelected) {
-      return "[DARK_GRAY]> [WHITE]" + name + " [DARK_GRAY]d[WHITE]" + level;
+      return "[DARK_GRAY]> [WHITE]" + name + " [DARK_GRAY]d[WHITE]" + level + details;
     } else {
-      return "[LIGHT_GRAY]" + name + " [DARK_GRAY]d[WHITE]" + level;
+      return "[LIGHT_GRAY]" + name + " [DARK_GRAY]d[WHITE]" + level + details;
     }
   }
 
   private String createSkillText(int index, String name, int level) {
     String capitalizedName = WordUtils.capitalize(name);
     String levelString = level == 0 ? " [WHITE]" + level : " [DARK_GRAY]d[WHITE]" + level;
-    String tiedTo = " [DARK_GRAY]Strength";
+    String details = "\n[DARK_GRAY]Tied to Strength";
 
     if (sectionSelected == Section.SKILLS && index == itemSelected) {
-      return "[DARK_GRAY]> [WHITE]" + capitalizedName + levelString + tiedTo;
+      return "[DARK_GRAY]> [WHITE]" + capitalizedName + levelString + details;
     } else {
-      return "[LIGHT_GRAY]" + capitalizedName + levelString + tiedTo;
+      return "[LIGHT_GRAY]" + capitalizedName + levelString + details;
     }
   }
 
