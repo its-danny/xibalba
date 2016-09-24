@@ -77,13 +77,20 @@ public class ItemHelpers {
         WorldManager.log.add(
             "You picked up a " + WorldManager.itemHelpers.getName(entity, item)
         );
+        if (itemDetails.twoHanded && ComponentMappers.oneArm.has(entity)) {
+          return;
+        }
 
-        if (Objects.equals(itemDetails.type, "weapon")
-            && equipment.slots.get("right hand") == null) {
-          hold(entity, item);
-          WorldManager.log.add(
-              "You are now holding a " + WorldManager.itemHelpers.getName(entity, item)
-          );
+        if (Objects.equals(itemDetails.type, "weapon")) {
+          if (!itemDetails.twoHanded || !ComponentMappers.oneArm.has(entity)) {
+            if (equipment.slots.get("right hand") == null) {
+              hold(entity, item);
+
+              WorldManager.log.add(
+                  "You are now holding a " + WorldManager.itemHelpers.getName(entity, item)
+              );
+            }
+          }
         }
       }
     }

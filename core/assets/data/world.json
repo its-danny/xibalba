@@ -10,9 +10,9 @@
       { "name": "jaguar", "spawnRange": "0,1"}
     ],
     "items": [
-      { "name": "chippedFlint", "spawnRange": "1,2"},
-      { "name": "healthPlant", "spawnRange": "2,3"},
-      { "name": "healthPlant", "spawnRange": "1,2"}
+      { "name": "bow", "spawnRange": "20,50"},
+      { "name": "arrow", "spawnRange": "100,100"},
+      { "name": "shield", "spawnRange": "10,20"}
     ]
   },
 

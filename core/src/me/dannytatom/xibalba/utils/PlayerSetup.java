@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.BodyComponent;
@@ -13,6 +14,8 @@ import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.SkillsComponent;
 import me.dannytatom.xibalba.components.VisualComponent;
+import me.dannytatom.xibalba.components.defects.OneArmComponent;
+import me.dannytatom.xibalba.components.traits.ScoutComponent;
 import me.dannytatom.xibalba.world.WorldManager;
 
 import java.util.Calendar;
@@ -24,6 +27,8 @@ public class PlayerSetup {
 
   public AttributesComponent attributes;
   public SkillsComponent skills;
+  public Array<String> traits;
+  public Array<String> defects;
 
   public String name;
 
@@ -46,6 +51,8 @@ public class PlayerSetup {
 
     attributes = new AttributesComponent(name, "It's you", 100, 10, 4, 4, 4);
     skills = new SkillsComponent();
+    traits = new Array<>();
+    defects = new Array<>();
   }
 
   private static String intToRoman(int number) {
@@ -80,6 +87,25 @@ public class PlayerSetup {
     bodyParts.put("left leg", 10);
     bodyParts.put("right leg", 10);
     player.add(new BodyComponent(bodyParts));
+
+    if (defects.contains(OneArmComponent.name, false)) {
+      player.add(new OneArmComponent());
+
+      BodyComponent body = ComponentMappers.body.get(player);
+      body.parts.remove("left arm");
+
+      AttributesComponent attributes = ComponentMappers.attributes.get(player);
+      attributes.maxHealth = MathUtils.ceil(attributes.maxHealth - (attributes.maxHealth * .20f));
+      attributes.health = attributes.maxHealth;
+    }
+
+    if (traits.contains(ScoutComponent.name, false)) {
+      player.add(new ScoutComponent());
+
+      AttributesComponent attributes = ComponentMappers.attributes.get(player);
+      attributes.maxVision = 120;
+      attributes.vision = 120;
+    }
 
     return player;
   }

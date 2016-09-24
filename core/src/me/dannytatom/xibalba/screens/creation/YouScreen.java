@@ -13,6 +13,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import me.dannytatom.xibalba.Main;
+import me.dannytatom.xibalba.components.defects.OneArmComponent;
+import me.dannytatom.xibalba.components.traits.ScoutComponent;
 import me.dannytatom.xibalba.screens.MainMenuScreen;
 import me.dannytatom.xibalba.ui.ActionButton;
 import me.dannytatom.xibalba.utils.PlayerSetup;
@@ -25,8 +27,11 @@ public class YouScreen implements Screen {
   private final PlayerSetup playerSetup;
   private int attributePoints;
   private int skillPoints;
-  private VerticalGroup attributes;
-  private VerticalGroup skills;
+  private int traitPoints;
+  private VerticalGroup attributesGroup;
+  private VerticalGroup skillsGroup;
+  private VerticalGroup traitsGroup;
+  private VerticalGroup defectsGroup;
 
   private Section sectionSelected = Section.ATTRIBUTES;
   private int itemSelected = 0;
@@ -34,6 +39,7 @@ public class YouScreen implements Screen {
   public YouScreen(Main main) {
     attributePoints = 5;
     skillPoints = 10;
+    traitPoints = 0;
     stage = new Stage(new FitViewport(960, 540));
     playerSetup = new PlayerSetup();
 
@@ -66,15 +72,20 @@ public class YouScreen implements Screen {
 
     Table mainTable = new Table();
 
-    attributes = new VerticalGroup().align(Align.top | Align.left);
-    skills = new VerticalGroup().align(Align.top | Align.left);
+    attributesGroup = new VerticalGroup().align(Align.top | Align.left);
+    skillsGroup = new VerticalGroup().align(Align.top | Align.left);
+    traitsGroup = new VerticalGroup().align(Align.top | Align.left);
+    defectsGroup = new VerticalGroup().align(Align.top | Align.left);
 
-    mainTable.add(attributes).pad(10).width(Gdx.graphics.getWidth() / 2 - 20).top().left();
-    mainTable.add(skills).pad(10).width(Gdx.graphics.getWidth() / 2 - 20).top().left();
+    mainTable.add(attributesGroup).pad(10).width(Gdx.graphics.getWidth() / 2 - 20).top().left();
+    mainTable.add(skillsGroup).pad(10).width(Gdx.graphics.getWidth() / 2 - 20).top().left();
+    mainTable.row();
+    mainTable.add(traitsGroup).pad(10).width(Gdx.graphics.getWidth() / 2 - 20).top().left();
+    mainTable.add(defectsGroup).pad(10).width(Gdx.graphics.getWidth() / 2 - 20).top().left();
 
-    ActionButton continueButton = new ActionButton("ENTER", "Review");
+    ActionButton continueButton = new ActionButton("ENTER", "Enter Your Name");
     continueButton.setKeys(Input.Keys.ENTER);
-    continueButton.setAction(table, () -> main.setScreen(new ReviewScreen(main, playerSetup)));
+    continueButton.setAction(table, () -> main.setScreen(new NameScreen(main, playerSetup)));
 
     table.add(titleTable);
     table.row();
@@ -84,6 +95,8 @@ public class YouScreen implements Screen {
 
     updateAttributesGroup();
     updateSkillsGroup();
+    updateTraitsGroup();
+    updateDefectsGroup();
 
     Gdx.input.setInputProcessor(stage);
     stage.setKeyboardFocus(table);
@@ -106,74 +119,174 @@ public class YouScreen implements Screen {
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
     if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
-      if (sectionSelected == Section.ATTRIBUTES) {
-        if (itemSelected > 0) {
-          itemSelected -= 1;
+      switch (sectionSelected) {
+        case ATTRIBUTES:
+          if (itemSelected > 0) {
+            itemSelected -= 1;
 
-          updateAttributesGroup();
-        }
-      } else if (sectionSelected == Section.SKILLS) {
-        if (itemSelected > 0) {
-          itemSelected -= 1;
+            updateAttributesGroup();
+          }
 
-          updateSkillsGroup();
-        }
+          break;
+        case SKILLS:
+          if (itemSelected > 0) {
+            itemSelected -= 1;
+
+            updateSkillsGroup();
+          }
+
+          break;
+        case TRAITS:
+          if (itemSelected > 0) {
+            itemSelected -= 1;
+
+            updateTraitsGroup();
+          }
+
+          break;
+        case DEFECTS:
+          if (itemSelected > 0) {
+            itemSelected -= 1;
+
+            updateDefectsGroup();
+          }
+
+          break;
+        default:
       }
     }
 
     if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
-      if (sectionSelected == Section.ATTRIBUTES) {
-        if (itemSelected < attributes.getChildren().size - 6) {
-          itemSelected += 1;
+      switch (sectionSelected) {
+        case ATTRIBUTES:
+          if (itemSelected < attributesGroup.getChildren().size - 6) {
+            itemSelected += 1;
 
-          updateAttributesGroup();
-        }
-      } else if (sectionSelected == Section.SKILLS) {
-        if (itemSelected < skills.getChildren().size - 6) {
-          itemSelected += 1;
+            updateAttributesGroup();
+          }
 
-          updateSkillsGroup();
-        }
+          break;
+        case SKILLS:
+          if (itemSelected < skillsGroup.getChildren().size - 6) {
+            itemSelected += 1;
+
+            updateSkillsGroup();
+          }
+
+          break;
+        case TRAITS:
+          if (itemSelected < traitsGroup.getChildren().size - 5) {
+            itemSelected += 1;
+
+            updateTraitsGroup();
+          }
+
+          break;
+        case DEFECTS:
+          if (itemSelected < defectsGroup.getChildren().size - 5) {
+            itemSelected += 1;
+
+            updateDefectsGroup();
+          }
+
+          break;
+        default:
       }
     }
 
     if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
-      if (sectionSelected == Section.ATTRIBUTES) {
-        sectionSelected = Section.SKILLS;
-        itemSelected = 0;
-
-        updateAttributesGroup();
-        updateSkillsGroup();
+      switch (sectionSelected) {
+        case ATTRIBUTES:
+          sectionSelected = Section.SKILLS;
+          itemSelected = 0;
+          break;
+        case SKILLS:
+          sectionSelected = Section.TRAITS;
+          itemSelected = 0;
+          break;
+        case TRAITS:
+          sectionSelected = Section.DEFECTS;
+          itemSelected = 0;
+          break;
+        case DEFECTS:
+          break;
+        default:
       }
+
+      updateAttributesGroup();
+      updateSkillsGroup();
+      updateTraitsGroup();
+      updateDefectsGroup();
     }
 
     if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
-      if (sectionSelected == Section.SKILLS) {
-        sectionSelected = Section.ATTRIBUTES;
-        itemSelected = 0;
-
-        updateAttributesGroup();
-        updateSkillsGroup();
+      switch (sectionSelected) {
+        case ATTRIBUTES:
+          break;
+        case SKILLS:
+          sectionSelected = Section.ATTRIBUTES;
+          itemSelected = 0;
+          break;
+        case TRAITS:
+          sectionSelected = Section.SKILLS;
+          itemSelected = 0;
+          break;
+        case DEFECTS:
+          sectionSelected = Section.TRAITS;
+          itemSelected = 0;
+          break;
+        default:
       }
+
+      updateAttributesGroup();
+      updateSkillsGroup();
+      updateTraitsGroup();
+      updateDefectsGroup();
     }
 
     if (Gdx.input.isKeyJustPressed(Input.Keys.X)) {
-      if (sectionSelected == Section.ATTRIBUTES) {
-        increaseAttribute();
-        updateAttributesGroup();
-      } else if (sectionSelected == Section.SKILLS) {
-        increaseSkill();
-        updateSkillsGroup();
+      switch (sectionSelected) {
+        case ATTRIBUTES:
+          increaseAttribute();
+          updateAttributesGroup();
+          break;
+        case SKILLS:
+          increaseSkill();
+          updateSkillsGroup();
+          break;
+        case TRAITS:
+          addTrait();
+          updateTraitsGroup();
+          break;
+        case DEFECTS:
+          addDefect();
+          updateTraitsGroup();
+          updateDefectsGroup();
+          break;
+        default:
       }
     }
 
     if (Gdx.input.isKeyJustPressed(Input.Keys.Z)) {
-      if (sectionSelected == Section.ATTRIBUTES) {
-        decreaseAttribute();
-        updateAttributesGroup();
-      } else if (sectionSelected == Section.SKILLS) {
-        decreaseSkill();
-        updateSkillsGroup();
+      switch (sectionSelected) {
+        case ATTRIBUTES:
+          decreaseAttribute();
+          updateAttributesGroup();
+          break;
+        case SKILLS:
+          decreaseSkill();
+          updateSkillsGroup();
+          break;
+        case TRAITS:
+          removeTrait();
+          updateTraitsGroup();
+          break;
+        case DEFECTS:
+          removeDefect();
+          updateTraitsGroup();
+          updateDefectsGroup();
+          break;
+        default:
       }
     }
 
@@ -182,33 +295,33 @@ public class YouScreen implements Screen {
   }
 
   private void updateAttributesGroup() {
-    attributes.clear();
+    attributesGroup.clear();
 
-    attributes.addActor(new Label("Attributes", Main.skin));
-    attributes.addActor(new Label("", Main.skin));
+    attributesGroup.addActor(new Label("Attributes", Main.skin));
+    attributesGroup.addActor(new Label("", Main.skin));
 
     Label instructions = new Label("[DARK_GRAY]1 point is 1 die upgrade", Main.skin);
-    attributes.addActor(instructions);
+    attributesGroup.addActor(instructions);
     Label pointsLeft = new Label(attributePoints + "[LIGHT_GRAY] points left", Main.skin);
-    attributes.addActor(pointsLeft);
-    attributes.addActor(new Label("", Main.skin));
+    attributesGroup.addActor(pointsLeft);
+    attributesGroup.addActor(new Label("", Main.skin));
 
-    attributes.addActor(new Label(createAttributeText(0, "Agility", playerSetup.attributes.agility), Main.skin));
-    attributes.addActor(new Label(createAttributeText(1, "Strength", playerSetup.attributes.strength), Main.skin));
-    attributes.addActor(new Label(createAttributeText(2, "Toughness", playerSetup.attributes.toughness), Main.skin));
+    attributesGroup.addActor(new Label(createAttributeText(0, "Agility", playerSetup.attributes.agility), Main.skin));
+    attributesGroup.addActor(new Label(createAttributeText(1, "Strength", playerSetup.attributes.strength), Main.skin));
+    attributesGroup.addActor(new Label(createAttributeText(2, "Toughness", playerSetup.attributes.toughness), Main.skin));
   }
 
   private void updateSkillsGroup() {
-    skills.clear();
+    skillsGroup.clear();
 
-    skills.addActor(new Label("Skills", Main.skin));
-    skills.addActor(new Label("", Main.skin));
+    skillsGroup.addActor(new Label("Skills", Main.skin));
+    skillsGroup.addActor(new Label("", Main.skin));
 
-    Label instructions = new Label(WordUtils.wrap("[DARK_GRAY]1 point is 1 die upgrade up to the related attribute level, above that is 2 points", 50), Main.skin);
-    skills.addActor(instructions);
+    Label instructions = new Label(WordUtils.wrap("[DARK_GRAY]1 point is 1 die upgrade up to the related attribute level, above that is 2 points", 70), Main.skin);
+    skillsGroup.addActor(instructions);
     Label pointsLeft = new Label(skillPoints + "[LIGHT_GRAY] points left", Main.skin);
-    skills.addActor(pointsLeft);
-    skills.addActor(new Label("", Main.skin));
+    skillsGroup.addActor(pointsLeft);
+    skillsGroup.addActor(new Label("", Main.skin));
 
     int index = 0;
 
@@ -216,10 +329,44 @@ public class YouScreen implements Screen {
       String skill = entry.getKey();
       Integer level = entry.getValue();
 
-      skills.addActor(new Label(createSkillText(index, skill, level), Main.skin));
+      skillsGroup.addActor(new Label(createSkillText(index, skill, level), Main.skin));
 
       index++;
     }
+  }
+
+  private void updateTraitsGroup() {
+    traitsGroup.clear();
+
+    traitsGroup.addActor(new Label("Traits", Main.skin));
+    traitsGroup.addActor(new Label("", Main.skin));
+
+    Label pointsLeft = new Label(traitPoints + "[LIGHT_GRAY] points left", Main.skin);
+    traitsGroup.addActor(pointsLeft);
+    traitsGroup.addActor(new Label("", Main.skin));
+
+    traitsGroup.addActor(
+        new Label(
+            createTraitText(0, ScoutComponent.name, ScoutComponent.description, ScoutComponent.cost),
+        Main.skin)
+    );
+  }
+
+  private void updateDefectsGroup() {
+    defectsGroup.clear();
+
+    defectsGroup.addActor(new Label("Defects", Main.skin));
+    defectsGroup.addActor(new Label("", Main.skin));
+
+    Label instructions = new Label(WordUtils.wrap("[DARK_GRAY]Taking a major defect gives you 2 points, taking a minor gives you 1", 70), Main.skin);
+    defectsGroup.addActor(instructions);
+    defectsGroup.addActor(new Label("", Main.skin));
+
+    defectsGroup.addActor(
+        new Label(
+            createDefectText(0, OneArmComponent.name, OneArmComponent.description, OneArmComponent.reward),
+        Main.skin)
+    );
   }
 
   private String createAttributeText(int index, String name, int level) {
@@ -254,12 +401,36 @@ public class YouScreen implements Screen {
   private String createSkillText(int index, String name, int level) {
     String capitalizedName = WordUtils.capitalize(name);
     String levelString = level == 0 ? " [WHITE]" + level : " [DARK_GRAY]d[WHITE]" + level;
-    String details = "\n[DARK_GRAY]Tied to " + playerSetup.skills.associations.get(name);
+    String details = "[DARK_GRAY] " + playerSetup.skills.associations.get(name);
 
     if (sectionSelected == Section.SKILLS && index == itemSelected) {
       return "[DARK_GRAY]> [WHITE]" + capitalizedName + levelString + details;
     } else {
       return "[LIGHT_GRAY]" + capitalizedName + levelString + details;
+    }
+  }
+
+  private String createTraitText(int index, String name, String description, int cost) {
+    String selected = playerSetup.traits.contains(name, false) ? "[WHITE]! " : "";
+    String type = cost == 1 ? "Minor" : "Major";
+    String desc = WordUtils.wrap(description, 70);
+
+    if (sectionSelected == Section.TRAITS && index == itemSelected) {
+      return selected + "[DARK_GRAY]> [WHITE]" + type + " [WHITE]" + name + "\n[DARK_GRAY]" + desc;
+    } else {
+      return selected + "[WHITE]" + type + " [LIGHT_GRAY]" + name + "\n[DARK_GRAY]" + desc;
+    }
+  }
+
+  private String createDefectText(int index, String name, String description, int reward) {
+    String selected = playerSetup.defects.contains(name, false) ? "[WHITE]! " : "";
+    String type = reward == 1 ? "Minor" : "Major";
+    String desc = WordUtils.wrap(description, 70);
+
+    if (sectionSelected == Section.DEFECTS && index == itemSelected) {
+      return selected + "[DARK_GRAY]> [WHITE]" + type + " [WHITE]" + name + "\n[DARK_GRAY]" + desc;
+    } else {
+      return selected + "[WHITE]" + type + " [LIGHT_GRAY]" + name + "\n[DARK_GRAY]" + desc;
     }
   }
 
@@ -385,6 +556,58 @@ public class YouScreen implements Screen {
     }
   }
 
+  private void addTrait() {
+    switch (itemSelected) {
+      case 0:
+        if (!playerSetup.traits.contains(ScoutComponent.name, false) && traitPoints >= ScoutComponent.cost) {
+          playerSetup.traits.add(ScoutComponent.name);
+          traitPoints -= ScoutComponent.cost;
+        }
+
+        break;
+      default:
+    }
+  }
+
+  private void removeTrait() {
+    switch (itemSelected) {
+      case 0:
+        if (playerSetup.traits.contains(ScoutComponent.name, false)) {
+          playerSetup.traits.removeValue(ScoutComponent.name, false);
+          traitPoints += ScoutComponent.cost;
+        }
+
+        break;
+      default:
+    }
+  }
+
+  private void addDefect() {
+    switch (itemSelected) {
+      case 0:
+        if (!playerSetup.defects.contains(OneArmComponent.name, false)) {
+          playerSetup.defects.add(OneArmComponent.name);
+          traitPoints += OneArmComponent.reward;
+        }
+
+        break;
+      default:
+    }
+  }
+
+  private void removeDefect() {
+    switch (itemSelected) {
+      case 0:
+        if (playerSetup.defects.contains(OneArmComponent.name, false)) {
+          playerSetup.defects.removeValue(OneArmComponent.name, false);
+          traitPoints -= OneArmComponent.reward;
+        }
+
+        break;
+      default:
+    }
+  }
+
   @Override
   public void resize(int width, int height) {
     stage.getViewport().update(width, height, true);
@@ -411,6 +634,6 @@ public class YouScreen implements Screen {
   }
 
   private enum Section {
-    ATTRIBUTES, SKILLS
+    ATTRIBUTES, SKILLS, TRAITS, DEFECTS
   }
 }

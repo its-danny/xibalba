@@ -22,7 +22,9 @@ import me.dannytatom.xibalba.components.EquipmentComponent;
 import me.dannytatom.xibalba.components.ItemComponent;
 import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.SkillsComponent;
+import me.dannytatom.xibalba.components.defects.OneArmComponent;
 import me.dannytatom.xibalba.components.items.ItemEffectsComponent;
+import me.dannytatom.xibalba.components.traits.ScoutComponent;
 import me.dannytatom.xibalba.ui.ActionButton;
 import me.dannytatom.xibalba.utils.ComponentMappers;
 import me.dannytatom.xibalba.world.WorldManager;
@@ -30,6 +32,7 @@ import org.apache.commons.lang3.text.WordUtils;
 
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Objects;
 
 public class CharacterScreen implements Screen {
   private final Main main;
@@ -39,6 +42,7 @@ public class CharacterScreen implements Screen {
   private final Table table;
   private final VerticalGroup attributesGroup;
   private final VerticalGroup skillsGroup;
+  private final VerticalGroup traitsGroup;
   private final VerticalGroup inventoryGroup;
   private final Table itemDetails;
   private final VerticalGroup equipmentGroup;
@@ -97,13 +101,14 @@ public class CharacterScreen implements Screen {
 
     attributesGroup = new VerticalGroup().align(Align.top | Align.left);
     skillsGroup = new VerticalGroup().align(Align.top | Align.left);
+    traitsGroup = new VerticalGroup().align(Align.top | Align.left);
 
     Table characterTable = new Table();
     characterTable.add(attributesGroup)
         .pad(10).width(Gdx.graphics.getWidth() / 3 - 20).top().left();
     characterTable.add(skillsGroup)
         .pad(10).width(Gdx.graphics.getWidth() / 3 - 20).top().left();
-    characterTable.add(new VerticalGroup())
+    characterTable.add(traitsGroup)
         .pad(10).width(Gdx.graphics.getWidth() / 3 - 20).top().left();
 
     inventoryGroup = new VerticalGroup().align(Align.top | Align.left);
@@ -147,6 +152,7 @@ public class CharacterScreen implements Screen {
 
     renderAttributes();
     renderSkills();
+    renderTraits();
     renderInventory();
     renderItemDetails();
     renderEquipment();
@@ -377,6 +383,25 @@ public class CharacterScreen implements Screen {
     }
   }
 
+  private void renderTraits() {
+    traitsGroup.clear();
+
+    traitsGroup.addActor(new Label("[DARK_GRAY]-[] Traits & Defects", Main.skin));
+    traitsGroup.addActor(new Label("", Main.skin));
+
+    if (ComponentMappers.oneArm.has(WorldManager.player)) {
+      traitsGroup.addActor(
+          new Label("[LIGHT_GRAY]" + OneArmComponent.name + "\n[DARK_GRAY]" + WordUtils.wrap(OneArmComponent.description, 50), Main.skin)
+      );
+    }
+
+    if (ComponentMappers.scout.has(WorldManager.player)) {
+      traitsGroup.addActor(
+          new Label("[LIGHT_GRAY]" + ScoutComponent.name + "\n[DARK_GRAY]" + WordUtils.wrap(ScoutComponent.description, 50), Main.skin)
+      );
+    }
+  }
+
   private void renderInventory() {
     inventoryGroup.clear();
 
@@ -414,8 +439,11 @@ public class CharacterScreen implements Screen {
 
     if (!inventoryItems.isEmpty()) {
       VerticalGroup statsGroup = new VerticalGroup().align(Align.top | Align.left);
+      VerticalGroup restrictionsGroup = new VerticalGroup().align(Align.top | Align.left);
 
       itemDetails.add(statsGroup).width(Gdx.graphics.getWidth() / 3 - 20).top().left();
+      itemDetails.row();
+      itemDetails.add(restrictionsGroup).width(Gdx.graphics.getWidth() / 3 - 20).top().left();
       itemDetails.row();
       itemDetails.add(itemActionGroup).top().left();
 
@@ -554,17 +582,37 @@ public class CharacterScreen implements Screen {
         statsGroup.addActor(new Label("", Main.skin));
       }
 
+      // Restrictions
+
+      if (ComponentMappers.oneArm.has(WorldManager.player) && selectedItemDetails.twoHanded) {
+        restrictionsGroup.addActor(new Label("[RED]You can't hold this due to too few arms.", Main.skin));
+      }
+
+      if (ComponentMappers.oneArm.has(WorldManager.player) && Objects.equals(selectedItemDetails.location, "left hand")) {
+        restrictionsGroup.addActor(new Label("[RED]You don't have a left hand to hold this in.", Main.skin));
+      }
+
+      if (restrictionsGroup.getChildren().size > 0) {
+        restrictionsGroup.addActor(new Label("", Main.skin));
+      }
+
       // Item actions
 
       if (applying == null) {
         if (selectedItemDetails.actions.contains("hold", false)
             && !WorldManager.itemHelpers.isEquipped(WorldManager.player, selectedItem)) {
-          itemActionGroup.addActor(holdButton);
+          if (!ComponentMappers.oneArm.has(WorldManager.player)
+              || !selectedItemDetails.twoHanded) {
+                itemActionGroup.addActor(holdButton);
+              }
         }
 
         if (selectedItemDetails.actions.contains("wear", false)
             && !WorldManager.itemHelpers.isEquipped(WorldManager.player, selectedItem)) {
-          itemActionGroup.addActor(wearButton);
+          if (!ComponentMappers.oneArm.has(WorldManager.player)
+              || !Objects.equals(selectedItemDetails.location, "left hand")) {
+                itemActionGroup.addActor(wearButton);
+              }
         }
 
         if (selectedItemDetails.actions.contains("throw", false)) {
@@ -607,15 +655,17 @@ public class CharacterScreen implements Screen {
       String key = WordUtils.capitalize(slot.getKey());
       Entity item = slot.getValue();
 
-      if (item == null) {
-        equipmentGroup.addActor(
-            new Label("[LIGHT_GRAY]" + key + ": [DARK_GRAY]Nothing", Main.skin)
-        );
-      } else {
-        String slotName = "[LIGHT_GRAY]" + key + ":[] ";
-        String itemName = WorldManager.itemHelpers.getName(WorldManager.player, item);
+      if (!ComponentMappers.oneArm.has(WorldManager.player) || !Objects.equals(slot.getKey(), "left hand")) {
+        if (item == null) {
+          equipmentGroup.addActor(
+              new Label("[LIGHT_GRAY]" + key + ": [DARK_GRAY]Nothing", Main.skin)
+          );
+        } else {
+          String slotName = "[LIGHT_GRAY]" + key + ":[] ";
+          String itemName = WorldManager.itemHelpers.getName(WorldManager.player, item);
 
-        equipmentGroup.addActor(new Label(slotName + itemName, Main.skin));
+          equipmentGroup.addActor(new Label(slotName + itemName, Main.skin));
+        }
       }
     }
   }

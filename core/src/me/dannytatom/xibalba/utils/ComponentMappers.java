@@ -20,6 +20,7 @@ import me.dannytatom.xibalba.components.actions.MovementComponent;
 import me.dannytatom.xibalba.components.actions.RangeComponent;
 import me.dannytatom.xibalba.components.ai.BrainComponent;
 import me.dannytatom.xibalba.components.ai.TargetComponent;
+import me.dannytatom.xibalba.components.defects.OneArmComponent;
 import me.dannytatom.xibalba.components.items.AmmunitionComponent;
 import me.dannytatom.xibalba.components.items.ArmorComponent;
 import me.dannytatom.xibalba.components.items.ItemEffectsComponent;
@@ -28,6 +29,7 @@ import me.dannytatom.xibalba.components.statuses.BleedingComponent;
 import me.dannytatom.xibalba.components.statuses.CrippledComponent;
 import me.dannytatom.xibalba.components.statuses.DrowningComponent;
 import me.dannytatom.xibalba.components.statuses.WetComponent;
+import me.dannytatom.xibalba.components.traits.ScoutComponent;
 
 public final class ComponentMappers {
   public static final ComponentMapper<BrainComponent> brain =
@@ -110,4 +112,10 @@ public final class ComponentMappers {
 
   public static final ComponentMapper<ExitComponent> exit =
       ComponentMapper.getFor(ExitComponent.class);
+
+  public static final ComponentMapper<OneArmComponent> oneArm =
+      ComponentMapper.getFor(OneArmComponent.class);
+
+  public static final ComponentMapper<ScoutComponent> scout =
+      ComponentMapper.getFor(ScoutComponent.class);
 }

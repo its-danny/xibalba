@@ -18,7 +18,7 @@ import me.dannytatom.xibalba.utils.PlayerSetup;
 
 import java.util.Objects;
 
-public class ReviewScreen implements Screen {
+public class NameScreen implements Screen {
   private final Main main;
   private final PlayerSetup playerSetup;
 
@@ -32,7 +32,7 @@ public class ReviewScreen implements Screen {
    *
    * @param main Instance of main class
    */
-  public ReviewScreen(Main main, PlayerSetup playerSetup) {
+  public NameScreen(Main main, PlayerSetup playerSetup) {
     this.main = main;
     this.playerSetup = playerSetup;
 
