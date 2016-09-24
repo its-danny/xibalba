@@ -21,21 +21,15 @@ import org.apache.commons.lang3.text.WordUtils;
 import java.util.Map;
 
 public class YouScreen implements Screen {
-
-  private int attributePoints;
-  private int skillPoints;
   private final Stage stage;
   private final PlayerSetup playerSetup;
-
+  private int attributePoints;
+  private int skillPoints;
   private VerticalGroup attributes;
   private VerticalGroup skills;
 
   private Section sectionSelected = Section.ATTRIBUTES;
   private int itemSelected = 0;
-
-  private enum Section {
-    ATTRIBUTES, SKILLS
-  }
 
   public YouScreen(Main main) {
     attributePoints = 5;
@@ -217,7 +211,7 @@ public class YouScreen implements Screen {
 
     int index = 0;
 
-    for (Map.Entry<String , Integer> entry : playerSetup.skills.levels.entrySet()) {
+    for (Map.Entry<String, Integer> entry : playerSetup.skills.levels.entrySet()) {
       String skill = entry.getKey();
       Integer level = entry.getValue();
 
@@ -254,7 +248,7 @@ public class YouScreen implements Screen {
   private String createSkillText(int index, String name, int level) {
     String capitalizedName = WordUtils.capitalize(name);
     String levelString = level == 0 ? " [WHITE]" + level : " [DARK_GRAY]d[WHITE]" + level;
-    String details = "\n[DARK_GRAY]Tied to Strength";
+    String details = "\n[DARK_GRAY]Tied to " + playerSetup.skills.associations.get(name);
 
     if (sectionSelected == Section.SKILLS && index == itemSelected) {
       return "[DARK_GRAY]> [WHITE]" + capitalizedName + levelString + details;
@@ -386,5 +380,9 @@ public class YouScreen implements Screen {
   @Override
   public void dispose() {
     stage.dispose();
+  }
+
+  private enum Section {
+    ATTRIBUTES, SKILLS
   }
 }

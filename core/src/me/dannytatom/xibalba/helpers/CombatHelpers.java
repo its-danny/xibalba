@@ -427,6 +427,30 @@ public class CombatHelpers {
       if (ComponentMappers.player.has(entity)) {
         WorldManager.log.add("[YELLOW]You feel better at " + skill);
       }
+
+      if (MathUtils.random() > .25) {
+        AttributesComponent attributes = ComponentMappers.attributes.get(entity);
+
+        switch (skills.associations.get(skill)) {
+          case "strength":
+            if (attributes.strength < 12) {
+              attributes.strength = attributes.strength == 0 ? 4 : attributes.strength + 2;
+            }
+
+            break;
+          case "toughness":
+            if (attributes.toughness < 12) {
+              attributes.toughness = attributes.toughness == 0 ? 4 : attributes.toughness + 2;
+            }
+
+            break;
+          default:
+        }
+
+        if (ComponentMappers.player.has(entity)) {
+          WorldManager.log.add("[YELLOW]Your " + skills.associations.get(skill) + " has risen");
+        }
+      }
     }
   }
 
