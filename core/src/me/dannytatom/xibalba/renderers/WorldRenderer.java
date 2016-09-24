@@ -197,7 +197,7 @@ public class WorldRenderer {
             minimum = .15f;
             break;
           case DAY:
-            minimum = .30f;
+            minimum = .20f;
             break;
           case DUSK:
             minimum = .15f;
