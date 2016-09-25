@@ -227,9 +227,10 @@ public class CombatHelpers {
       levelSkill(starter, skillName, skillLevelAmount);
     } else {
       AttributesComponent targetAttributes = ComponentMappers.attributes.get(target);
+      String name = ComponentMappers.player.has(starter) ? "You" : starterAttributes.name;
 
       WorldManager.log.add(
-          starterAttributes.name + " tried to hit " + targetAttributes.name + " but missed"
+          name + " tried to hit " + targetAttributes.name + " but missed"
       );
     }
   }
@@ -302,9 +303,10 @@ public class CombatHelpers {
       levelSkill(starter, skill, skillLevelAmount);
     } else {
       AttributesComponent targetAttributes = ComponentMappers.attributes.get(target);
+      String name = ComponentMappers.player.has(starter) ? "You" : starterAttributes.name;
 
       WorldManager.log.add(
-          starterAttributes.name + " tried to hit " + targetAttributes.name + " but missed"
+          name + " tried to hit " + targetAttributes.name + " but missed"
       );
     }
   }
@@ -386,13 +388,15 @@ public class CombatHelpers {
       // apply statuses effect.
       //
       // TODO: Probably change this to make more sense
+      String name = ComponentMappers.player.has(target) ? "You" : targetAttributes.name;
+
       if (targetBody.damage.get(bodyPart) > (targetAttributes.maxHealth / 3)) {
         if (bodyPart.contains("leg") && !ComponentMappers.crippled.has(target)) {
           target.add(new CrippledComponent());
-          WorldManager.log.add("[RED]" + targetAttributes.name + " is crippled");
+          WorldManager.log.add("[RED]" + name + " is crippled");
         } else if (bodyPart.contains("body") && !ComponentMappers.bleeding.has(target)) {
           target.add(new BleedingComponent());
-          WorldManager.log.add("[RED]" + targetAttributes.name + " is bleeding");
+          WorldManager.log.add("[RED]" + name + " is bleeding");
         }
       }
     } else {
