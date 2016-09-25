@@ -30,8 +30,8 @@ public class YouScreen implements Screen {
   private int traitPoints;
   private VerticalGroup attributesGroup;
   private VerticalGroup skillsGroup;
-  private VerticalGroup traitsGroup;
   private VerticalGroup defectsGroup;
+  private VerticalGroup traitsGroup;
 
   private Section sectionSelected = Section.ATTRIBUTES;
   private int itemSelected = 0;
@@ -46,7 +46,6 @@ public class YouScreen implements Screen {
     Table table = new Table();
     table.setFillParent(true);
     table.left().top();
-    table.pad(10);
     stage.addActor(table);
 
     Table titleTable = new Table();
@@ -74,14 +73,14 @@ public class YouScreen implements Screen {
 
     attributesGroup = new VerticalGroup().align(Align.top | Align.left);
     skillsGroup = new VerticalGroup().align(Align.top | Align.left);
-    traitsGroup = new VerticalGroup().align(Align.top | Align.left);
     defectsGroup = new VerticalGroup().align(Align.top | Align.left);
+    traitsGroup = new VerticalGroup().align(Align.top | Align.left);
 
     mainTable.add(attributesGroup).pad(10).width(Gdx.graphics.getWidth() / 2 - 20).top().left();
     mainTable.add(skillsGroup).pad(10).width(Gdx.graphics.getWidth() / 2 - 20).top().left();
     mainTable.row();
-    mainTable.add(traitsGroup).pad(10).width(Gdx.graphics.getWidth() / 2 - 20).top().left();
     mainTable.add(defectsGroup).pad(10).width(Gdx.graphics.getWidth() / 2 - 20).top().left();
+    mainTable.add(traitsGroup).pad(10).width(Gdx.graphics.getWidth() / 2 - 20).top().left();
 
     ActionButton continueButton = new ActionButton("ENTER", "Enter Your Name");
     continueButton.setKeys(Input.Keys.ENTER);
@@ -95,8 +94,8 @@ public class YouScreen implements Screen {
 
     updateAttributesGroup();
     updateSkillsGroup();
-    updateTraitsGroup();
     updateDefectsGroup();
+    updateTraitsGroup();
 
     Gdx.input.setInputProcessor(stage);
     stage.setKeyboardFocus(table);
@@ -136,19 +135,19 @@ public class YouScreen implements Screen {
           }
 
           break;
-        case TRAITS:
-          if (itemSelected > 0) {
-            itemSelected -= 1;
-
-            updateTraitsGroup();
-          }
-
-          break;
         case DEFECTS:
           if (itemSelected > 0) {
             itemSelected -= 1;
 
             updateDefectsGroup();
+          }
+
+          break;
+        case TRAITS:
+          if (itemSelected > 0) {
+            itemSelected -= 1;
+
+            updateTraitsGroup();
           }
 
           break;
@@ -174,19 +173,19 @@ public class YouScreen implements Screen {
           }
 
           break;
-        case TRAITS:
-          if (itemSelected < traitsGroup.getChildren().size - 5) {
-            itemSelected += 1;
-
-            updateTraitsGroup();
-          }
-
-          break;
         case DEFECTS:
           if (itemSelected < defectsGroup.getChildren().size - 5) {
             itemSelected += 1;
 
             updateDefectsGroup();
+          }
+
+          break;
+        case TRAITS:
+          if (itemSelected < traitsGroup.getChildren().size - 5) {
+            itemSelected += 1;
+
+            updateTraitsGroup();
           }
 
           break;
@@ -201,22 +200,22 @@ public class YouScreen implements Screen {
           itemSelected = 0;
           break;
         case SKILLS:
-          sectionSelected = Section.TRAITS;
-          itemSelected = 0;
-          break;
-        case TRAITS:
           sectionSelected = Section.DEFECTS;
           itemSelected = 0;
           break;
         case DEFECTS:
+          sectionSelected = Section.TRAITS;
+          itemSelected = 0;
+          break;
+        case TRAITS:
           break;
         default:
       }
 
       updateAttributesGroup();
       updateSkillsGroup();
-      updateTraitsGroup();
       updateDefectsGroup();
+      updateTraitsGroup();
     }
 
     if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
@@ -227,12 +226,12 @@ public class YouScreen implements Screen {
           sectionSelected = Section.ATTRIBUTES;
           itemSelected = 0;
           break;
-        case TRAITS:
+        case DEFECTS:
           sectionSelected = Section.SKILLS;
           itemSelected = 0;
           break;
-        case DEFECTS:
-          sectionSelected = Section.TRAITS;
+        case TRAITS:
+          sectionSelected = Section.DEFECTS;
           itemSelected = 0;
           break;
         default:
@@ -240,8 +239,8 @@ public class YouScreen implements Screen {
 
       updateAttributesGroup();
       updateSkillsGroup();
-      updateTraitsGroup();
       updateDefectsGroup();
+      updateTraitsGroup();
     }
 
     if (Gdx.input.isKeyJustPressed(Input.Keys.X)) {
@@ -254,14 +253,14 @@ public class YouScreen implements Screen {
           increaseSkill();
           updateSkillsGroup();
           break;
+        case DEFECTS:
+          addDefect();
+          updateDefectsGroup();
+          updateTraitsGroup();
+          break;
         case TRAITS:
           addTrait();
           updateTraitsGroup();
-          break;
-        case DEFECTS:
-          addDefect();
-          updateTraitsGroup();
-          updateDefectsGroup();
           break;
         default:
       }
@@ -277,14 +276,14 @@ public class YouScreen implements Screen {
           decreaseSkill();
           updateSkillsGroup();
           break;
+        case DEFECTS:
+          removeDefect();
+          updateDefectsGroup();
+          updateTraitsGroup();
+          break;
         case TRAITS:
           removeTrait();
           updateTraitsGroup();
-          break;
-        case DEFECTS:
-          removeDefect();
-          updateTraitsGroup();
-          updateDefectsGroup();
           break;
         default:
       }
@@ -335,23 +334,6 @@ public class YouScreen implements Screen {
     }
   }
 
-  private void updateTraitsGroup() {
-    traitsGroup.clear();
-
-    traitsGroup.addActor(new Label("Traits", Main.skin));
-    traitsGroup.addActor(new Label("", Main.skin));
-
-    Label pointsLeft = new Label(traitPoints + "[LIGHT_GRAY] points left", Main.skin);
-    traitsGroup.addActor(pointsLeft);
-    traitsGroup.addActor(new Label("", Main.skin));
-
-    traitsGroup.addActor(
-        new Label(
-            createTraitText(0, ScoutComponent.name, ScoutComponent.description, ScoutComponent.cost),
-        Main.skin)
-    );
-  }
-
   private void updateDefectsGroup() {
     defectsGroup.clear();
 
@@ -365,6 +347,23 @@ public class YouScreen implements Screen {
     defectsGroup.addActor(
         new Label(
             createDefectText(0, OneArmComponent.name, OneArmComponent.description, OneArmComponent.reward),
+            Main.skin)
+    );
+  }
+
+  private void updateTraitsGroup() {
+    traitsGroup.clear();
+
+    traitsGroup.addActor(new Label("Traits", Main.skin));
+    traitsGroup.addActor(new Label("", Main.skin));
+
+    Label pointsLeft = new Label(traitPoints + "[LIGHT_GRAY] points left", Main.skin);
+    traitsGroup.addActor(pointsLeft);
+    traitsGroup.addActor(new Label("", Main.skin));
+
+    traitsGroup.addActor(
+        new Label(
+            createTraitText(0, ScoutComponent.name, ScoutComponent.description, ScoutComponent.cost),
         Main.skin)
     );
   }
@@ -410,24 +409,24 @@ public class YouScreen implements Screen {
     }
   }
 
-  private String createTraitText(int index, String name, String description, int cost) {
-    String selected = playerSetup.traits.contains(name, false) ? "[WHITE]! " : "";
-    String type = cost == 1 ? "Minor" : "Major";
-    String desc = WordUtils.wrap(description, 70);
-
-    if (sectionSelected == Section.TRAITS && index == itemSelected) {
-      return selected + "[DARK_GRAY]> [WHITE]" + type + " [WHITE]" + name + "\n[DARK_GRAY]" + desc;
-    } else {
-      return selected + "[WHITE]" + type + " [LIGHT_GRAY]" + name + "\n[DARK_GRAY]" + desc;
-    }
-  }
-
   private String createDefectText(int index, String name, String description, int reward) {
     String selected = playerSetup.defects.contains(name, false) ? "[WHITE]! " : "";
     String type = reward == 1 ? "Minor" : "Major";
     String desc = WordUtils.wrap(description, 70);
 
     if (sectionSelected == Section.DEFECTS && index == itemSelected) {
+      return selected + "[DARK_GRAY]> [WHITE]" + type + " [WHITE]" + name + "\n[DARK_GRAY]" + desc;
+    } else {
+      return selected + "[WHITE]" + type + " [LIGHT_GRAY]" + name + "\n[DARK_GRAY]" + desc;
+    }
+  }
+
+  private String createTraitText(int index, String name, String description, int cost) {
+    String selected = playerSetup.traits.contains(name, false) ? "[WHITE]! " : "";
+    String type = cost == 1 ? "Minor" : "Major";
+    String desc = WordUtils.wrap(description, 70);
+
+    if (sectionSelected == Section.TRAITS && index == itemSelected) {
       return selected + "[DARK_GRAY]> [WHITE]" + type + " [WHITE]" + name + "\n[DARK_GRAY]" + desc;
     } else {
       return selected + "[WHITE]" + type + " [LIGHT_GRAY]" + name + "\n[DARK_GRAY]" + desc;
@@ -556,32 +555,6 @@ public class YouScreen implements Screen {
     }
   }
 
-  private void addTrait() {
-    switch (itemSelected) {
-      case 0:
-        if (!playerSetup.traits.contains(ScoutComponent.name, false) && traitPoints >= ScoutComponent.cost) {
-          playerSetup.traits.add(ScoutComponent.name);
-          traitPoints -= ScoutComponent.cost;
-        }
-
-        break;
-      default:
-    }
-  }
-
-  private void removeTrait() {
-    switch (itemSelected) {
-      case 0:
-        if (playerSetup.traits.contains(ScoutComponent.name, false)) {
-          playerSetup.traits.removeValue(ScoutComponent.name, false);
-          traitPoints += ScoutComponent.cost;
-        }
-
-        break;
-      default:
-    }
-  }
-
   private void addDefect() {
     switch (itemSelected) {
       case 0:
@@ -601,6 +574,32 @@ public class YouScreen implements Screen {
         if (playerSetup.defects.contains(OneArmComponent.name, false)) {
           playerSetup.defects.removeValue(OneArmComponent.name, false);
           traitPoints -= OneArmComponent.reward;
+        }
+
+        break;
+      default:
+    }
+  }
+
+  private void addTrait() {
+    switch (itemSelected) {
+      case 0:
+        if (!playerSetup.traits.contains(ScoutComponent.name, false) && traitPoints >= ScoutComponent.cost) {
+          playerSetup.traits.add(ScoutComponent.name);
+          traitPoints -= ScoutComponent.cost;
+        }
+
+        break;
+      default:
+    }
+  }
+
+  private void removeTrait() {
+    switch (itemSelected) {
+      case 0:
+        if (playerSetup.traits.contains(ScoutComponent.name, false)) {
+          playerSetup.traits.removeValue(ScoutComponent.name, false);
+          traitPoints += ScoutComponent.cost;
         }
 
         break;
