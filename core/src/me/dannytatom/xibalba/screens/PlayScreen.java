@@ -1,5 +1,10 @@
 package me.dannytatom.xibalba.screens;
 
+import aurelienribon.tweenengine.Timeline;
+import aurelienribon.tweenengine.TweenCallback;
+import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.core.Family;
+import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
@@ -10,6 +15,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.PlayerInput;
 import me.dannytatom.xibalba.components.AttributesComponent;
+import me.dannytatom.xibalba.components.PositionComponent;
+import me.dannytatom.xibalba.components.VisualComponent;
 import me.dannytatom.xibalba.renderers.HudRenderer;
 import me.dannytatom.xibalba.renderers.WorldRenderer;
 import me.dannytatom.xibalba.utils.ComponentMappers;
@@ -81,14 +88,6 @@ class PlayScreen implements Screen {
     autoTimer += delta;
     keyHoldTimer += delta;
 
-    // In some cases, we want the game to take turns on it's own
-    if ((WorldManager.state == WorldManager.State.MOVING
-        || WorldManager.entityHelpers.shouldSkipTurn(WorldManager.player))
-        && autoTimer >= .10f) {
-      autoTimer = 0;
-      WorldManager.executeTurn = true;
-    }
-
     // Keep moving if a key is held down
     if (playerInput.keyHeld != -1) {
       keyHoldTimerDelay += delta;
@@ -101,6 +100,14 @@ class PlayScreen implements Screen {
       }
     } else {
       keyHoldTimerDelay = 0;
+    }
+
+    // In some cases, we want the game to take turns on it's own
+    if ((WorldManager.state == WorldManager.State.MOVING
+        || WorldManager.entityHelpers.shouldSkipTurn(WorldManager.player))
+        && autoTimer >= .10f) {
+      autoTimer = 0;
+      WorldManager.executeTurn = true;
     }
 
     // Update engine if it's time to execute a turn
@@ -121,7 +128,43 @@ class PlayScreen implements Screen {
       WorldManager.state = WorldManager.State.PLAYING;
     }
 
-    // Check player health
+    // Do tweens
+    if (WorldManager.tweens.size > 0) {
+      WorldManager.state = WorldManager.State.WAITING;
+      Timeline timeline = Timeline.createParallel();
+
+      for (int i = 0; i < WorldManager.tweens.size; i++) {
+        timeline.push(WorldManager.tweens.get(i));
+        WorldManager.tweens.removeIndex(i);
+      }
+
+      timeline.setCallback(
+          (type, source) -> {
+            if (type == TweenCallback.COMPLETE) {
+              WorldManager.state = WorldManager.State.PLAYING;
+            }
+          }
+      ).start(Main.tweenManager);
+    }
+
+    // Update entity sprite positions
+    if (WorldManager.state != WorldManager.State.WAITING) {
+      ImmutableArray<Entity> entities
+          = WorldManager.engine.getEntitiesFor(
+          Family.all(VisualComponent.class, PositionComponent.class).get()
+      );
+
+      for (Entity entity : entities) {
+        PositionComponent position = ComponentMappers.position.get(entity);
+        VisualComponent visual = ComponentMappers.visual.get(entity);
+
+        visual.sprite.setPosition(
+            position.pos.x * Main.SPRITE_WIDTH, position.pos.y * Main.SPRITE_HEIGHT
+        );
+      }
+    }
+
+    // Check player health for DEATH
     if (playerAttributes.health <= 0) {
       Main.playScreen.dispose();
       main.setScreen(new MainMenuScreen(main));

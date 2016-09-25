@@ -60,10 +60,6 @@ public class CharacterScreen implements Screen {
   private Section sectionSelected = Section.INVENTORY;
   private int itemSelected = 0;
 
-  private enum Section {
-    INVENTORY, EQUIPMENT
-  }
-
   /**
    * View and manage inventory.
    *
@@ -229,7 +225,7 @@ public class CharacterScreen implements Screen {
 
     attributesGroup.addActor(
         new Label(
-              "[LIGHT_GRAY]STR " + "[CYAN]" + strength + "[DARK_GRAY]d "
+            "[LIGHT_GRAY]STR " + "[CYAN]" + strength + "[DARK_GRAY]d "
                 + "[LIGHT_GRAY]DMG " + "[CYAN]" + strength + "[DARK_GRAY]d "
                 + (damage > 0 ? "[LIGHT_GRAY]+ " + "[RED]" + damage + "[DARK_GRAY]d" : ""),
             Main.skin
@@ -703,5 +699,9 @@ public class CharacterScreen implements Screen {
   @Override
   public void dispose() {
     stage.dispose();
+  }
+
+  private enum Section {
+    INVENTORY, EQUIPMENT
   }
 }

@@ -51,8 +51,6 @@ public class RangeSystem extends UsesEnergySystem {
   }
 
   private void doThrowAnimation(Entity entity, Entity item, Vector2 position, boolean destroy) {
-    WorldManager.state = WorldManager.State.WAITING;
-
     // We have to set the items position before starting the tween since who knows wtf
     // position it had before it ended up in your inventory.
     PositionComponent throwerPosition = ComponentMappers.position.get(entity);
@@ -60,7 +58,7 @@ public class RangeSystem extends UsesEnergySystem {
 
     VisualComponent itemVisual = ComponentMappers.visual.get(item);
 
-    Tween.to(itemVisual.sprite, SpriteAccessor.XY, .5f).target(
+    WorldManager.tweens.add(Tween.to(itemVisual.sprite, SpriteAccessor.XY, .5f).target(
         position.x * Main.SPRITE_WIDTH, position.y * Main.SPRITE_HEIGHT
     ).setCallback(
         (type, source) -> {
@@ -70,10 +68,8 @@ public class RangeSystem extends UsesEnergySystem {
             } else {
               WorldManager.itemHelpers.drop(entity, item, position);
             }
-
-            WorldManager.state = WorldManager.State.PLAYING;
           }
         }
-    ).start(Main.tweenManager);
+    ));
   }
 }

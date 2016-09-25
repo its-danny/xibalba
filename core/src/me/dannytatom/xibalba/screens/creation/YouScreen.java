@@ -364,7 +364,7 @@ public class YouScreen implements Screen {
     traitsGroup.addActor(
         new Label(
             createTraitText(0, ScoutComponent.name, ScoutComponent.description, ScoutComponent.cost),
-        Main.skin)
+            Main.skin)
     );
   }
 

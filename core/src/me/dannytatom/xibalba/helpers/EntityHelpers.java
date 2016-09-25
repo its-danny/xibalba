@@ -2,10 +2,8 @@ package me.dannytatom.xibalba.helpers;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.Vector2;
-import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
-import me.dannytatom.xibalba.components.VisualComponent;
 import me.dannytatom.xibalba.utils.ComponentMappers;
 import me.dannytatom.xibalba.world.ShadowCaster;
 import me.dannytatom.xibalba.world.WorldManager;
@@ -88,12 +86,7 @@ public class EntityHelpers {
     }
 
     PositionComponent position = ComponentMappers.position.get(entity);
-    VisualComponent visual = ComponentMappers.visual.get(entity);
-
     position.pos.set(newPosition);
-    visual.sprite.setPosition(
-        position.pos.x * Main.SPRITE_WIDTH, position.pos.y * Main.SPRITE_HEIGHT
-    );
   }
 
   /**

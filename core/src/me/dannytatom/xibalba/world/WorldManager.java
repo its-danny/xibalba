@@ -1,7 +1,9 @@
 package me.dannytatom.xibalba.world;
 
+import aurelienribon.tweenengine.Tween;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.utils.Array;
 import me.dannytatom.xibalba.ActionLog;
 import me.dannytatom.xibalba.helpers.CombatHelpers;
 import me.dannytatom.xibalba.helpers.EntityHelpers;
@@ -28,6 +30,7 @@ public class WorldManager {
   public static ActionLog log;
   public static World world;
   public static State state;
+  public static Array<Tween> tweens;
   public static EntityFactory entityFactory;
   public static MapHelpers mapHelpers;
   public static CombatHelpers combatHelpers;
@@ -44,6 +47,7 @@ public class WorldManager {
     engine = new Engine();
     log = new ActionLog();
     world = new World();
+    tweens = new Array<>();
 
     entityFactory = new EntityFactory();
     mapHelpers = new MapHelpers();
@@ -56,19 +60,19 @@ public class WorldManager {
 
     // Setup engine (systems are run in order added)
     engine.addSystem(new AttributesSystem());
-    engine.addSystem(new MouseMovementSystem());
-    engine.addSystem(new BrainSystem());
-    engine.addSystem(new WanderSystem());
-    engine.addSystem(new TargetSystem());
-    engine.addSystem(new MovementSystem());
-    engine.addSystem(new RangeSystem());
-    engine.addSystem(new MeleeSystem());
     engine.addSystem(new TimeSystem());
     engine.addSystem(new TileEffectSystem());
     engine.addSystem(new CrippledSystem());
     engine.addSystem(new BleedingSystem());
     engine.addSystem(new DrowningSystem());
     engine.addSystem(new WetSystem());
+    engine.addSystem(new MouseMovementSystem());
+    engine.addSystem(new BrainSystem());
+    engine.addSystem(new WanderSystem());
+    engine.addSystem(new TargetSystem());
+    engine.addSystem(new RangeSystem());
+    engine.addSystem(new MeleeSystem());
+    engine.addSystem(new MovementSystem());
   }
 
   public enum State {

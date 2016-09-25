@@ -196,6 +196,8 @@ public class HudRenderer {
       name += " [DARK_GRAY][TARGETING][]";
     } else if (WorldManager.state == WorldManager.State.FOCUSED) {
       name += " [DARK_GRAY][FOCUSED][]";
+    } else if (WorldManager.state == WorldManager.State.WAITING) {
+      name += " [DARK_GRAY][WAITING][]";
     }
 
     areaDetails.addActor(new Label(name, Main.skin));

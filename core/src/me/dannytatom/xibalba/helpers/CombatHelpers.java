@@ -467,8 +467,10 @@ public class CombatHelpers {
 
   private void doHitAnimation(Entity starter, Entity target) {
     VisualComponent targetVisual = ComponentMappers.visual.get(target);
-    Tween.to(targetVisual.sprite, SpriteAccessor.ALPHA, .05f).target(.5f)
-        .repeatYoyo(1, 0f).start(Main.tweenManager);
+
+    WorldManager.tweens.add(
+        Tween.to(targetVisual.sprite, SpriteAccessor.ALPHA, .05f).target(.5f).repeatYoyo(1, 0f)
+    );
 
     PositionComponent starterPosition = ComponentMappers.position.get(starter);
     PositionComponent targetPosition = ComponentMappers.position.get(target);
@@ -491,7 +493,8 @@ public class CombatHelpers {
       bumpY = targetVisual.sprite.getY();
     }
 
-    Tween.to(targetVisual.sprite, SpriteAccessor.XY, .05f).target(bumpX, bumpY)
-        .repeatYoyo(1, 0f).start(Main.tweenManager);
+    WorldManager.tweens.add(
+        Tween.to(targetVisual.sprite, SpriteAccessor.XY, .05f).target(bumpX, bumpY).repeatYoyo(1, 0f)
+    );
   }
 }
