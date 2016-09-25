@@ -156,11 +156,7 @@ class PlayScreen implements Screen {
 
       for (Entity entity : entities) {
         PositionComponent position = ComponentMappers.position.get(entity);
-        VisualComponent visual = ComponentMappers.visual.get(entity);
-
-        visual.sprite.setPosition(
-            position.pos.x * Main.SPRITE_WIDTH, position.pos.y * Main.SPRITE_HEIGHT
-        );
+        WorldManager.entityHelpers.updateSpritePosition(entity, position.pos);
       }
     }
 

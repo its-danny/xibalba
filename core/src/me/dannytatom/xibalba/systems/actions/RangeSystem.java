@@ -55,10 +55,11 @@ public class RangeSystem extends UsesEnergySystem {
     // position it had before it ended up in your inventory.
     PositionComponent throwerPosition = ComponentMappers.position.get(entity);
     WorldManager.entityHelpers.updatePosition(item, throwerPosition.pos);
+    WorldManager.entityHelpers.updateSpritePosition(item, throwerPosition.pos);
 
     VisualComponent itemVisual = ComponentMappers.visual.get(item);
 
-    WorldManager.tweens.add(Tween.to(itemVisual.sprite, SpriteAccessor.XY, .5f).target(
+    WorldManager.tweens.add(Tween.to(itemVisual.sprite, SpriteAccessor.XY, .25f).target(
         position.x * Main.SPRITE_WIDTH, position.y * Main.SPRITE_HEIGHT
     ).setCallback(
         (type, source) -> {

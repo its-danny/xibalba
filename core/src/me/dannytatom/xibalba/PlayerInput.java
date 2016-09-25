@@ -145,7 +145,7 @@ public class PlayerInput implements InputProcessor {
           if (primaryWeapon != null) {
             WeaponComponent weaponDetails = ComponentMappers.weapon.get(primaryWeapon);
 
-            if (Objects.equals(weaponDetails.type, "ranged")) {
+            if (Objects.equals(weaponDetails.type, "range")) {
               if (WorldManager.itemHelpers.hasAmmunitionOfType(WorldManager.player,
                   weaponDetails.ammunitionType)) {
                 playerDetails.target = null;

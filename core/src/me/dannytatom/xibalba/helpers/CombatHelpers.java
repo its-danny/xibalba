@@ -39,7 +39,7 @@ public class CombatHelpers {
    * @param bodyPart Where ya hitting them at
    */
   public void preparePlayerForMelee(Entity enemy, String bodyPart) {
-    Gdx.app.log("CombatHelpers", "Preparing for melee");
+    Gdx.app.log("CombatHelpers", "Preparing for melee attack");
 
     AttributesComponent attributes = ComponentMappers.attributes.get(WorldManager.player);
 
@@ -55,7 +55,7 @@ public class CombatHelpers {
    * @param bodyPart Where you trying to hit em
    */
   public void preparePlayerForThrowing(Vector2 position, String bodyPart) {
-    Gdx.app.log("CombatHelpers", "Preparing for throwing");
+    Gdx.app.log("CombatHelpers", "Preparing to throw");
 
     AttributesComponent attributes = ComponentMappers.attributes.get(WorldManager.player);
 
@@ -73,7 +73,7 @@ public class CombatHelpers {
    * @param bodyPart Where you trying to hit em
    */
   public void preparePlayerForRanged(Vector2 position, String bodyPart) {
-    Gdx.app.log("CombatHelpers", "Preparing for ranged");
+    Gdx.app.log("CombatHelpers", "Preparing for ranged attack");
 
     AttributesComponent attributes = ComponentMappers.attributes.get(WorldManager.player);
 
