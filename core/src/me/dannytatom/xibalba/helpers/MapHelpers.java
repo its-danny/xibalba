@@ -422,7 +422,7 @@ public class MapHelpers {
       cellX = MathUtils.random(0, map.width - 1);
       cellY = MathUtils.random(0, map.height - 1);
     }
-    while (isBlocked(index, new Vector2(cellX, cellY)));
+    while (isBlocked(index, new Vector2(cellX, cellY)) || getCell(cellX, cellY).isWater());
 
     return new Vector2(cellX, cellY);
   }
