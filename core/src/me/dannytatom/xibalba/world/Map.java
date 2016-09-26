@@ -73,7 +73,7 @@ public class Map {
       }
     }
 
-    if (MathUtils.randomBoolean()) {
+    if (MathUtils.random() > .5f) {
       createWater();
     }
   }
@@ -104,7 +104,7 @@ public class Map {
       }
     }
 
-    if (MathUtils.randomBoolean()) {
+    if (MathUtils.random() > .75f) {
       createWater();
     }
   }
