@@ -175,7 +175,7 @@ public class EntityHelpers {
     if (ComponentMappers.player.has(entity)) {
       WorldManager.log.add("You lose " + amount + " health");
     } else {
-      WorldManager.log.add(attributes.name + " loses "  + amount + " health");
+      WorldManager.log.add(attributes.name + " loses " + amount + " health");
     }
   }
 }

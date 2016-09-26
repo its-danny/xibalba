@@ -111,9 +111,9 @@ public class Main extends Game {
     Colors.put("forestTree-1", parseColor("67CF8B"));
     Colors.put("forestTree-2", parseColor("77E09B"));
     Colors.put("forestTree-3", parseColor("4AC775"));
-    Colors.put("caveFloor", Colors.get("DARK_GRAY"));
-    Colors.put("caveFloorWet", parseColor("67979B"));
-    Colors.put("caveWall", Colors.get("DARK_GRAY"));
+    Colors.put("caveFloor", parseColor("4D4D4D"));
+    Colors.put("caveFloorWet", parseColor("5A8B8E"));
+    Colors.put("caveWall", parseColor("424242"));
 
     // Decoration colors
     Colors.put("remains", Colors.get("RED"));

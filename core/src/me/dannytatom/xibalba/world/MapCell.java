@@ -6,8 +6,8 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 public class MapCell {
   public final String description;
   public final Sprite sprite;
-  private final Type type;
   public final Tween tween;
+  private final Type type;
   public boolean hidden = true;
   public boolean forgotten = false;
 
