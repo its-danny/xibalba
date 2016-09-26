@@ -203,7 +203,7 @@ public class CombatHelpers {
         }
       }
 
-      doHitAnimation(starter, target);
+      doHitAnimation(target);
 
       int strengthRoll = MathUtils.random(1, starterAttributes.strength);
       int weaponRoll = 0;
@@ -282,7 +282,7 @@ public class CombatHelpers {
         Main.cameraShake.shake(.4f, .1f);
       }
 
-      doHitAnimation(starter, target);
+      doHitAnimation(target);
 
       int weaponRoll;
       int critRoll = 0;
@@ -482,36 +482,11 @@ public class CombatHelpers {
     }
   }
 
-  private void doHitAnimation(Entity starter, Entity target) {
+  private void doHitAnimation(Entity target) {
     VisualComponent targetVisual = ComponentMappers.visual.get(target);
 
     WorldManager.tweens.add(
-        Tween.to(targetVisual.sprite, SpriteAccessor.ALPHA, .05f).target(.5f).repeatYoyo(1, 0f)
-    );
-
-    PositionComponent starterPosition = ComponentMappers.position.get(starter);
-    PositionComponent targetPosition = ComponentMappers.position.get(target);
-    float bumpX;
-    float bumpY;
-
-    if (starterPosition.pos.x < targetPosition.pos.x) {
-      bumpX = targetVisual.sprite.getX() + (Main.SPRITE_WIDTH / 4);
-    } else if (starterPosition.pos.x > targetPosition.pos.x) {
-      bumpX = targetVisual.sprite.getX() - (Main.SPRITE_WIDTH / 4);
-    } else {
-      bumpX = targetVisual.sprite.getX();
-    }
-
-    if (starterPosition.pos.y < targetPosition.pos.y) {
-      bumpY = targetVisual.sprite.getY() + (Main.SPRITE_HEIGHT / 4);
-    } else if (starterPosition.pos.y > targetPosition.pos.y) {
-      bumpY = targetVisual.sprite.getY() - (Main.SPRITE_HEIGHT / 4);
-    } else {
-      bumpY = targetVisual.sprite.getY();
-    }
-
-    WorldManager.tweens.add(
-        Tween.to(targetVisual.sprite, SpriteAccessor.XY, .05f).target(bumpX, bumpY).repeatYoyo(1, 0f)
+        Tween.to(targetVisual.sprite, SpriteAccessor.ALPHA, .05f).target(.25f).repeatYoyo(1, 0f)
     );
   }
 }

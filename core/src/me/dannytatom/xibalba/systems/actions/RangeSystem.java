@@ -36,13 +36,12 @@ public class RangeSystem extends UsesEnergySystem {
 
       if (Objects.equals(range.skill, "throwing")) {
         ComponentMappers.item.get(range.item).throwing = false;
+      }
+
+      if (target == null) {
         doThrowAnimation(entity, range.item, range.position, false);
       } else {
-        if (target == null) {
-          doThrowAnimation(entity, range.item, range.position, false);
-        } else {
-          doThrowAnimation(entity, range.item, range.position, true);
-        }
+        doThrowAnimation(entity, range.item, range.position, true);
       }
     }
 
@@ -59,7 +58,7 @@ public class RangeSystem extends UsesEnergySystem {
 
     VisualComponent itemVisual = ComponentMappers.visual.get(item);
 
-    WorldManager.tweens.add(Tween.to(itemVisual.sprite, SpriteAccessor.XY, .25f).target(
+    WorldManager.tweens.add(Tween.to(itemVisual.sprite, SpriteAccessor.XY, .1f).target(
         position.x * Main.SPRITE_WIDTH, position.y * Main.SPRITE_HEIGHT
     ).setCallback(
         (type, source) -> {

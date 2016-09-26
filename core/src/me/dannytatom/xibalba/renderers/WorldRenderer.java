@@ -176,6 +176,11 @@ public class WorldRenderer {
         WorldManager.engine.getEntitiesFor(Family.all(EnemyComponent.class).get());
 
     for (Entity entity : entities) {
+      if (Main.tweenManager.getRunningTimelinesCount() == 0) {
+        PositionComponent position = ComponentMappers.position.get(entity);
+        WorldManager.entityHelpers.updateSpritePosition(entity, position.pos);
+      }
+
       if (WorldManager.entityHelpers.isVisible(entity)) {
         ComponentMappers.visual.get(entity).sprite.draw(batch);
       }
@@ -185,8 +190,14 @@ public class WorldRenderer {
   private void renderPlayer() {
     ImmutableArray<Entity> entities =
         WorldManager.engine.getEntitiesFor(Family.all(PlayerComponent.class).get());
+    Entity entity = entities.first();
 
-    ComponentMappers.visual.get(entities.first()).sprite.draw(batch);
+    if (Main.tweenManager.getRunningTimelinesCount() == 0) {
+      PositionComponent position = ComponentMappers.position.get(entity);
+      WorldManager.entityHelpers.updateSpritePosition(entity, position.pos);
+    }
+
+    ComponentMappers.visual.get(entity).sprite.draw(batch);
   }
 
   private void renderShadows() {

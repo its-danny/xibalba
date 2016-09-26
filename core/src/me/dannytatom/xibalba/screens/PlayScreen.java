@@ -2,9 +2,6 @@ package me.dannytatom.xibalba.screens;
 
 import aurelienribon.tweenengine.Timeline;
 import aurelienribon.tweenengine.TweenCallback;
-import com.badlogic.ashley.core.Entity;
-import com.badlogic.ashley.core.Family;
-import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
@@ -15,8 +12,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.PlayerInput;
 import me.dannytatom.xibalba.components.AttributesComponent;
-import me.dannytatom.xibalba.components.PositionComponent;
-import me.dannytatom.xibalba.components.VisualComponent;
 import me.dannytatom.xibalba.renderers.HudRenderer;
 import me.dannytatom.xibalba.renderers.WorldRenderer;
 import me.dannytatom.xibalba.utils.ComponentMappers;
@@ -145,19 +140,6 @@ class PlayScreen implements Screen {
             }
           }
       ).start(Main.tweenManager);
-    }
-
-    // Update entity sprite positions
-    if (WorldManager.state != WorldManager.State.WAITING) {
-      ImmutableArray<Entity> entities
-          = WorldManager.engine.getEntitiesFor(
-          Family.all(VisualComponent.class, PositionComponent.class).get()
-      );
-
-      for (Entity entity : entities) {
-        PositionComponent position = ComponentMappers.position.get(entity);
-        WorldManager.entityHelpers.updateSpritePosition(entity, position.pos);
-      }
     }
 
     // Check player health for DEATH

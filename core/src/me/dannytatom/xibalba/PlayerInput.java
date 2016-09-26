@@ -218,6 +218,9 @@ public class PlayerInput implements InputProcessor {
           } else {
             handleThrow();
           }
+
+          playerDetails.target = null;
+          playerDetails.path = null;
         }
         break;
       case Keys.SHIFT_LEFT:
