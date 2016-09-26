@@ -410,7 +410,7 @@ public class YouScreen implements Screen {
   }
 
   private String createDefectText(int index, String name, String description, int reward) {
-    String selected = playerSetup.defects.contains(name, false) ? "[WHITE]! " : "";
+    String selected = playerSetup.defects.contains(name, false) ? "[WHITE]x " : "";
     String type = reward == 1 ? "Minor" : "Major";
     String desc = WordUtils.wrap(description, 70);
 
@@ -422,7 +422,7 @@ public class YouScreen implements Screen {
   }
 
   private String createTraitText(int index, String name, String description, int cost) {
-    String selected = playerSetup.traits.contains(name, false) ? "[WHITE]! " : "";
+    String selected = playerSetup.traits.contains(name, false) ? "[WHITE]x " : "";
     String type = cost == 1 ? "Minor" : "Major";
     String desc = WordUtils.wrap(description, 70);
 

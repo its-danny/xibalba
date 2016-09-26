@@ -3,10 +3,11 @@ package me.dannytatom.xibalba.components;
 import com.badlogic.ashley.core.Component;
 
 import java.util.HashMap;
+import java.util.TreeMap;
 
 public class SkillsComponent implements Component {
   public final HashMap<String, String> associations;
-  public final HashMap<String, Integer> levels;
+  public final TreeMap<String, Integer> levels;
   public final HashMap<String, Integer> counters;
 
   /**
@@ -23,7 +24,7 @@ public class SkillsComponent implements Component {
     associations.put("throwing", "strength");
     associations.put("unarmed", "strength");
 
-    levels = new HashMap<>();
+    levels = new TreeMap<>();
 
     levels.put("archery", 0);
     levels.put("bashing", 0);

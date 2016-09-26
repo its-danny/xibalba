@@ -3,10 +3,10 @@ package me.dannytatom.xibalba.components;
 import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
 
-import java.util.HashMap;
+import java.util.TreeMap;
 
 public class EquipmentComponent implements Component {
-  public final HashMap<String, Entity> slots = new HashMap<>();
+  public final TreeMap<String, Entity> slots = new TreeMap<>();
 
   /**
    * Set up the equipment slots.

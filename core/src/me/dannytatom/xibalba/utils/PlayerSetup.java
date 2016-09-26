@@ -19,7 +19,6 @@ import me.dannytatom.xibalba.components.traits.ScoutComponent;
 import me.dannytatom.xibalba.world.WorldManager;
 
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.TreeMap;
 
 public class PlayerSetup {
@@ -79,7 +78,7 @@ public class PlayerSetup {
     player.add(new InventoryComponent());
     player.add(new EquipmentComponent());
 
-    HashMap<String, Integer> bodyParts = new HashMap<>();
+    TreeMap<String, Integer> bodyParts = new TreeMap<>();
     bodyParts.put("head", 10);
     bodyParts.put("body", 8);
     bodyParts.put("left arm", 10);
