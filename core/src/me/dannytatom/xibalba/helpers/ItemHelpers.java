@@ -66,7 +66,7 @@ public class ItemHelpers {
     InventoryComponent inventory = ComponentMappers.inventory.get(entity);
 
     if (inventory != null) {
-      if (inventory.items.size() < 10) {
+      if (inventory.items.size() < 20) {
         item.remove(PositionComponent.class);
         inventory.items.add(item);
 

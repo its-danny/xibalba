@@ -28,6 +28,8 @@ import me.dannytatom.xibalba.utils.ComponentMappers;
 import me.dannytatom.xibalba.world.WorldManager;
 import org.apache.commons.lang3.text.WordUtils;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
@@ -58,6 +60,7 @@ public class CharacterScreen implements Screen {
   private Entity applyingItem = null;
 
   private Section sectionSelected = Section.INVENTORY;
+  private HashMap<String, Integer> stackedItems;
   private int itemSelected = 0;
 
   /**
@@ -148,7 +151,13 @@ public class CharacterScreen implements Screen {
       switch (sectionSelected) {
         case INVENTORY:
           if (itemSelected > 0) {
-            itemSelected -= 1;
+            ItemComponent nextItem = ComponentMappers.item.get(inventory.items.get(itemSelected - 1));
+
+            if (stackedItems.get(nextItem.name) == null) {
+              itemSelected -= 1;
+            } else {
+              itemSelected -= stackedItems.get(nextItem.name);
+            }
 
             updateInventoryGroup();
             updateItemDetailsGroup();
@@ -162,8 +171,14 @@ public class CharacterScreen implements Screen {
     if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
       switch (sectionSelected) {
         case INVENTORY:
-          if (itemSelected < inventoryGroup.getChildren().size - 3) {
-            itemSelected += 1;
+          if (itemSelected < inventory.items.size() - 1) {
+            ItemComponent thisItem = ComponentMappers.item.get(inventory.items.get(itemSelected));
+
+            if (stackedItems.get(thisItem.name) == null) {
+              itemSelected += 1;
+            } else {
+              itemSelected += stackedItems.get(thisItem.name);
+            }
 
             updateInventoryGroup();
             updateItemDetailsGroup();
@@ -278,10 +293,38 @@ public class CharacterScreen implements Screen {
     inventoryGroup.addActor(new Label("Inventory", Main.skin));
     inventoryGroup.addActor(new Label("", Main.skin));
 
+    Collections.sort(inventory.items, (e1, e2) -> {
+      ItemComponent e1i = ComponentMappers.item.get(e1);
+      ItemComponent e2i = ComponentMappers.item.get(e2);
+
+      return e1i.name.compareTo(e2i.name);
+    });
+
+    stackedItems = new HashMap<>();
+
     for (int i = 0; i < inventory.items.size(); i++) {
       Entity item = inventory.items.get(i);
+      ItemComponent details = ComponentMappers.item.get(item);
 
-      inventoryGroup.addActor(new Label(createInventoryItemText(i, item), Main.skin));
+      if (Objects.equals(details.type, "ammunition") || Objects.equals(details.type, "consumable")) {
+        if (stackedItems.containsKey(details.name)) {
+          stackedItems.put(details.name, stackedItems.get(details.name) + 1);
+        } else {
+          stackedItems.put(details.name, 1);
+        }
+      }
+    }
+
+    for (int i = 0; i < inventory.items.size(); i++) {
+      Entity item = inventory.items.get(i);
+      ItemComponent details = ComponentMappers.item.get(item);
+
+      if (stackedItems.containsKey(details.name)) {
+        inventoryGroup.addActor(new Label(createInventoryItemText(i, item, stackedItems.get(details.name)), Main.skin));
+        i = i + stackedItems.get(details.name) - 1;
+      } else {
+        inventoryGroup.addActor(new Label(createInventoryItemText(i, item, 1), Main.skin));
+      }
     }
   }
 
@@ -342,7 +385,7 @@ public class CharacterScreen implements Screen {
           if (details.attributes.get("defense") != null) {
             String string = "[LIGHT_GRAY]DEF " + "[GREEN]" + details.attributes.get("defense");
 
-            if (!itemIsEquipped) {
+            if (!itemIsEquipped && details.location != null) {
               Entity itemInSlot = equipment.slots.get(details.location);
 
               if (itemInSlot != null) {
@@ -362,7 +405,7 @@ public class CharacterScreen implements Screen {
           if (details.attributes.get("hitDamage") != null) {
             String string = "[LIGHT_GRAY]HIT DMG " + "[RED]" + details.attributes.get("hitDamage") + "[DARK_GRAY]d";
 
-            if (!itemIsEquipped) {
+            if (!itemIsEquipped && details.location != null) {
               Entity itemInSlot = equipment.slots.get(details.location);
 
               if (itemInSlot != null) {
@@ -382,7 +425,7 @@ public class CharacterScreen implements Screen {
           if (details.attributes.get("throwDamage") != null) {
             String string = "[LIGHT_GRAY]THR DMG " + "[RED]" + details.attributes.get("throwDamage") + "[DARK_GRAY]d";
 
-            if (!itemIsEquipped) {
+            if (!itemIsEquipped && details.location != null) {
               Entity itemInSlot = equipment.slots.get(details.location);
 
               if (itemInSlot != null) {
@@ -402,7 +445,7 @@ public class CharacterScreen implements Screen {
           if (details.attributes.get("shotDamage") != null) {
             String string = "[LIGHT_GRAY]SHOT DMG " + "[RED]" + details.attributes.get("shotDamage") + "[DARK_GRAY]d";
 
-            if (!itemIsEquipped) {
+            if (!itemIsEquipped && details.location != null) {
               Entity itemInSlot = equipment.slots.get(details.location);
 
               if (itemInSlot != null) {
@@ -525,7 +568,7 @@ public class CharacterScreen implements Screen {
     }
   }
 
-  private String createInventoryItemText(int index, Entity item) {
+  private String createInventoryItemText(int index, Entity item, int amount) {
     String name = WorldManager.itemHelpers.getName(WorldManager.player, item);
 
     if (WorldManager.itemHelpers.isEquipped(WorldManager.player, item)) {
@@ -533,9 +576,9 @@ public class CharacterScreen implements Screen {
     }
 
     if (sectionSelected == Section.INVENTORY && index == itemSelected) {
-      return "[DARK_GRAY]> [WHITE]" + name;
+      return "[DARK_GRAY]> [WHITE]" + name + (amount > 1 ? " [WHITE]x" + amount : "");
     } else {
-      return "[LIGHT_GRAY]" + name;
+      return "[LIGHT_GRAY]" + name + (amount > 1 ? " [WHITE]x" + amount : "");
     }
   }
 
@@ -572,6 +615,7 @@ public class CharacterScreen implements Screen {
       if (itemActionGroup.getChildren().contains(holdButton, true)) {
         WorldManager.itemHelpers.hold(WorldManager.player, inventory.items.get(itemSelected));
 
+        updateAttributesGroup();
         updateInventoryGroup();
         updateItemDetailsGroup();
         updateEquipmentGroup();
@@ -584,6 +628,7 @@ public class CharacterScreen implements Screen {
       if (itemActionGroup.getChildren().contains(wearButton, true)) {
         WorldManager.itemHelpers.wear(WorldManager.player, inventory.items.get(itemSelected));
 
+        updateAttributesGroup();
         updateInventoryGroup();
         updateItemDetailsGroup();
         updateEquipmentGroup();
@@ -614,6 +659,7 @@ public class CharacterScreen implements Screen {
 
         itemSelected = 0;
 
+        updateAttributesGroup();
         updateInventoryGroup();
         updateItemDetailsGroup();
         updateEquipmentGroup();
@@ -655,6 +701,7 @@ public class CharacterScreen implements Screen {
       if (itemActionGroup.getChildren().contains(removeButton, true)) {
         WorldManager.itemHelpers.remove(WorldManager.player, inventory.items.get(itemSelected));
 
+        updateAttributesGroup();
         updateInventoryGroup();
         updateItemDetailsGroup();
         updateEquipmentGroup();
@@ -669,6 +716,7 @@ public class CharacterScreen implements Screen {
 
         itemSelected = 0;
 
+        updateAttributesGroup();
         updateInventoryGroup();
         updateItemDetailsGroup();
         updateEquipmentGroup();
