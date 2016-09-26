@@ -148,11 +148,11 @@ public class Map {
           }
 
           water.setColor(lightColor);
-          Tween.to(water, SpriteAccessor.COLOR, .5f).target(
+          Tween tween = Tween.to(water, SpriteAccessor.COLOR, .5f).target(
               darkColor.r, darkColor.g, darkColor.b
-          ).repeatYoyo(Tween.INFINITY, MathUtils.random()).start(Main.tweenManager);
+          ).repeatYoyo(Tween.INFINITY, MathUtils.random());
 
-          map[x][y] = new MapCell(water, type, "water");
+          map[x][y] = new MapCell(water, type, "water", tween);
         }
       }
     }

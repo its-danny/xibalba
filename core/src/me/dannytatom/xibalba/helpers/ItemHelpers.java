@@ -9,7 +9,6 @@ import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.items.AmmunitionComponent;
 import me.dannytatom.xibalba.components.items.ItemEffectsComponent;
-import me.dannytatom.xibalba.components.items.WeaponComponent;
 import me.dannytatom.xibalba.utils.ComponentMappers;
 import me.dannytatom.xibalba.world.WorldManager;
 
@@ -326,25 +325,6 @@ public class ItemHelpers {
   }
 
   /**
-   * Whether or not their primary weapon uses ammo.
-   *
-   * @param entity Entity we're checking.
-   *
-   * @return Does it?
-   */
-  public boolean primaryWeaponUsesAmmo(Entity entity) {
-    Entity item = getRightHand(entity);
-
-    if (item != null) {
-      WeaponComponent weapon = ComponentMappers.weapon.get(item);
-
-      return weapon != null && weapon.ammunitionType != null;
-    } else {
-      return false;
-    }
-  }
-
-  /**
    * Find out if an entity has the ammunition it needs.
    *
    * @param entity Who needs to know
@@ -364,29 +344,6 @@ public class ItemHelpers {
     }
 
     return false;
-  }
-
-  /**
-   * Get a count of ammo.
-   *
-   * @param entity Who has the ammo?
-   * @param type   What type of ammo?
-   *
-   * @return How much they got
-   */
-  public int amountOfAmmunitionType(Entity entity, String type) {
-    ArrayList<Entity> items = ComponentMappers.inventory.get(entity).items;
-    int count = 0;
-
-    for (Entity item : items) {
-      AmmunitionComponent ammunition = ComponentMappers.ammunition.get(item);
-
-      if (ammunition != null && Objects.equals(ammunition.type, type)) {
-        count += 1;
-      }
-    }
-
-    return count;
   }
 
   /**

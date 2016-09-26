@@ -91,6 +91,10 @@ public class WorldRenderer {
 
         if (map.lightMap[x][y] > 0) {
           cell.hidden = false;
+
+          if (cell.tween != null && !cell.tween.isStarted()) {
+            cell.tween.start(Main.tweenManager);
+          }
         }
 
         if (!cell.hidden) {

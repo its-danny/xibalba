@@ -249,14 +249,11 @@ public class MapHelpers {
     }
   }
 
-  /**
-   * Attempt to get the entity at the given position, returns null if nobody is there.
-   *
-   * @param position The entity's position
-   *
-   * @return The entity
-   */
   public Entity getEntityAt(Vector2 position) {
+    return getEntityAt(position.x, position.y);
+  }
+
+  public Entity getEntityAt(float x, float y) {
     ImmutableArray<Entity> entities =
         WorldManager.engine.getEntitiesFor(
             Family.all(PositionComponent.class).exclude(DecorationComponent.class).get()
@@ -265,7 +262,7 @@ public class MapHelpers {
     for (Entity entity : entities) {
       PositionComponent entityPosition = ComponentMappers.position.get(entity);
 
-      if (entityPosition.pos.epsilonEquals(position, 0.00001f)) {
+      if (entityPosition.pos.x == x && entityPosition.pos.y == y) {
         return entity;
       }
     }

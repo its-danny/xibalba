@@ -1,11 +1,13 @@
 package me.dannytatom.xibalba.world;
 
+import aurelienribon.tweenengine.Tween;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 
 public class MapCell {
   public final String description;
   public final Sprite sprite;
   private final Type type;
+  public final Tween tween;
   public boolean hidden = true;
   public boolean forgotten = false;
 
@@ -16,10 +18,15 @@ public class MapCell {
    * @param type        whether or not an entity can move onto this cell
    * @param description what this cell like?
    */
-  MapCell(Sprite sprite, Type type, String description) {
+  MapCell(Sprite sprite, Type type, String description, Tween tween) {
     this.sprite = sprite;
     this.type = type;
     this.description = description;
+    this.tween = tween;
+  }
+
+  MapCell(Sprite sprite, Type type, String description) {
+    this(sprite, type, description, null);
   }
 
   public boolean isNothing() {

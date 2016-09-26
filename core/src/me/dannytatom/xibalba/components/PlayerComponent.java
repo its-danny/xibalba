@@ -12,6 +12,7 @@ public class PlayerComponent implements Component {
   public final Array<String> identifiedItems = new Array<>();
   public List<GridCell> path = null;
   public Vector2 target = null;
+  public Entity lastHitEntity = null;
   public FocusedAction focusedAction = null;
   public Entity focusedEntity = null;
 

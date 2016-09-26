@@ -173,6 +173,11 @@ public class CombatHelpers {
     AttributesComponent starterAttributes = ComponentMappers.attributes.get(starter);
 
     if (hit > 0) {
+      if (ComponentMappers.player.has(starter)) {
+        PlayerComponent playerDetails = ComponentMappers.player.get(starter);
+        playerDetails.lastHitEntity = target;
+      }
+
       if (ComponentMappers.player.has(target)) {
         Main.cameraShake.shake(.4f, .1f);
       }
@@ -268,6 +273,11 @@ public class CombatHelpers {
     AttributesComponent starterAttributes = ComponentMappers.attributes.get(starter);
 
     if (hit > 0) {
+      if (ComponentMappers.player.has(starter)) {
+        PlayerComponent playerDetails = ComponentMappers.player.get(starter);
+        playerDetails.lastHitEntity = target;
+      }
+
       if (ComponentMappers.player.has(target)) {
         Main.cameraShake.shake(.4f, .1f);
       }
@@ -413,6 +423,9 @@ public class CombatHelpers {
       WorldManager.world.removeEntity(target);
 
       if (ComponentMappers.player.has(starter)) {
+        PlayerComponent playerDetails = ComponentMappers.player.get(starter);
+        playerDetails.lastHitEntity = null;
+
         WorldManager.log.add("[GREEN]You killed " + targetAttributes.name + "!");
       } else {
         WorldManager.log.add("[RED]You have been killed by " + starterAttributes.name);
