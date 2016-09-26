@@ -312,6 +312,10 @@ public class PlayerInput implements InputProcessor {
     Vector2 mousePosition = Main.mousePositionToWorld(worldCamera);
     Vector2 relativeToPlayer = mousePosition.cpy().sub(playerPosition.pos);
 
+    if (playerDetails.target != null && playerDetails.target.epsilonEquals(mousePosition, 0.00001f)) {
+      return false;
+    }
+
     if (WorldManager.state == WorldManager.State.PLAYING) {
       playerDetails.target = null;
       playerDetails.path = null;
