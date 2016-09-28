@@ -109,8 +109,8 @@ class PlayScreen implements Screen {
     if (WorldManager.executeTurn) {
       WorldManager.turnCount += 1;
 
-      WorldManager.world.getCurrentMap().time.update();
       WorldManager.engine.update(delta);
+      WorldManager.world.getCurrentMap().time.update();
       WorldManager.executeTurn = false;
     }
 

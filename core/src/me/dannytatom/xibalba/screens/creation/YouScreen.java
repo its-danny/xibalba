@@ -46,13 +46,14 @@ public class YouScreen implements Screen {
     Table table = new Table();
     table.setFillParent(true);
     table.left().top();
+    table.pad(10);
     stage.addActor(table);
 
     Table titleTable = new Table();
 
     HorizontalGroup titleGroup = new HorizontalGroup().align(Align.center | Align.left);
     titleGroup.space(10);
-    titleTable.add(titleGroup).pad(10).width(Gdx.graphics.getWidth() - 20).top().left();
+    titleTable.add(titleGroup).pad(0, 0, 10, 0).width(Gdx.graphics.getWidth() - 20).top().left();
 
     ActionButton backButton = new ActionButton("Q", "Back");
     backButton.setKeys(Input.Keys.Q);
@@ -76,11 +77,11 @@ public class YouScreen implements Screen {
     defectsGroup = new VerticalGroup().align(Align.top | Align.left);
     traitsGroup = new VerticalGroup().align(Align.top | Align.left);
 
-    mainTable.add(attributesGroup).pad(10).width(Gdx.graphics.getWidth() / 2 - 20).top().left();
-    mainTable.add(skillsGroup).pad(10).width(Gdx.graphics.getWidth() / 2 - 20).top().left();
+    mainTable.add(attributesGroup).pad(0, 0, 10, 0).width(Gdx.graphics.getWidth() / 2 - 10).top().left();
+    mainTable.add(skillsGroup).pad(0, 0, 10, 0).width(Gdx.graphics.getWidth() / 2 - 10).top().left();
     mainTable.row();
-    mainTable.add(defectsGroup).pad(10).width(Gdx.graphics.getWidth() / 2 - 20).top().left();
-    mainTable.add(traitsGroup).pad(10).width(Gdx.graphics.getWidth() / 2 - 20).top().left();
+    mainTable.add(defectsGroup).pad(0, 0, 10, 0).width(Gdx.graphics.getWidth() / 2 - 10).top().left();
+    mainTable.add(traitsGroup).pad(0, 0, 10, 0).width(Gdx.graphics.getWidth() / 2 - 10).top().left();
 
     ActionButton continueButton = new ActionButton("ENTER", "Enter Your Name");
     continueButton.setKeys(Input.Keys.ENTER);

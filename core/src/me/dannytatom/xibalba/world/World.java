@@ -78,8 +78,6 @@ public class World {
         WorldManager.player, WorldManager.mapHelpers.getEntrancePosition()
     );
 
-    getCurrentMap().time.update();
-
     PositionComponent playerPosition = ComponentMappers.position.get(WorldManager.player);
     updateLighting(playerPosition.pos.x, playerPosition.pos.y);
 
@@ -104,8 +102,6 @@ public class World {
     WorldManager.entityHelpers.updatePosition(
         WorldManager.player, WorldManager.mapHelpers.getExitPosition()
     );
-
-    getCurrentMap().time.update();
 
     PositionComponent playerPosition = ComponentMappers.position.get(WorldManager.player);
     updateLighting(playerPosition.pos.x, playerPosition.pos.y);

@@ -29,7 +29,7 @@ public class MapTime {
       }
     } else {
       counter = 0;
-      time = Time.DAWN;
+      time = Time.DAY;
     }
   }
 

@@ -167,7 +167,7 @@ public class LoadingScreen implements Screen {
           break;
       }
 
-      spawnShit(level, i, i == levels.size());
+      spawnShit(level, i, i == levels.size() - 1);
     }
 
     // Add player entity
