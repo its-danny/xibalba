@@ -15,6 +15,13 @@ public class PlayerComponent implements Component {
   public Entity lastHitEntity = null;
   public FocusedAction focusedAction = null;
   public Entity focusedEntity = null;
+  public int lowestDepth = 1;
+  public int totalHits = 0;
+  public int totalMisses = 0;
+  public int totalDamageDone = 0;
+  public int totalKills = 0;
+  public int totalDamageReceived = 0;
+  public int totalDamageHealed = 0;
 
   public PlayerComponent() {
 

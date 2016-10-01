@@ -190,14 +190,17 @@ public class WorldRenderer {
   private void renderPlayer() {
     ImmutableArray<Entity> entities =
         WorldManager.engine.getEntitiesFor(Family.all(PlayerComponent.class).get());
-    Entity entity = entities.first();
 
-    if (Main.tweenManager.getRunningTimelinesCount() == 0) {
-      PositionComponent position = ComponentMappers.position.get(entity);
-      WorldManager.entityHelpers.updateSpritePosition(entity, position.pos);
+    if (entities.size() > 0) {
+      Entity player = entities.first();
+
+      if (Main.tweenManager.getRunningTimelinesCount() == 0) {
+        PositionComponent position = ComponentMappers.position.get(player);
+        WorldManager.entityHelpers.updateSpritePosition(player, position.pos);
+      }
+
+      ComponentMappers.visual.get(player).sprite.draw(batch);
     }
-
-    ComponentMappers.visual.get(entity).sprite.draw(batch);
   }
 
   private void renderShadows() {

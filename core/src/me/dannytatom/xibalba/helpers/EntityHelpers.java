@@ -139,6 +139,8 @@ public class EntityHelpers {
 
       if (ComponentMappers.player.has(entity)) {
         WorldManager.log.add("You gain " + amount + " health");
+
+        ComponentMappers.player.get(entity).totalDamageHealed += amount;
       } else {
         WorldManager.log.add(attributes.name + " gained " + amount + " health");
       }
@@ -167,15 +169,13 @@ public class EntityHelpers {
     }
   }
 
-  private void dealDamage(Entity entity, int amount) {
+  public void dealDamage(Entity entity, int amount) {
     AttributesComponent attributes = ComponentMappers.attributes.get(entity);
 
     attributes.health -= amount;
 
     if (ComponentMappers.player.has(entity)) {
-      WorldManager.log.add("You lose " + amount + " health");
-    } else {
-      WorldManager.log.add(attributes.name + " loses " + amount + " health");
+      ComponentMappers.player.get(entity).totalDamageReceived += amount;
     }
   }
 }

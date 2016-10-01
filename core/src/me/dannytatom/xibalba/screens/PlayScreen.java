@@ -123,7 +123,7 @@ class PlayScreen implements Screen {
       WorldManager.state = WorldManager.State.PLAYING;
     }
 
-    // Do tweens
+    // Start tweens
     if (WorldManager.tweens.size > 0) {
       WorldManager.state = WorldManager.State.WAITING;
       Timeline timeline = Timeline.createParallel();
@@ -144,14 +144,13 @@ class PlayScreen implements Screen {
 
     // Check player health for DEATH
     if (playerAttributes.health <= 0) {
-      Main.playScreen.dispose();
-      main.setScreen(new MainMenuScreen(main));
-    } else {
-      Main.tweenManager.update(delta);
-
-      worldRenderer.render(delta);
-      hudRenderer.render(delta);
+      WorldManager.state = WorldManager.State.DEAD;
     }
+
+    Main.tweenManager.update(delta);
+
+    worldRenderer.render(delta);
+    hudRenderer.render(delta);
   }
 
   @Override

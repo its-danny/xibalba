@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.utils.Array;
 import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.MouseMovementComponent;
+import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.utils.ComponentMappers;
 
@@ -67,6 +68,11 @@ public class World {
     entities.get(currentMapIndex).removeValue(WorldManager.player, true);
 
     currentMapIndex += 1;
+
+    PlayerComponent playerDetails = ComponentMappers.player.get(WorldManager.player);
+    if (currentMapIndex > playerDetails.lowestDepth) {
+      playerDetails.lowestDepth = currentMapIndex;
+    }
 
     WorldManager.engine.removeAllEntities();
     for (Entity entity : entities.get(currentMapIndex)) {

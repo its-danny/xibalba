@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
@@ -19,6 +20,7 @@ import me.dannytatom.xibalba.components.BodyComponent;
 import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.screens.CharacterScreen;
+import me.dannytatom.xibalba.screens.MainMenuScreen;
 import me.dannytatom.xibalba.screens.PauseScreen;
 import me.dannytatom.xibalba.ui.ActionButton;
 import me.dannytatom.xibalba.utils.ComponentMappers;
@@ -47,6 +49,8 @@ public class HudRenderer {
   private final VerticalGroup menuAndAreaDetails;
   private final VerticalGroup areaDetails;
   private final Table menuButtons;
+  private final Dialog deathDialog;
+  private boolean deathDialogShowing = false;
 
   /**
    * Renders the HUD.
@@ -95,6 +99,23 @@ public class HudRenderer {
     bottomTable.add(abilitiesTable).pad(10, 10, 10, 10).width(Gdx.graphics.getWidth() / 3 - 20).top();
     bottomTable.add(menuAndAreaDetails).pad(10, 10, 10, 10).width(Gdx.graphics.getWidth() / 3 - 20).bottom();
 
+    deathDialog = new Dialog("", Main.skin) {
+      public void result(Object obj) {
+        if (obj.equals(true)) {
+          Main.playScreen.dispose();
+          main.setScreen(new MainMenuScreen(main));
+        } else {
+          Gdx.app.exit();
+        }
+      }
+    };
+
+    deathDialog.button("[DARK_GRAY][[CYAN] ENTER [DARK_GRAY]][WHITE] Return to Main Menu", true);
+    deathDialog.key(Input.Keys.ENTER, true);
+    deathDialog.button("[DARK_GRAY][[CYAN] Q [DARK_GRAY]][WHITE] Quit", false);
+    deathDialog.key(Input.Keys.Q, false);
+    deathDialog.pad(10);
+
     stage.setKeyboardFocus(bottomTable);
   }
 
@@ -110,6 +131,7 @@ public class HudRenderer {
     updateActionLog();
     updateAbilities();
     updateAreaDetails();
+    showDeathDialog();
 
     stage.act(delta);
     stage.draw();
@@ -143,6 +165,8 @@ public class HudRenderer {
       name += " [DARK_GRAY][TARGETING][]";
     } else if (WorldManager.state == WorldManager.State.FOCUSED) {
       name += " [DARK_GRAY][FOCUSED][]";
+    } else if (WorldManager.state == WorldManager.State.DEAD) {
+      name += " [DARK_GRAY][DEAD][]";
     }
 
     if (playerInfo.getChildren().size == 0) {
@@ -242,8 +266,9 @@ public class HudRenderer {
         }
       }
     } else {
-
-      abilitiesTable.clear();
+      if (abilitiesTable.getChildren().size > 0) {
+        abilitiesTable.clear();
+      }
     }
   }
 
@@ -308,6 +333,38 @@ public class HudRenderer {
         Label entityDescriptionLabel = (Label) areaDetails.getChildren().get(1);
         entityDescriptionLabel.setText(entityDescription);
       }
+    }
+  }
+
+  private void showDeathDialog() {
+    if (WorldManager.state == WorldManager.State.DEAD && !deathDialogShowing) {
+      String depth = "[LIGHT_GRAY]You made it to depth [] " + playerDetails.lowestDepth;
+
+      String hits = "[LIGHT_GRAY]You hit[] " + playerDetails.totalHits
+          + "[LIGHT_GRAY] enemies and missed[] " + playerDetails.totalMisses;
+
+      String damage = "[LIGHT_GRAY]You did[] " + playerDetails.totalDamageDone
+          + "[LIGHT_GRAY] damage, took[] " + playerDetails.totalDamageReceived
+          + "[LIGHT_GRAY], and healed[] " + playerDetails.totalDamageHealed;
+
+      String kills = "[LIGHT_GRAY]You killed[] "
+          + playerDetails.totalKills + "[LIGHT_GRAY] enemies";
+
+      Table table = deathDialog.getContentTable();
+      table.pad(0);
+      table.add(new Label("YOU HAVE FAILED", Main.skin)).center().row();
+      table.add(new Label(depth, Main.skin)).left().row();
+      table.add(new Label(hits, Main.skin)).left().row();
+      table.add(new Label(damage, Main.skin)).left().row();
+      table.add(new Label(kills, Main.skin)).left().row();
+      deathDialog.getButtonTable().pad(5, 0, 0, 0);
+
+      deathDialogShowing = true;
+      deathDialog.show(stage);
+
+      deathDialog.setPosition(
+          deathDialog.getX(), deathDialog.getY() + (deathDialog.getY() / 2)
+      );
     }
   }
 

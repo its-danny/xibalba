@@ -29,11 +29,18 @@ public class DrowningSystem extends UsesEnergySystem {
 
       entity.remove(DrowningComponent.class);
     } else {
+      WorldManager.entityHelpers.dealDamage(entity, 5);
+
       AttributesComponent attributes = ComponentMappers.attributes.get(entity);
-      attributes.health -= 5;
 
       if (attributes.vision > 1) {
         attributes.vision -= 1;
+      }
+
+      if (ComponentMappers.player.has(entity)) {
+        WorldManager.log.add("You took 5 damage from bleeding");
+      } else {
+        WorldManager.log.add(attributes.name + " took 5 damage from bleeding");
       }
     }
   }

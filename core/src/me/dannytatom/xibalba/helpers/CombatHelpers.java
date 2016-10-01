@@ -171,11 +171,12 @@ public class CombatHelpers {
     Gdx.app.log("CombatHelpers", "Hit roll: " + hit);
 
     AttributesComponent starterAttributes = ComponentMappers.attributes.get(starter);
+    PlayerComponent playerDetails = ComponentMappers.player.get(starter);
 
     if (hit > 0) {
       if (ComponentMappers.player.has(starter)) {
-        PlayerComponent playerDetails = ComponentMappers.player.get(starter);
         playerDetails.lastHitEntity = target;
+        playerDetails.totalHits += 1;
       }
 
       if (ComponentMappers.player.has(target)) {
@@ -231,6 +232,10 @@ public class CombatHelpers {
 
       levelSkill(starter, skillName, skillLevelAmount);
     } else {
+      if (ComponentMappers.player.has(starter)) {
+        playerDetails.totalMisses += 1;
+      }
+
       AttributesComponent targetAttributes = ComponentMappers.attributes.get(target);
       String name = ComponentMappers.player.has(starter) ? "You" : starterAttributes.name;
 
@@ -271,11 +276,12 @@ public class CombatHelpers {
     Gdx.app.log("CombatHelpers", "Hit roll: " + hit);
 
     AttributesComponent starterAttributes = ComponentMappers.attributes.get(starter);
+    PlayerComponent playerDetails = ComponentMappers.player.get(starter);
 
     if (hit > 0) {
       if (ComponentMappers.player.has(starter)) {
-        PlayerComponent playerDetails = ComponentMappers.player.get(starter);
         playerDetails.lastHitEntity = target;
+        playerDetails.totalHits += 1;
       }
 
       if (ComponentMappers.player.has(target)) {
@@ -312,6 +318,10 @@ public class CombatHelpers {
 
       levelSkill(starter, skill, skillLevelAmount);
     } else {
+      if (ComponentMappers.player.has(starter)) {
+        playerDetails.totalMisses += 1;
+      }
+
       AttributesComponent targetAttributes = ComponentMappers.attributes.get(target);
       String name = ComponentMappers.player.has(starter) ? "You" : starterAttributes.name;
 
@@ -386,7 +396,11 @@ public class CombatHelpers {
     if (totalDamage > 0) {
       BodyComponent targetBody = ComponentMappers.body.get(target);
 
-      targetAttributes.health -= totalDamage;
+      if (ComponentMappers.player.has(target)) {
+        ComponentMappers.player.get(target).totalDamageDone += totalDamage;
+      }
+
+      WorldManager.entityHelpers.dealDamage(target, totalDamage);
       targetBody.damage.put(bodyPart, targetBody.damage.get(bodyPart) + totalDamage);
 
       WorldManager.log.add(
@@ -425,6 +439,7 @@ public class CombatHelpers {
       if (ComponentMappers.player.has(starter)) {
         PlayerComponent playerDetails = ComponentMappers.player.get(starter);
         playerDetails.lastHitEntity = null;
+        playerDetails.totalKills += 1;
 
         WorldManager.log.add("[GREEN]You killed " + targetAttributes.name + "!");
       } else {
