@@ -22,3 +22,6 @@ actions:
   - throw
   - hold
   - applyTo
+
+verbs:
+  - shot

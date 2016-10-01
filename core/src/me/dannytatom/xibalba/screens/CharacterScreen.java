@@ -216,7 +216,7 @@ public class CharacterScreen implements Screen {
     // Toughness & defense
 
     int toughness = attributes.toughness;
-    int defense = WorldManager.combatHelpers.getArmorDefense(WorldManager.player);
+    int defense = WorldManager.entityHelpers.getArmorDefense(WorldManager.player);
 
     attributesGroup.addActor(
         new Label(

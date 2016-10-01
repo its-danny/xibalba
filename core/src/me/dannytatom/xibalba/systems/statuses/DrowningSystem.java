@@ -29,7 +29,7 @@ public class DrowningSystem extends UsesEnergySystem {
 
       entity.remove(DrowningComponent.class);
     } else {
-      WorldManager.entityHelpers.dealDamage(entity, 5);
+      WorldManager.entityHelpers.takeDamage(entity, 5);
 
       AttributesComponent attributes = ComponentMappers.attributes.get(entity);
 

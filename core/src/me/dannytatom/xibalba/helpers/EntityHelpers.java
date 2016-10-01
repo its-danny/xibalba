@@ -1,14 +1,19 @@
 package me.dannytatom.xibalba.helpers;
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.components.AttributesComponent;
+import me.dannytatom.xibalba.components.EquipmentComponent;
+import me.dannytatom.xibalba.components.ItemComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.VisualComponent;
 import me.dannytatom.xibalba.utils.ComponentMappers;
 import me.dannytatom.xibalba.world.ShadowCaster;
 import me.dannytatom.xibalba.world.WorldManager;
+
+import java.util.Objects;
 
 public class EntityHelpers {
   /**
@@ -77,6 +82,46 @@ public class EntityHelpers {
   }
 
   /**
+   * Entity's toughness + armor defense.
+   *
+   * @param entity Who we're getting defense of
+   *
+   * @return Their combined defense
+   */
+  public int getCombinedDefense(Entity entity) {
+    AttributesComponent attributes = ComponentMappers.attributes.get(entity);
+
+    return MathUtils.random(1, attributes.toughness) + getArmorDefense(entity);
+  }
+
+  /**
+   * Just armor defense.
+   *
+   * @param entity Who we're getting defense of
+   *
+   * @return Their armor defense
+   */
+  public int getArmorDefense(Entity entity) {
+    EquipmentComponent equipment = ComponentMappers.equipment.get(entity);
+
+    int defense = 0;
+
+    if (equipment != null) {
+      for (Entity item : equipment.slots.values()) {
+        if (item != null) {
+          ItemComponent itemDetails = ComponentMappers.item.get(item);
+
+          if (Objects.equals(itemDetails.type, "armor")) {
+            defense += itemDetails.attributes.get("defense");
+          }
+        }
+      }
+    }
+
+    return defense;
+  }
+
+  /**
    * Update an entity's position.
    *
    * @param entity      The entity
@@ -118,8 +163,8 @@ public class EntityHelpers {
       case "raiseStrength":
         raiseStrength(entity, Integer.parseInt(params[0]));
         break;
-      case "dealDamage":
-        dealDamage(entity, Integer.parseInt(params[0]));
+      case "takeDamage":
+        takeDamage(entity, Integer.parseInt(params[0]));
         break;
       default:
     }
@@ -169,7 +214,7 @@ public class EntityHelpers {
     }
   }
 
-  public void dealDamage(Entity entity, int amount) {
+  public void takeDamage(Entity entity, int amount) {
     AttributesComponent attributes = ComponentMappers.attributes.get(entity);
 
     attributes.health -= amount;

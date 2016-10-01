@@ -338,10 +338,10 @@ public class HudRenderer {
 
   private void showDeathDialog() {
     if (WorldManager.state == WorldManager.State.DEAD && !deathDialogShowing) {
-      String depth = "[LIGHT_GRAY]You made it to depth [] " + playerDetails.lowestDepth;
+      String depth = "[LIGHT_GRAY]You made it to depth[] " + playerDetails.lowestDepth;
 
-      String hits = "[LIGHT_GRAY]You hit[] " + playerDetails.totalHits
-          + "[LIGHT_GRAY] enemies and missed[] " + playerDetails.totalMisses;
+      String hits = "[LIGHT_GRAY]You hit enemies[] " + playerDetails.totalHits
+          + "[LIGHT_GRAY] times and missed[] " + playerDetails.totalMisses;
 
       String damage = "[LIGHT_GRAY]You did[] " + playerDetails.totalDamageDone
           + "[LIGHT_GRAY] damage, took[] " + playerDetails.totalDamageReceived

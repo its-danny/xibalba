@@ -21,7 +21,7 @@ public class BleedingSystem extends UsesEnergySystem {
     if (bleeding.counter == 5) {
       entity.remove(BleedingComponent.class);
     } else {
-      WorldManager.entityHelpers.dealDamage(entity, 5);
+      WorldManager.entityHelpers.takeDamage(entity, 5);
 
       bleeding.counter += 1;
 
