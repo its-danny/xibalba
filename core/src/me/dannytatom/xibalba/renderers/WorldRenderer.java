@@ -19,6 +19,7 @@ import me.dannytatom.xibalba.components.ExitComponent;
 import me.dannytatom.xibalba.components.ItemComponent;
 import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
+import me.dannytatom.xibalba.components.TrapComponent;
 import me.dannytatom.xibalba.utils.ComponentMappers;
 import me.dannytatom.xibalba.world.Map;
 import me.dannytatom.xibalba.world.MapCell;
@@ -104,6 +105,7 @@ public class WorldRenderer {
 
     renderStairs();
     renderDecorations();
+    renderTraps();
     renderItems();
     renderEnemies();
     renderPlayer();
@@ -136,6 +138,17 @@ public class WorldRenderer {
 
     for (Entity entity : entities) {
       if (WorldManager.entityHelpers.isVisible(entity)) {
+        ComponentMappers.visual.get(entity).sprite.draw(batch);
+      }
+    }
+  }
+
+  private void renderTraps() {
+    ImmutableArray<Entity> entities =
+        WorldManager.engine.getEntitiesFor(Family.all(TrapComponent.class).get());
+
+    for (Entity entity : entities) {
+      if (ComponentMappers.visual.has(entity) && WorldManager.entityHelpers.isVisible(entity)) {
         ComponentMappers.visual.get(entity).sprite.draw(batch);
       }
     }

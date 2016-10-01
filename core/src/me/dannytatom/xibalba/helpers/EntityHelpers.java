@@ -24,8 +24,9 @@ public class EntityHelpers {
   }
 
   public boolean shouldSkipTurn(Entity entity) {
-    return ComponentMappers.crippled.has(entity)
-        && ComponentMappers.crippled.get(entity).turnCounter != 0;
+    return (ComponentMappers.crippled.has(entity)
+        && ComponentMappers.crippled.get(entity).turnCounter != 0)
+        || (ComponentMappers.stuck.has(entity));
   }
 
   /**
@@ -60,6 +61,10 @@ public class EntityHelpers {
         && (entityPosition.pos.y == playerPosition.pos.y - 1
         || entityPosition.pos.y == playerPosition.pos.y
         || entityPosition.pos.y == playerPosition.pos.y + 1);
+  }
+
+  public boolean playerAlive() {
+    return ComponentMappers.attributes.get(WorldManager.player).health > 0;
   }
 
   /**

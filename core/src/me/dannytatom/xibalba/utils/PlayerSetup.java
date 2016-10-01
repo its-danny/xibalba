@@ -24,10 +24,10 @@ import java.util.TreeMap;
 public class PlayerSetup {
   private static final TreeMap<Integer, String> rnMap = new TreeMap<>();
 
-  public AttributesComponent attributes;
-  public SkillsComponent skills;
-  public Array<String> traits;
-  public Array<String> defects;
+  public final AttributesComponent attributes;
+  public final SkillsComponent skills;
+  public final Array<String> traits;
+  public final Array<String> defects;
 
   public String name;
 

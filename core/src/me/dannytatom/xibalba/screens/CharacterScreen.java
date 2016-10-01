@@ -36,18 +36,18 @@ import java.util.Objects;
 public class CharacterScreen implements Screen {
   private final Main main;
   private final Stage stage;
-  private AttributesComponent attributes;
-  private SkillsComponent skills;
-  private InventoryComponent inventory;
-  private EquipmentComponent equipment;
-  private Table table;
-  private VerticalGroup attributesGroup;
-  private VerticalGroup skillsGroup;
-  private VerticalGroup traitsGroup;
-  private VerticalGroup inventoryGroup;
-  private VerticalGroup itemDetailsGroup;
-  private VerticalGroup equipmentGroup;
-  private HorizontalGroup itemActionGroup;
+  private final AttributesComponent attributes;
+  private final SkillsComponent skills;
+  private final InventoryComponent inventory;
+  private final EquipmentComponent equipment;
+  private final Table table;
+  private final VerticalGroup attributesGroup;
+  private final VerticalGroup skillsGroup;
+  private final VerticalGroup traitsGroup;
+  private final VerticalGroup inventoryGroup;
+  private final VerticalGroup itemDetailsGroup;
+  private final VerticalGroup equipmentGroup;
+  private final HorizontalGroup itemActionGroup;
   private ActionButton cancelButton;
   private ActionButton holdButton;
   private ActionButton wearButton;
@@ -59,7 +59,7 @@ public class CharacterScreen implements Screen {
   private ActionButton dropButton;
   private Entity applyingItem = null;
 
-  private Section sectionSelected = Section.INVENTORY;
+  private final Section sectionSelected = Section.INVENTORY;
   private HashMap<String, Integer> stackedItems;
   private int itemSelected = 0;
 

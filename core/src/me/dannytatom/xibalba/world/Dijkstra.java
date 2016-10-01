@@ -5,8 +5,8 @@ import com.badlogic.gdx.utils.Array;
 
 import java.util.Arrays;
 
-public class Dijkstra {
-  public int[][] map;
+class Dijkstra {
+  private int[][] map;
 
   public Dijkstra(boolean[][] geometry, Array<Vector2> goals) {
     createMap(geometry, goals);
@@ -24,7 +24,7 @@ public class Dijkstra {
   // will take to get from any given tile to the nearest goal.
   //
   // To find a path, you just walk downhill from starting position to goal position.
-  public void createMap(boolean[][] geometry, Array<Vector2> goals) {
+  private void createMap(boolean[][] geometry, Array<Vector2> goals) {
     map = new int[geometry.length][geometry[0].length];
 
     for (int[] row : map) {
@@ -113,7 +113,7 @@ public class Dijkstra {
     return path;
   }
 
-  public int get(int cellX, int cellY) {
+  private int get(int cellX, int cellY) {
     return map[cellX][cellY];
   }
 }

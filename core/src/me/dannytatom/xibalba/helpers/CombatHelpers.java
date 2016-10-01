@@ -239,6 +239,7 @@ public class CombatHelpers {
             + (item == null ? "hit" : ComponentMappers.item.get(item).verbs.random())
             + " " + getName(target)
             + " for " + totalDamage
+            + (Objects.equals(bodyPart, "body") ? "" : " in the " + bodyPart)
     );
 
     return totalDamage;

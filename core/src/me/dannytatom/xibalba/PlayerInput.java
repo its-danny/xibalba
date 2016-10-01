@@ -19,7 +19,8 @@ import me.dannytatom.xibalba.world.WorldManager;
 
 import java.util.Objects;
 
-public class PlayerInput implements InputProcessor {
+public class
+PlayerInput implements InputProcessor {
   private final OrthographicCamera worldCamera;
   public int keyHeld = -1;
   private boolean holdingShift = false;
@@ -30,6 +31,10 @@ public class PlayerInput implements InputProcessor {
 
   @Override
   public boolean keyDown(int keycode) {
+    if (WorldManager.entityHelpers.shouldSkipTurn(WorldManager.player)) {
+      return false;
+    }
+
     AttributesComponent attributes = ComponentMappers.attributes.get(WorldManager.player);
     PositionComponent position = ComponentMappers.position.get(WorldManager.player);
     PlayerComponent playerDetails = ComponentMappers.player.get(WorldManager.player);
@@ -260,7 +265,7 @@ public class PlayerInput implements InputProcessor {
 
   @Override
   public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-    if (button == 1) {
+    if (WorldManager.entityHelpers.shouldSkipTurn(WorldManager.player) || button == 1) {
       return false;
     }
 

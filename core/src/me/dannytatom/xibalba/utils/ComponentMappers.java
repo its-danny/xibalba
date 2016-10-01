@@ -14,6 +14,7 @@ import me.dannytatom.xibalba.components.MouseMovementComponent;
 import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.SkillsComponent;
+import me.dannytatom.xibalba.components.TrapComponent;
 import me.dannytatom.xibalba.components.VisualComponent;
 import me.dannytatom.xibalba.components.actions.MeleeComponent;
 import me.dannytatom.xibalba.components.actions.MovementComponent;
@@ -22,14 +23,15 @@ import me.dannytatom.xibalba.components.ai.BrainComponent;
 import me.dannytatom.xibalba.components.ai.TargetComponent;
 import me.dannytatom.xibalba.components.defects.OneArmComponent;
 import me.dannytatom.xibalba.components.items.AmmunitionComponent;
-import me.dannytatom.xibalba.components.items.ArmorComponent;
 import me.dannytatom.xibalba.components.items.ItemEffectsComponent;
 import me.dannytatom.xibalba.components.items.WeaponComponent;
 import me.dannytatom.xibalba.components.statuses.BleedingComponent;
 import me.dannytatom.xibalba.components.statuses.CrippledComponent;
 import me.dannytatom.xibalba.components.statuses.DrowningComponent;
+import me.dannytatom.xibalba.components.statuses.StuckComponent;
 import me.dannytatom.xibalba.components.statuses.WetComponent;
 import me.dannytatom.xibalba.components.traits.ScoutComponent;
+import me.dannytatom.xibalba.components.traps.SpiderWebComponent;
 
 public final class ComponentMappers {
   public static final ComponentMapper<BrainComponent> brain =
@@ -65,6 +67,9 @@ public final class ComponentMappers {
   public static final ComponentMapper<DrowningComponent> drowning =
       ComponentMapper.getFor(DrowningComponent.class);
 
+  public static final ComponentMapper<StuckComponent> stuck =
+      ComponentMapper.getFor(StuckComponent.class);
+
   public static final ComponentMapper<WetComponent> wet =
       ComponentMapper.getFor(WetComponent.class);
 
@@ -89,9 +94,6 @@ public final class ComponentMappers {
   public static final ComponentMapper<AmmunitionComponent> ammunition =
       ComponentMapper.getFor(AmmunitionComponent.class);
 
-  public static final ComponentMapper<ArmorComponent> armor =
-      ComponentMapper.getFor(ArmorComponent.class);
-
   public static final ComponentMapper<ItemEffectsComponent> itemEffects =
       ComponentMapper.getFor(ItemEffectsComponent.class);
 
@@ -112,6 +114,12 @@ public final class ComponentMappers {
 
   public static final ComponentMapper<ExitComponent> exit =
       ComponentMapper.getFor(ExitComponent.class);
+
+  public static final ComponentMapper<TrapComponent> trap =
+      ComponentMapper.getFor(TrapComponent.class);
+
+  public static final ComponentMapper<SpiderWebComponent> spiderWeb =
+      ComponentMapper.getFor(SpiderWebComponent.class);
 
   public static final ComponentMapper<OneArmComponent> oneArm =
       ComponentMapper.getFor(OneArmComponent.class);

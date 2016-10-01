@@ -22,6 +22,7 @@ import me.dannytatom.xibalba.systems.ai.WanderSystem;
 import me.dannytatom.xibalba.systems.statuses.BleedingSystem;
 import me.dannytatom.xibalba.systems.statuses.CrippledSystem;
 import me.dannytatom.xibalba.systems.statuses.DrowningSystem;
+import me.dannytatom.xibalba.systems.statuses.StuckSystem;
 import me.dannytatom.xibalba.systems.statuses.WetSystem;
 import me.dannytatom.xibalba.utils.EntityFactory;
 
@@ -61,11 +62,6 @@ public class WorldManager {
     // Setup engine (systems are run in order added)
     engine.addSystem(new AttributesSystem());
     engine.addSystem(new TimeSystem());
-    engine.addSystem(new TileEffectSystem());
-    engine.addSystem(new CrippledSystem());
-    engine.addSystem(new BleedingSystem());
-    engine.addSystem(new DrowningSystem());
-    engine.addSystem(new WetSystem());
     engine.addSystem(new MouseMovementSystem());
     engine.addSystem(new BrainSystem());
     engine.addSystem(new WanderSystem());
@@ -73,6 +69,12 @@ public class WorldManager {
     engine.addSystem(new RangeSystem());
     engine.addSystem(new MeleeSystem());
     engine.addSystem(new MovementSystem());
+    engine.addSystem(new TileEffectSystem());
+    engine.addSystem(new CrippledSystem());
+    engine.addSystem(new BleedingSystem());
+    engine.addSystem(new DrowningSystem());
+    engine.addSystem(new StuckSystem());
+    engine.addSystem(new WetSystem());
   }
 
   public enum State {

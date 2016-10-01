@@ -2,6 +2,7 @@ package me.dannytatom.xibalba.utils;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Colors;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -16,12 +17,14 @@ import me.dannytatom.xibalba.components.ExitComponent;
 import me.dannytatom.xibalba.components.ItemComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.SkillsComponent;
+import me.dannytatom.xibalba.components.TrapComponent;
 import me.dannytatom.xibalba.components.VisualComponent;
 import me.dannytatom.xibalba.components.ai.BrainComponent;
 import me.dannytatom.xibalba.components.items.AmmunitionComponent;
 import me.dannytatom.xibalba.components.items.ArmorComponent;
 import me.dannytatom.xibalba.components.items.ItemEffectsComponent;
 import me.dannytatom.xibalba.components.items.WeaponComponent;
+import me.dannytatom.xibalba.components.traps.SpiderWebComponent;
 import me.dannytatom.xibalba.world.Map;
 import me.dannytatom.xibalba.world.WorldManager;
 import org.yaml.snakeyaml.Yaml;
@@ -118,6 +121,25 @@ public class EntityFactory {
         Main.asciiAtlas.createSprite(data.visual.get("character")),
         position, Main.parseColor(data.visual.get("color"))
     ));
+
+    return entity;
+  }
+
+  public Entity createTrap(String name, Vector2 position) {
+    Entity entity = new Entity();
+
+    entity.add(new TrapComponent());
+    entity.add(new PositionComponent(position));
+    entity.add(new VisualComponent(
+        Main.asciiAtlas.createSprite("0302"), position, Color.WHITE, 0.1f
+    ));
+
+    switch (name) {
+      case "spiderWeb":
+        entity.add(new SpiderWebComponent());
+        break;
+      default:
+    }
 
     return entity;
   }

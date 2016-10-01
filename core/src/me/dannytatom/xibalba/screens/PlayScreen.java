@@ -18,7 +18,6 @@ import me.dannytatom.xibalba.utils.ComponentMappers;
 import me.dannytatom.xibalba.world.WorldManager;
 
 class PlayScreen implements Screen {
-  private final Main main;
 
   private final WorldRenderer worldRenderer;
   private final HudRenderer hudRenderer;
@@ -37,8 +36,6 @@ class PlayScreen implements Screen {
    * @param main Instance of Main class
    */
   public PlayScreen(Main main) {
-    this.main = main;
-
     autoTimer = 0;
     keyHoldTimerDelay = 0;
     keyHoldTimer = 0;
@@ -99,6 +96,7 @@ class PlayScreen implements Screen {
 
     // In some cases, we want the game to take turns on it's own
     if ((WorldManager.state == WorldManager.State.MOVING
+        || WorldManager.state == WorldManager.State.DEAD
         || WorldManager.entityHelpers.shouldSkipTurn(WorldManager.player))
         && autoTimer >= .10f) {
       autoTimer = 0;

@@ -28,10 +28,10 @@ public class YouScreen implements Screen {
   private int attributePoints;
   private int skillPoints;
   private int traitPoints;
-  private VerticalGroup attributesGroup;
-  private VerticalGroup skillsGroup;
-  private VerticalGroup defectsGroup;
-  private VerticalGroup traitsGroup;
+  private final VerticalGroup attributesGroup;
+  private final VerticalGroup skillsGroup;
+  private final VerticalGroup defectsGroup;
+  private final VerticalGroup traitsGroup;
 
   private Section sectionSelected = Section.ATTRIBUTES;
   private int itemSelected = 0;

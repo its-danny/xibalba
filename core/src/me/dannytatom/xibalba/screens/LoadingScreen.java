@@ -192,6 +192,21 @@ public class LoadingScreen implements Screen {
       );
     }
 
+    // Traps
+    for (int i = 0; i < level.traps.size; i++) {
+      HashMap<String, String> trap = level.traps.get(i);
+      String[] range = trap.get("spawnRange").split(",");
+      int amount = MathUtils.random(Integer.parseInt(range[0]), Integer.parseInt(range[1]));
+
+      for (int j = 0; j < amount; j++) {
+        WorldManager.world.entities.get(mapIndex).add(
+            WorldManager.entityFactory.createTrap(trap.get("name"),
+                WorldManager.mapHelpers.getRandomOpenPosition(mapIndex)
+            )
+        );
+      }
+    }
+
     // Spawn items
     for (int i = 0; i < level.items.size; i++) {
       HashMap<String, String> item = level.items.get(i);

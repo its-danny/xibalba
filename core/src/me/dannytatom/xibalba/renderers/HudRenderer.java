@@ -38,7 +38,6 @@ public class HudRenderer {
   private final AttributesComponent playerAttributes;
   private final PositionComponent playerPosition;
 
-  private final Table topTable;
   private final Table bottomTable;
 
   private final VerticalGroup playerInfo;
@@ -69,7 +68,7 @@ public class HudRenderer {
     playerAttributes = ComponentMappers.attributes.get(player);
     playerPosition = ComponentMappers.position.get(player);
 
-    topTable = new Table();
+    Table topTable = new Table();
     topTable.top().left();
     topTable.setFillParent(true);
     stage.addActor(topTable);
@@ -421,6 +420,10 @@ public class HudRenderer {
 
     if (ComponentMappers.drowning.has(entity)) {
       statuses.add("[DARK_GRAY]DROWNING[]");
+    }
+
+    if (ComponentMappers.stuck.has(entity)) {
+      statuses.add("[DARK_GRAY]STUCK[]");
     }
 
     return statuses.toString(", ");

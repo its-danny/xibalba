@@ -9,4 +9,5 @@ public class JsonToLevel {
   public HashMap<String, String> size;
   public Array<HashMap<String, String>> enemies;
   public Array<HashMap<String, String>> items;
+  public Array<HashMap<String, String>> traps;
 }

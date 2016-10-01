@@ -30,7 +30,7 @@ public class Main extends Game {
   public static TextureAtlas asciiAtlas;
   public static Skin skin;
   public static Screen playScreen;
-  public static Kryo kryo;
+  private static Kryo kryo;
   public static TweenManager tweenManager;
   public static SoundManager soundManager;
   public static CameraShake cameraShake;

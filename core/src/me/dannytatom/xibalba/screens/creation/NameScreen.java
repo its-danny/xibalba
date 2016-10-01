@@ -18,7 +18,7 @@ import me.dannytatom.xibalba.utils.PlayerSetup;
 
 import java.util.Objects;
 
-public class NameScreen implements Screen {
+class NameScreen implements Screen {
   private final Main main;
   private final PlayerSetup playerSetup;
 

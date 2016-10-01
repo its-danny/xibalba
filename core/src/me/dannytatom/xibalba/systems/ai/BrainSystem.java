@@ -43,7 +43,7 @@ public class BrainSystem extends UsesEnergySystem {
   private void handleWaiting(Entity entity) {
     AttributesComponent attributes = ComponentMappers.attributes.get(entity);
 
-    if (WorldManager.entityHelpers.isNearPlayer(entity)) {
+    if (WorldManager.entityHelpers.isNearPlayer(entity) && WorldManager.entityHelpers.playerAlive()) {
       if (attributes.energy >= MeleeComponent.COST) {
         switchToAttack(entity);
       } else if (attributes.energy >= MovementComponent.COST) {
@@ -51,7 +51,7 @@ public class BrainSystem extends UsesEnergySystem {
       }
     } else {
       if (attributes.energy >= MovementComponent.COST) {
-        if (WorldManager.entityHelpers.canSeePlayer(entity, attributes.vision)) {
+        if (WorldManager.entityHelpers.canSeePlayer(entity, attributes.vision) && WorldManager.entityHelpers.playerAlive()) {
           switchToTarget(entity, WorldManager.mapHelpers.getOpenSpaceNearPlayer());
         } else {
           switchToWander(entity);
@@ -63,7 +63,7 @@ public class BrainSystem extends UsesEnergySystem {
   private void handleWander(Entity entity) {
     AttributesComponent attributes = ComponentMappers.attributes.get(entity);
 
-    if (WorldManager.entityHelpers.isNearPlayer(entity)) {
+    if (WorldManager.entityHelpers.isNearPlayer(entity) && WorldManager.entityHelpers.playerAlive()) {
       if (attributes.energy >= MeleeComponent.COST) {
         switchToAttack(entity);
       } else if (attributes.energy >= MovementComponent.COST) {
@@ -73,7 +73,7 @@ public class BrainSystem extends UsesEnergySystem {
       }
     } else {
       if (attributes.energy >= MovementComponent.COST) {
-        if (WorldManager.entityHelpers.canSeePlayer(entity, attributes.vision)) {
+        if (WorldManager.entityHelpers.canSeePlayer(entity, attributes.vision) && WorldManager.entityHelpers.playerAlive()) {
           switchToTarget(entity, WorldManager.mapHelpers.getOpenSpaceNearPlayer());
         } else {
           switchToWander(entity);
@@ -89,7 +89,7 @@ public class BrainSystem extends UsesEnergySystem {
     TargetComponent target = ComponentMappers.target.get(entity);
     Vector2 playerPosition = ComponentMappers.position.get(WorldManager.player).pos;
 
-    if (WorldManager.entityHelpers.isNearPlayer(entity)) {
+    if (WorldManager.entityHelpers.isNearPlayer(entity) && WorldManager.entityHelpers.playerAlive()) {
       if (attributes.energy >= MeleeComponent.COST) {
         switchToAttack(entity);
       } else {
@@ -97,7 +97,7 @@ public class BrainSystem extends UsesEnergySystem {
       }
     } else {
       if (attributes.energy >= MovementComponent.COST) {
-        if (WorldManager.entityHelpers.canSeePlayer(entity, attributes.vision)) {
+        if (WorldManager.entityHelpers.canSeePlayer(entity, attributes.vision) && WorldManager.entityHelpers.playerAlive()) {
           if (playerPosition != target.pos) {
             switchToTarget(entity, WorldManager.mapHelpers.getOpenSpaceNearPlayer());
           }
@@ -113,7 +113,7 @@ public class BrainSystem extends UsesEnergySystem {
   private void handleAttack(Entity entity) {
     AttributesComponent attributes = ComponentMappers.attributes.get(entity);
 
-    if (WorldManager.entityHelpers.isNearPlayer(entity)) {
+    if (WorldManager.entityHelpers.isNearPlayer(entity) && WorldManager.entityHelpers.playerAlive()) {
       if (attributes.energy >= MeleeComponent.COST) {
         entity.add(new MeleeComponent(WorldManager.player, "body"));
       } else if (attributes.energy >= MovementComponent.COST) {
@@ -121,7 +121,7 @@ public class BrainSystem extends UsesEnergySystem {
       }
     } else {
       if (attributes.energy >= MovementComponent.COST) {
-        if (WorldManager.entityHelpers.canSeePlayer(entity, attributes.vision)) {
+        if (WorldManager.entityHelpers.canSeePlayer(entity, attributes.vision) && WorldManager.entityHelpers.playerAlive()) {
           switchToTarget(entity, WorldManager.mapHelpers.getOpenSpaceNearPlayer());
         } else {
           switchToWander(entity);

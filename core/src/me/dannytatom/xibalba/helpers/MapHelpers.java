@@ -13,6 +13,7 @@ import me.dannytatom.xibalba.components.ExitComponent;
 import me.dannytatom.xibalba.components.ItemComponent;
 import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
+import me.dannytatom.xibalba.components.TrapComponent;
 import me.dannytatom.xibalba.utils.ComponentMappers;
 import me.dannytatom.xibalba.world.Map;
 import me.dannytatom.xibalba.world.MapCell;
@@ -86,6 +87,8 @@ public class MapHelpers {
               blocked = true;
               break;
             }
+          } else if (ComponentMappers.trap.has(entity)) {
+            blocked = false;
           } else {
             blocked = true;
             break;
@@ -327,6 +330,23 @@ public class MapHelpers {
     ImmutableArray<Entity> entities =
         WorldManager.engine.getEntitiesFor(
             Family.all(ItemComponent.class, PositionComponent.class).get()
+        );
+
+    for (Entity entity : entities) {
+      PositionComponent entityPosition = ComponentMappers.position.get(entity);
+
+      if (entityPosition.pos.epsilonEquals(position, 0.00001f)) {
+        return entity;
+      }
+    }
+
+    return null;
+  }
+
+  public Entity getTrapAt(Vector2 position) {
+    ImmutableArray<Entity> entities =
+        WorldManager.engine.getEntitiesFor(
+            Family.all(TrapComponent.class).get()
         );
 
     for (Entity entity : entities) {
