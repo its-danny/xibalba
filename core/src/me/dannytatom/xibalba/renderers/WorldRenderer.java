@@ -3,6 +3,7 @@ package me.dannytatom.xibalba.renderers;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Colors;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -33,8 +34,6 @@ public class WorldRenderer {
   private final PlayerComponent playerDetails;
 
   // These get reused a ton
-  private final Sprite target;
-  private final Sprite targetPath;
   private final Sprite shadow;
 
   /**
@@ -50,10 +49,6 @@ public class WorldRenderer {
     viewport = new FitViewport(960, 540, worldCamera);
 
     playerDetails = ComponentMappers.player.get(WorldManager.player);
-
-    target = Main.asciiAtlas.createSprite("0915");
-    targetPath = Main.asciiAtlas.createSprite("0915");
-    targetPath.setColor(Colors.get("YELLOW"));
     shadow = Main.asciiAtlas.createSprite("1113");
   }
 
@@ -107,25 +102,13 @@ public class WorldRenderer {
       }
     }
 
-    if (playerDetails.path != null && playerDetails.target != null) {
-      for (int i = 0; i < playerDetails.path.size(); i++) {
-        boolean isLast = i == (playerDetails.path.size() - 1);
-
-        GridCell cell = playerDetails.path.get(i);
-
-        batch.draw(
-            isLast ? target : targetPath,
-            cell.x * Main.SPRITE_WIDTH, cell.y * Main.SPRITE_HEIGHT
-        );
-      }
-    }
-
     renderStairs();
     renderDecorations();
     renderItems();
     renderEnemies();
     renderPlayer();
     renderShadows();
+    renderHighlights();
 
     batch.end();
   }
@@ -233,6 +216,20 @@ public class WorldRenderer {
         shadow.setColor(Colors.get(WorldManager.world.getCurrentMap().type + "Background"));
         shadow.setAlpha(-alpha);
         shadow.setPosition(x * Main.SPRITE_WIDTH, y * Main.SPRITE_HEIGHT);
+
+        shadow.draw(batch);
+      }
+    }
+  }
+
+  private void renderHighlights() {
+    if (playerDetails.path != null && playerDetails.target != null) {
+      for (int i = 0; i < playerDetails.path.size(); i++) {
+        GridCell cell = playerDetails.path.get(i);
+
+        shadow.setColor(Color.WHITE);
+        shadow.setAlpha(.15f);
+        shadow.setPosition(cell.x * Main.SPRITE_WIDTH, cell.y * Main.SPRITE_HEIGHT);
 
         shadow.draw(batch);
       }
