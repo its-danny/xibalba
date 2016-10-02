@@ -17,7 +17,6 @@ public class Map {
   public final String type;
   public final MapCell.Type[][] geometry;
   public final MapTime time;
-  public float[][] lightMap;
   private MapCell[][] map;
   private MapCell.Type[][] flooded;
   private int floodedCount = 0;

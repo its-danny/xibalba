@@ -12,6 +12,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import me.dannytatom.xibalba.Main;
+import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.DecorationComponent;
 import me.dannytatom.xibalba.components.EnemyComponent;
 import me.dannytatom.xibalba.components.EntranceComponent;
@@ -33,6 +34,7 @@ public class WorldRenderer {
   private final OrthographicCamera worldCamera;
 
   private final PlayerComponent playerDetails;
+  private final AttributesComponent playerAttributes;
 
   // These get reused a ton
   private final Sprite shadow;
@@ -50,6 +52,8 @@ public class WorldRenderer {
     viewport = new FitViewport(960, 540, worldCamera);
 
     playerDetails = ComponentMappers.player.get(WorldManager.player);
+    playerAttributes = ComponentMappers.attributes.get(WorldManager.player);
+
     shadow = Main.asciiAtlas.createSprite("1113");
   }
 
@@ -59,9 +63,6 @@ public class WorldRenderer {
   public void render(float delta) {
     // Get playerDetails position
     PositionComponent playerPosition = ComponentMappers.position.get(WorldManager.player);
-
-    // Update lighting
-    WorldManager.world.updateLighting(playerPosition.pos.x, playerPosition.pos.y);
 
     // Handle screen shake
     if (Main.cameraShake.time > 0) {
@@ -85,7 +86,7 @@ public class WorldRenderer {
       for (int y = 0; y < map.height - 1; y++) {
         MapCell cell = WorldManager.mapHelpers.getCell(x, y);
 
-        if (map.lightMap[x][y] > 0) {
+        if (playerAttributes.visionMap[x][y] > 0) {
           cell.hidden = false;
 
           if (cell.tween != null && !cell.tween.isStarted()) {
@@ -94,7 +95,7 @@ public class WorldRenderer {
         }
 
         if (!cell.hidden) {
-          cell.forgotten = map.lightMap[x][y] <= 0;
+          cell.forgotten = playerAttributes.visionMap[x][y] <= 0;
 
           if (WorldManager.mapHelpers.getEntitiesAt(new Vector2(x, y)).size() == 0) {
             cell.sprite.draw(batch);
@@ -200,10 +201,8 @@ public class WorldRenderer {
   }
 
   private void renderShadows() {
-    Map map = WorldManager.world.getCurrentMap();
-
-    for (int x = 0; x < map.lightMap.length; x++) {
-      for (int y = 0; y < map.lightMap[0].length; y++) {
+    for (int x = 0; x < playerAttributes.visionMap.length; x++) {
+      for (int y = 0; y < playerAttributes.visionMap[0].length; y++) {
         float minimum;
 
         switch (WorldManager.world.getCurrentMap().time.time) {
@@ -224,7 +223,7 @@ public class WorldRenderer {
             break;
         }
 
-        float alpha = map.lightMap[x][y] <= minimum ? minimum : map.lightMap[x][y];
+        float alpha = playerAttributes.visionMap[x][y] <= minimum ? minimum : playerAttributes.visionMap[x][y];
 
         shadow.setColor(Colors.get(WorldManager.world.getCurrentMap().type + "Background"));
         shadow.setAlpha(-alpha);

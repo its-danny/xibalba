@@ -16,11 +16,13 @@ import me.dannytatom.xibalba.world.WorldManager;
 import java.util.Objects;
 
 public class EntityHelpers {
+  private ShadowCaster caster;
+
   /**
    * EntityHelpers constructor, clearly.
    */
   public EntityHelpers() {
-
+    caster = new ShadowCaster();
   }
 
   public boolean shouldSkipTurn(Entity entity) {
@@ -67,23 +69,26 @@ public class EntityHelpers {
     return ComponentMappers.attributes.get(WorldManager.player).health > 0;
   }
 
+  public void updateSenses(Entity entity) {
+    AttributesComponent attributes = ComponentMappers.attributes.get(entity);
+    PositionComponent position = ComponentMappers.position.get(entity);
+
+    attributes.visionMap = caster.calculateFov(WorldManager.mapHelpers.createFovMap(),
+        (int) position.pos.x, (int) position.pos.y, attributes.vision);
+  }
+
   /**
    * Uses light world to determine if they can see the player.
    *
-   * @param entity   ho we checking
-   * @param distance Radius to use
+   * @param entity who we checking
    *
    * @return Can they see the player?
    */
-  public boolean canSeePlayer(Entity entity, int distance) {
-    PositionComponent entityPosition = ComponentMappers.position.get(entity);
+  public boolean canSeePlayer(Entity entity) {
+    AttributesComponent attributes = ComponentMappers.attributes.get(entity);
     PositionComponent playerPosition = ComponentMappers.position.get(WorldManager.player);
 
-    ShadowCaster caster = new ShadowCaster();
-    float[][] lightMap = caster.calculateFov(WorldManager.mapHelpers.createFovMap(),
-        (int) entityPosition.pos.x, (int) entityPosition.pos.y, distance);
-
-    return lightMap[(int) playerPosition.pos.x][(int) playerPosition.pos.y] > 0;
+    return attributes.visionMap[(int) playerPosition.pos.x][(int) playerPosition.pos.y] > 0;
   }
 
   /**

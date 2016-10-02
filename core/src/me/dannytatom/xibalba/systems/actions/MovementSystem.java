@@ -72,5 +72,7 @@ public class MovementSystem extends UsesEnergySystem {
     WorldManager.entityHelpers.updatePosition(
         entity, movement.pos
     );
+
+    WorldManager.entityHelpers.updateSenses(entity);
   }
 }

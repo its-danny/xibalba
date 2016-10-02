@@ -16,6 +16,7 @@ public class AttributesComponent implements Component {
   public int health;
   public int oxygen;
   public int energy;
+  public float[][] visionMap;
 
   /**
    * Holds entity attributes.

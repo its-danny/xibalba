@@ -110,6 +110,8 @@ public class PlayerSetup {
       player.add(new PerceptiveComponent());
     }
 
+    WorldManager.entityHelpers.updateSenses(player);
+
     return player;
   }
 

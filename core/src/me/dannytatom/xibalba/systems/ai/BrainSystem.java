@@ -51,7 +51,7 @@ public class BrainSystem extends UsesEnergySystem {
       }
     } else {
       if (attributes.energy >= MovementComponent.COST) {
-        if (WorldManager.entityHelpers.canSeePlayer(entity, attributes.vision) && WorldManager.entityHelpers.playerAlive()) {
+        if (WorldManager.entityHelpers.canSeePlayer(entity) && WorldManager.entityHelpers.playerAlive()) {
           switchToTarget(entity, WorldManager.mapHelpers.getOpenSpaceNearPlayer());
         } else {
           switchToWander(entity);
@@ -73,7 +73,7 @@ public class BrainSystem extends UsesEnergySystem {
       }
     } else {
       if (attributes.energy >= MovementComponent.COST) {
-        if (WorldManager.entityHelpers.canSeePlayer(entity, attributes.vision) && WorldManager.entityHelpers.playerAlive()) {
+        if (WorldManager.entityHelpers.canSeePlayer(entity) && WorldManager.entityHelpers.playerAlive()) {
           switchToTarget(entity, WorldManager.mapHelpers.getOpenSpaceNearPlayer());
         } else {
           switchToWander(entity);
@@ -97,7 +97,7 @@ public class BrainSystem extends UsesEnergySystem {
       }
     } else {
       if (attributes.energy >= MovementComponent.COST) {
-        if (WorldManager.entityHelpers.canSeePlayer(entity, attributes.vision) && WorldManager.entityHelpers.playerAlive()) {
+        if (WorldManager.entityHelpers.canSeePlayer(entity) && WorldManager.entityHelpers.playerAlive()) {
           if (playerPosition != target.pos) {
             switchToTarget(entity, WorldManager.mapHelpers.getOpenSpaceNearPlayer());
           }
@@ -121,7 +121,7 @@ public class BrainSystem extends UsesEnergySystem {
       }
     } else {
       if (attributes.energy >= MovementComponent.COST) {
-        if (WorldManager.entityHelpers.canSeePlayer(entity, attributes.vision) && WorldManager.entityHelpers.playerAlive()) {
+        if (WorldManager.entityHelpers.canSeePlayer(entity) && WorldManager.entityHelpers.playerAlive()) {
           switchToTarget(entity, WorldManager.mapHelpers.getOpenSpaceNearPlayer());
         } else {
           switchToWander(entity);

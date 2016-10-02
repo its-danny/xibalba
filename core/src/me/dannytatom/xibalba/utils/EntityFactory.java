@@ -78,6 +78,8 @@ public class EntityFactory {
     }
     entity.add(new BrainComponent(personalities));
 
+    WorldManager.entityHelpers.updateSenses(entity);
+
     return entity;
   }
 
