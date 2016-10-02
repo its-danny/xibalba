@@ -15,6 +15,7 @@ import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.SkillsComponent;
 import me.dannytatom.xibalba.components.VisualComponent;
 import me.dannytatom.xibalba.components.defects.OneArmComponent;
+import me.dannytatom.xibalba.components.traits.PerceptiveComponent;
 import me.dannytatom.xibalba.components.traits.ScoutComponent;
 import me.dannytatom.xibalba.world.WorldManager;
 
@@ -73,7 +74,6 @@ public class PlayerSetup {
     Vector2 position = WorldManager.mapHelpers.getEntrancePosition();
     player.add(new PositionComponent(position));
     player.add(new VisualComponent(Main.asciiAtlas.createSprite("0004"), position));
-
     player.add(new PlayerComponent());
     player.add(new InventoryComponent());
     player.add(new EquipmentComponent());
@@ -104,6 +104,10 @@ public class PlayerSetup {
       AttributesComponent attributes = ComponentMappers.attributes.get(player);
       attributes.maxVision = 120;
       attributes.vision = 120;
+    }
+
+    if (traits.contains(PerceptiveComponent.name, false)) {
+      player.add(new PerceptiveComponent());
     }
 
     return player;

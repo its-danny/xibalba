@@ -169,14 +169,16 @@ public class LoadingScreen implements Screen {
 
       spawnShit(level, i, i == levels.size() - 1);
     }
-
-    // Add player entity
-    WorldManager.player = playerSetup.create();
-    WorldManager.world.entities.get(WorldManager.world.currentMapIndex).add(WorldManager.player);
   }
 
   private void spawnShit(JsonToLevel level, int mapIndex, boolean isLast) {
     WorldManager.world.entities.put(mapIndex, new Array<>());
+
+    // Spawn player on first
+    if (mapIndex == 0) {
+      WorldManager.player = playerSetup.create();
+      WorldManager.world.entities.get(WorldManager.world.currentMapIndex).add(WorldManager.player);
+    }
 
     // Spawn an entrance on every level but first
     if (mapIndex > 0) {

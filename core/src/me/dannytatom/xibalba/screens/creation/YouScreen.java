@@ -14,6 +14,7 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.components.defects.OneArmComponent;
+import me.dannytatom.xibalba.components.traits.PerceptiveComponent;
 import me.dannytatom.xibalba.components.traits.ScoutComponent;
 import me.dannytatom.xibalba.screens.MainMenuScreen;
 import me.dannytatom.xibalba.ui.ActionButton;
@@ -367,6 +368,12 @@ public class YouScreen implements Screen {
             createTraitText(0, ScoutComponent.name, ScoutComponent.description, ScoutComponent.cost),
             Main.skin)
     );
+
+    traitsGroup.addActor(
+        new Label(
+            createTraitText(1, PerceptiveComponent.name, PerceptiveComponent.description, PerceptiveComponent.cost),
+            Main.skin)
+    );
   }
 
   private String createAttributeText(int index, String name, int level) {
@@ -591,6 +598,13 @@ public class YouScreen implements Screen {
         }
 
         break;
+      case 1:
+        if (!playerSetup.traits.contains(PerceptiveComponent.name, false) && traitPoints >= PerceptiveComponent.cost) {
+          playerSetup.traits.add(PerceptiveComponent.name);
+          traitPoints -= PerceptiveComponent.cost;
+        }
+
+        break;
       default:
     }
   }
@@ -601,6 +615,13 @@ public class YouScreen implements Screen {
         if (playerSetup.traits.contains(ScoutComponent.name, false)) {
           playerSetup.traits.removeValue(ScoutComponent.name, false);
           traitPoints += ScoutComponent.cost;
+        }
+
+        break;
+      case 1:
+        if (playerSetup.traits.contains(PerceptiveComponent.name, false)) {
+          playerSetup.traits.removeValue(PerceptiveComponent.name, false);
+          traitPoints += PerceptiveComponent.cost;
         }
 
         break;

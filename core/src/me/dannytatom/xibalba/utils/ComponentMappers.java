@@ -30,6 +30,7 @@ import me.dannytatom.xibalba.components.statuses.CrippledComponent;
 import me.dannytatom.xibalba.components.statuses.DrowningComponent;
 import me.dannytatom.xibalba.components.statuses.StuckComponent;
 import me.dannytatom.xibalba.components.statuses.WetComponent;
+import me.dannytatom.xibalba.components.traits.PerceptiveComponent;
 import me.dannytatom.xibalba.components.traits.ScoutComponent;
 import me.dannytatom.xibalba.components.traps.SpiderWebComponent;
 
@@ -126,4 +127,7 @@ public final class ComponentMappers {
 
   public static final ComponentMapper<ScoutComponent> scout =
       ComponentMapper.getFor(ScoutComponent.class);
+
+  public static final ComponentMapper<PerceptiveComponent> perceptive =
+      ComponentMapper.getFor(PerceptiveComponent.class);
 }

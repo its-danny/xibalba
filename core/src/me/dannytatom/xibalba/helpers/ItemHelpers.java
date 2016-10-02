@@ -229,6 +229,8 @@ public class ItemHelpers {
       }
 
       WorldManager.entityHelpers.updatePosition(item, position);
+      WorldManager.entityHelpers.updateSpritePosition(item, position);
+
       inventory.items.remove(item);
 
       if (ComponentMappers.player.has(entity)) {

@@ -130,13 +130,16 @@ public class EntityFactory {
 
     entity.add(new TrapComponent());
     entity.add(new PositionComponent(position));
-    entity.add(new VisualComponent(
-        Main.asciiAtlas.createSprite("0302"), position, Color.WHITE, 0.1f
-    ));
 
     switch (name) {
       case "spiderWeb":
         entity.add(new SpiderWebComponent());
+
+        entity.add(new VisualComponent(
+            Main.asciiAtlas.createSprite("0302"), position, Color.WHITE,
+            ComponentMappers.perceptive.has(WorldManager.player) ? .5f : .1f
+        ));
+
         break;
       default:
     }
