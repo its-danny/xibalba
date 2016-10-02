@@ -13,6 +13,7 @@ import me.dannytatom.xibalba.components.ItemComponent;
 import me.dannytatom.xibalba.components.MouseMovementComponent;
 import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
+import me.dannytatom.xibalba.components.RainDropComponent;
 import me.dannytatom.xibalba.components.SkillsComponent;
 import me.dannytatom.xibalba.components.TrapComponent;
 import me.dannytatom.xibalba.components.VisualComponent;
@@ -103,6 +104,9 @@ public final class ComponentMappers {
 
   public static final ComponentMapper<DecorationComponent> decoration =
       ComponentMapper.getFor(DecorationComponent.class);
+
+  public static final ComponentMapper<RainDropComponent> rainDrop =
+      ComponentMapper.getFor(RainDropComponent.class);
 
   public static final ComponentMapper<PlayerComponent> player =
       ComponentMapper.getFor(PlayerComponent.class);

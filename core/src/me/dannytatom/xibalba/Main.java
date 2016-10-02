@@ -108,6 +108,7 @@ public class Main extends Game {
 
     // Environment colors
     Colors.put("forestFloor", parseColor("78AD8A"));
+    Colors.put("forestFloorWet", parseColor("70BBAD"));
     Colors.put("forestTree-1", parseColor("67CF8B"));
     Colors.put("forestTree-2", parseColor("77E09B"));
     Colors.put("forestTree-3", parseColor("4AC775"));

@@ -16,6 +16,7 @@ import me.dannytatom.xibalba.components.EntranceComponent;
 import me.dannytatom.xibalba.components.ExitComponent;
 import me.dannytatom.xibalba.components.ItemComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
+import me.dannytatom.xibalba.components.RainDropComponent;
 import me.dannytatom.xibalba.components.SkillsComponent;
 import me.dannytatom.xibalba.components.TrapComponent;
 import me.dannytatom.xibalba.components.VisualComponent;
@@ -221,6 +222,19 @@ public class EntityFactory {
     entity.add(new PositionComponent(position));
     entity.add(new VisualComponent(
         Main.asciiAtlas.createSprite("0109"), position, Colors.get("remains")
+    ));
+
+    return entity;
+  }
+
+  public Entity createRainDrop(Vector2 position) {
+    Entity entity = new Entity();
+
+    entity.add(new DecorationComponent(false));
+    entity.add(new RainDropComponent());
+    entity.add(new PositionComponent(position));
+    entity.add(new VisualComponent(
+        Main.asciiAtlas.createSprite("1502"), position, Colors.get("CYAN")
     ));
 
     return entity;

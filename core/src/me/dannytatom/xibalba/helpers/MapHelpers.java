@@ -61,6 +61,10 @@ public class MapHelpers {
     return getCell(WorldManager.world.currentMapIndex, (int) cellX, (int) cellY);
   }
 
+  public boolean isBlocked(Vector2 position) {
+    return isBlocked(WorldManager.world.currentMapIndex, position);
+  }
+
   /**
    * Returns whether or not the given position is blocked.
    *
@@ -493,6 +497,6 @@ public class MapHelpers {
   }
 
   public void makeFloorWet(Vector2 position) {
-    getCell(position.x, position.y).sprite.setColor(Colors.get("caveFloorWet"));
+    getCell(position.x, position.y).sprite.setColor(Colors.get(WorldManager.world.getCurrentMap().type + "FloorWet"));
   }
 }
