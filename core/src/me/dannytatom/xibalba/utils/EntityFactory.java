@@ -67,6 +67,7 @@ public class EntityFactory {
         data.description,
         data.attributes.get("speed"),
         data.attributes.get("vision"),
+        data.attributes.get("hearing"),
         data.attributes.get("toughness"),
         data.attributes.get("strength"),
         data.attributes.get("agility")

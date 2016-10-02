@@ -10,6 +10,7 @@ import me.dannytatom.xibalba.helpers.EntityHelpers;
 import me.dannytatom.xibalba.helpers.ItemHelpers;
 import me.dannytatom.xibalba.helpers.MapHelpers;
 import me.dannytatom.xibalba.systems.AttributesSystem;
+import me.dannytatom.xibalba.systems.DeathSystem;
 import me.dannytatom.xibalba.systems.MouseMovementSystem;
 import me.dannytatom.xibalba.systems.TileEffectSystem;
 import me.dannytatom.xibalba.systems.TimeSystem;
@@ -75,6 +76,7 @@ public class WorldManager {
     engine.addSystem(new DrowningSystem());
     engine.addSystem(new StuckSystem());
     engine.addSystem(new WetSystem());
+    engine.addSystem(new DeathSystem());
   }
 
   public enum State {

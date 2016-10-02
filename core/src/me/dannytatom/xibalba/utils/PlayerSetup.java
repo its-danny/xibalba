@@ -49,7 +49,7 @@ public class PlayerSetup {
 
     generateName();
 
-    attributes = new AttributesComponent(name, "It's you", 100, 10, 4, 4, 4);
+    attributes = new AttributesComponent(name, "It's you", 100, 10, 5, 4, 4, 4);
     skills = new SkillsComponent();
     traits = new Array<>();
     defects = new Array<>();
@@ -102,15 +102,15 @@ public class PlayerSetup {
       player.add(new ScoutComponent());
 
       AttributesComponent attributes = ComponentMappers.attributes.get(player);
-      attributes.maxVision = 120;
-      attributes.vision = 120;
+      attributes.maxVision = 20;
+      attributes.vision = 20;
     }
 
     if (traits.contains(PerceptiveComponent.name, false)) {
       player.add(new PerceptiveComponent());
 
       AttributesComponent attributes = ComponentMappers.attributes.get(player);
-      attributes.hearing = attributes.hearing * 2;
+      attributes.hearing = attributes.vision * 2;
     }
 
     WorldManager.entityHelpers.updateSenses(player);

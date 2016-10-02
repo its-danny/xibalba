@@ -22,6 +22,7 @@ import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.SkillsComponent;
 import me.dannytatom.xibalba.components.defects.OneArmComponent;
 import me.dannytatom.xibalba.components.items.ItemEffectsComponent;
+import me.dannytatom.xibalba.components.traits.PerceptiveComponent;
 import me.dannytatom.xibalba.components.traits.ScoutComponent;
 import me.dannytatom.xibalba.ui.ActionButton;
 import me.dannytatom.xibalba.utils.ComponentMappers;
@@ -283,6 +284,12 @@ public class CharacterScreen implements Screen {
     if (ComponentMappers.scout.has(WorldManager.player)) {
       traitsGroup.addActor(
           new Label("[GREEN]" + ScoutComponent.name + "\n[DARK_GRAY]" + WordUtils.wrap(ScoutComponent.description, 50), Main.skin)
+      );
+    }
+
+    if (ComponentMappers.perceptive.has(WorldManager.player)) {
+      traitsGroup.addActor(
+          new Label("[GREEN]" + PerceptiveComponent.name + "\n[DARK_GRAY]" + WordUtils.wrap(PerceptiveComponent.description, 50), Main.skin)
       );
     }
   }

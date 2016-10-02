@@ -9,7 +9,8 @@ visual:
 
 attributes:
   speed: 100
-  vision: 20
+  vision: 5
+  hearing: 20
   toughness: 4
   strength: 4
   agility: 4

@@ -9,7 +9,6 @@ import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.BodyComponent;
 import me.dannytatom.xibalba.components.ItemComponent;
 import me.dannytatom.xibalba.components.PlayerComponent;
-import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.SkillsComponent;
 import me.dannytatom.xibalba.components.VisualComponent;
 import me.dannytatom.xibalba.components.actions.MeleeComponent;
@@ -281,10 +280,21 @@ public class CombatHelpers {
         ComponentMappers.player.get(starter).totalDamageDone += totalDamage;
       }
 
-      // If you've done damage to the body part equal to or more than a third their health,
-      // apply statuses effect.
+      // Apply status effects
 
-      if (targetBody.damage.get(bodyPart) > (targetAttributes.maxHealth / 3)) {
+      boolean addEffect = false;
+
+      if (Objects.equals(bodyPart, "body")) {
+        if (MathUtils.random() > 0.25f) {
+          addEffect = targetBody.damage.get(bodyPart) > (targetAttributes.maxHealth / 2);
+        }
+      } else {
+        if (MathUtils.random() > 0.5f) {
+          addEffect = targetBody.damage.get(bodyPart) > (targetAttributes.maxHealth / 3);
+        }
+      }
+
+      if (addEffect) {
         if (bodyPart.contains("leg") && !ComponentMappers.crippled.has(target)) {
           target.add(new CrippledComponent());
           WorldManager.log.add("[RED]" + getName(starter) + " crippled " + getName(target));
@@ -367,11 +377,6 @@ public class CombatHelpers {
       // Kill it?
 
       if (targetAttributes.health <= 0) {
-        PositionComponent targetPosition = ComponentMappers.position.get(target);
-
-        WorldManager.world.addEntity(WorldManager.entityFactory.createRemains(targetPosition.pos));
-        WorldManager.world.removeEntity(target);
-
         if (ComponentMappers.player.has(starter)) {
           PlayerComponent playerDetails = ComponentMappers.player.get(starter);
 
