@@ -108,6 +108,9 @@ public class PlayerSetup {
 
     if (traits.contains(PerceptiveComponent.name, false)) {
       player.add(new PerceptiveComponent());
+
+      AttributesComponent attributes = ComponentMappers.attributes.get(player);
+      attributes.hearing = attributes.hearing * 2;
     }
 
     WorldManager.entityHelpers.updateSenses(player);

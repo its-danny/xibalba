@@ -11,12 +11,14 @@ public class AttributesComponent implements Component {
   public int maxHealth;
   public int toughness;
   public int vision;
+  public int hearing;
   public int strength;
   public int agility;
   public int health;
   public int oxygen;
   public int energy;
   public float[][] visionMap;
+  public float[][] hearingMap;
 
   /**
    * Holds entity attributes.
@@ -42,6 +44,7 @@ public class AttributesComponent implements Component {
     this.maxHealth = toughness * 10;
     this.maxOxygen = toughness * 4;
     this.vision = maxVision;
+    this.hearing = maxVision;
     this.health = maxHealth;
     this.oxygen = maxOxygen;
   }

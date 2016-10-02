@@ -73,8 +73,19 @@ public class EntityHelpers {
     AttributesComponent attributes = ComponentMappers.attributes.get(entity);
     PositionComponent position = ComponentMappers.position.get(entity);
 
-    attributes.visionMap = caster.calculateFov(WorldManager.mapHelpers.createFovMap(),
-        (int) position.pos.x, (int) position.pos.y, attributes.vision);
+    float[][] fovMap = WorldManager.mapHelpers.createFovMap();
+
+    attributes.visionMap = caster.calculateFov(
+        fovMap, (int) position.pos.x, (int) position.pos.y, attributes.vision
+    );
+
+    if (attributes.hearing == attributes.vision) {
+      attributes.hearingMap = attributes.visionMap;
+    } else {
+      attributes.hearingMap = caster.calculateFov(
+          fovMap, (int) position.pos.x, (int) position.pos.y, attributes.hearing
+      );
+    }
   }
 
   /**
@@ -89,6 +100,13 @@ public class EntityHelpers {
     PositionComponent playerPosition = ComponentMappers.position.get(WorldManager.player);
 
     return attributes.visionMap[(int) playerPosition.pos.x][(int) playerPosition.pos.y] > 0;
+  }
+
+  public boolean canHear(Entity listener, Entity target) {
+    AttributesComponent attributes = ComponentMappers.attributes.get(listener);
+    PositionComponent targetPosition = ComponentMappers.position.get(target);
+
+    return attributes.hearingMap[(int) targetPosition.pos.x][(int) targetPosition.pos.y] > 0;
   }
 
   /**

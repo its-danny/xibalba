@@ -38,6 +38,7 @@ public class WorldRenderer {
 
   // These get reused a ton
   private final Sprite shadow;
+  private final Sprite question;
 
   /**
    * Setup world renderer.
@@ -55,6 +56,7 @@ public class WorldRenderer {
     playerAttributes = ComponentMappers.attributes.get(WorldManager.player);
 
     shadow = Main.asciiAtlas.createSprite("1113");
+    question = Main.asciiAtlas.createSprite("1503");
   }
 
   /**
@@ -173,13 +175,17 @@ public class WorldRenderer {
         WorldManager.engine.getEntitiesFor(Family.all(EnemyComponent.class).get());
 
     for (Entity entity : entities) {
+      PositionComponent position = ComponentMappers.position.get(entity);
+
       if (Main.tweenManager.getRunningTimelinesCount() == 0) {
-        PositionComponent position = ComponentMappers.position.get(entity);
         WorldManager.entityHelpers.updateSpritePosition(entity, position.pos);
       }
 
       if (WorldManager.entityHelpers.isVisible(entity)) {
         ComponentMappers.visual.get(entity).sprite.draw(batch);
+      } else if (WorldManager.entityHelpers.canHear(WorldManager.player, entity)) {
+        question.setPosition(position.pos.x * Main.SPRITE_WIDTH, position.pos.y * Main.SPRITE_HEIGHT);
+        question.draw(batch);
       }
     }
   }
@@ -203,33 +209,37 @@ public class WorldRenderer {
   private void renderShadows() {
     for (int x = 0; x < playerAttributes.visionMap.length; x++) {
       for (int y = 0; y < playerAttributes.visionMap[0].length; y++) {
-        float minimum;
+        Entity enemy = WorldManager.mapHelpers.getEnemyAt(new Vector2(x, y));
 
-        switch (WorldManager.world.getCurrentMap().time.time) {
-          case DAWN:
-            minimum = .15f;
-            break;
-          case DAY:
-            minimum = .20f;
-            break;
-          case DUSK:
-            minimum = .15f;
-            break;
-          case NIGHT:
-            minimum = .10f;
-            break;
-          default:
-            minimum = .10f;
-            break;
+        // Sometimes we don't want shadows, like if you can hear an enemy
+        if (enemy == null || !WorldManager.entityHelpers.canHear(WorldManager.player, enemy)) {
+          float minimum;
+
+          switch (WorldManager.world.getCurrentMap().time.time) {
+            case DAWN:
+              minimum = .15f;
+              break;
+            case DAY:
+              minimum = .20f;
+              break;
+            case DUSK:
+              minimum = .15f;
+              break;
+            case NIGHT:
+              minimum = .10f;
+              break;
+            default:
+              minimum = .10f;
+              break;
+          }
+
+          float alpha = playerAttributes.visionMap[x][y] <= minimum ? minimum : playerAttributes.visionMap[x][y];
+
+          shadow.setColor(Colors.get(WorldManager.world.getCurrentMap().type + "Background"));
+          shadow.setAlpha(-alpha);
+          shadow.setPosition(x * Main.SPRITE_WIDTH, y * Main.SPRITE_HEIGHT);
+          shadow.draw(batch);
         }
-
-        float alpha = playerAttributes.visionMap[x][y] <= minimum ? minimum : playerAttributes.visionMap[x][y];
-
-        shadow.setColor(Colors.get(WorldManager.world.getCurrentMap().type + "Background"));
-        shadow.setAlpha(-alpha);
-        shadow.setPosition(x * Main.SPRITE_WIDTH, y * Main.SPRITE_HEIGHT);
-
-        shadow.draw(batch);
       }
     }
   }
