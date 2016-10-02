@@ -44,7 +44,7 @@ public class AttributesComponent implements Component {
     this.maxHealth = toughness * 10;
     this.maxOxygen = toughness * 4;
     this.vision = maxVision;
-    this.hearing = maxVision;
+    this.hearing = maxVision / 2;
     this.health = maxHealth;
     this.oxygen = maxOxygen;
   }

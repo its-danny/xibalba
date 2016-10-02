@@ -74,6 +74,7 @@ public class World {
     );
 
     WorldManager.state = WorldManager.State.PLAYING;
+    WorldManager.entityHelpers.updateSenses(WorldManager.player);
   }
 
   /**
@@ -96,5 +97,6 @@ public class World {
     );
 
     WorldManager.state = WorldManager.State.PLAYING;
+    WorldManager.entityHelpers.updateSenses(WorldManager.player);
   }
 }

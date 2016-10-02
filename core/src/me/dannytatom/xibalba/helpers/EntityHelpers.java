@@ -75,31 +75,28 @@ public class EntityHelpers {
 
     float[][] fovMap = WorldManager.mapHelpers.createFovMap();
 
-    attributes.visionMap = caster.calculateFov(
-        fovMap, (int) position.pos.x, (int) position.pos.y, attributes.vision
-    );
+    if (attributes.visionMap == null || attributes.visionMap[(int) position.pos.x][(int) position.pos.y] > 0) {
+      attributes.visionMap = caster.calculateFov(
+          fovMap, (int) position.pos.x, (int) position.pos.y, attributes.vision
+      );
+    }
 
-    if (attributes.hearing == attributes.vision) {
-      attributes.hearingMap = attributes.visionMap;
-    } else {
+    if (attributes.hearingMap == null || attributes.hearingMap[(int) position.pos.x][(int) position.pos.y] > 0) {
       attributes.hearingMap = caster.calculateFov(
           fovMap, (int) position.pos.x, (int) position.pos.y, attributes.hearing
       );
     }
   }
 
-  /**
-   * Uses light world to determine if they can see the player.
-   *
-   * @param entity who we checking
-   *
-   * @return Can they see the player?
-   */
-  public boolean canSeePlayer(Entity entity) {
-    AttributesComponent attributes = ComponentMappers.attributes.get(entity);
-    PositionComponent playerPosition = ComponentMappers.position.get(WorldManager.player);
+  public boolean canSee(Entity looker, Entity target) {
+    AttributesComponent attributes = ComponentMappers.attributes.get(looker);
+    PositionComponent targetPosition = ComponentMappers.position.get(target);
 
-    return attributes.visionMap[(int) playerPosition.pos.x][(int) playerPosition.pos.y] > 0;
+    return attributes.visionMap[(int) targetPosition.pos.x][(int) targetPosition.pos.y] > 0;
+  }
+
+  public boolean canSeePlayer(Entity entity) {
+    return canSee(entity, WorldManager.player);
   }
 
   public boolean canHear(Entity listener, Entity target) {
@@ -107,6 +104,14 @@ public class EntityHelpers {
     PositionComponent targetPosition = ComponentMappers.position.get(target);
 
     return attributes.hearingMap[(int) targetPosition.pos.x][(int) targetPosition.pos.y] > 0;
+  }
+
+  public boolean canHearPlayer(Entity entity) {
+    return canHear(entity, WorldManager.player);
+  }
+
+  public boolean canSensePlayer(Entity entity) {
+    return canSeePlayer(entity) || canHearPlayer(entity);
   }
 
   /**
