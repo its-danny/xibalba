@@ -20,6 +20,7 @@ import me.dannytatom.xibalba.components.InventoryComponent;
 import me.dannytatom.xibalba.components.ItemComponent;
 import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.SkillsComponent;
+import me.dannytatom.xibalba.components.defects.MyopiaComponent;
 import me.dannytatom.xibalba.components.defects.OneArmComponent;
 import me.dannytatom.xibalba.components.items.ItemEffectsComponent;
 import me.dannytatom.xibalba.components.traits.PerceptiveComponent;
@@ -278,6 +279,12 @@ public class CharacterScreen implements Screen {
     if (ComponentMappers.oneArm.has(WorldManager.player)) {
       traitsGroup.addActor(
           new Label("[RED]" + OneArmComponent.name + "\n[DARK_GRAY]" + WordUtils.wrap(OneArmComponent.description, 50), Main.skin)
+      );
+    }
+
+    if (ComponentMappers.myopia.has(WorldManager.player)) {
+      traitsGroup.addActor(
+          new Label("[RED]" + MyopiaComponent.name + "\n[DARK_GRAY]" + WordUtils.wrap(MyopiaComponent.description, 50), Main.skin)
       );
     }
 

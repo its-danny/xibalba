@@ -14,6 +14,7 @@ import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.SkillsComponent;
 import me.dannytatom.xibalba.components.VisualComponent;
+import me.dannytatom.xibalba.components.defects.MyopiaComponent;
 import me.dannytatom.xibalba.components.defects.OneArmComponent;
 import me.dannytatom.xibalba.components.traits.PerceptiveComponent;
 import me.dannytatom.xibalba.components.traits.ScoutComponent;
@@ -96,6 +97,14 @@ public class PlayerSetup {
       AttributesComponent attributes = ComponentMappers.attributes.get(player);
       attributes.maxHealth = MathUtils.ceil(attributes.maxHealth - (attributes.maxHealth * .20f));
       attributes.health = attributes.maxHealth;
+    }
+
+    if (defects.contains(MyopiaComponent.name, false)) {
+      player.add(new MyopiaComponent());
+
+      AttributesComponent attributes = ComponentMappers.attributes.get(player);
+      attributes.maxVision = 5;
+      attributes.vision = 5;
     }
 
     if (traits.contains(ScoutComponent.name, false)) {

@@ -22,6 +22,7 @@ import me.dannytatom.xibalba.components.actions.MovementComponent;
 import me.dannytatom.xibalba.components.actions.RangeComponent;
 import me.dannytatom.xibalba.components.ai.BrainComponent;
 import me.dannytatom.xibalba.components.ai.TargetComponent;
+import me.dannytatom.xibalba.components.defects.MyopiaComponent;
 import me.dannytatom.xibalba.components.defects.OneArmComponent;
 import me.dannytatom.xibalba.components.items.AmmunitionComponent;
 import me.dannytatom.xibalba.components.items.ItemEffectsComponent;
@@ -128,6 +129,9 @@ public final class ComponentMappers {
 
   public static final ComponentMapper<OneArmComponent> oneArm =
       ComponentMapper.getFor(OneArmComponent.class);
+
+  public static final ComponentMapper<MyopiaComponent> myopia =
+      ComponentMapper.getFor(MyopiaComponent.class);
 
   public static final ComponentMapper<ScoutComponent> scout =
       ComponentMapper.getFor(ScoutComponent.class);

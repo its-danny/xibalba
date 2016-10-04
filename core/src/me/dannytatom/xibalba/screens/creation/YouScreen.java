@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import me.dannytatom.xibalba.Main;
+import me.dannytatom.xibalba.components.defects.MyopiaComponent;
 import me.dannytatom.xibalba.components.defects.OneArmComponent;
 import me.dannytatom.xibalba.components.traits.PerceptiveComponent;
 import me.dannytatom.xibalba.components.traits.ScoutComponent;
@@ -351,6 +352,12 @@ public class YouScreen implements Screen {
             createDefectText(0, OneArmComponent.name, OneArmComponent.description, OneArmComponent.reward),
             Main.skin)
     );
+
+    defectsGroup.addActor(
+        new Label(
+            createDefectText(1, MyopiaComponent.name, MyopiaComponent.description, MyopiaComponent.reward),
+            Main.skin)
+    );
   }
 
   private void updateTraitsGroup() {
@@ -572,6 +579,13 @@ public class YouScreen implements Screen {
         }
 
         break;
+      case 1:
+        if (!playerSetup.defects.contains(MyopiaComponent.name, false)) {
+          playerSetup.defects.add(MyopiaComponent.name);
+          traitPoints += MyopiaComponent.reward;
+        }
+
+        break;
       default:
     }
   }
@@ -582,6 +596,13 @@ public class YouScreen implements Screen {
         if (playerSetup.defects.contains(OneArmComponent.name, false)) {
           playerSetup.defects.removeValue(OneArmComponent.name, false);
           traitPoints -= OneArmComponent.reward;
+        }
+
+        break;
+      case 1:
+        if (playerSetup.defects.contains(MyopiaComponent.name, false)) {
+          playerSetup.defects.removeValue(MyopiaComponent.name, false);
+          traitPoints -= MyopiaComponent.reward;
         }
 
         break;
