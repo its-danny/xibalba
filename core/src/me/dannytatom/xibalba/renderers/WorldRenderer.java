@@ -210,9 +210,10 @@ public class WorldRenderer {
     for (int x = 0; x < playerAttributes.visionMap.length; x++) {
       for (int y = 0; y < playerAttributes.visionMap[0].length; y++) {
         Entity enemy = WorldManager.mapHelpers.getEnemyAt(new Vector2(x, y));
+        MapCell cell = WorldManager.mapHelpers.getCell(x, y);
 
         // Sometimes we don't want shadows, like if you can hear an enemy
-        if (enemy == null || !WorldManager.entityHelpers.canHear(WorldManager.player, enemy)) {
+        if (cell.hidden || enemy == null || !WorldManager.entityHelpers.canHear(WorldManager.player, enemy)) {
           float minimum;
 
           switch (WorldManager.world.getCurrentMap().time.time) {
