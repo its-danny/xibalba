@@ -309,13 +309,17 @@ public class MapHelpers {
    * @return The enemy
    */
   public Entity getEnemyAt(Vector2 position) {
+    return getEnemyAt((int) position.x, (int) position.y);
+  }
+
+  public Entity getEnemyAt(int cellX, int cellY) {
     ImmutableArray<Entity> entities =
         WorldManager.engine.getEntitiesFor(Family.all(EnemyComponent.class).get());
 
     for (Entity entity : entities) {
       PositionComponent entityPosition = ComponentMappers.position.get(entity);
 
-      if (entityPosition.pos.epsilonEquals(position, 0.00001f)) {
+      if (entityPosition.pos.x == cellX && entityPosition.pos.y == cellY) {
         return entity;
       }
     }

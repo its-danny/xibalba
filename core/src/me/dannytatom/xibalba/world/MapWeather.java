@@ -32,7 +32,6 @@ public class MapWeather {
     splash = Main.asciiAtlas.createSprite("0900");
     splash.setColor(Colors.get("CYAN"));
     fading = Main.asciiAtlas.createSprite("0700");
-    fading.setAlpha(0.5f);
   }
 
   public void update(float delta) {

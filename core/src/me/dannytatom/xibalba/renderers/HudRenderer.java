@@ -211,11 +211,11 @@ public class HudRenderer {
   }
 
   private void updateDebugInfo() {
-    String playerInfo = "[DARK_GRAY]Depth " + (WorldManager.world.currentMapIndex + 1)
+    String playerInfo = "[DARK_GRAY]" + WorldManager.world.getCurrentMap().time.time.toString()
+        + ", Depth " + (WorldManager.world.currentMapIndex + 1)
         + ", Turn " + WorldManager.turnCount
         + ", " + (int) playerPosition.pos.x + ":" + (int) playerPosition.pos.y;
-    String performanceInfo = "[DARK_GRAY]v0.1.0 FPS " + Gdx.graphics.getFramesPerSecond() + ", "
-        + WorldManager.engine.getEntities().size() + " entities";
+    String performanceInfo = "[DARK_GRAY]v0.1.0 FPS " + Gdx.graphics.getFramesPerSecond();
 
     if (debugInfo.getChildren().size == 0) {
       debugInfo.addActor(new Label(playerInfo, Main.skin));

@@ -207,42 +207,33 @@ public class WorldRenderer {
   }
 
   private void renderShadows() {
-    for (int x = 0; x < playerAttributes.visionMap.length; x++) {
-      for (int y = 0; y < playerAttributes.visionMap[0].length; y++) {
-        Entity enemy = WorldManager.mapHelpers.getEnemyAt(new Vector2(x, y));
+    Map map = WorldManager.world.getCurrentMap();
+
+    for (int x = 0; x < map.width - 1; x++) {
+      for (int y = 0; y < map.height - 1; y++) {
         MapCell cell = WorldManager.mapHelpers.getCell(x, y);
 
-        // Sometimes we don't want shadows, like if you can hear an enemy
-        if (cell.hidden || enemy == null || !WorldManager.entityHelpers.canHear(WorldManager.player, enemy)) {
-          float minimum;
-
-          switch (WorldManager.world.getCurrentMap().time.time) {
-            case DAWN:
-              minimum = .15f;
-              break;
-            case DAY:
-              minimum = .20f;
-              break;
-            case DUSK:
-              minimum = .15f;
-              break;
-            case NIGHT:
-              minimum = .10f;
-              break;
-            default:
-              minimum = .10f;
-              break;
-          }
-
-          float alpha = playerAttributes.visionMap[x][y] <= minimum
-              ? minimum : playerAttributes.visionMap[x][y];
-
-          shadow.setColor(Colors.get(WorldManager.world.getCurrentMap().type + "Background"));
-          shadow.setAlpha(-alpha);
-          shadow.setPosition(x * Main.SPRITE_WIDTH, y * Main.SPRITE_HEIGHT);
-
-          shadow.draw(batch);
+        if (cell.hidden) {
+          continue;
         }
+
+        Entity enemy = WorldManager.mapHelpers.getEnemyAt(x, y);
+
+        boolean canHearEnemy = ComponentMappers.perceptive.has(WorldManager.player)
+            && enemy != null && WorldManager.entityHelpers.canHear(WorldManager.player, enemy);
+
+        if (canHearEnemy) {
+          continue;
+        }
+
+        float alpha = playerAttributes.visionMap[x][y] <= map.time.shadow
+            ? map.time.shadow : playerAttributes.visionMap[x][y];
+
+        shadow.setColor(Colors.get(WorldManager.world.getCurrentMap().type + "Background"));
+        shadow.setAlpha(-alpha);
+        shadow.setPosition(x * Main.SPRITE_WIDTH, y * Main.SPRITE_HEIGHT);
+
+        shadow.draw(batch);
       }
     }
   }
