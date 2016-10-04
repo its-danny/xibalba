@@ -11,6 +11,7 @@ import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.utils.SpriteAccessor;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 public class Map {
   public final int width;
@@ -87,8 +88,8 @@ public class Map {
     for (int x = 0; x < geometry.length; x++) {
       for (int y = 0; y < geometry[x].length; y++) {
         if (geometry[x][y] == MapCell.Type.FLOOR) {
-          Sprite floor = Main.asciiAtlas.createSprite("0011");
-          floor.setColor(Colors.get("caveFloor"));
+          Sprite floor = Main.asciiAtlas.createSprite("0915");
+          floor.setColor(Colors.get("caveFloor-" + + MathUtils.random(1, 3)));
           map[x][y] = new MapCell(floor, MapCell.Type.FLOOR, "a cave floor");
         } else {
           int neighbours = getGroundNeighbours(x, y);
@@ -136,18 +137,18 @@ public class Map {
           Sprite water = Main.asciiAtlas.createSprite("0715");
           water.setPosition(x * Main.SPRITE_WIDTH, y * Main.SPRITE_HEIGHT);
 
-          MapCell.Type type;
+          MapCell.Type waterType;
           Color lightColor;
           Color darkColor;
 
           if (getGroundNeighbours(x, y) < 8) {
-            type = MapCell.Type.SHALLOW_WATER;
-            lightColor = Colors.get("CYAN");
-            darkColor = Colors.get("DARK_CYAN");
+            waterType = MapCell.Type.SHALLOW_WATER;
+            lightColor = Colors.get(Objects.equals(type, "forest") ? "waterShallowLightBlue" : "waterShallowLightGreen");
+            darkColor = Colors.get(Objects.equals(type, "forest") ? "waterShallowDarkBlue" : "waterShallowDarkGreen");
           } else {
-            type = MapCell.Type.DEEP_WATER;
-            lightColor = Colors.get("DARK_CYAN");
-            darkColor = Colors.get("DARKER_CYAN");
+            waterType = MapCell.Type.DEEP_WATER;
+            lightColor = Colors.get(Objects.equals(type, "forest") ? "waterDeepLightBlue" : "waterDeepLightGreen");
+            darkColor = Colors.get(Objects.equals(type, "forest") ? "waterDeepDarkBlue" : "waterDeepDarkGreen");
           }
 
           water.setColor(lightColor);
@@ -155,7 +156,7 @@ public class Map {
               darkColor.r, darkColor.g, darkColor.b
           ).repeatYoyo(Tween.INFINITY, MathUtils.random());
 
-          map[x][y] = new MapCell(water, type, "water", tween);
+          map[x][y] = new MapCell(water, waterType, "water", tween);
         }
       }
     }

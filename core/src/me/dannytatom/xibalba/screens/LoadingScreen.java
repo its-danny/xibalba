@@ -185,6 +185,12 @@ public class LoadingScreen implements Screen {
       WorldManager.world.getMap(mapIndex).exit = WorldManager.mapHelpers.getRandomOpenPosition();
     }
 
+    // Spawn player on first
+    if (mapIndex == 0) {
+      WorldManager.player = playerSetup.create();
+      WorldManager.world.entities.get(WorldManager.world.currentMapIndex).add(WorldManager.player);
+    }
+
     // Traps
     for (int i = 0; i < level.traps.size; i++) {
       HashMap<String, String> trap = level.traps.get(i);
@@ -227,12 +233,6 @@ public class LoadingScreen implements Screen {
                 WorldManager.mapHelpers.getRandomOpenPosition(mapIndex))
         );
       }
-    }
-
-    // Spawn player on first
-    if (mapIndex == 0) {
-      WorldManager.player = playerSetup.create();
-      WorldManager.world.entities.get(WorldManager.world.currentMapIndex).add(WorldManager.player);
     }
 
     // Other things

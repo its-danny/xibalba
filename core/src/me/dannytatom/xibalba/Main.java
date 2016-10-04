@@ -16,7 +16,6 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.esotericsoftware.kryo.Kryo;
 import me.dannytatom.xibalba.screens.MainMenuScreen;
 import me.dannytatom.xibalba.utils.CameraShake;
 import me.dannytatom.xibalba.utils.SoundManager;
@@ -96,8 +95,6 @@ public class Main extends Game {
     Colors.put("LIGHT_GRAY", parseColor("c2c2c2"));
     Colors.put("DARK_GRAY", parseColor("666666"));
     Colors.put("CYAN", parseColor("67C8CF"));
-    Colors.put("DARK_CYAN", parseColor("139EA8"));
-    Colors.put("DARKER_CYAN", parseColor("0B7880"));
     Colors.put("RED", parseColor("D67474"));
     Colors.put("YELLOW", parseColor("E0DFB1"));
     Colors.put("GREEN", parseColor("67CF8B"));
@@ -108,9 +105,22 @@ public class Main extends Game {
     Colors.put("forestTree-1", parseColor("67CF8B"));
     Colors.put("forestTree-2", parseColor("77E09B"));
     Colors.put("forestTree-3", parseColor("4AC775"));
-    Colors.put("caveFloor", parseColor("4D4D4D"));
-    Colors.put("caveFloorWet", parseColor("5A8B8E"));
-    Colors.put("caveWall", parseColor("424242"));
+
+    Colors.put("caveFloor-1", parseColor("7A7971"));
+    Colors.put("caveFloor-2", parseColor("8C8B82"));
+    Colors.put("caveFloor-3", parseColor("696862"));
+    Colors.put("caveFloorWet", parseColor("71A48E"));
+    Colors.put("caveWall", parseColor("66655C"));
+
+    Colors.put("waterShallowLightBlue", parseColor("67C8CF"));
+    Colors.put("waterShallowDarkBlue", parseColor("139EA8"));
+    Colors.put("waterDeepLightBlue", parseColor("139EA8"));
+    Colors.put("waterDeepDarkBlue", parseColor("0B7880"));
+
+    Colors.put("waterShallowLightGreen", parseColor("67CFAB"));
+    Colors.put("waterShallowDarkGreen", parseColor("13A88F"));
+    Colors.put("waterDeepLightGreen", parseColor("13A88F"));
+    Colors.put("waterDeepDarkGreen", parseColor("0B8074"));
 
     // Decoration colors
     Colors.put("remains", Colors.get("RED"));
