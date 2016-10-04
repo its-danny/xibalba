@@ -17,7 +17,7 @@ public class Map {
   public final String type;
   public final MapCell.Type[][] geometry;
   public final MapTime time;
-  public final MapWeather weather;
+  public MapWeather weather;
   private MapCell[][] map;
   private MapCell.Type[][] flooded;
   private int floodedCount = 0;
@@ -35,7 +35,6 @@ public class Map {
     this.height = this.geometry[0].length;
 
     this.time = new MapTime();
-    this.weather = new MapWeather();
   }
 
   public void paint() {

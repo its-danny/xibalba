@@ -227,8 +227,9 @@ public class EntityFactory {
     return entity;
   }
 
-  public Entity createRainDrop(Vector2 position) {
+  public Entity createRainDrop() {
     Entity entity = new Entity();
+    Vector2 position = new Vector2(0, 0);
 
     entity.add(new DecorationComponent(false));
     entity.add(new RainDropComponent());

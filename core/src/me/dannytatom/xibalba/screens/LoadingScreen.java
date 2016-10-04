@@ -19,12 +19,14 @@ import me.dannytatom.xibalba.utils.JsonToLevel;
 import me.dannytatom.xibalba.utils.PlayerSetup;
 import me.dannytatom.xibalba.utils.SoundManager;
 import me.dannytatom.xibalba.world.Map;
+import me.dannytatom.xibalba.world.MapWeather;
 import me.dannytatom.xibalba.world.WorldManager;
 import me.dannytatom.xibalba.world.generators.CaveGenerator;
 import me.dannytatom.xibalba.world.generators.ForestGenerator;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 
 public class LoadingScreen implements Screen {
   private final Main main;
@@ -236,6 +238,11 @@ public class LoadingScreen implements Screen {
                 WorldManager.mapHelpers.getRandomOpenPosition(mapIndex))
         );
       }
+    }
+
+    // Other things
+    if (Objects.equals(level.type, "forest")) {
+      WorldManager.world.getMap(mapIndex).weather = new MapWeather(mapIndex);
     }
   }
 

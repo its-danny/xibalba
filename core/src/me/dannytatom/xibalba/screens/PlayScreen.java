@@ -81,7 +81,9 @@ class PlayScreen implements Screen {
     keyHoldTimer += delta;
 
     // Weather!
-    WorldManager.world.getCurrentMap().weather.update(delta);
+    if (WorldManager.world.getCurrentMap().weather != null) {
+      WorldManager.world.getCurrentMap().weather.update(delta);
+    }
 
     // Keep moving if a key is held down
     if (playerInput.keyHeld != -1) {

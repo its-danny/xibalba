@@ -234,11 +234,13 @@ public class WorldRenderer {
               break;
           }
 
-          float alpha = playerAttributes.visionMap[x][y] <= minimum ? minimum : playerAttributes.visionMap[x][y];
+          float alpha = playerAttributes.visionMap[x][y] <= minimum
+              ? minimum : playerAttributes.visionMap[x][y];
 
           shadow.setColor(Colors.get(WorldManager.world.getCurrentMap().type + "Background"));
           shadow.setAlpha(-alpha);
           shadow.setPosition(x * Main.SPRITE_WIDTH, y * Main.SPRITE_HEIGHT);
+
           shadow.draw(batch);
         }
       }
