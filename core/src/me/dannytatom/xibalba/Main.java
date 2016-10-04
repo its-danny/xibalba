@@ -30,7 +30,6 @@ public class Main extends Game {
   public static TextureAtlas asciiAtlas;
   public static Skin skin;
   public static Screen playScreen;
-  private static Kryo kryo;
   public static TweenManager tweenManager;
   public static SoundManager soundManager;
   public static CameraShake cameraShake;
@@ -92,9 +91,6 @@ public class Main extends Game {
     skin.addRegions(new TextureAtlas(Gdx.files.internal("ui/uiskin.atlas")));
     skin.load(Gdx.files.internal("ui/uiskin.json"));
     skin.getFont("default-font").getData().markupEnabled = true;
-
-    // Kryo
-    kryo = new Kryo();
 
     // Setup text colors
     Colors.put("LIGHT_GRAY", parseColor("c2c2c2"));

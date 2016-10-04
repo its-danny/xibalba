@@ -75,17 +75,13 @@ public class EntityHelpers {
 
     float[][] fovMap = WorldManager.mapHelpers.createFovMap();
 
-    if (attributes.visionMap == null || attributes.visionMap[(int) position.pos.x][(int) position.pos.y] > 0) {
-      attributes.visionMap = caster.calculateFov(
-          fovMap, (int) position.pos.x, (int) position.pos.y, attributes.vision
-      );
-    }
+    attributes.visionMap = caster.calculateFov(
+        fovMap, (int) position.pos.x, (int) position.pos.y, attributes.vision
+    );
 
-    if (attributes.hearingMap == null || attributes.hearingMap[(int) position.pos.x][(int) position.pos.y] > 0) {
-      attributes.hearingMap = caster.calculateFov(
-          fovMap, (int) position.pos.x, (int) position.pos.y, attributes.hearing
-      );
-    }
+    attributes.hearingMap = caster.calculateFov(
+        fovMap, (int) position.pos.x, (int) position.pos.y, attributes.hearing
+    );
   }
 
   public boolean canSee(Entity looker, Entity target) {

@@ -2,8 +2,8 @@
   {
     "type": "forest",
     "size": {
-      "width": "150,200",
-      "height": "100,200"
+      "width": "100,200",
+      "height": "100,150"
     },
     "enemies": [
       { "name": "spiderMonkey", "spawnRange": "8,12"},

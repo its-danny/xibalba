@@ -378,42 +378,6 @@ public class MapHelpers {
   }
 
   /**
-   * Get position of entrance.
-   *
-   * @return The position
-   */
-  public Vector2 getEntrancePosition() {
-    ImmutableArray<Entity> entrances =
-        WorldManager.engine.getEntitiesFor(Family.all(EntranceComponent.class).get());
-
-    if (entrances.size() > 0) {
-      PositionComponent position = ComponentMappers.position.get(entrances.first());
-
-      return position.pos;
-    }
-
-    return getRandomOpenPosition(WorldManager.world.currentMapIndex);
-  }
-
-  /**
-   * Get position of exit.
-   *
-   * @return The position
-   */
-  public Vector2 getExitPosition() {
-    ImmutableArray<Entity> exits =
-        WorldManager.engine.getEntitiesFor(Family.all(ExitComponent.class).get());
-
-    if (exits.size() > 0) {
-      PositionComponent position = ComponentMappers.position.get(exits.first());
-
-      return position.pos;
-    }
-
-    return getRandomOpenPosition(WorldManager.world.currentMapIndex);
-  }
-
-  /**
    * Returns an open position near the given position. TODO: Make this less retarded.
    *
    * @return An open position

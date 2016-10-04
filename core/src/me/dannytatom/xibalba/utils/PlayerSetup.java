@@ -71,7 +71,7 @@ public class PlayerSetup {
     player.add(skills);
     player.add(attributes);
 
-    Vector2 position = WorldManager.mapHelpers.getEntrancePosition();
+    Vector2 position = WorldManager.world.getCurrentMap().entrance;
     player.add(new PositionComponent(position));
     player.add(new VisualComponent(Main.asciiAtlas.createSprite("0004"), position));
     player.add(new PlayerComponent());
@@ -112,8 +112,6 @@ public class PlayerSetup {
       AttributesComponent attributes = ComponentMappers.attributes.get(player);
       attributes.hearing = attributes.vision * 2;
     }
-
-    WorldManager.entityHelpers.updateSenses(player);
 
     return player;
   }

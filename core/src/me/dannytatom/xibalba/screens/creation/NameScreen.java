@@ -111,7 +111,7 @@ class NameScreen implements Screen {
     String playerName = playerNameField.getText();
     playerSetup.name = Objects.equals(playerName, "") ? playerSetup.name : playerName;
 
-    main.setScreen(new LoadingScreen(main, true, playerSetup));
+    main.setScreen(new LoadingScreen(main, playerSetup));
   }
 
   @Override

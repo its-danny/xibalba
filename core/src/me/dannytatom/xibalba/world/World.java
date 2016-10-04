@@ -1,15 +1,19 @@
 package me.dannytatom.xibalba.world;
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.components.MouseMovementComponent;
 import me.dannytatom.xibalba.components.PlayerComponent;
+import me.dannytatom.xibalba.screens.PlayScreen;
 import me.dannytatom.xibalba.utils.ComponentMappers;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class World {
+  private Main main;
   public final ArrayList<Map> maps;
   public final HashMap<Integer, Array<Entity>> entities;
   public int currentMapIndex = 0;
@@ -43,20 +47,29 @@ public class World {
   /**
    * Setup starting level.
    */
-  public void setup() {
+  public void setup(Main main) {
+    this.main = main;
+
     for (Entity entity : entities.get(currentMapIndex)) {
       WorldManager.engine.addEntity(entity);
+
+      if (ComponentMappers.attributes.has(entity)) {
+        WorldManager.entityHelpers.updateSenses(entity);
+      }
     }
+
+    Main.playScreen = new PlayScreen(main);
+    main.setScreen(Main.playScreen);
   }
 
-  /**
-   * Go down a level.
-   */
-  public void goDown() {
-    entities.get(currentMapIndex + 1).add(WorldManager.player);
-    entities.get(currentMapIndex).removeValue(WorldManager.player, true);
+  public void changeDepth(int change) {
+    Main.playScreen.dispose();
+    main.setScreen(null);
 
-    currentMapIndex += 1;
+    entities.get(currentMapIndex).removeValue(WorldManager.player, true);
+    entities.get(currentMapIndex + change).add(WorldManager.player);
+
+    currentMapIndex += change;
 
     PlayerComponent playerDetails = ComponentMappers.player.get(WorldManager.player);
     if (currentMapIndex > playerDetails.lowestDepth) {
@@ -64,39 +77,41 @@ public class World {
     }
 
     WorldManager.engine.removeAllEntities();
+
     for (Entity entity : entities.get(currentMapIndex)) {
       WorldManager.engine.addEntity(entity);
+
+      if (ComponentMappers.attributes.has(entity)) {
+        if (ComponentMappers.player.has(entity)) {
+          entity.remove(MouseMovementComponent.class);
+
+          Vector2 position = change > 0
+              ? WorldManager.world.getCurrentMap().entrance
+              : WorldManager.world.getCurrentMap().exit;
+
+          WorldManager.entityHelpers.updatePosition(entity, position);
+          WorldManager.entityHelpers.updateSpritePosition(entity, position);
+        }
+
+        WorldManager.entityHelpers.updateSenses(entity);
+      }
     }
 
-    WorldManager.player.remove(MouseMovementComponent.class);
-    WorldManager.entityHelpers.updatePosition(
-        WorldManager.player, WorldManager.mapHelpers.getEntrancePosition()
-    );
+    Main.playScreen = new PlayScreen(main);
+    main.setScreen(Main.playScreen);
+  }
 
-    WorldManager.state = WorldManager.State.PLAYING;
-    WorldManager.entityHelpers.updateSenses(WorldManager.player);
+  /**
+   * Go down a level.
+   */
+  public void goDown() {
+    changeDepth(1);
   }
 
   /**
    * Go up a level.
    */
   public void goUp() {
-    entities.get(currentMapIndex - 1).add(WorldManager.player);
-    entities.get(currentMapIndex).removeValue(WorldManager.player, true);
-
-    currentMapIndex -= 1;
-
-    WorldManager.engine.removeAllEntities();
-    for (Entity entity : entities.get(currentMapIndex)) {
-      WorldManager.engine.addEntity(entity);
-    }
-
-    WorldManager.player.remove(MouseMovementComponent.class);
-    WorldManager.entityHelpers.updatePosition(
-        WorldManager.player, WorldManager.mapHelpers.getExitPosition()
-    );
-
-    WorldManager.state = WorldManager.State.PLAYING;
-    WorldManager.entityHelpers.updateSenses(WorldManager.player);
+    changeDepth(-1);
   }
 }

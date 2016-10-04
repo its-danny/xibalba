@@ -99,8 +99,12 @@ public class WorldRenderer {
         if (!cell.hidden) {
           cell.forgotten = playerAttributes.visionMap[x][y] <= 0;
 
-          if (WorldManager.mapHelpers.getEntitiesAt(new Vector2(x, y)).size() == 0) {
+          if (cell.forgotten) {
             cell.sprite.draw(batch);
+          } else {
+            if (WorldManager.mapHelpers.getEntitiesAt(new Vector2(x, y)).size() == 0) {
+              cell.sprite.draw(batch);
+            }
           }
         }
       }

@@ -17,7 +17,7 @@ import me.dannytatom.xibalba.renderers.WorldRenderer;
 import me.dannytatom.xibalba.utils.ComponentMappers;
 import me.dannytatom.xibalba.world.WorldManager;
 
-class PlayScreen implements Screen {
+public class PlayScreen implements Screen {
 
   private final WorldRenderer worldRenderer;
   private final HudRenderer hudRenderer;
@@ -44,9 +44,6 @@ class PlayScreen implements Screen {
     // Setup camera;
     OrthographicCamera worldCamera = new OrthographicCamera();
 
-    // World setup
-    WorldManager.world.setup();
-
     // Setup renderers
     worldRenderer = new WorldRenderer(worldCamera, batch);
     hudRenderer = new HudRenderer(main, batch);
@@ -62,8 +59,6 @@ class PlayScreen implements Screen {
 
     // Change state to playing
     WorldManager.state = WorldManager.State.PLAYING;
-
-    Gdx.app.log("PlayScreen", "Game Started");
   }
 
   @Override
@@ -117,15 +112,6 @@ class PlayScreen implements Screen {
       WorldManager.executeTurn = false;
     }
 
-    // Check if going up or down levels
-    if (WorldManager.state == WorldManager.State.GOING_DOWN) {
-      WorldManager.world.goDown();
-      WorldManager.state = WorldManager.State.PLAYING;
-    } else if (WorldManager.state == WorldManager.State.GOING_UP) {
-      WorldManager.world.goUp();
-      WorldManager.state = WorldManager.State.PLAYING;
-    }
-
     // Start tweens
     if (WorldManager.tweens.size > 0) {
       WorldManager.state = WorldManager.State.WAITING;
@@ -145,15 +131,22 @@ class PlayScreen implements Screen {
       ).start(Main.tweenManager);
     }
 
+    // Check if going up or down levels
+    if (WorldManager.state == WorldManager.State.GOING_DOWN) {
+      WorldManager.world.goDown();
+    } else if (WorldManager.state == WorldManager.State.GOING_UP) {
+      WorldManager.world.goUp();
+    } else {
+      Main.tweenManager.update(delta);
+
+      worldRenderer.render(delta);
+      hudRenderer.render(delta);
+    }
+
     // Check player health for DEATH
     if (playerAttributes.health <= 0) {
       WorldManager.state = WorldManager.State.DEAD;
     }
-
-    Main.tweenManager.update(delta);
-
-    worldRenderer.render(delta);
-    hudRenderer.render(delta);
   }
 
   @Override

@@ -35,7 +35,6 @@ public class PauseScreen implements Screen {
     ActionButton mainMenuButton = new ActionButton("M", "Main Menu");
     mainMenuButton.setKeys(Input.Keys.M);
     mainMenuButton.setAction(table, () -> {
-      save();
       Main.playScreen.dispose();
       main.setScreen(new MainMenuScreen(main));
     });
@@ -43,7 +42,6 @@ public class PauseScreen implements Screen {
     ActionButton quitButton = new ActionButton("Q", "Quit");
     quitButton.setKeys(Input.Keys.Q);
     quitButton.setAction(table, () -> {
-      save();
       Gdx.app.exit();
     });
 
@@ -82,12 +80,6 @@ public class PauseScreen implements Screen {
   @Override
   public void resize(int width, int height) {
     stage.getViewport().update(width, height, true);
-  }
-
-  private void save() {
-    Output output = new Output(Gdx.files.local("save").write(false));
-    // TODO: Save
-    output.close();
   }
 
   @Override

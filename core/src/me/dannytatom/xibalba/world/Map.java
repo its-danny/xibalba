@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Colors;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.utils.SpriteAccessor;
@@ -16,6 +17,8 @@ public class Map {
   public final int height;
   public final String type;
   public final MapCell.Type[][] geometry;
+  public Vector2 entrance;
+  public Vector2 exit;
   public final MapTime time;
   public MapWeather weather;
   private MapCell[][] map;

@@ -1,5 +1,6 @@
 package me.dannytatom.xibalba.screens;
 
+import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Sound;
@@ -13,8 +14,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.esotericsoftware.kryo.io.Input;
 import me.dannytatom.xibalba.Main;
+import me.dannytatom.xibalba.utils.ComponentMappers;
 import me.dannytatom.xibalba.utils.JsonToLevel;
 import me.dannytatom.xibalba.utils.PlayerSetup;
 import me.dannytatom.xibalba.utils.SoundManager;
@@ -30,7 +31,6 @@ import java.util.Objects;
 
 public class LoadingScreen implements Screen {
   private final Main main;
-  private final boolean newGame;
   private final Stage stage;
   private final Label label;
   private final PlayerSetup playerSetup;
@@ -41,9 +41,8 @@ public class LoadingScreen implements Screen {
    *
    * @param main Instance of main class
    */
-  public LoadingScreen(Main main, boolean newGame, PlayerSetup playerSetup) {
+  public LoadingScreen(Main main, PlayerSetup playerSetup) {
     this.main = main;
-    this.newGame = newGame;
     this.playerSetup = playerSetup;
 
     stage = new Stage(new FitViewport(960, 540));
@@ -80,20 +79,10 @@ public class LoadingScreen implements Screen {
 
       WorldManager.setup();
 
-      if (newGame) {
-        if (!generating) {
-          generateWorld();
+      if (!generating) {
+        generateWorld();
 
-          Main.playScreen = new PlayScreen(main);
-          main.setScreen(Main.playScreen);
-        }
-      } else {
-        Input input = new Input(Gdx.files.local("save").read());
-        // TODO: Load
-        input.close();
-
-        Main.playScreen = new PlayScreen(main);
-        main.setScreen(Main.playScreen);
+        WorldManager.world.setup(main);
       }
     }
 
@@ -176,24 +165,24 @@ public class LoadingScreen implements Screen {
   private void spawnShit(JsonToLevel level, int mapIndex, boolean isLast) {
     WorldManager.world.entities.put(mapIndex, new Array<>());
 
-    // Spawn player on first
-    if (mapIndex == 0) {
-      WorldManager.player = playerSetup.create();
-      WorldManager.world.entities.get(WorldManager.world.currentMapIndex).add(WorldManager.player);
-    }
-
     // Spawn an entrance on every level but first
     if (mapIndex > 0) {
-      WorldManager.world.entities.get(mapIndex).add(
-          WorldManager.entityFactory.createEntrance(mapIndex)
-      );
+      Entity entrance = WorldManager.entityFactory.createEntrance(mapIndex);
+
+      WorldManager.world.entities.get(mapIndex).add(entrance);
+      WorldManager.world.getMap(mapIndex).entrance = ComponentMappers.position.get(entrance).pos;
+    } else {
+      WorldManager.world.getMap(mapIndex).entrance = WorldManager.mapHelpers.getRandomOpenPosition();
     }
 
     // Spawn an exit on every level but last
     if (!isLast) {
-      WorldManager.world.entities.get(mapIndex).add(
-          WorldManager.entityFactory.createExit(mapIndex)
-      );
+      Entity exit = WorldManager.entityFactory.createExit(mapIndex);
+
+      WorldManager.world.entities.get(mapIndex).add(exit);
+      WorldManager.world.getMap(mapIndex).exit = ComponentMappers.position.get(exit).pos;
+    } else {
+      WorldManager.world.getMap(mapIndex).exit = WorldManager.mapHelpers.getRandomOpenPosition();
     }
 
     // Traps
@@ -238,6 +227,12 @@ public class LoadingScreen implements Screen {
                 WorldManager.mapHelpers.getRandomOpenPosition(mapIndex))
         );
       }
+    }
+
+    // Spawn player on first
+    if (mapIndex == 0) {
+      WorldManager.player = playerSetup.create();
+      WorldManager.world.entities.get(WorldManager.world.currentMapIndex).add(WorldManager.player);
     }
 
     // Other things
