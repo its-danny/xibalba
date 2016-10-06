@@ -1,0 +1,25 @@
+---
+name: Anaconda
+description: Although the name applies to a group of snakes, it is often used to refer only to one
+  species in particular, the common or green anaconda (Eunectes murinus) which is the largest
+  snake in the world by weight, and the second longest.
+
+visual:
+  character: "0501"
+  color: DDE6CC
+
+attributes:
+  speed: 100
+  vision: 10
+  hearing: 10
+  toughness: 6
+  strength: 8
+  agility: 12
+
+bodyParts:
+  body: 6
+
+brain:
+  personalities:
+    - SOLO
+    - AGGRESSIVE

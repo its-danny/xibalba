@@ -1,0 +1,30 @@
+---
+name: Sloth
+description: Sloths are classified as folivores, as the bulk of their diets consist of buds,
+  tender shoots, and leaves, mainly of Cecropia trees. Some two-toed sloths have been documented
+  as eating insects, small reptiles, and birds as a small supplement to their diets.
+
+visual:
+  character: "0307"
+  color: EBE8DD
+
+attributes:
+  speed: 20
+  vision: 10
+  hearing: 10
+  toughness: 6
+  strength: 4
+  agility: 4
+
+bodyParts:
+  head: 8
+  body: 6
+  left arm: 8
+  right arm: 8
+  left leg: 6
+  right leg: 6
+
+brain:
+  personalities:
+    - SOLO
+    - PASSIVE
