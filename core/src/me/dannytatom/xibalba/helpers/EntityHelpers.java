@@ -85,6 +85,10 @@ public class EntityHelpers {
   }
 
   public boolean canSee(Entity looker, Entity target) {
+    if (target == null) {
+      return false;
+    }
+
     AttributesComponent attributes = ComponentMappers.attributes.get(looker);
     PositionComponent targetPosition = ComponentMappers.position.get(target);
 

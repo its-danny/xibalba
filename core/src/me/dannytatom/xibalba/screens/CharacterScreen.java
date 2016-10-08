@@ -18,7 +18,6 @@ import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.EquipmentComponent;
 import me.dannytatom.xibalba.components.InventoryComponent;
 import me.dannytatom.xibalba.components.ItemComponent;
-import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.SkillsComponent;
 import me.dannytatom.xibalba.components.defects.MyopiaComponent;
 import me.dannytatom.xibalba.components.defects.OneArmComponent;
@@ -654,12 +653,8 @@ public class CharacterScreen implements Screen {
     throwButton.setAction(table, () -> {
       if (itemActionGroup.getChildren().contains(throwButton, true)) {
         ComponentMappers.item.get(inventory.items.get(itemSelected)).throwing = true;
-        PlayerComponent player = ComponentMappers.player.get(WorldManager.player);
 
-        player.target = null;
-        player.path = null;
-
-        WorldManager.state = WorldManager.State.TARGETING;
+        WorldManager.inputHelpers.startTargeting();
 
         main.setScreen(Main.playScreen);
       }

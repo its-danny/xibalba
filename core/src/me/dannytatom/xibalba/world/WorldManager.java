@@ -7,6 +7,7 @@ import com.badlogic.gdx.utils.Array;
 import me.dannytatom.xibalba.ActionLog;
 import me.dannytatom.xibalba.helpers.CombatHelpers;
 import me.dannytatom.xibalba.helpers.EntityHelpers;
+import me.dannytatom.xibalba.helpers.InputHelpers;
 import me.dannytatom.xibalba.helpers.ItemHelpers;
 import me.dannytatom.xibalba.helpers.MapHelpers;
 import me.dannytatom.xibalba.systems.AttributesSystem;
@@ -34,6 +35,7 @@ public class WorldManager {
   public static State state;
   public static Array<Tween> tweens;
   public static EntityFactory entityFactory;
+  public static InputHelpers inputHelpers;
   public static MapHelpers mapHelpers;
   public static CombatHelpers combatHelpers;
   public static EntityHelpers entityHelpers;
@@ -52,6 +54,7 @@ public class WorldManager {
     tweens = new Array<>();
 
     entityFactory = new EntityFactory();
+    inputHelpers = new InputHelpers();
     mapHelpers = new MapHelpers();
     entityHelpers = new EntityHelpers();
     itemHelpers = new ItemHelpers();

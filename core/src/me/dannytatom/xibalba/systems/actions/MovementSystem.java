@@ -3,6 +3,7 @@ package me.dannytatom.xibalba.systems.actions;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import me.dannytatom.xibalba.components.AttributesComponent;
+import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.VisualComponent;
 import me.dannytatom.xibalba.components.actions.MovementComponent;
@@ -74,5 +75,11 @@ public class MovementSystem extends UsesEnergySystem {
     );
 
     WorldManager.entityHelpers.updateSenses(entity);
+
+    PlayerComponent playerDetails = ComponentMappers.player.get(WorldManager.player);
+
+    if (!WorldManager.entityHelpers.canSee(WorldManager.player, playerDetails.lastHitEntity)) {
+      playerDetails.lastHitEntity = null;
+    }
   }
 }

@@ -47,7 +47,7 @@ PlayerInput implements InputProcessor {
         if (WorldManager.state == WorldManager.State.PLAYING) {
           handleMovement(attributes.energy, new Vector2(position.pos.x, position.pos.y + 1));
         } else if (WorldManager.state == WorldManager.State.TARGETING) {
-          handleTargeting(new Vector2(0, 1));
+          WorldManager.inputHelpers.handleTargeting(new Vector2(0, 1));
         } else if (WorldManager.state == WorldManager.State.LOOKING) {
           handleLooking(new Vector2(0, 1), false);
         }
@@ -59,7 +59,7 @@ PlayerInput implements InputProcessor {
         if (WorldManager.state == WorldManager.State.PLAYING) {
           handleMovement(attributes.energy, new Vector2(position.pos.x + 1, position.pos.y + 1));
         } else if (WorldManager.state == WorldManager.State.TARGETING) {
-          handleTargeting(new Vector2(1, 1));
+          WorldManager.inputHelpers.handleTargeting(new Vector2(1, 1));
         } else if (WorldManager.state == WorldManager.State.LOOKING) {
           handleLooking(new Vector2(1, 1), false);
         }
@@ -71,7 +71,7 @@ PlayerInput implements InputProcessor {
         if (WorldManager.state == WorldManager.State.PLAYING) {
           handleMovement(attributes.energy, new Vector2(position.pos.x + 1, position.pos.y));
         } else if (WorldManager.state == WorldManager.State.TARGETING) {
-          handleTargeting(new Vector2(1, 0));
+          WorldManager.inputHelpers.handleTargeting(new Vector2(1, 0));
         } else if (WorldManager.state == WorldManager.State.LOOKING) {
           handleLooking(new Vector2(1, 0), false);
         }
@@ -83,7 +83,7 @@ PlayerInput implements InputProcessor {
         if (WorldManager.state == WorldManager.State.PLAYING) {
           handleMovement(attributes.energy, new Vector2(position.pos.x + 1, position.pos.y - 1));
         } else if (WorldManager.state == WorldManager.State.TARGETING) {
-          handleTargeting(new Vector2(1, -1));
+          WorldManager.inputHelpers.handleTargeting(new Vector2(1, -1));
         } else if (WorldManager.state == WorldManager.State.LOOKING) {
           handleLooking(new Vector2(1, -1), false);
         }
@@ -95,7 +95,7 @@ PlayerInput implements InputProcessor {
         if (WorldManager.state == WorldManager.State.PLAYING) {
           handleMovement(attributes.energy, new Vector2(position.pos.x, position.pos.y - 1));
         } else if (WorldManager.state == WorldManager.State.TARGETING) {
-          handleTargeting(new Vector2(0, -1));
+          WorldManager.inputHelpers.handleTargeting(new Vector2(0, -1));
         } else if (WorldManager.state == WorldManager.State.LOOKING) {
           handleLooking(new Vector2(0, -1), false);
         }
@@ -107,7 +107,7 @@ PlayerInput implements InputProcessor {
         if (WorldManager.state == WorldManager.State.PLAYING) {
           handleMovement(attributes.energy, new Vector2(position.pos.x - 1, position.pos.y - 1));
         } else if (WorldManager.state == WorldManager.State.TARGETING) {
-          handleTargeting(new Vector2(-1, -1));
+          WorldManager.inputHelpers.handleTargeting(new Vector2(-1, -1));
         } else if (WorldManager.state == WorldManager.State.LOOKING) {
           handleLooking(new Vector2(-1, -1), false);
         }
@@ -119,7 +119,7 @@ PlayerInput implements InputProcessor {
         if (WorldManager.state == WorldManager.State.PLAYING) {
           handleMovement(attributes.energy, new Vector2(position.pos.x - 1, position.pos.y));
         } else if (WorldManager.state == WorldManager.State.TARGETING) {
-          handleTargeting(new Vector2(-1, 0));
+          WorldManager.inputHelpers.handleTargeting(new Vector2(-1, 0));
         } else if (WorldManager.state == WorldManager.State.LOOKING) {
           handleLooking(new Vector2(-1, 0), false);
         }
@@ -131,7 +131,7 @@ PlayerInput implements InputProcessor {
         if (WorldManager.state == WorldManager.State.PLAYING) {
           handleMovement(attributes.energy, new Vector2(position.pos.x - 1, position.pos.y + 1));
         } else if (WorldManager.state == WorldManager.State.TARGETING) {
-          handleTargeting(new Vector2(-1, 1));
+          WorldManager.inputHelpers.handleTargeting(new Vector2(-1, 1));
         } else if (WorldManager.state == WorldManager.State.LOOKING) {
           handleLooking(new Vector2(-1, 1), false);
         }
@@ -153,10 +153,7 @@ PlayerInput implements InputProcessor {
             if (Objects.equals(weaponDetails.type, "range")) {
               if (WorldManager.itemHelpers.hasAmmunitionOfType(WorldManager.player,
                   weaponDetails.ammunitionType)) {
-                playerDetails.target = null;
-                playerDetails.path = null;
-
-                WorldManager.state = WorldManager.State.TARGETING;
+                WorldManager.inputHelpers.startTargeting();
               } else {
                 WorldManager.log.add("You aren't carrying any ammunition for this");
               }
@@ -180,10 +177,7 @@ PlayerInput implements InputProcessor {
             if (itemDetails.actions.contains("throw", false)) {
               itemDetails.throwing = true;
 
-              playerDetails.target = null;
-              playerDetails.path = null;
-
-              WorldManager.state = WorldManager.State.TARGETING;
+              WorldManager.inputHelpers.startTargeting();
             } else {
               WorldManager.log.add("You can't throw that");
             }
@@ -347,7 +341,7 @@ PlayerInput implements InputProcessor {
       playerDetails.path = null;
 
       if (WorldManager.mapHelpers.cellExists(mousePosition)) {
-        handleTargeting(relativeToPlayer);
+        WorldManager.inputHelpers.handleTargeting(relativeToPlayer);
 
         return true;
       }
@@ -396,12 +390,6 @@ PlayerInput implements InputProcessor {
     PlayerComponent playerDetails = ComponentMappers.player.get(WorldManager.player);
 
     playerDetails.path = null;
-  }
-
-  private void handleTargeting(Vector2 pos) {
-    WorldManager.mapHelpers.createTargetingPath(
-        ComponentMappers.position.get(WorldManager.player).pos, pos
-    );
   }
 
   private void handleLooking(Vector2 pos, boolean careAboutWalls) {

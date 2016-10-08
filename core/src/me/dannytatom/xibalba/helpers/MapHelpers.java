@@ -6,11 +6,9 @@ import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.graphics.Colors;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.DecorationComponent;
 import me.dannytatom.xibalba.components.EnemyComponent;
-import me.dannytatom.xibalba.components.EntranceComponent;
-import me.dannytatom.xibalba.components.ExitComponent;
-import me.dannytatom.xibalba.components.ItemComponent;
 import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.TrapComponent;
@@ -327,28 +325,34 @@ public class MapHelpers {
     return null;
   }
 
-  /**
-   * Get item from a location.
-   *
-   * @param position Where the item is
-   *
-   * @return The item
-   */
-  public Entity getItemAt(Vector2 position) {
-    ImmutableArray<Entity> entities =
-        WorldManager.engine.getEntitiesFor(
-            Family.all(ItemComponent.class, PositionComponent.class).get()
-        );
+  public ArrayList<Entity> getEnemiesInVision() {
+    ArrayList<Entity> enemies = new ArrayList<>();
 
-    for (Entity entity : entities) {
-      PositionComponent entityPosition = ComponentMappers.position.get(entity);
+    PositionComponent position = ComponentMappers.position.get(WorldManager.player);
+    AttributesComponent attributes = ComponentMappers.attributes.get(WorldManager.player);
 
-      if (entityPosition.pos.epsilonEquals(position, 0.00001f)) {
-        return entity;
+    for (int x = (int) position.pos.x - attributes.vision; x < (int) position.pos.x + attributes.vision; x++) {
+      for (int y = (int) position.pos.y - attributes.vision; y < (int) position.pos.y + attributes.vision; y++) {
+        Entity enemy = getEnemyAt(x, y);
+
+        if (enemy != null) {
+          enemies.add(enemy);
+        }
       }
     }
 
-    return null;
+    enemies.sort((enemy1, enemy2) -> {
+      PositionComponent enemy1Position = ComponentMappers.position.get(enemy1);
+      PositionComponent enemy2Position = ComponentMappers.position.get(enemy2);
+
+      if (enemy1Position.pos.x > enemy2Position.pos.x && enemy1Position.pos.y > enemy2Position.pos.y) {
+        return -1;
+      } else {
+        return 1;
+      }
+    });
+
+    return enemies;
   }
 
   public Entity getTrapAt(Vector2 position) {
