@@ -23,7 +23,7 @@ import me.dannytatom.xibalba.components.VisualComponent;
 import me.dannytatom.xibalba.components.ai.BrainComponent;
 import me.dannytatom.xibalba.components.items.AmmunitionComponent;
 import me.dannytatom.xibalba.components.items.ArmorComponent;
-import me.dannytatom.xibalba.components.items.ItemEffectsComponent;
+import me.dannytatom.xibalba.components.EffectsComponent;
 import me.dannytatom.xibalba.components.items.WeaponComponent;
 import me.dannytatom.xibalba.components.traps.SpiderWebComponent;
 import me.dannytatom.xibalba.world.Map;
@@ -80,6 +80,10 @@ public class EntityFactory {
     }
     entity.add(new BrainComponent(personalities));
 
+    if (data.effects != null) {
+      entity.add(new EffectsComponent(data));
+    }
+
     return entity;
   }
 
@@ -116,7 +120,7 @@ public class EntityFactory {
     }
 
     if (data.effects != null) {
-      entity.add(new ItemEffectsComponent(data));
+      entity.add(new EffectsComponent(data));
     }
 
     entity.add(new VisualComponent(

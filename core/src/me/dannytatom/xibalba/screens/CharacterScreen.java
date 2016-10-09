@@ -21,7 +21,7 @@ import me.dannytatom.xibalba.components.ItemComponent;
 import me.dannytatom.xibalba.components.SkillsComponent;
 import me.dannytatom.xibalba.components.defects.MyopiaComponent;
 import me.dannytatom.xibalba.components.defects.OneArmComponent;
-import me.dannytatom.xibalba.components.items.ItemEffectsComponent;
+import me.dannytatom.xibalba.components.EffectsComponent;
 import me.dannytatom.xibalba.components.traits.PerceptiveComponent;
 import me.dannytatom.xibalba.components.traits.ScoutComponent;
 import me.dannytatom.xibalba.ui.ActionButton;
@@ -476,7 +476,7 @@ public class CharacterScreen implements Screen {
 
         // Item effects
 
-        ItemEffectsComponent selectedItemEffects = ComponentMappers.itemEffects.get(item);
+        EffectsComponent selectedItemEffects = ComponentMappers.effects.get(item);
 
         if (selectedItemEffects != null) {
           for (Map.Entry<String, String> entry : selectedItemEffects.effects.entrySet()) {

@@ -24,6 +24,7 @@ import me.dannytatom.xibalba.systems.ai.WanderSystem;
 import me.dannytatom.xibalba.systems.statuses.BleedingSystem;
 import me.dannytatom.xibalba.systems.statuses.CrippledSystem;
 import me.dannytatom.xibalba.systems.statuses.DrowningSystem;
+import me.dannytatom.xibalba.systems.statuses.PoisonedSystem;
 import me.dannytatom.xibalba.systems.statuses.StuckSystem;
 import me.dannytatom.xibalba.systems.statuses.WetSystem;
 import me.dannytatom.xibalba.utils.EntityFactory;
@@ -78,6 +79,7 @@ public class WorldManager {
     engine.addSystem(new BleedingSystem());
     engine.addSystem(new DrowningSystem());
     engine.addSystem(new StuckSystem());
+    engine.addSystem(new PoisonedSystem());
     engine.addSystem(new WetSystem());
     engine.addSystem(new DeathSystem());
   }

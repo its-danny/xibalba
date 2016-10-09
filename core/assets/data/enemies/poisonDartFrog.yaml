@@ -26,3 +26,6 @@ bodyParts:
 brain:
   personalities:
     - PASSIVE
+
+effects:
+  onHit: poison:33,3,5

@@ -18,7 +18,7 @@ public class BleedingSystem extends UsesEnergySystem {
     BleedingComponent bleeding = ComponentMappers.bleeding.get(entity);
     AttributesComponent attributes = ComponentMappers.attributes.get(entity);
 
-    if (bleeding.counter == 5) {
+    if (bleeding.counter == bleeding.life) {
       entity.remove(BleedingComponent.class);
     } else {
       WorldManager.entityHelpers.takeDamage(entity, 5);

@@ -7,13 +7,13 @@ import com.badlogic.gdx.math.Vector2;
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.BodyComponent;
+import me.dannytatom.xibalba.components.EffectsComponent;
 import me.dannytatom.xibalba.components.ItemComponent;
 import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.SkillsComponent;
 import me.dannytatom.xibalba.components.VisualComponent;
 import me.dannytatom.xibalba.components.actions.MeleeComponent;
 import me.dannytatom.xibalba.components.actions.RangeComponent;
-import me.dannytatom.xibalba.components.items.ItemEffectsComponent;
 import me.dannytatom.xibalba.components.items.WeaponComponent;
 import me.dannytatom.xibalba.components.statuses.BleedingComponent;
 import me.dannytatom.xibalba.components.statuses.CrippledComponent;
@@ -21,7 +21,6 @@ import me.dannytatom.xibalba.utils.ComponentMappers;
 import me.dannytatom.xibalba.utils.SpriteAccessor;
 import me.dannytatom.xibalba.world.WorldManager;
 
-import java.util.Map;
 import java.util.Objects;
 
 public class CombatHelpers {
@@ -348,20 +347,23 @@ public class CombatHelpers {
         }
       }
 
+      // Apply entity status effects
+
+      EffectsComponent starterEffects = ComponentMappers.effects.get(starter);
+
+      if (starterEffects != null && starterEffects.effects.containsKey("onHit")) {
+        WorldManager.entityHelpers.applyEffect(target, starterEffects.effects.get("onHit"));
+      }
+
       // Apply weapon effects
 
       if (item != null) {
         ItemComponent itemDetails = ComponentMappers.item.get(item);
-        ItemEffectsComponent itemEffects = ComponentMappers.itemEffects.get(item);
+        EffectsComponent itemEffects = ComponentMappers.effects.get(item);
 
         if (itemEffects != null) {
-          for (Map.Entry<String, String> entry : itemEffects.effects.entrySet()) {
-            String event = entry.getKey();
-            String action = entry.getValue();
-
-            if (Objects.equals(event, "onHit")) {
-              WorldManager.entityHelpers.applyEffect(target, action);
-            }
+          if (itemEffects.effects.containsKey("onHit")) {
+            WorldManager.entityHelpers.applyEffect(target, itemEffects.effects.get("onHit"));
           }
 
           if (ComponentMappers.player.has(starter)) {

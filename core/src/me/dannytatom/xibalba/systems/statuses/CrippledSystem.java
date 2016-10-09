@@ -15,7 +15,7 @@ public class CrippledSystem extends UsesEnergySystem {
   protected void processEntity(Entity entity, float deltaTime) {
     CrippledComponent crippled = ComponentMappers.crippled.get(entity);
 
-    if (crippled.counter == 4) {
+    if (crippled.counter == crippled.life) {
       entity.remove(CrippledComponent.class);
     } else {
       if (crippled.turnCounter == 2) {

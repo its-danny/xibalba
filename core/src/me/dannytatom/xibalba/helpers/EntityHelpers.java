@@ -9,6 +9,7 @@ import me.dannytatom.xibalba.components.EquipmentComponent;
 import me.dannytatom.xibalba.components.ItemComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.VisualComponent;
+import me.dannytatom.xibalba.components.statuses.PoisonedComponent;
 import me.dannytatom.xibalba.utils.ComponentMappers;
 import me.dannytatom.xibalba.world.ShadowCaster;
 import me.dannytatom.xibalba.world.WorldManager;
@@ -199,6 +200,9 @@ public class EntityHelpers {
       case "takeDamage":
         takeDamage(entity, Integer.parseInt(params[0]));
         break;
+      case "poison":
+        poison(entity, Integer.parseInt(params[0]), Integer.parseInt(params[1]), Integer.parseInt(params[2]));
+        break;
       default:
     }
   }
@@ -254,6 +258,24 @@ public class EntityHelpers {
 
     if (ComponentMappers.player.has(entity)) {
       ComponentMappers.player.get(entity).totalDamageReceived += amount;
+    }
+  }
+
+  private void poison(Entity entity, int chance, int damage, int turns) {
+    if (ComponentMappers.poisoned.has(entity)) {
+      return;
+    }
+
+    if (MathUtils.random() > chance / 100) {
+      entity.add(new PoisonedComponent(damage, turns));
+
+      if (ComponentMappers.player.has(entity)) {
+        WorldManager.log.add("You have been poisoned");
+      } else {
+        AttributesComponent attributes = ComponentMappers.attributes.get(entity);
+
+        WorldManager.log.add(attributes.name + " has been poisoned");
+      }
     }
   }
 }

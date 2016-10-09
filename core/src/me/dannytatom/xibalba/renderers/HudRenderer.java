@@ -164,8 +164,6 @@ public class HudRenderer {
       name += " [DARK_GRAY][TARGETING][]";
     } else if (WorldManager.state == WorldManager.State.FOCUSED) {
       name += " [DARK_GRAY][FOCUSED][]";
-    } else if (WorldManager.state == WorldManager.State.DEAD) {
-      name += " [DARK_GRAY][DEAD][]";
     }
 
     if (playerInfo.getChildren().size == 0) {
@@ -425,6 +423,10 @@ public class HudRenderer {
 
     if (ComponentMappers.stuck.has(entity)) {
       statuses.add("[DARK_GRAY]STUCK[]");
+    }
+
+    if (ComponentMappers.poisoned.has(entity)) {
+      statuses.add("[DARK_GRAY]POISONED[]");
     }
 
     return statuses.toString(", ");

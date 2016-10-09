@@ -1,0 +1,16 @@
+---
+type: consumable
+name: Poison Plant
+description: It poisons you some
+
+visual:
+  character: "1114"
+  color: 67CF8B
+
+actions:
+  - consume
+  - apply
+
+effects:
+  onConsume: poison:100,2,3
+  onApply: poison:100,2,3

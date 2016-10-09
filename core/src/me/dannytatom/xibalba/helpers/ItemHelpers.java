@@ -8,7 +8,7 @@ import me.dannytatom.xibalba.components.ItemComponent;
 import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.items.AmmunitionComponent;
-import me.dannytatom.xibalba.components.items.ItemEffectsComponent;
+import me.dannytatom.xibalba.components.EffectsComponent;
 import me.dannytatom.xibalba.utils.ComponentMappers;
 import me.dannytatom.xibalba.world.WorldManager;
 
@@ -149,7 +149,7 @@ public class ItemHelpers {
 
       WorldManager.log.add("You eat a " + itemDetails.name);
 
-      ItemEffectsComponent itemEffects = ComponentMappers.itemEffects.get(item);
+      EffectsComponent itemEffects = ComponentMappers.effects.get(item);
 
       if (itemEffects != null) {
         for (Map.Entry<String, String> entry : itemEffects.effects.entrySet()) {
@@ -181,11 +181,11 @@ public class ItemHelpers {
    */
   public void apply(Entity entity, Entity applyingItem, Entity targetItem) {
     if (applyingItem != null && targetItem != null) {
-      ItemEffectsComponent applyingItemEffects = ComponentMappers.itemEffects.get(applyingItem);
-      ItemEffectsComponent targetItemEffects = ComponentMappers.itemEffects.get(targetItem);
+      EffectsComponent applyingItemEffects = ComponentMappers.effects.get(applyingItem);
+      EffectsComponent targetItemEffects = ComponentMappers.effects.get(targetItem);
 
       if (targetItemEffects == null) {
-        targetItem.add(new ItemEffectsComponent());
+        targetItem.add(new EffectsComponent());
       }
 
       if (targetItemEffects != null) {

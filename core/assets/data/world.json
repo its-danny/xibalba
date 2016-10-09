@@ -16,7 +16,9 @@
       { "name": "bow", "spawnRange": "0,1" },
       { "name": "arrow", "spawnRange": "5,10" },
       { "name": "shield", "spawnRange": "0,1" },
-      { "name": "chippedFlint", "spawnRange": "1,1" }
+      { "name": "chippedFlint", "spawnRange": "1,1" },
+      { "name": "poisonPlant", "spawnRange": "0,1" },
+      { "name": "healthPlant", "spawnRange": "0,1" }
     ],
     "traps": [
 

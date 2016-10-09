@@ -25,11 +25,12 @@ import me.dannytatom.xibalba.components.ai.TargetComponent;
 import me.dannytatom.xibalba.components.defects.MyopiaComponent;
 import me.dannytatom.xibalba.components.defects.OneArmComponent;
 import me.dannytatom.xibalba.components.items.AmmunitionComponent;
-import me.dannytatom.xibalba.components.items.ItemEffectsComponent;
+import me.dannytatom.xibalba.components.EffectsComponent;
 import me.dannytatom.xibalba.components.items.WeaponComponent;
 import me.dannytatom.xibalba.components.statuses.BleedingComponent;
 import me.dannytatom.xibalba.components.statuses.CrippledComponent;
 import me.dannytatom.xibalba.components.statuses.DrowningComponent;
+import me.dannytatom.xibalba.components.statuses.PoisonedComponent;
 import me.dannytatom.xibalba.components.statuses.StuckComponent;
 import me.dannytatom.xibalba.components.statuses.WetComponent;
 import me.dannytatom.xibalba.components.traits.PerceptiveComponent;
@@ -73,6 +74,9 @@ public final class ComponentMappers {
   public static final ComponentMapper<StuckComponent> stuck =
       ComponentMapper.getFor(StuckComponent.class);
 
+  public static final ComponentMapper<PoisonedComponent> poisoned =
+      ComponentMapper.getFor(PoisonedComponent.class);
+
   public static final ComponentMapper<WetComponent> wet =
       ComponentMapper.getFor(WetComponent.class);
 
@@ -85,6 +89,9 @@ public final class ComponentMappers {
   public static final ComponentMapper<RangeComponent> range =
       ComponentMapper.getFor(RangeComponent.class);
 
+  public static final ComponentMapper<EffectsComponent> effects =
+      ComponentMapper.getFor(EffectsComponent.class);
+
   public static final ComponentMapper<InventoryComponent> inventory =
       ComponentMapper.getFor(InventoryComponent.class);
 
@@ -96,9 +103,6 @@ public final class ComponentMappers {
 
   public static final ComponentMapper<AmmunitionComponent> ammunition =
       ComponentMapper.getFor(AmmunitionComponent.class);
-
-  public static final ComponentMapper<ItemEffectsComponent> itemEffects =
-      ComponentMapper.getFor(ItemEffectsComponent.class);
 
   public static final ComponentMapper<WeaponComponent> weapon =
       ComponentMapper.getFor(WeaponComponent.class);
