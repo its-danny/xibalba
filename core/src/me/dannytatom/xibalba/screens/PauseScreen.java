@@ -9,7 +9,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.esotericsoftware.kryo.io.Output;
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.ui.ActionButton;
 
@@ -41,9 +40,7 @@ public class PauseScreen implements Screen {
 
     ActionButton quitButton = new ActionButton("Q", "Quit");
     quitButton.setKeys(Input.Keys.Q);
-    quitButton.setAction(table, () -> {
-      Gdx.app.exit();
-    });
+    quitButton.setAction(table, () -> Gdx.app.exit());
 
     table.add(new Label("[LIGHT_GRAY]PAUSED[]", Main.skin)).pad(0, 0, 10, 0);
     table.row();

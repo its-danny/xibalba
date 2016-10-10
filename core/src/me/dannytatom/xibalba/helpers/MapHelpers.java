@@ -373,30 +373,22 @@ public class MapHelpers {
   }
 
   /**
-   * Returns an open position near the player.
-   *
-   * @return Player position
-   */
-  public Vector2 getOpenSpaceNearPlayer() {
-    return getOpenSpaceNearEntity(ComponentMappers.position.get(WorldManager.player).pos);
-  }
-
-  /**
    * Returns an open position near the given position. TODO: Make this less retarded.
    *
    * @return An open position
    */
-  private Vector2 getOpenSpaceNearEntity(Vector2 pos) {
+  public Vector2 getOpenSpaceNearEntity(Entity target) {
+    Vector2 targetPosition = ComponentMappers.position.get(target).pos;
     Vector2 position;
 
-    if (!isBlocked(WorldManager.world.currentMapIndex, new Vector2(pos.x + 1, pos.y))) {
-      position = new Vector2(pos.x + 1, pos.y);
-    } else if (!isBlocked(WorldManager.world.currentMapIndex, new Vector2(pos.x - 1, pos.y))) {
-      position = new Vector2(pos.x - 1, pos.y);
-    } else if (!isBlocked(WorldManager.world.currentMapIndex, new Vector2(pos.x, pos.y + 1))) {
-      position = new Vector2(pos.x, pos.y + 1);
-    } else if (!isBlocked(WorldManager.world.currentMapIndex, new Vector2(pos.x, pos.y - 1))) {
-      position = new Vector2(pos.x, pos.y - 1);
+    if (!isBlocked(WorldManager.world.currentMapIndex, new Vector2(targetPosition.x + 1, targetPosition.y))) {
+      position = new Vector2(targetPosition.x + 1, targetPosition.y);
+    } else if (!isBlocked(WorldManager.world.currentMapIndex, new Vector2(targetPosition.x - 1, targetPosition.y))) {
+      position = new Vector2(targetPosition.x - 1, targetPosition.y);
+    } else if (!isBlocked(WorldManager.world.currentMapIndex, new Vector2(targetPosition.x, targetPosition.y + 1))) {
+      position = new Vector2(targetPosition.x, targetPosition.y + 1);
+    } else if (!isBlocked(WorldManager.world.currentMapIndex, new Vector2(targetPosition.x, targetPosition.y - 1))) {
+      position = new Vector2(targetPosition.x, targetPosition.y - 1);
     } else {
       position = null;
     }

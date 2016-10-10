@@ -10,7 +10,9 @@ import com.badlogic.gdx.utils.Array;
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.BodyComponent;
+import me.dannytatom.xibalba.components.BrainComponent;
 import me.dannytatom.xibalba.components.DecorationComponent;
+import me.dannytatom.xibalba.components.EffectsComponent;
 import me.dannytatom.xibalba.components.EnemyComponent;
 import me.dannytatom.xibalba.components.EntranceComponent;
 import me.dannytatom.xibalba.components.ExitComponent;
@@ -20,10 +22,8 @@ import me.dannytatom.xibalba.components.RainDropComponent;
 import me.dannytatom.xibalba.components.SkillsComponent;
 import me.dannytatom.xibalba.components.TrapComponent;
 import me.dannytatom.xibalba.components.VisualComponent;
-import me.dannytatom.xibalba.components.ai.BrainComponent;
 import me.dannytatom.xibalba.components.items.AmmunitionComponent;
 import me.dannytatom.xibalba.components.items.ArmorComponent;
-import me.dannytatom.xibalba.components.EffectsComponent;
 import me.dannytatom.xibalba.components.items.WeaponComponent;
 import me.dannytatom.xibalba.components.traps.SpiderWebComponent;
 import me.dannytatom.xibalba.world.Map;
@@ -78,7 +78,7 @@ public class EntityFactory {
     for (String personality : data.brain.get("personalities")) {
       personalities.add(BrainComponent.Personality.valueOf(personality));
     }
-    entity.add(new BrainComponent(personalities));
+    entity.add(new BrainComponent(entity, personalities));
 
     if (data.effects != null) {
       entity.add(new EffectsComponent(data));

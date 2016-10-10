@@ -4,8 +4,8 @@ import java.util.Objects;
 
 public class MapTime {
   public Time time;
-  private int counter = 0;
   public float shadow = 0;
+  private int counter = 0;
 
   public MapTime() {
     time = Time.DAWN;

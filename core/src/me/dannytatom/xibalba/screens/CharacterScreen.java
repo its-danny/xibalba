@@ -15,13 +15,13 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.components.AttributesComponent;
+import me.dannytatom.xibalba.components.EffectsComponent;
 import me.dannytatom.xibalba.components.EquipmentComponent;
 import me.dannytatom.xibalba.components.InventoryComponent;
 import me.dannytatom.xibalba.components.ItemComponent;
 import me.dannytatom.xibalba.components.SkillsComponent;
 import me.dannytatom.xibalba.components.defects.MyopiaComponent;
 import me.dannytatom.xibalba.components.defects.OneArmComponent;
-import me.dannytatom.xibalba.components.EffectsComponent;
 import me.dannytatom.xibalba.components.traits.PerceptiveComponent;
 import me.dannytatom.xibalba.components.traits.ScoutComponent;
 import me.dannytatom.xibalba.ui.ActionButton;
@@ -49,6 +49,7 @@ public class CharacterScreen implements Screen {
   private final VerticalGroup itemDetailsGroup;
   private final VerticalGroup equipmentGroup;
   private final HorizontalGroup itemActionGroup;
+  private final Section sectionSelected = Section.INVENTORY;
   private ActionButton cancelButton;
   private ActionButton holdButton;
   private ActionButton wearButton;
@@ -59,8 +60,6 @@ public class CharacterScreen implements Screen {
   private ActionButton removeButton;
   private ActionButton dropButton;
   private Entity applyingItem = null;
-
-  private final Section sectionSelected = Section.INVENTORY;
   private HashMap<String, Integer> stackedItems;
   private int itemSelected = 0;
 

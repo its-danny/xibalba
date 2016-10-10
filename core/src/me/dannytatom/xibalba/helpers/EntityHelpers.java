@@ -66,7 +66,7 @@ public class EntityHelpers {
         || entityPosition.pos.y == playerPosition.pos.y + 1);
   }
 
-  public boolean playerAlive() {
+  public boolean isPlayerAlive() {
     return ComponentMappers.attributes.get(WorldManager.player).health > 0;
   }
 

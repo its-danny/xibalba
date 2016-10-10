@@ -27,14 +27,13 @@ import java.util.Map;
 public class YouScreen implements Screen {
   private final Stage stage;
   private final PlayerSetup playerSetup;
-  private int attributePoints;
-  private int skillPoints;
-  private int traitPoints;
   private final VerticalGroup attributesGroup;
   private final VerticalGroup skillsGroup;
   private final VerticalGroup defectsGroup;
   private final VerticalGroup traitsGroup;
-
+  private int attributePoints;
+  private int skillPoints;
+  private int traitPoints;
   private Section sectionSelected = Section.ATTRIBUTES;
   private int itemSelected = 0;
 

@@ -18,9 +18,9 @@ public class Map {
   public final int height;
   public final String type;
   public final MapCell.Type[][] geometry;
+  public final MapTime time;
   public Vector2 entrance;
   public Vector2 exit;
-  public final MapTime time;
   public MapWeather weather;
   private MapCell[][] map;
   private MapCell.Type[][] flooded;
@@ -89,7 +89,7 @@ public class Map {
       for (int y = 0; y < geometry[x].length; y++) {
         if (geometry[x][y] == MapCell.Type.FLOOR) {
           Sprite floor = Main.asciiAtlas.createSprite("0915");
-          floor.setColor(Colors.get("caveFloor-" + + MathUtils.random(1, 3)));
+          floor.setColor(Colors.get("caveFloor-" + +MathUtils.random(1, 3)));
           map[x][y] = new MapCell(floor, MapCell.Type.FLOOR, "a cave floor");
         } else {
           int neighbours = getGroundNeighbours(x, y);

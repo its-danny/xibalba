@@ -17,6 +17,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.BodyComponent;
+import me.dannytatom.xibalba.components.BrainComponent;
 import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.screens.CharacterScreen;
@@ -303,6 +304,11 @@ public class HudRenderer {
       }
 
       Entity entity = WorldManager.mapHelpers.getEntityAt(playerDetails.target.x, playerDetails.target.y);
+
+      if (!WorldManager.entityHelpers.canSee(WorldManager.player, entity)) {
+        entity = null;
+      }
+
       String entityName = null;
       String entityDescription = null;
 
@@ -322,7 +328,10 @@ public class HudRenderer {
           }
         } else if (ComponentMappers.enemy.has(entity)) {
           AttributesComponent enemyAttributes = ComponentMappers.attributes.get(entity);
-          entityName = "[RED]" + enemyAttributes.name;
+
+          BrainComponent brain = ComponentMappers.brain.get(entity);
+          entityName = "[RED]" + enemyAttributes.name + " [DARK_GRAY]" + brain.stateMachine.getCurrentState().name();
+
           entityDescription = WordUtils.wrap(enemyAttributes.description, 50);
         }
 

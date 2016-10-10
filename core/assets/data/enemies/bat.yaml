@@ -23,4 +23,5 @@ bodyParts:
 
 brain:
   personalities:
+    - FLYING
     - PACKS

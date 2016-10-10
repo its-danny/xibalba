@@ -13,10 +13,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class World {
-  private Main main;
   public final ArrayList<Map> maps;
   public final HashMap<Integer, Array<Entity>> entities;
   public int currentMapIndex = 0;
+  private Main main;
 
   /**
    * Instantiate some shit.

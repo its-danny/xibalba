@@ -3,7 +3,9 @@ package me.dannytatom.xibalba.utils;
 import com.badlogic.ashley.core.ComponentMapper;
 import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.BodyComponent;
+import me.dannytatom.xibalba.components.BrainComponent;
 import me.dannytatom.xibalba.components.DecorationComponent;
+import me.dannytatom.xibalba.components.EffectsComponent;
 import me.dannytatom.xibalba.components.EnemyComponent;
 import me.dannytatom.xibalba.components.EntranceComponent;
 import me.dannytatom.xibalba.components.EquipmentComponent;
@@ -20,12 +22,9 @@ import me.dannytatom.xibalba.components.VisualComponent;
 import me.dannytatom.xibalba.components.actions.MeleeComponent;
 import me.dannytatom.xibalba.components.actions.MovementComponent;
 import me.dannytatom.xibalba.components.actions.RangeComponent;
-import me.dannytatom.xibalba.components.ai.BrainComponent;
-import me.dannytatom.xibalba.components.ai.TargetComponent;
 import me.dannytatom.xibalba.components.defects.MyopiaComponent;
 import me.dannytatom.xibalba.components.defects.OneArmComponent;
 import me.dannytatom.xibalba.components.items.AmmunitionComponent;
-import me.dannytatom.xibalba.components.EffectsComponent;
 import me.dannytatom.xibalba.components.items.WeaponComponent;
 import me.dannytatom.xibalba.components.statuses.BleedingComponent;
 import me.dannytatom.xibalba.components.statuses.CrippledComponent;
@@ -79,9 +78,6 @@ public final class ComponentMappers {
 
   public static final ComponentMapper<WetComponent> wet =
       ComponentMapper.getFor(WetComponent.class);
-
-  public static final ComponentMapper<TargetComponent> target =
-      ComponentMapper.getFor(TargetComponent.class);
 
   public static final ComponentMapper<MeleeComponent> melee =
       ComponentMapper.getFor(MeleeComponent.class);
