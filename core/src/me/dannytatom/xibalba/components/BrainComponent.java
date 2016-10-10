@@ -24,7 +24,6 @@ public class BrainComponent implements Component {
 
   public enum Personality {
     AGGRESSIVE, // Will target and attack on sight
-    PASSIVE,    // Doesn't really care about anything
     PACKS,      // Travels in packs
     SAFE,       // Will flee if health gets below 50%
     SOLO,       // Travels alone

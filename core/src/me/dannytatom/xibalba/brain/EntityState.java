@@ -1,7 +1,6 @@
 package me.dannytatom.xibalba.brain;
 
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ai.fsm.State;
 import com.badlogic.gdx.ai.msg.Telegram;
 import com.badlogic.gdx.math.Vector2;
@@ -31,7 +30,6 @@ public enum EntityState implements State<Entity> {
     }
   },
 
-
   WANDER() {
     @Override
     public void enter(Entity entity) {
@@ -50,12 +48,10 @@ public enum EntityState implements State<Entity> {
 
       if (isNearPlayer && playerIsAlive) {
         if (canAttack(entity)) {
-          brain.stateMachine.changeState(ATTACK);
-        } else if (canMove(entity)) {
           brain.target = WorldManager.player;
-          brain.stateMachine.changeState(TARGET);
+          brain.stateMachine.changeState(ATTACK);
         }
-      } else if (canSensePlayer && playerIsAlive) {
+      } else if (canSensePlayer && playerIsAlive && isAggressive(entity)) {
         if (canMove(entity)) {
           brain.target = WorldManager.player;
           brain.stateMachine.changeState(TARGET);
@@ -84,10 +80,8 @@ public enum EntityState implements State<Entity> {
       boolean canSensePlayer = WorldManager.entityHelpers.canSensePlayer(entity);
       boolean playerIsAlive = WorldManager.entityHelpers.isPlayerAlive();
 
-      if (isNearPlayer && playerIsAlive) {
-        if (canAttack(entity)) {
-          brain.stateMachine.changeState(ATTACK);
-        }
+      if (isNearPlayer && playerIsAlive && canAttack(entity)) {
+        brain.stateMachine.changeState(ATTACK);
       } else if (canSensePlayer && playerIsAlive) {
         if (canMove(entity)) {
           updatePath(entity);
@@ -116,11 +110,9 @@ public enum EntityState implements State<Entity> {
       boolean canSensePlayer = WorldManager.entityHelpers.canSensePlayer(entity);
       boolean playerIsAlive = WorldManager.entityHelpers.isPlayerAlive();
 
-      if (isNearPlayer && playerIsAlive) {
-        if (canAttack(entity)) {
-          entity.add(new MeleeComponent(brain.target, "body"));
-        }
-      } else if (canSensePlayer && playerIsAlive) {
+      if (isNearPlayer && playerIsAlive && canAttack(entity)) {
+        entity.add(new MeleeComponent(brain.target, "body"));
+      } else if (canSensePlayer && playerIsAlive && isAggressive(entity)) {
         if (canMove(entity)) {
           brain.target = WorldManager.player;
           brain.stateMachine.changeState(TARGET);
@@ -202,5 +194,33 @@ public enum EntityState implements State<Entity> {
 
     return !WorldManager.entityHelpers.shouldSkipTurn(entity)
         && attributes.energy >= MeleeComponent.COST;
+  }
+
+  boolean isAggressive(Entity entity) {
+    return ComponentMappers.brain.get(entity).personalities.contains(BrainComponent.Personality.AGGRESSIVE, true);
+  }
+
+  boolean travelsInPacks(Entity entity) {
+    return ComponentMappers.brain.get(entity).personalities.contains(BrainComponent.Personality.PACKS, true);
+  }
+
+  boolean isSafe(Entity entity) {
+    return ComponentMappers.brain.get(entity).personalities.contains(BrainComponent.Personality.SAFE, true);
+  }
+
+  boolean travelsSolo(Entity entity) {
+    return ComponentMappers.brain.get(entity).personalities.contains(BrainComponent.Personality.SOLO, true);
+  }
+
+  boolean isStealthy(Entity entity) {
+    return ComponentMappers.brain.get(entity).personalities.contains(BrainComponent.Personality.STEALTHY, true);
+  }
+
+  boolean flies(Entity entity) {
+    return ComponentMappers.brain.get(entity).personalities.contains(BrainComponent.Personality.FLYING, true);
+  }
+
+  boolean isAquatic(Entity entity) {
+    return ComponentMappers.brain.get(entity).personalities.contains(BrainComponent.Personality.AQUATIC, true);
   }
 }

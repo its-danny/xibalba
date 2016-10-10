@@ -25,7 +25,7 @@ bodyParts:
 
 brain:
   personalities:
-    - PASSIVE
+    - PACKS
 
 effects:
   onHit: poison:33,3,5

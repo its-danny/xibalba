@@ -26,6 +26,7 @@ bodyParts:
 
 brain:
   personalities:
+    - AGGRESSIVE
     - PACKS
   hates:
     - tarantula
