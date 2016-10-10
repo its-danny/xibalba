@@ -28,6 +28,7 @@ brain:
   personalities:
     - AGGRESSIVE
     - PACKS
+    - SAFE
   hates:
     - tarantula
   avoids:

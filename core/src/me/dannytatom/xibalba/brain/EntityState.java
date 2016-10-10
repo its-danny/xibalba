@@ -46,12 +46,12 @@ public enum EntityState implements State<Entity> {
       boolean canSensePlayer = WorldManager.entityHelpers.canSensePlayer(entity);
       boolean playerIsAlive = WorldManager.entityHelpers.isPlayerAlive();
 
-      if (isNearPlayer && playerIsAlive) {
+      if (isNearPlayer && playerIsAlive && !shouldFlee(entity)) {
         if (canAttack(entity)) {
           brain.target = WorldManager.player;
           brain.stateMachine.changeState(ATTACK);
         }
-      } else if (canSensePlayer && playerIsAlive && isAggressive(entity)) {
+      } else if (canSensePlayer && playerIsAlive && isAggressive(entity) && !shouldFlee(entity)) {
         if (canMove(entity)) {
           brain.target = WorldManager.player;
           brain.stateMachine.changeState(TARGET);
@@ -110,9 +110,9 @@ public enum EntityState implements State<Entity> {
       boolean canSensePlayer = WorldManager.entityHelpers.canSensePlayer(entity);
       boolean playerIsAlive = WorldManager.entityHelpers.isPlayerAlive();
 
-      if (isNearPlayer && playerIsAlive && canAttack(entity)) {
+      if (isNearPlayer && playerIsAlive && !shouldFlee(entity) && canAttack(entity)) {
         entity.add(new MeleeComponent(brain.target, "body"));
-      } else if (canSensePlayer && playerIsAlive && isAggressive(entity)) {
+      } else if (canSensePlayer && playerIsAlive && isAggressive(entity) && !shouldFlee(entity)) {
         if (canMove(entity)) {
           brain.target = WorldManager.player;
           brain.stateMachine.changeState(TARGET);
@@ -196,6 +196,12 @@ public enum EntityState implements State<Entity> {
         && attributes.energy >= MeleeComponent.COST;
   }
 
+  boolean shouldFlee(Entity entity) {
+    AttributesComponent attributes = ComponentMappers.attributes.get(entity);
+
+    return isSafe(entity) && attributes.health < (attributes.maxHealth / 2);
+  }
+
   boolean isAggressive(Entity entity) {
     return ComponentMappers.brain.get(entity).personalities.contains(BrainComponent.Personality.AGGRESSIVE, true);
   }
@@ -204,12 +210,12 @@ public enum EntityState implements State<Entity> {
     return ComponentMappers.brain.get(entity).personalities.contains(BrainComponent.Personality.PACKS, true);
   }
 
-  boolean isSafe(Entity entity) {
-    return ComponentMappers.brain.get(entity).personalities.contains(BrainComponent.Personality.SAFE, true);
-  }
-
   boolean travelsSolo(Entity entity) {
     return ComponentMappers.brain.get(entity).personalities.contains(BrainComponent.Personality.SOLO, true);
+  }
+
+  boolean isSafe(Entity entity) {
+    return ComponentMappers.brain.get(entity).personalities.contains(BrainComponent.Personality.SAFE, true);
   }
 
   boolean isStealthy(Entity entity) {

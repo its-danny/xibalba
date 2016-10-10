@@ -27,3 +27,4 @@ bodyParts:
 brain:
   personalities:
     - SOLO
+    - SAFE
