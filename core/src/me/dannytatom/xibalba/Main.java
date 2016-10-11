@@ -123,7 +123,6 @@ public class Main extends Game {
     Colors.put("waterDeepDarkGreen", parseColor("0B8074"));
 
     // Decoration colors
-    Colors.put("remains", Colors.get("RED"));
     Colors.put("stone", Colors.get("LIGHT_GRAY"));
 
     // Background colors

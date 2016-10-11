@@ -217,18 +217,6 @@ public class EntityFactory {
     return entity;
   }
 
-  public Entity createRemains(Vector2 position) {
-    Entity entity = new Entity();
-
-    entity.add(new DecorationComponent(false));
-    entity.add(new PositionComponent(position));
-    entity.add(new VisualComponent(
-        Main.asciiAtlas.createSprite("0109"), position, Colors.get("remains")
-    ));
-
-    return entity;
-  }
-
   public Entity createRainDrop() {
     Entity entity = new Entity();
     Vector2 position = new Vector2(0, 0);

@@ -8,7 +8,7 @@ import java.util.HashMap;
 
 public class ItemComponent implements Component {
   public final String type;
-  public final String name;
+  public String name;
   public final String description;
   public final String location;
   public final boolean twoHanded;

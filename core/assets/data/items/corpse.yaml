@@ -1,0 +1,23 @@
+---
+type: corpse
+name: Corpse
+description: A rotting corpse.
+
+visual:
+  character: "0109"
+  color: D67474
+
+skill: bashing
+location: right hand
+
+attributes:
+  hitDamage: 6
+  throwDamage: 4
+
+actions:
+  - throw
+  - hold
+
+verbs:
+  - bashed
+  - hit
