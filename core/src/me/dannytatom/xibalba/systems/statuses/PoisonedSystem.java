@@ -22,8 +22,6 @@ public class PoisonedSystem extends UsesEnergySystem {
     } else {
       WorldManager.entityHelpers.takeDamage(entity, poisoned.damage);
 
-      poisoned.counter += 1;
-
       if (WorldManager.entityHelpers.canSee(WorldManager.player, entity)) {
         boolean isPlayer = ComponentMappers.player.has(entity);
         AttributesComponent attributes = ComponentMappers.attributes.get(entity);
@@ -34,6 +32,8 @@ public class PoisonedSystem extends UsesEnergySystem {
           WorldManager.log.add((isPlayer ? "[RED]You" : "[GREEN]" + attributes.name) + " died from poisoning");
         }
       }
+
+      poisoned.counter += 1;
     }
   }
 }

@@ -1,0 +1,11 @@
+---
+type: bandage
+name: Skin
+description: Can be used to bandage wounds.
+
+visual:
+  character: "0006"
+  color: FFFFFF
+
+actions:
+  - bandage

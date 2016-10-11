@@ -203,7 +203,7 @@ public class HudRenderer {
         enemyHealthLabel.setText(createEntityHealth(playerDetails.lastHitEntity));
         Label enemyOxygenLabel = (Label) enemyInfo.getChildren().get(2);
         enemyOxygenLabel.setText(createEntityOxygen(playerDetails.lastHitEntity));
-        Label enemyStatusLabel = (Label) playerInfo.getChildren().get(3);
+        Label enemyStatusLabel = (Label) enemyInfo.getChildren().get(3);
         enemyStatusLabel.setText(createEntityStatus(playerDetails.lastHitEntity));
       }
     }
@@ -426,6 +426,10 @@ public class HudRenderer {
       statuses.add("[DARK_GRAY]BLEEDING[]");
     }
 
+    if (ComponentMappers.poisoned.has(entity)) {
+      statuses.add("[DARK_GRAY]POISONED[]");
+    }
+
     if (ComponentMappers.drowning.has(entity)) {
       statuses.add("[DARK_GRAY]DROWNING[]");
     }
@@ -434,11 +438,7 @@ public class HudRenderer {
       statuses.add("[DARK_GRAY]STUCK[]");
     }
 
-    if (ComponentMappers.poisoned.has(entity)) {
-      statuses.add("[DARK_GRAY]POISONED[]");
-    }
-
-    return statuses.toString(", ");
+    return statuses.toString("[LIGHT_GRAY],[] ");
   }
 
   private void handleFocusedAttack(String part) {

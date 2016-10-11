@@ -8,16 +8,14 @@ import java.util.HashMap;
 
 public class ItemComponent implements Component {
   public final String type;
-  public String name;
   public final String description;
   public final String location;
   public final boolean twoHanded;
   public final String skill;
-
   public final HashMap<String, Integer> attributes;
   public final Array<String> actions;
   public final Array<String> verbs;
-
+  public String name;
   public boolean throwing = false;
 
   /**

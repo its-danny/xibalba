@@ -17,6 +17,7 @@ attributes:
 actions:
   - throw
   - hold
+  - skin
 
 verbs:
   - bashed

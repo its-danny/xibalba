@@ -62,7 +62,7 @@ public class ItemHelpers {
    * @param entity Entity we wanna to give shit to
    * @param item   The item itself
    */
-  public void addToInventory(Entity entity, Entity item) {
+  public void addToInventory(Entity entity, Entity item, boolean log) {
     InventoryComponent inventory = ComponentMappers.inventory.get(entity);
 
     if (inventory != null) {
@@ -73,9 +73,12 @@ public class ItemHelpers {
         EquipmentComponent equipment = ComponentMappers.equipment.get(entity);
         ItemComponent itemDetails = ComponentMappers.item.get(item);
 
-        WorldManager.log.add(
-            "You picked up a " + WorldManager.itemHelpers.getName(entity, item)
-        );
+        if (log) {
+          WorldManager.log.add(
+              "You picked up a " + WorldManager.itemHelpers.getName(entity, item)
+          );
+        }
+
         if (itemDetails.twoHanded && ComponentMappers.oneArm.has(entity)) {
           return;
         }

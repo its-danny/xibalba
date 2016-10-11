@@ -49,7 +49,7 @@ public class MovementSystem extends UsesEnergySystem {
         }
 
         if (ComponentMappers.item.has(thing)) {
-          WorldManager.itemHelpers.addToInventory(WorldManager.player, thing);
+          WorldManager.itemHelpers.addToInventory(WorldManager.player, thing, true);
 
           move(entity, movement);
 
