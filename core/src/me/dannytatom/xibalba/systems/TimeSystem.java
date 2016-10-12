@@ -15,11 +15,6 @@ public class TimeSystem extends UsesEnergySystem {
   protected void processEntity(Entity entity, float deltaTime) {
     AttributesComponent attributes = ComponentMappers.attributes.get(entity);
 
-    // Drowning effects vision and i'm lazy
-    if (ComponentMappers.drowning.has(entity)) {
-      return;
-    }
-
     switch (WorldManager.world.getCurrentMap().time.time) {
       case DAWN:
         attributes.vision = attributes.maxVision / 4 * 3;
