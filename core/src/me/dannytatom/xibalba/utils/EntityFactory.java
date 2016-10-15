@@ -11,6 +11,7 @@ import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.BodyComponent;
 import me.dannytatom.xibalba.components.BrainComponent;
+import me.dannytatom.xibalba.components.CorpseComponent;
 import me.dannytatom.xibalba.components.DecorationComponent;
 import me.dannytatom.xibalba.components.EffectsComponent;
 import me.dannytatom.xibalba.components.EnemyComponent;
@@ -133,9 +134,12 @@ public class EntityFactory {
 
   public Entity createCorpse(Entity enemy, Vector2 position) {
     Entity entity = createItem("corpse", position);
-    ;
-    ComponentMappers.item.get(entity).name
-        = ComponentMappers.attributes.get(enemy).name + " Corpse";
+    String name = ComponentMappers.attributes.get(enemy).name;
+
+    ComponentMappers.item.get(entity).name = name + " corpse";
+
+    BodyComponent body = ComponentMappers.body.get(enemy);
+    entity.add(new CorpseComponent(name, body.parts));
 
     return entity;
   }
@@ -144,7 +148,17 @@ public class EntityFactory {
     Entity entity = createItem("skin", position);
 
     ComponentMappers.item.get(entity).name
-        = ComponentMappers.item.get(corpse).name.replace("Corpse", "Skin");
+        = ComponentMappers.corpse.get(corpse).entityName + " skin";
+
+    return entity;
+  }
+
+  public Entity createLimb(Entity corpse, String part, Vector2 position) {
+    Entity entity = createItem("limb", position);
+
+    ComponentMappers.item.get(entity).name
+        = ComponentMappers.corpse.get(corpse).entityName
+          + " " + part.replace("left ", "").replace("right ", "");
 
     return entity;
   }

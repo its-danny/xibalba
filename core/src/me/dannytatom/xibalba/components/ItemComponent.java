@@ -13,7 +13,7 @@ public class ItemComponent implements Component {
   public final boolean twoHanded;
   public final String skill;
   public final HashMap<String, Integer> attributes;
-  public final Array<String> actions;
+  public Array<String> actions;
   public final Array<String> verbs;
   public String name;
   public boolean throwing = false;

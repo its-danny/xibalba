@@ -1,7 +1,7 @@
 ---
-type: corpse
-name: Corpse
-description: A rotting corpse.
+type: limb
+name: Limb
+description: A rotting limb.
 
 visual:
   character: "0109"
@@ -11,14 +11,12 @@ skill: bashing
 location: right hand
 
 attributes:
-  hitDamage: 6
+  hitDamage: 4
   throwDamage: 4
 
 actions:
   - throw
   - hold
-  - skin
-  - dismember
 
 verbs:
   - bashed

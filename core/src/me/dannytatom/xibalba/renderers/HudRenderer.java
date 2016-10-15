@@ -252,6 +252,7 @@ public class HudRenderer {
         int actionNumber = 0;
         for (String part : body.parts.keySet()) {
           actionNumber++;
+
           // If you look at the docs for Input.Keys, number keys are offset by 7
           // (e.g. 0 = 7, 1 = 8, etc)
           ActionButton button = new ActionButton(actionNumber, WordUtils.capitalize(part));

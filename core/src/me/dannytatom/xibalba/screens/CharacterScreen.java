@@ -18,6 +18,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.components.AttributesComponent;
+import me.dannytatom.xibalba.components.CorpseComponent;
 import me.dannytatom.xibalba.components.EffectsComponent;
 import me.dannytatom.xibalba.components.EquipmentComponent;
 import me.dannytatom.xibalba.components.InventoryComponent;
@@ -53,7 +54,7 @@ public class CharacterScreen implements Screen {
   private final VerticalGroup inventoryGroup;
   private final VerticalGroup itemDetailsGroup;
   private final VerticalGroup equipmentGroup;
-  private final HorizontalGroup itemActionGroup;
+  private final Table itemActionTable;
   private final Section sectionSelected = Section.INVENTORY;
   private ActionButton cancelButton;
   private ActionButton holdButton;
@@ -61,12 +62,14 @@ public class CharacterScreen implements Screen {
   private ActionButton throwButton;
   private ActionButton eatButton;
   private ActionButton skinButton;
+  private ActionButton dismemberButton;
   private ActionButton applyButton;
   private ActionButton confirmApplyButton;
   private ActionButton bandageButton;
   private ActionButton removeButton;
   private ActionButton dropButton;
   private Entity applyingItem = null;
+  private boolean dismembering = false;
   private HashMap<String, Integer> stackedItems;
   private int itemSelected = 0;
 
@@ -113,7 +116,7 @@ public class CharacterScreen implements Screen {
     inventoryGroup = new VerticalGroup().align(Align.top | Align.left);
     itemDetailsGroup = new VerticalGroup().align(Align.top | Align.left);
     equipmentGroup = new VerticalGroup().align(Align.top | Align.left);
-    itemActionGroup = new HorizontalGroup().space(5).align(Align.top | Align.left);
+    itemActionTable = new Table().align(Align.top | Align.left);
 
     mainTable.add(attributesGroup).pad(10).width(Gdx.graphics.getWidth() / 3 - 20).top().left();
     mainTable.add(skillsGroup).pad(10).width(Gdx.graphics.getWidth() / 3 - 20).top().left();
@@ -156,6 +159,9 @@ public class CharacterScreen implements Screen {
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
     if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
+      dismembering = false;
+      applyingItem = null;
+
       switch (sectionSelected) {
         case INVENTORY:
           if (itemSelected > 0) {
@@ -177,6 +183,9 @@ public class CharacterScreen implements Screen {
     }
 
     if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
+      dismembering = false;
+      applyingItem = null;
+
       switch (sectionSelected) {
         case INVENTORY:
           if (itemSelected < inventory.items.size() - 1) {
@@ -378,7 +387,7 @@ public class CharacterScreen implements Screen {
 
   private void updateItemDetailsGroup() {
     itemDetailsGroup.clear();
-    itemActionGroup.clear();
+    itemActionTable.clear();
 
     if (!inventory.items.isEmpty()) {
       Entity item = inventory.items.get(itemSelected);
@@ -408,7 +417,7 @@ public class CharacterScreen implements Screen {
 
       itemDetailsGroup.addActor(statsGroup);
       itemDetailsGroup.addActor(restrictionsGroup);
-      itemDetailsGroup.addActor(itemActionGroup);
+      itemDetailsGroup.addActor(itemActionTable);
 
       boolean itemIsEquipped = WorldManager.itemHelpers.isEquipped(player, item);
 
@@ -554,51 +563,109 @@ public class CharacterScreen implements Screen {
 
       // Actions
 
-      if (applyingItem == null) {
+      if (dismembering) {
+        Entity corpse = inventory.items.get(itemSelected);
+        CorpseComponent body = ComponentMappers.corpse.get(corpse);
+
+        itemActionTable.add(cancelButton).pad(0, 0, 5, 5);
+
+        int actionNumber = 0;
+
+        for (String part : body.parts.keySet()) {
+          if (Objects.equals(part, "body")) {
+            continue;
+          }
+
+          actionNumber++;
+
+          // If you look at the docs for Input.Keys, number keys are offset by 7
+          // (e.g. 0 = 7, 1 = 8, etc)
+          ActionButton button = new ActionButton(actionNumber, WordUtils.capitalize(part));
+          button.setKeys(actionNumber + 7);
+          button.setAction(table, () -> {
+            if (itemActionTable.getChildren().contains(button, true)) {
+              Vector2 position = ComponentMappers.position.get(player).pos;
+
+              Entity limb = WorldManager.entityFactory.createLimb(corpse, part, position);
+              WorldManager.itemHelpers.addToInventory(player, limb, false);
+              body.parts.remove(part);
+
+              WorldManager.log.add(
+                  "You ripped the " + part + " from the "
+                      + ComponentMappers.corpse.get(corpse).entityName + " corpse"
+              );
+
+              if (body.parts.size() == 0 || (body.parts.size() == 1 && body.parts.containsKey("body"))) {
+                ComponentMappers.item.get(corpse).actions.removeValue("dismember", false);
+              }
+
+              dismembering = false;
+              itemSelected = 0;
+
+              updateInventoryGroup();
+              updateItemDetailsGroup();
+            }
+          });
+
+          itemActionTable.add(button).pad(0, 0, 5, 5);
+        }
+      } else if (applyingItem != null) {
+        itemActionTable.add(cancelButton).pad(0, 0, 5, 5);
+
+        if (applyingItem != item && details.actions.contains("applyTo", false)) {
+          itemActionTable.add(confirmApplyButton).pad(0, 0, 5, 5);
+        }
+      } else {
         if (details.actions.contains("hold", false) && !itemIsEquipped) {
           if (!ComponentMappers.oneArm.has(player) || !details.twoHanded) {
-            itemActionGroup.addActor(holdButton);
+            itemActionTable.add(holdButton).pad(0, 0, 5, 5);
           }
         }
 
         if (details.actions.contains("wear", false) && !itemIsEquipped) {
           if (!ComponentMappers.oneArm.has(player) || !Objects.equals(details.location, "left hand")) {
-            itemActionGroup.addActor(wearButton);
+            itemActionTable.add(wearButton).pad(0, 0, 5, 5);
           }
         }
 
         if (details.actions.contains("throw", false)) {
-          itemActionGroup.addActor(throwButton);
+          itemActionTable.add(throwButton).pad(0, 0, 5, 5);
         }
 
         if (details.actions.contains("consume", false) && !itemIsEquipped) {
-          itemActionGroup.addActor(eatButton);
+          itemActionTable.add(eatButton).pad(0, 0, 5, 5);
         }
 
         if (details.actions.contains("skin", false) && !itemIsEquipped) {
-          itemActionGroup.addActor(skinButton);
+          itemActionTable.add(skinButton).pad(0, 0, 5, 5);
+        }
+
+        if (details.actions.contains("dismember", false) && !itemIsEquipped) {
+          itemActionTable.add(dismemberButton).pad(0, 0, 5, 5);
         }
 
         if (details.actions.contains("bandage", false) && ComponentMappers.bleeding.has(player)) {
-          itemActionGroup.addActor(bandageButton);
+          itemActionTable.add(bandageButton).pad(0, 0, 5, 5);
+        }
+
+        if (itemActionTable.getChildren().size > 0 ) {
+          itemActionTable.row();
         }
 
         if (details.actions.contains("apply", false)) {
-          itemActionGroup.addActor(applyButton);
+          itemActionTable.add(applyButton).pad(0, 0, 5, 5);
         }
 
         if (itemIsEquipped) {
-          itemActionGroup.addActor(removeButton);
+          itemActionTable.add(removeButton).pad(0, 0, 5, 5);
         }
 
         if (!itemIsEquipped) {
-          itemActionGroup.addActor(dropButton);
+          itemActionTable.add(dropButton).pad(0, 0, 5, 5);
         }
-      } else {
-        itemActionGroup.addActor(cancelButton);
 
-        if (applyingItem != item && details.actions.contains("applyTo", false)) {
-          itemActionGroup.addActor(confirmApplyButton);
+        if (itemActionTable.getChildren().size > 0 ) {
+          itemActionTable.row();
         }
       }
     }
@@ -656,21 +723,20 @@ public class CharacterScreen implements Screen {
     cancelButton = new ActionButton("Q", "Cancel");
     cancelButton.setKeys(Input.Keys.Q);
     cancelButton.setAction(table, () -> {
-      if (itemActionGroup.getChildren().contains(cancelButton, true)) {
-        if (applyingItem != null) {
-          applyingItem = null;
+      if (itemActionTable.getChildren().contains(cancelButton, true)) {
+        applyingItem = null;
+        dismembering = false;
 
-          updateInventoryGroup();
-          updateItemDetailsGroup();
-          updateEquipmentGroup();
-        }
+        updateInventoryGroup();
+        updateItemDetailsGroup();
+        updateEquipmentGroup();
       }
     });
 
     holdButton = new ActionButton("H", "Hold");
     holdButton.setKeys(Input.Keys.H);
     holdButton.setAction(table, () -> {
-      if (itemActionGroup.getChildren().contains(holdButton, true)) {
+      if (itemActionTable.getChildren().contains(holdButton, true)) {
         WorldManager.itemHelpers.hold(player, inventory.items.get(itemSelected));
 
         updateAttributesGroup();
@@ -683,7 +749,7 @@ public class CharacterScreen implements Screen {
     wearButton = new ActionButton("W", "Wear");
     wearButton.setKeys(Input.Keys.W);
     wearButton.setAction(table, () -> {
-      if (itemActionGroup.getChildren().contains(wearButton, true)) {
+      if (itemActionTable.getChildren().contains(wearButton, true)) {
         WorldManager.itemHelpers.wear(player, inventory.items.get(itemSelected));
 
         updateAttributesGroup();
@@ -696,7 +762,7 @@ public class CharacterScreen implements Screen {
     throwButton = new ActionButton("T", "Throw");
     throwButton.setKeys(Input.Keys.T);
     throwButton.setAction(table, () -> {
-      if (itemActionGroup.getChildren().contains(throwButton, true)) {
+      if (itemActionTable.getChildren().contains(throwButton, true)) {
         ComponentMappers.item.get(inventory.items.get(itemSelected)).throwing = true;
 
         WorldManager.inputHelpers.startTargeting();
@@ -708,7 +774,7 @@ public class CharacterScreen implements Screen {
     eatButton = new ActionButton("E", "Eat");
     eatButton.setKeys(Input.Keys.E);
     eatButton.setAction(table, () -> {
-      if (itemActionGroup.getChildren().contains(eatButton, true)) {
+      if (itemActionTable.getChildren().contains(eatButton, true)) {
         WorldManager.itemHelpers.eat(player, inventory.items.get(itemSelected));
 
         itemSelected = 0;
@@ -723,7 +789,7 @@ public class CharacterScreen implements Screen {
     skinButton = new ActionButton("S", "Skin");
     skinButton.setKeys(Input.Keys.S);
     skinButton.setAction(table, () -> {
-      if (itemActionGroup.getChildren().contains(skinButton, true)) {
+      if (itemActionTable.getChildren().contains(skinButton, true)) {
         Vector2 position = ComponentMappers.position.get(player).pos;
         int amount = MathUtils.random(1, 6);
 
@@ -742,10 +808,20 @@ public class CharacterScreen implements Screen {
       }
     });
 
+    dismemberButton = new ActionButton("M", "Dismember");
+    dismemberButton.setKeys(Input.Keys.M);
+    dismemberButton.setAction(table, () -> {
+      if (itemActionTable.getChildren().contains(dismemberButton, true)) {
+        dismembering = true;
+
+        updateItemDetailsGroup();
+      }
+    });
+
     bandageButton = new ActionButton("B", "Bandage");
     bandageButton.setKeys(Input.Keys.B);
     bandageButton.setAction(table, () -> {
-      if (itemActionGroup.getChildren().contains(bandageButton, true)) {
+      if (itemActionTable.getChildren().contains(bandageButton, true)) {
         player.remove(BleedingComponent.class);
         WorldManager.itemHelpers.destroy(player, inventory.items.get(itemSelected));
 
@@ -762,7 +838,7 @@ public class CharacterScreen implements Screen {
     applyButton = new ActionButton("A", "Apply");
     applyButton.setKeys(Input.Keys.A);
     applyButton.setAction(table, () -> {
-      if (itemActionGroup.getChildren().contains(applyButton, true)) {
+      if (itemActionTable.getChildren().contains(applyButton, true)) {
         applyingItem = inventory.items.get(itemSelected);
 
         updateInventoryGroup();
@@ -774,7 +850,7 @@ public class CharacterScreen implements Screen {
     confirmApplyButton = new ActionButton("ENTER", "Apply to this");
     confirmApplyButton.setKeys(Input.Keys.ENTER);
     confirmApplyButton.setAction(table, () -> {
-      if (itemActionGroup.getChildren().contains(confirmApplyButton, true)) {
+      if (itemActionTable.getChildren().contains(confirmApplyButton, true)) {
         WorldManager.itemHelpers.apply(
             player, applyingItem, inventory.items.get(itemSelected)
         );
@@ -791,7 +867,7 @@ public class CharacterScreen implements Screen {
     removeButton = new ActionButton("R", "Remove");
     removeButton.setKeys(Input.Keys.R);
     removeButton.setAction(table, () -> {
-      if (itemActionGroup.getChildren().contains(removeButton, true)) {
+      if (itemActionTable.getChildren().contains(removeButton, true)) {
         WorldManager.itemHelpers.remove(player, inventory.items.get(itemSelected));
 
         updateAttributesGroup();
@@ -804,7 +880,7 @@ public class CharacterScreen implements Screen {
     dropButton = new ActionButton("D", "Drop");
     dropButton.setKeys(Input.Keys.D);
     dropButton.setAction(table, () -> {
-      if (itemActionGroup.getChildren().contains(dropButton, true)) {
+      if (itemActionTable.getChildren().contains(dropButton, true)) {
         WorldManager.itemHelpers.drop(player, inventory.items.get(itemSelected));
 
         itemSelected = 0;

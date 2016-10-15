@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.ComponentMapper;
 import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.BodyComponent;
 import me.dannytatom.xibalba.components.BrainComponent;
+import me.dannytatom.xibalba.components.CorpseComponent;
 import me.dannytatom.xibalba.components.DecorationComponent;
 import me.dannytatom.xibalba.components.EffectsComponent;
 import me.dannytatom.xibalba.components.EnemyComponent;
@@ -114,6 +115,9 @@ public final class ComponentMappers {
 
   public static final ComponentMapper<EnemyComponent> enemy =
       ComponentMapper.getFor(EnemyComponent.class);
+
+  public static final ComponentMapper<CorpseComponent> corpse =
+      ComponentMapper.getFor(CorpseComponent.class);
 
   public static final ComponentMapper<EntranceComponent> entrance =
       ComponentMapper.getFor(EntranceComponent.class);
