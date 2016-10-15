@@ -24,6 +24,8 @@ bodyParts:
   left leg: 6
   right leg: 6
 
+wearableBodyParts:
+
 brain:
   personalities:
     - AGGRESSIVE

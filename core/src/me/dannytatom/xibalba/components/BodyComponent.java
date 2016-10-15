@@ -7,6 +7,7 @@ import java.util.TreeMap;
 
 public class BodyComponent implements Component {
   public final TreeMap<String, Integer> parts;
+  public final TreeMap<String, String> wearable;
   public final HashMap<String, Integer> damage;
 
   /**
@@ -14,12 +15,17 @@ public class BodyComponent implements Component {
    *
    * @param parts HashMap of parts
    */
-  public BodyComponent(TreeMap<String, Integer> parts) {
+  public BodyComponent(TreeMap<String, Integer> parts, TreeMap<String, String> wearable) {
     this.parts = parts;
-    this.damage = new HashMap<>();
+    this.wearable = wearable;
 
+    this.damage = new HashMap<>();
     for (String part : parts.keySet()) {
       this.damage.put(part, 0);
     }
+  }
+
+  public BodyComponent(TreeMap<String, Integer> parts) {
+    this(parts, null);
   }
 }

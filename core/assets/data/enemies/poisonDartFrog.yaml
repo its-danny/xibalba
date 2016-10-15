@@ -23,6 +23,8 @@ bodyParts:
   head: 8
   body: 8
 
+wearableBodyParts:
+
 brain:
   personalities:
     - PACKS

@@ -21,6 +21,8 @@ bodyParts:
   left wing: 6
   right wing: 6
 
+wearableBodyParts:
+
 brain:
   personalities:
     - FLYING

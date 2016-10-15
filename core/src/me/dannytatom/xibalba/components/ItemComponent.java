@@ -9,7 +9,7 @@ import java.util.HashMap;
 public class ItemComponent implements Component {
   public final String type;
   public final String description;
-  public final String location;
+  public String location;
   public final boolean twoHanded;
   public final String skill;
   public final HashMap<String, Integer> attributes;

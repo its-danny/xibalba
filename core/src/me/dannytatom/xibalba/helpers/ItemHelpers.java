@@ -129,6 +129,25 @@ public class ItemHelpers {
 
     equipment.slots.put(itemDetails.location, item);
 
+    if (ComponentMappers.effects.has(item)) {
+      EffectsComponent effects = ComponentMappers.effects.get(item);
+
+      for (Map.Entry<String,String> entry : effects.effects.entrySet()) {
+        String type = entry.getKey();
+        String value = entry.getValue();
+
+        if (Objects.equals(type, "passive")) {
+          String[] arr = value.split(":");
+
+          switch (arr[0]) {
+            case "raiseSpeed":
+              ComponentMappers.attributes.get(WorldManager.player).speed += Integer.parseInt(arr[1]);
+              break;
+          }
+        }
+      }
+    }
+
     Entity primary = getRightHand(entity);
 
     if (primary != null) {
@@ -213,6 +232,25 @@ public class ItemHelpers {
       equipment.slots.put("right hand", null);
     } else {
       equipment.slots.put(itemDetails.location, null);
+    }
+
+    if (ComponentMappers.effects.has(item)) {
+      EffectsComponent effects = ComponentMappers.effects.get(item);
+
+      for (Map.Entry<String,String> entry : effects.effects.entrySet()) {
+        String type = entry.getKey();
+        String value = entry.getValue();
+
+        if (Objects.equals(type, "passive")) {
+          String[] arr = value.split(":");
+
+          switch (arr[0]) {
+            case "raiseSpeed":
+              ComponentMappers.attributes.get(WorldManager.player).speed -= Integer.parseInt(arr[1]);
+              break;
+          }
+        }
+      }
     }
   }
 

@@ -19,6 +19,8 @@ attributes:
 bodyParts:
   body: 6
 
+wearableBodyParts:
+
 brain:
   personalities:
     - SOLO

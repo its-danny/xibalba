@@ -56,7 +56,7 @@ public class EntityFactory {
     entity.add(new EnemyComponent());
     entity.add(new PositionComponent(position));
     entity.add(new SkillsComponent());
-    entity.add(new BodyComponent(data.bodyParts));
+    entity.add(new BodyComponent(data.bodyParts, data.wearableBodyParts));
 
     entity.add(new VisualComponent(
             Main.asciiAtlas.createSprite(
@@ -139,7 +139,7 @@ public class EntityFactory {
     ComponentMappers.item.get(entity).name = name + " corpse";
 
     BodyComponent body = ComponentMappers.body.get(enemy);
-    entity.add(new CorpseComponent(name, body.parts));
+    entity.add(new CorpseComponent(name, body.parts, body.wearable));
 
     return entity;
   }
@@ -156,9 +156,22 @@ public class EntityFactory {
   public Entity createLimb(Entity corpse, String part, Vector2 position) {
     Entity entity = createItem("limb", position);
 
-    ComponentMappers.item.get(entity).name
-        = ComponentMappers.corpse.get(corpse).entityName
+    ItemComponent item = ComponentMappers.item.get(entity);
+
+    item.name = ComponentMappers.corpse.get(corpse).entityName
           + " " + part.replace("left ", "").replace("right ", "");
+
+    CorpseComponent body = ComponentMappers.corpse.get(corpse);
+
+    if (body.wearable != null && body.wearable.get(part) != null) {
+      item.location = part;
+      item.actions.add("wear");
+
+      EffectsComponent effects = new EffectsComponent();
+      effects.effects.put("passive", body.wearable.get(part));
+
+      entity.add(effects);
+    }
 
     return entity;
   }

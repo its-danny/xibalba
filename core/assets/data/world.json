@@ -6,11 +6,7 @@
       "height": "100,150"
     },
     "enemies": [
-      { "name": "spiderMonkey", "spawnRange": "2,5" },
-      { "name": "jaguar", "spawnRange": "0,1" },
-      { "name": "sloth", "spawnRange": "1,2" },
-      { "name": "anaconda", "spawnRange": "0,1" },
-      { "name": "poisonDartFrog", "spawnRange": "3,5" }
+      { "name": "jaguar", "spawnRange": "5,5" }
     ],
     "items": [
       { "name": "bow", "spawnRange": "0,1" },

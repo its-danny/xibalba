@@ -22,6 +22,8 @@ bodyParts:
   body: 6
   legs: 4
 
+wearableBodyParts:
+
 brain:
   personalities:
     - SOLO

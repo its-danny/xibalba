@@ -10,6 +10,7 @@ public class YamlToEnemy {
   public HashMap<String, String> visual;
   public HashMap<String, Integer> attributes;
   public TreeMap<String, Integer> bodyParts;
+  public TreeMap<String, String> wearableBodyParts;
   public HashMap<String, List<String>> brain;
   public HashMap<String, String> effects;
 }

@@ -230,6 +230,11 @@ public class CharacterScreen implements Screen {
         new Label("[LIGHT_GRAY]HP " + healthColor + attributes.health + "[LIGHT_GRAY]/" + attributes.maxHealth, Main.skin)
     );
 
+    // Energy & Speed
+    attributesGroup.addActor(
+        new Label("[LIGHT_GRAY]ENG []" + attributes.energy + " [LIGHT_GRAY]SPD []" + attributes.speed, Main.skin)
+    );
+
     // Toughness & defense
 
     int toughness = attributes.toughness;
