@@ -69,6 +69,12 @@ public class PlayerSetup {
   public Entity create() {
     Entity player = new Entity();
 
+    attributes.maxHealth = attributes.toughness * 10;
+    attributes.health = attributes.maxHealth;
+
+    attributes.maxOxygen = attributes.toughness * 4;
+    attributes.oxygen = attributes.maxOxygen;
+
     player.add(skills);
     player.add(attributes);
 
