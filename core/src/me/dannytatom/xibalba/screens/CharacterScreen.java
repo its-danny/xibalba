@@ -725,12 +725,10 @@ public class CharacterScreen implements Screen {
     skinButton.setAction(table, () -> {
       if (itemActionGroup.getChildren().contains(skinButton, true)) {
         Vector2 position = ComponentMappers.position.get(player).pos;
-        String entityName = ComponentMappers.item.get(inventory.items.get(itemSelected)).name.replace(" Corpse", "");
         int amount = MathUtils.random(1, 6);
 
         for (int i = 0; i < amount; i++) {
-          Entity skin = WorldManager.entityFactory.createItem("skin", position);
-          ComponentMappers.item.get(skin).name = entityName + " Skin";
+          Entity skin = WorldManager.entityFactory.createSkin(inventory.items.get(itemSelected), position);
           WorldManager.itemHelpers.addToInventory(player, skin, false);
         }
 

@@ -131,6 +131,24 @@ public class EntityFactory {
     return entity;
   }
 
+  public Entity createCorpse(Entity enemy, Vector2 position) {
+    Entity entity = createItem("corpse", position);
+    ;
+    ComponentMappers.item.get(entity).name
+        = ComponentMappers.attributes.get(enemy).name + " Corpse";
+
+    return entity;
+  }
+
+  public Entity createSkin(Entity corpse, Vector2 position) {
+    Entity entity = createItem("skin", position);
+
+    ComponentMappers.item.get(entity).name
+        = ComponentMappers.item.get(corpse).name.replace("Corpse", "Skin");
+
+    return entity;
+  }
+
   public Entity createTrap(String name, Vector2 position) {
     Entity entity = new Entity();
 

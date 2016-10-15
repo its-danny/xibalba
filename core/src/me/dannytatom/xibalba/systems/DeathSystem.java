@@ -19,8 +19,7 @@ public class DeathSystem extends UsesEnergySystem {
     if (attributes.health <= 0) {
       PositionComponent position = ComponentMappers.position.get(entity);
 
-      Entity corpse = WorldManager.entityFactory.createItem("corpse", position.pos);
-      ComponentMappers.item.get(corpse).name = attributes.name + " Corpse";
+      Entity corpse = WorldManager.entityFactory.createCorpse(entity, position.pos);
 
       WorldManager.world.addEntity(corpse);
       WorldManager.world.removeEntity(entity);
