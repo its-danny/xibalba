@@ -9,12 +9,12 @@ import java.util.HashMap;
 public class ItemComponent implements Component {
   public final String type;
   public final String description;
-  public String location;
   public final boolean twoHanded;
   public final String skill;
   public final HashMap<String, Integer> attributes;
-  public Array<String> actions;
   public final Array<String> verbs;
+  public String location;
+  public Array<String> actions;
   public String name;
   public boolean throwing = false;
 

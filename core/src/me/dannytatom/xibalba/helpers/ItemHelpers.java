@@ -132,7 +132,7 @@ public class ItemHelpers {
     if (ComponentMappers.effects.has(item)) {
       EffectsComponent effects = ComponentMappers.effects.get(item);
 
-      for (Map.Entry<String,String> entry : effects.effects.entrySet()) {
+      for (Map.Entry<String, String> entry : effects.effects.entrySet()) {
         String type = entry.getKey();
         String value = entry.getValue();
 
@@ -237,7 +237,7 @@ public class ItemHelpers {
     if (ComponentMappers.effects.has(item)) {
       EffectsComponent effects = ComponentMappers.effects.get(item);
 
-      for (Map.Entry<String,String> entry : effects.effects.entrySet()) {
+      for (Map.Entry<String, String> entry : effects.effects.entrySet()) {
         String type = entry.getKey();
         String value = entry.getValue();
 
@@ -248,6 +248,7 @@ public class ItemHelpers {
             case "raiseSpeed":
               ComponentMappers.attributes.get(WorldManager.player).speed -= Integer.parseInt(arr[1]);
               break;
+            default:
           }
         }
       }

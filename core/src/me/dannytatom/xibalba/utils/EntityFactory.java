@@ -159,7 +159,7 @@ public class EntityFactory {
     ItemComponent item = ComponentMappers.item.get(entity);
 
     item.name = ComponentMappers.corpse.get(corpse).entityName
-          + " " + part.replace("left ", "").replace("right ", "");
+        + " " + part.replace("left ", "").replace("right ", "");
 
     CorpseComponent body = ComponentMappers.corpse.get(corpse);
 

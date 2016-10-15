@@ -653,7 +653,7 @@ public class CharacterScreen implements Screen {
           itemActionTable.add(bandageButton).pad(0, 0, 5, 5);
         }
 
-        if (itemActionTable.getChildren().size > 0 ) {
+        if (itemActionTable.getChildren().size > 0) {
           itemActionTable.row();
         }
 
@@ -669,7 +669,7 @@ public class CharacterScreen implements Screen {
           itemActionTable.add(dropButton).pad(0, 0, 5, 5);
         }
 
-        if (itemActionTable.getChildren().size > 0 ) {
+        if (itemActionTable.getChildren().size > 0) {
           itemActionTable.row();
         }
       }
