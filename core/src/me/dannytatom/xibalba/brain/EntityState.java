@@ -144,8 +144,10 @@ public enum EntityState implements State<Entity> {
     BrainComponent brain = ComponentMappers.brain.get(entity);
 
     if (brain.path == null || brain.path.isEmpty()) {
+      boolean avoidDeepWater = !isAquatic(entity) && !flies(entity);
+
       NavigationGrid<GridCell> grid =
-          new NavigationGrid<>(WorldManager.mapHelpers.createPathfindingMap(), false);
+          new NavigationGrid<>(WorldManager.mapHelpers.createPathfindingMap(avoidDeepWater), false);
       AStarGridFinder<GridCell> finder = new AStarGridFinder<>(GridCell.class);
 
       PositionComponent position = ComponentMappers.position.get(entity);

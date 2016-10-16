@@ -107,15 +107,19 @@ public class MapHelpers {
    *
    * @return 2d array of GridCells
    */
-  public GridCell[][] createPathfindingMap() {
+  public GridCell[][] createPathfindingMap(boolean avoidDeepWater) {
     Map map = WorldManager.world.getCurrentMap();
     GridCell[][] cells = new GridCell[map.width][map.height];
 
     for (int x = 0; x < map.width; x++) {
       for (int y = 0; y < map.height; y++) {
-        cells[x][y] = new GridCell(
-            x, y, !isBlocked(WorldManager.world.currentMapIndex, new Vector2(x, y))
-        );
+        boolean walkable = !isBlocked(WorldManager.world.currentMapIndex, new Vector2(x, y));
+
+        if (walkable && avoidDeepWater) {
+          walkable = !getCell(x, y).isDeepWater();
+        }
+
+        cells[x][y] = new GridCell(x, y, walkable);
       }
     }
 
