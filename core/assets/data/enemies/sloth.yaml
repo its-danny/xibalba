@@ -25,8 +25,3 @@ bodyParts:
   right leg: 6
 
 wearableBodyParts:
-
-brain:
-  personalities:
-    - SOLO
-    - SAFE

@@ -4,31 +4,17 @@ import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.ai.fsm.DefaultStateMachine;
 import com.badlogic.gdx.ai.fsm.StateMachine;
-import com.badlogic.gdx.utils.Array;
-import me.dannytatom.xibalba.brain.EntityState;
+import me.dannytatom.xibalba.brain.DefaultBrain;
 import org.xguzm.pathfinding.grid.GridCell;
 
 import java.util.List;
 
 public class BrainComponent implements Component {
-  public Array<Personality> personalities;
-  public StateMachine<Entity, EntityState> stateMachine;
+  public StateMachine<Entity, DefaultBrain> stateMachine;
   public List<GridCell> path;
   public Entity target;
 
-  public BrainComponent(Entity entity, Array<Personality> personalities) {
-    this.personalities = personalities;
-
-    stateMachine = new DefaultStateMachine<>(entity, EntityState.IDLE);
-  }
-
-  public enum Personality {
-    AGGRESSIVE, // Will target and attack on sight
-    PACKS,      // Travels in packs
-    SOLO,       // Travels alone
-    SAFE,       // Will flee if health gets below 50%
-    STEALTHY,   // Stays in shadows or out of sight when not in combat
-    FLYING,     // They fly over water and traps and such
-    AQUATIC,    // They stay in water
+  public BrainComponent(Entity entity) {
+    stateMachine = new DefaultStateMachine<>(entity, DefaultBrain.IDLE);
   }
 }

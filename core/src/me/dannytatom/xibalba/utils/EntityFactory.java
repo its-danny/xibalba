@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Colors;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Array;
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.BodyComponent;
@@ -75,11 +74,7 @@ public class EntityFactory {
         data.attributes.get("agility")
     ));
 
-    Array<BrainComponent.Personality> personalities = new Array<>();
-    for (String personality : data.brain.get("personalities")) {
-      personalities.add(BrainComponent.Personality.valueOf(personality));
-    }
-    entity.add(new BrainComponent(entity, personalities));
+    entity.add(new BrainComponent(entity));
 
     if (data.effects != null) {
       entity.add(new EffectsComponent(data));

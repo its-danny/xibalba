@@ -18,7 +18,7 @@ import org.xguzm.pathfinding.grid.finders.AStarGridFinder;
 import java.util.ArrayList;
 import java.util.List;
 
-public enum EntityState implements State<Entity> {
+public enum DefaultBrain implements State<Entity> {
   IDLE() {
     @Override
     public void update(Entity entity) {
@@ -43,7 +43,6 @@ public enum EntityState implements State<Entity> {
       BrainComponent brain = ComponentMappers.brain.get(entity);
 
       boolean isNearPlayer = WorldManager.entityHelpers.isNearPlayer(entity);
-      boolean canSensePlayer = WorldManager.entityHelpers.canSensePlayer(entity);
       boolean playerIsAlive = WorldManager.entityHelpers.isPlayerAlive();
 
       if (isNearPlayer && playerIsAlive && !shouldFlee(entity)) {
@@ -51,44 +50,9 @@ public enum EntityState implements State<Entity> {
           brain.target = WorldManager.player;
           brain.stateMachine.changeState(ATTACK);
         }
-      } else if (canSensePlayer && playerIsAlive && isAggressive(entity) && !shouldFlee(entity)) {
-        if (canMove(entity)) {
-          brain.target = WorldManager.player;
-          brain.stateMachine.changeState(TARGET);
-        }
       } else {
         if (canMove(entity)) {
           updatePath(entity);
-        }
-      }
-    }
-
-    @Override
-    public void exit(Entity entity) {
-      BrainComponent brain = ComponentMappers.brain.get(entity);
-
-      brain.path = null;
-    }
-  },
-
-  TARGET() {
-    @Override
-    public void update(Entity entity) {
-      BrainComponent brain = ComponentMappers.brain.get(entity);
-
-      boolean isNearPlayer = WorldManager.entityHelpers.isNearPlayer(entity);
-      boolean canSensePlayer = WorldManager.entityHelpers.canSensePlayer(entity);
-      boolean playerIsAlive = WorldManager.entityHelpers.isPlayerAlive();
-
-      if (isNearPlayer && playerIsAlive && canAttack(entity)) {
-        brain.stateMachine.changeState(ATTACK);
-      } else if (canSensePlayer && playerIsAlive) {
-        if (canMove(entity)) {
-          updatePath(entity);
-        }
-      } else {
-        if (canMove(entity)) {
-          brain.stateMachine.changeState(WANDER);
         }
       }
     }
@@ -107,16 +71,10 @@ public enum EntityState implements State<Entity> {
       BrainComponent brain = ComponentMappers.brain.get(entity);
 
       boolean isNearPlayer = WorldManager.entityHelpers.isNearPlayer(entity);
-      boolean canSensePlayer = WorldManager.entityHelpers.canSensePlayer(entity);
       boolean playerIsAlive = WorldManager.entityHelpers.isPlayerAlive();
 
       if (isNearPlayer && playerIsAlive && !shouldFlee(entity) && canAttack(entity)) {
         entity.add(new MeleeComponent(brain.target, "body"));
-      } else if (canSensePlayer && playerIsAlive && isAggressive(entity) && !shouldFlee(entity)) {
-        if (canMove(entity)) {
-          brain.target = WorldManager.player;
-          brain.stateMachine.changeState(TARGET);
-        }
       } else {
         if (canMove(entity)) {
           brain.stateMachine.changeState(WANDER);
@@ -144,10 +102,7 @@ public enum EntityState implements State<Entity> {
     BrainComponent brain = ComponentMappers.brain.get(entity);
 
     if (brain.path == null || brain.path.isEmpty()) {
-      boolean avoidDeepWater = !isAquatic(entity) && !flies(entity);
-
-      NavigationGrid<GridCell> grid =
-          new NavigationGrid<>(WorldManager.mapHelpers.createPathfindingMap(avoidDeepWater), false);
+      NavigationGrid<GridCell> grid = new NavigationGrid<>(WorldManager.mapHelpers.createPathfindingMap(true), false);
       AStarGridFinder<GridCell> finder = new AStarGridFinder<>(GridCell.class);
 
       PositionComponent position = ComponentMappers.position.get(entity);
@@ -201,34 +156,6 @@ public enum EntityState implements State<Entity> {
   boolean shouldFlee(Entity entity) {
     AttributesComponent attributes = ComponentMappers.attributes.get(entity);
 
-    return isSafe(entity) && attributes.health < (attributes.maxHealth / 2);
-  }
-
-  boolean isAggressive(Entity entity) {
-    return ComponentMappers.brain.get(entity).personalities.contains(BrainComponent.Personality.AGGRESSIVE, true);
-  }
-
-  boolean travelsInPacks(Entity entity) {
-    return ComponentMappers.brain.get(entity).personalities.contains(BrainComponent.Personality.PACKS, true);
-  }
-
-  boolean travelsSolo(Entity entity) {
-    return ComponentMappers.brain.get(entity).personalities.contains(BrainComponent.Personality.SOLO, true);
-  }
-
-  boolean isSafe(Entity entity) {
-    return ComponentMappers.brain.get(entity).personalities.contains(BrainComponent.Personality.SAFE, true);
-  }
-
-  boolean isStealthy(Entity entity) {
-    return ComponentMappers.brain.get(entity).personalities.contains(BrainComponent.Personality.STEALTHY, true);
-  }
-
-  boolean flies(Entity entity) {
-    return ComponentMappers.brain.get(entity).personalities.contains(BrainComponent.Personality.FLYING, true);
-  }
-
-  boolean isAquatic(Entity entity) {
-    return ComponentMappers.brain.get(entity).personalities.contains(BrainComponent.Personality.AQUATIC, true);
+    return attributes.health < (attributes.maxHealth / 2);
   }
 }

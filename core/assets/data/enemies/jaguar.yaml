@@ -27,9 +27,3 @@ bodyParts:
 wearableBodyParts:
   left leg: raiseSpeed:10
   right leg: raiseSpeed:10
-
-brain:
-  personalities:
-    - SOLO
-    - STEALTHY
-    - AGGRESSIVE

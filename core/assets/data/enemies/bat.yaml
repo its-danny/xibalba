@@ -22,8 +22,3 @@ bodyParts:
   right wing: 6
 
 wearableBodyParts:
-
-brain:
-  personalities:
-    - FLYING
-    - PACKS

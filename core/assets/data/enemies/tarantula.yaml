@@ -23,9 +23,3 @@ bodyParts:
   legs: 4
 
 wearableBodyParts:
-
-brain:
-  personalities:
-    - SOLO
-    - AGGRESSIVE
-    - SAFE

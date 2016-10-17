@@ -1,7 +1,6 @@
 package me.dannytatom.xibalba.utils;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.TreeMap;
 
 public class YamlToEnemy {
@@ -11,6 +10,5 @@ public class YamlToEnemy {
   public HashMap<String, Integer> attributes;
   public TreeMap<String, Integer> bodyParts;
   public TreeMap<String, String> wearableBodyParts;
-  public HashMap<String, List<String>> brain;
   public HashMap<String, String> effects;
 }
