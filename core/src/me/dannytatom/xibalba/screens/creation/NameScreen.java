@@ -25,6 +25,7 @@ class NameScreen implements Screen {
   private final Stage stage;
   private final TextField worldSeedField;
   private final TextField playerNameField;
+  private final TextField playerColorField;
   private long worldSeed;
 
   /**
@@ -53,17 +54,25 @@ class NameScreen implements Screen {
     table.row();
 
     Label worldSeedLabel = new Label("World Seed", Main.skin);
-    table.add(worldSeedLabel).pad(0, 0, 10, 10).width(Gdx.graphics.getWidth() / 2 - 20);
+    table.add(worldSeedLabel).pad(0, 0, 10, 0).width(Gdx.graphics.getWidth() / 2);
     table.row();
     worldSeedField = new TextField(worldSeed + "", Main.skin);
-    table.add(worldSeedField).pad(0, 0, 10, 10).width(Gdx.graphics.getWidth() / 2 - 20);
+    table.add(worldSeedField).pad(0, 0, 10, 0).width(Gdx.graphics.getWidth() / 2 );
 
     table.row();
     Label playerNameLabel = new Label("Name", Main.skin);
-    table.add(playerNameLabel).pad(0, 0, 10, 10).width(Gdx.graphics.getWidth() / 2 - 20);
+    table.add(playerNameLabel).pad(0, 0, 10, 0).width(Gdx.graphics.getWidth() / 2);
     table.row();
     playerNameField = new TextField(playerSetup.name, Main.skin);
-    table.add(playerNameField).pad(0, 0, 10, 10).width(Gdx.graphics.getWidth() / 2 - 20);
+    table.add(playerNameField).pad(0, 0, 10, 0).width(Gdx.graphics.getWidth() / 2);
+
+    table.row();
+    Label playerColorLabel = new Label("Color", Main.skin);
+    table.add(playerColorLabel).pad(0, 0, 10, 0).width(Gdx.graphics.getWidth() / 2);
+    table.row();
+    playerColorField = new TextField(playerSetup.color, Main.skin);
+    playerColorField.setMaxLength(6);
+    table.add(playerColorField).pad(0, 0, 10, 0).width(Gdx.graphics.getWidth() / 2);
 
     ActionButton continueButton = new ActionButton("ENTER", "Begin Your Journey");
     continueButton.setKeys(Input.Keys.ENTER);
@@ -110,6 +119,10 @@ class NameScreen implements Screen {
     // Set player name
     String playerName = playerNameField.getText();
     playerSetup.name = Objects.equals(playerName, "") ? playerSetup.name : playerName;
+
+    // Set player color
+    String playerColor = playerColorField.getText();
+    playerSetup.color = Objects.equals(playerColor, "") ? playerSetup.color : playerColor;
 
     main.setScreen(new LoadingScreen(main, playerSetup));
   }

@@ -31,6 +31,7 @@ public class PlayerSetup {
   public final Array<String> traits;
   public final Array<String> defects;
 
+  public String color;
   public String name;
 
   public PlayerSetup() {
@@ -48,6 +49,7 @@ public class PlayerSetup {
     rnMap.put(4, "IV");
     rnMap.put(1, "I");
 
+    color = "FFFFFF";
     generateName();
 
     attributes = new AttributesComponent(name, "It's you", 100, 10, 5, 4, 4, 4);
@@ -80,7 +82,7 @@ public class PlayerSetup {
 
     Vector2 position = WorldManager.world.getCurrentMap().entrance;
     player.add(new PositionComponent(position));
-    player.add(new VisualComponent(Main.asciiAtlas.createSprite("0004"), position));
+    player.add(new VisualComponent(Main.asciiAtlas.createSprite("0004"), position, Main.parseColor(color)));
     player.add(new PlayerComponent());
     player.add(new InventoryComponent());
     player.add(new EquipmentComponent());
