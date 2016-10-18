@@ -176,10 +176,14 @@ public class CombatHelpers {
       return 0;
     }
 
+    // Tween some opacity on the entity hit
+    VisualComponent targetVisual = ComponentMappers.visual.get(target);
+
+    WorldManager.tweens.add(
+        Tween.to(targetVisual.sprite, SpriteAccessor.ALPHA, .05f).target(.25f).repeatYoyo(1, 0f)
+    );
+
     // Ya didn't miss!
-
-    doHitAnimation(target);
-
     return hitRoll;
   }
 
@@ -250,6 +254,20 @@ public class CombatHelpers {
       AttributesComponent targetAttributes = ComponentMappers.attributes.get(target);
 
       int totalDamage = damage - defense;
+
+      // Shake camera if the player was hit
+
+      if (ComponentMappers.player.has(target)) {
+        Main.cameraShake.shake(.5f, .1f);
+      }
+
+      // Maybe add some blood to the floor
+
+      Vector2 position = WorldManager.mapHelpers.getRandomOpenSpaceNearEntity(target);
+
+      if (position != null) {
+        WorldManager.mapHelpers.makeFloorBloody(position);
+      }
 
       // Sound effects!
 
@@ -398,18 +416,6 @@ public class CombatHelpers {
   private String getName(Entity entity) {
     return ComponentMappers.player.has(entity)
         ? "You" : ComponentMappers.attributes.get(entity).name;
-  }
-
-  private void doHitAnimation(Entity target) {
-    VisualComponent targetVisual = ComponentMappers.visual.get(target);
-
-    WorldManager.tweens.add(
-        Tween.to(targetVisual.sprite, SpriteAccessor.ALPHA, .05f).target(.25f).repeatYoyo(1, 0f)
-    );
-
-    if (ComponentMappers.player.has(target)) {
-      Main.cameraShake.shake(.5f, .1f);
-    }
   }
 
   private enum AttackType {

@@ -400,6 +400,22 @@ public class MapHelpers {
     return position;
   }
 
+  public Vector2 getRandomOpenSpaceNearEntity(Entity target) {
+    Vector2 targetPosition = ComponentMappers.position.get(target).pos;
+    Vector2 position;
+
+    int x = MathUtils.random(-1, 1);
+    int y = MathUtils.random(-1, 1);
+
+    if (!isBlocked(WorldManager.world.currentMapIndex, new Vector2(targetPosition.x + x, targetPosition.y + y))) {
+      position = new Vector2(targetPosition.x + 1, targetPosition.y + y);
+    } else {
+      position = null;
+    }
+
+    return position;
+  }
+
   /**
    * Find a random open cell on any world.
    *
@@ -466,5 +482,9 @@ public class MapHelpers {
 
   public void makeFloorWet(Vector2 position) {
     getCell(position.x, position.y).sprite.setColor(Colors.get(WorldManager.world.getCurrentMap().type + "FloorWet"));
+  }
+
+  public void makeFloorBloody(Vector2 position) {
+    getCell(position.x, position.y).sprite.setColor(Colors.get("RED"));
   }
 }
