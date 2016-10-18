@@ -220,11 +220,11 @@ public class EntityHelpers {
       attributes.health += amount;
 
       if (ComponentMappers.player.has(entity)) {
-        WorldManager.log.add("You gain " + amount + " health");
+        WorldManager.log.add("stats.healthRaised", "You", amount);
 
         ComponentMappers.player.get(entity).totalDamageHealed += amount;
       } else {
-        WorldManager.log.add(attributes.name + " gained " + amount + " health");
+        WorldManager.log.add("stats.healthRaised", attributes.name, amount);
       }
     }
   }
@@ -242,11 +242,9 @@ public class EntityHelpers {
       attributes.strength += amount;
 
       if (ComponentMappers.player.has(entity)) {
-        WorldManager.log.add("Your strength has improved to " + attributes.strength + "d");
+        WorldManager.log.add("stats.strengthRaised", "You");
       } else {
-        WorldManager.log.add(
-            attributes.name + " strength has improved to " + attributes.strength + "d"
-        );
+        WorldManager.log.add("stats.strengthRaised", attributes.name);
       }
     }
   }
@@ -270,11 +268,11 @@ public class EntityHelpers {
       entity.add(new PoisonedComponent(damage, turns));
 
       if (ComponentMappers.player.has(entity)) {
-        WorldManager.log.add("You have been poisoned");
+        WorldManager.log.add("effects.poisoned.started", "You", "are");
       } else {
         AttributesComponent attributes = ComponentMappers.attributes.get(entity);
 
-        WorldManager.log.add(attributes.name + " has been poisoned");
+        WorldManager.log.add("effects.poisoned.started", attributes.name, "is");
       }
     }
   }

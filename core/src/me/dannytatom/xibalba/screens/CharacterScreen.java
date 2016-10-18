@@ -595,10 +595,7 @@ public class CharacterScreen implements Screen {
               WorldManager.itemHelpers.addToInventory(player, limb, false);
               body.parts.remove(part);
 
-              WorldManager.log.add(
-                  "You ripped the " + part + " from the "
-                      + ComponentMappers.corpse.get(corpse).entityName + " corpse"
-              );
+              WorldManager.log.add("inventory.dismembered", part, ComponentMappers.corpse.get(corpse).entityName);
 
               if (body.parts.size() == 0 || (body.parts.size() == 1 && body.parts.containsKey("body"))) {
                 ComponentMappers.item.get(corpse).actions.removeValue("dismember", false);
@@ -804,7 +801,7 @@ public class CharacterScreen implements Screen {
         }
 
         WorldManager.itemHelpers.destroy(player, inventory.items.get(itemSelected));
-        WorldManager.log.add("You got " + amount + " skins from the corpse");
+        WorldManager.log.add("inventory.skinned", amount);
 
         itemSelected = 0;
 
@@ -830,7 +827,7 @@ public class CharacterScreen implements Screen {
         player.remove(BleedingComponent.class);
         WorldManager.itemHelpers.destroy(player, inventory.items.get(itemSelected));
 
-        WorldManager.log.add("You have bandaged your bleeding wound");
+        WorldManager.log.add("inventory.bandaged");
 
         itemSelected = 0;
 

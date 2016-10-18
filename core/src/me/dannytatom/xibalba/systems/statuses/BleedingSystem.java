@@ -31,10 +31,10 @@ public class BleedingSystem extends UsesEnergySystem {
 
         boolean isPlayer = ComponentMappers.player.has(entity);
 
-        WorldManager.log.add((isPlayer ? "You" : attributes.name) + " took 5 damage from bleeding");
+        WorldManager.log.add("effects.bleeding.tookDamage", (isPlayer ? "You" : attributes.name), 5);
 
         if (attributes.health <= 0) {
-          WorldManager.log.add((isPlayer ? "[RED]You" : "[GREEN]" + attributes.name) + " bled to death");
+          WorldManager.log.add("effects.bleeding.died", (isPlayer ? "You" : attributes.name));
         }
       }
 

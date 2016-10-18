@@ -155,13 +155,13 @@ PlayerInput implements InputProcessor {
                   weaponDetails.ammunitionType)) {
                 WorldManager.inputHelpers.startTargeting();
               } else {
-                WorldManager.log.add("You aren't carrying any ammunition for this");
+                WorldManager.log.add("inventory.noAmmunitionAvailable");
               }
             } else {
-              WorldManager.log.add("This weapon doesn't take ammunition");
+              WorldManager.log.add("inventory.itemDoesNotTakeAmmunition");
             }
           } else {
-            WorldManager.log.add("You aren't holding a weapon");
+            WorldManager.log.add("inventory.notHoldingWeapon");
           }
         }
         break;
@@ -179,7 +179,7 @@ PlayerInput implements InputProcessor {
 
               WorldManager.inputHelpers.startTargeting();
             } else {
-              WorldManager.log.add("You can't throw that");
+              WorldManager.log.add("inventory.cantThrowItem");
             }
           }
         }

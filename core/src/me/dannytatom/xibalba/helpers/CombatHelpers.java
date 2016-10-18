@@ -137,7 +137,7 @@ public class CombatHelpers {
         ComponentMappers.player.get(starter).totalMisses += 1;
       }
 
-      WorldManager.log.add(getName(starter) + " tried to hit " + getName(target) + " but missed");
+      WorldManager.log.add("combat.missed", getName(starter), getName(target));
     }
   }
 
@@ -237,11 +237,9 @@ public class CombatHelpers {
     // Log some shit
 
     WorldManager.log.add(
-        getName(starter) + " "
-            + (item == null ? "hit" : ComponentMappers.item.get(item).verbs.random())
-            + " " + getName(target)
-            + " for " + totalDamage
-            + (Objects.equals(bodyPart, "body") ? "" : " in the " + bodyPart)
+        "combat.hit", getName(starter),
+        (item == null ? "hit" : ComponentMappers.item.get(item).verbs.random()),
+        getName(target), totalDamage, bodyPart
     );
 
     return totalDamage;
@@ -314,10 +312,10 @@ public class CombatHelpers {
       if (addEffect) {
         if (bodyPart.contains("leg") && !ComponentMappers.crippled.has(target)) {
           target.add(new CrippledComponent());
-          WorldManager.log.add("[RED]" + getName(starter) + " crippled " + getName(target));
+          WorldManager.log.add("effects.crippled.started", getName(starter), getName(target));
         } else if (bodyPart.contains("body") && !ComponentMappers.bleeding.has(target)) {
           target.add(new BleedingComponent());
-          WorldManager.log.add("[RED]" + getName(starter) + " has caused " + getName(target) + " to bleed out");
+          WorldManager.log.add("effects.bleeding.started", getName(starter), getName(target));
         }
       }
 
@@ -334,7 +332,7 @@ public class CombatHelpers {
         skills.counters.put(skill, 0);
 
         if (ComponentMappers.player.has(starter)) {
-          WorldManager.log.add("[YELLOW]You feel better at " + skill);
+          WorldManager.log.add("skills.increased", skill);
         }
 
         if (MathUtils.random() > .25) {
@@ -360,7 +358,7 @@ public class CombatHelpers {
           }
 
           if (ComponentMappers.player.has(starter)) {
-            WorldManager.log.add("[YELLOW]Your " + skills.associations.get(skill) + " has risen");
+            WorldManager.log.add("attributes.increased", skills.associations.get(skill));
           }
         }
       }
@@ -403,11 +401,11 @@ public class CombatHelpers {
           playerDetails.lastHitEntity = null;
           playerDetails.totalKills += 1;
 
-          WorldManager.log.add("[GREEN]You killed " + targetAttributes.name);
+          WorldManager.log.add("combat.playerKilledEnemy", targetAttributes.name);
         } else {
           AttributesComponent starterAttributes = ComponentMappers.attributes.get(starter);
 
-          WorldManager.log.add("[RED]You have been killed by " + starterAttributes.name);
+          WorldManager.log.add("combat.enemyKilledPlayer", starterAttributes.name);
         }
       }
     }

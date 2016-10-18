@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.I18NBundle;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import me.dannytatom.xibalba.Main;
@@ -91,6 +92,8 @@ public class LoadingScreen implements Screen {
   }
 
   private void loadAssets() {
+    Main.assets.load("i18n/xibalba", I18NBundle.class);
+
     Main.assets.load("sprites/main.atlas", TextureAtlas.class);
     Main.assets.load("sprites/qbicfeet_10x10.atlas", TextureAtlas.class);
 

@@ -40,10 +40,10 @@ public class DrowningSystem extends UsesEnergySystem {
       if (WorldManager.entityHelpers.canSee(WorldManager.player, entity)) {
         boolean isPlayer = ComponentMappers.player.has(entity);
 
-        WorldManager.log.add((isPlayer ? "You" : attributes.name) + " took 5 damage from drowning");
+        WorldManager.log.add("effects.drowning.tookDamage", (isPlayer ? "You" : attributes.name), 5);
 
         if (attributes.health <= 0) {
-          WorldManager.log.add((isPlayer ? "[RED]You" : "[GREEN]" + attributes.name) + " drowned to death");
+          WorldManager.log.add("effects.drowning.died", (isPlayer ? "You" : attributes.name));
         }
       }
     }

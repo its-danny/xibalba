@@ -74,9 +74,7 @@ public class ItemHelpers {
         ItemComponent itemDetails = ComponentMappers.item.get(item);
 
         if (log) {
-          WorldManager.log.add(
-              "You picked up a " + WorldManager.itemHelpers.getName(entity, item)
-          );
+          WorldManager.log.add("inventory.pickedUp", WorldManager.itemHelpers.getName(entity, item));
         }
 
         if (itemDetails.twoHanded && ComponentMappers.oneArm.has(entity)) {
@@ -88,9 +86,7 @@ public class ItemHelpers {
             if (equipment.slots.get("right hand") == null) {
               hold(entity, item);
 
-              WorldManager.log.add(
-                  "You are now holding a " + WorldManager.itemHelpers.getName(entity, item)
-              );
+              WorldManager.log.add("inventory.holding", WorldManager.itemHelpers.getName(entity, item));
             }
           }
         }
@@ -169,7 +165,7 @@ public class ItemHelpers {
     if (item != null) {
       ItemComponent itemDetails = ComponentMappers.item.get(item);
 
-      WorldManager.log.add("You eat a " + itemDetails.name);
+      WorldManager.log.add("inventory.ate", itemDetails.name);
 
       EffectsComponent itemEffects = ComponentMappers.effects.get(item);
 
@@ -276,9 +272,7 @@ public class ItemHelpers {
       inventory.items.remove(item);
 
       if (ComponentMappers.player.has(entity)) {
-        WorldManager.log.add(
-            "You dropped a " + WorldManager.itemHelpers.getName(entity, item)
-        );
+        WorldManager.log.add("inventory.dropped", WorldManager.itemHelpers.getName(entity, item));
       }
     }
   }
