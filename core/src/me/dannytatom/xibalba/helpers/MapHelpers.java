@@ -408,7 +408,7 @@ public class MapHelpers {
     int y = MathUtils.random(-1, 1);
 
     if (!isBlocked(WorldManager.world.currentMapIndex, new Vector2(targetPosition.x + x, targetPosition.y + y))) {
-      position = new Vector2(targetPosition.x + 1, targetPosition.y + y);
+      position = new Vector2(targetPosition.x + x, targetPosition.y + y);
     } else {
       position = null;
     }
