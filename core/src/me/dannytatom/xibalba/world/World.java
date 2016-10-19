@@ -62,7 +62,7 @@ public class World {
     main.setScreen(Main.playScreen);
   }
 
-  public void changeDepth(int change) {
+  private void changeDepth(int change) {
     Main.playScreen.dispose();
     main.setScreen(null);
 

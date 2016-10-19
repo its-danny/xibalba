@@ -102,7 +102,8 @@ public enum DefaultBrain implements State<Entity> {
     BrainComponent brain = ComponentMappers.brain.get(entity);
 
     if (brain.path == null || brain.path.isEmpty()) {
-      NavigationGrid<GridCell> grid = new NavigationGrid<>(WorldManager.mapHelpers.createPathfindingMap(true), false);
+      NavigationGrid<GridCell> grid
+          = new NavigationGrid<>(WorldManager.mapHelpers.createPathfindingMap(true), false);
       AStarGridFinder<GridCell> finder = new AStarGridFinder<>(GridCell.class);
 
       PositionComponent position = ComponentMappers.position.get(entity);
@@ -116,7 +117,7 @@ public enum DefaultBrain implements State<Entity> {
         }
         while (brain.path == null);
       } else {
-        Vector2 targetPosition = WorldManager.mapHelpers.getOpenSpaceNearEntity(brain.target);
+        Vector2 targetPosition = WorldManager.mapHelpers.getRandomOpenSpaceNearEntity(brain.target);
 
         brain.path = finder.findPath((int) position.pos.x, (int) position.pos.y,
             (int) targetPosition.x, (int) targetPosition.y, grid);

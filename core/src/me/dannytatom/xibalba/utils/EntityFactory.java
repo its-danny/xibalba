@@ -127,6 +127,14 @@ public class EntityFactory {
     return entity;
   }
 
+  /**
+   * Create a corpse.
+   *
+   * @param enemy    The enemy who's corpse we're creating
+   * @param position Where to place it
+   *
+   * @return The corpse
+   */
   public Entity createCorpse(Entity enemy, Vector2 position) {
     Entity entity = createItem("corpse", position);
     String name = ComponentMappers.attributes.get(enemy).name;
@@ -139,21 +147,38 @@ public class EntityFactory {
     return entity;
   }
 
+  /**
+   * Create skin.
+   *
+   * @param corpse   The corpse we're skinning
+   * @param position Where to place the skin
+   *
+   * @return The skin
+   */
   public Entity createSkin(Entity corpse, Vector2 position) {
     Entity entity = createItem("skin", position);
 
     ComponentMappers.item.get(entity).name
-        = ComponentMappers.corpse.get(corpse).entityName + " skin";
+        = ComponentMappers.corpse.get(corpse).entity + " skin";
 
     return entity;
   }
 
+  /**
+   * Create limb.
+   *
+   * @param corpse   The corpse we're dismembering
+   * @param part     What part of the body we're dismembering
+   * @param position Where to place the limb
+   *
+   * @return The skin
+   */
   public Entity createLimb(Entity corpse, String part, Vector2 position) {
     Entity entity = createItem("limb", position);
 
     ItemComponent item = ComponentMappers.item.get(entity);
 
-    item.name = ComponentMappers.corpse.get(corpse).entityName
+    item.name = ComponentMappers.corpse.get(corpse).entity
         + " " + part.replace("left ", "").replace("right ", "");
 
     CorpseComponent body = ComponentMappers.corpse.get(corpse);
@@ -171,6 +196,14 @@ public class EntityFactory {
     return entity;
   }
 
+  /**
+   * Create trap.
+   *
+   * @param name     Name of the trap we're creating
+   * @param position Where to place it
+   *
+   * @return The trap
+   */
   public Entity createTrap(String name, Vector2 position) {
     Entity entity = new Entity();
 
@@ -257,6 +290,11 @@ public class EntityFactory {
     return entity;
   }
 
+  /**
+   * Create rain drop.
+   *
+   * @return The rain drop
+   */
   public Entity createRainDrop() {
     Entity entity = new Entity();
     Vector2 position = new Vector2(0, 0);

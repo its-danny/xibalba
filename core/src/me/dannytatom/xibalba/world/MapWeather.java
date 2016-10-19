@@ -13,12 +13,19 @@ import me.dannytatom.xibalba.components.VisualComponent;
 import me.dannytatom.xibalba.utils.ComponentMappers;
 
 public class MapWeather {
-  private ImmutableArray<Entity> rainDrops;
+  private final ImmutableArray<Entity> rainDrops;
+  private final Sprite falling;
+  private final Sprite splash;
+  private final Sprite fading;
   private float counter = 0;
-  private Sprite falling;
-  private Sprite splash;
-  private Sprite fading;
 
+  /**
+   * Rainfall in the forest.
+   * </p>
+   * Generate 250 rain drops in random positions on the map.
+   *
+   * @param mapIndex The map we're working on
+   */
   public MapWeather(int mapIndex) {
     for (int i = 0; i < 250; i++) {
       Entity drop = WorldManager.entityFactory.createRainDrop();
@@ -34,6 +41,12 @@ public class MapWeather {
     fading = Main.asciiAtlas.createSprite("0700");
   }
 
+  /**
+   * Move the rain falls ever 10ms,
+   * changing them from falling to splashing to fading as they move.
+   *
+   * @param delta Time since last frame
+   */
   public void update(float delta) {
     counter += delta;
 

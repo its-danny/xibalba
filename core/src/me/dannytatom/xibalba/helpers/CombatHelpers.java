@@ -83,6 +83,13 @@ public class CombatHelpers {
     }
   }
 
+  /**
+   * Handles melee combat.
+   *
+   * @param starter  Who started the fight
+   * @param target   Who they fightin'
+   * @param bodyPart Where they hittin'
+   */
   public void melee(Entity starter, Entity target, String bodyPart) {
     Entity item = null;
 
@@ -115,6 +122,15 @@ public class CombatHelpers {
     }
   }
 
+  /**
+   * Handles range combat.
+   *
+   * @param starter  Who started the fight
+   * @param target   Who they fightin'
+   * @param bodyPart Where they hittin'
+   * @param item     What item they're hitting them w/
+   * @param skill    What skill to use (throw if throwing, archery if bow, etc0
+   */
   public void range(Entity starter, Entity target, String bodyPart, Entity item, String skill) {
     SkillsComponent starterSkills = ComponentMappers.skills.get(starter);
     int skillLevel = starterSkills.levels.get(skill);
@@ -129,7 +145,9 @@ public class CombatHelpers {
         playerDetails.totalHits += 1;
       }
 
-      int damage = rollDamage(Objects.equals(skill, "throwing") ? AttackType.THROW : AttackType.RANGE, starter, target, item, hit, bodyPart);
+      int damage = rollDamage(Objects.equals(skill, "throwing")
+          ? AttackType.THROW
+          : AttackType.RANGE, starter, target, item, hit, bodyPart);
 
       applyDamage(starter, target, item, damage, skill, bodyPart);
     } else {
@@ -251,8 +269,6 @@ public class CombatHelpers {
     if (damage > defense) {
       AttributesComponent targetAttributes = ComponentMappers.attributes.get(target);
 
-      int totalDamage = damage - defense;
-
       // Shake camera if the player was hit
 
       if (ComponentMappers.player.has(target)) {
@@ -287,6 +303,7 @@ public class CombatHelpers {
       // Deal the damage
 
       BodyComponent targetBody = ComponentMappers.body.get(target);
+      int totalDamage = damage - defense;
 
       WorldManager.entityHelpers.takeDamage(target, totalDamage);
       targetBody.damage.put(bodyPart, targetBody.damage.get(bodyPart) + totalDamage);
@@ -341,17 +358,20 @@ public class CombatHelpers {
           switch (skills.associations.get(skill)) {
             case "agility":
               if (starterAttributes.agility < 12) {
-                starterAttributes.agility = starterAttributes.agility == 0 ? 4 : starterAttributes.agility + 2;
+                starterAttributes.agility
+                    = starterAttributes.agility == 0 ? 4 : starterAttributes.agility + 2;
               }
               break;
             case "strength":
               if (starterAttributes.strength < 12) {
-                starterAttributes.strength = starterAttributes.strength == 0 ? 4 : starterAttributes.strength + 2;
+                starterAttributes.strength
+                    = starterAttributes.strength == 0 ? 4 : starterAttributes.strength + 2;
               }
               break;
             case "toughness":
               if (starterAttributes.toughness < 12) {
-                starterAttributes.toughness = starterAttributes.toughness == 0 ? 4 : starterAttributes.toughness + 2;
+                starterAttributes.toughness
+                    = starterAttributes.toughness == 0 ? 4 : starterAttributes.toughness + 2;
               }
               break;
             default:
@@ -385,7 +405,8 @@ public class CombatHelpers {
           if (ComponentMappers.player.has(starter)) {
             PlayerComponent playerDetails = ComponentMappers.player.get(starter);
 
-            if (playerDetails != null && !playerDetails.identifiedItems.contains(itemDetails.name, true)) {
+            if (playerDetails != null
+                && !playerDetails.identifiedItems.contains(itemDetails.name, true)) {
               playerDetails.identifiedItems.add(itemDetails.name);
             }
           }

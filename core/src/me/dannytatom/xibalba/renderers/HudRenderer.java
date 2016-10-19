@@ -74,13 +74,16 @@ public class HudRenderer {
     topTable.setFillParent(true);
     stage.addActor(topTable);
 
+
     playerInfo = new VerticalGroup().left();
     enemyInfo = new VerticalGroup().center();
     debugInfo = new VerticalGroup().right();
 
-    topTable.add(playerInfo).pad(10, 10, 10, 10).width(Gdx.graphics.getWidth() / 3 - 20).top();
-    topTable.add(enemyInfo).pad(10, 10, 10, 10).width(Gdx.graphics.getWidth() / 3 - 20).top();
-    topTable.add(debugInfo).pad(10, 10, 10, 10).width(Gdx.graphics.getWidth() / 3 - 20).top();
+    int width = Gdx.graphics.getWidth() / 3 - 20;
+
+    topTable.add(playerInfo).pad(10, 10, 10, 10).width(width).top();
+    topTable.add(enemyInfo).pad(10, 10, 10, 10).width(width).top();
+    topTable.add(debugInfo).pad(10, 10, 10, 10).width(width).top();
 
     bottomTable = new Table();
     bottomTable.bottom();
@@ -95,9 +98,9 @@ public class HudRenderer {
     menuAndAreaDetails.addActor(areaDetails);
     setupMenuButtons();
 
-    bottomTable.add(actionLog).pad(10, 10, 10, 10).width(Gdx.graphics.getWidth() / 3 - 20).bottom();
-    bottomTable.add(abilitiesTable).pad(10, 10, 10, 10).width(Gdx.graphics.getWidth() / 3 - 20).top();
-    bottomTable.add(menuAndAreaDetails).pad(10, 10, 10, 10).width(Gdx.graphics.getWidth() / 3 - 20).bottom();
+    bottomTable.add(actionLog).pad(10, 10, 10, 10).width(width).bottom();
+    bottomTable.add(abilitiesTable).pad(10, 10, 10, 10).width(width).top();
+    bottomTable.add(menuAndAreaDetails).pad(10, 10, 10, 10).width(width).bottom();
 
     deathDialog = new Dialog("", Main.skin) {
       public void result(Object obj) {
@@ -188,7 +191,8 @@ public class HudRenderer {
     if (playerDetails.lastHitEntity == null) {
       enemyInfo.clear();
     } else {
-      AttributesComponent enemyAttributes = ComponentMappers.attributes.get(playerDetails.lastHitEntity);
+      AttributesComponent enemyAttributes
+          = ComponentMappers.attributes.get(playerDetails.lastHitEntity);
       String name = enemyAttributes.name;
 
       if (enemyInfo.getChildren().size == 0) {
@@ -295,7 +299,8 @@ public class HudRenderer {
         return;
       }
 
-      MapCell cell = WorldManager.mapHelpers.getCell(playerDetails.target.x, playerDetails.target.y);
+      MapCell cell
+          = WorldManager.mapHelpers.getCell(playerDetails.target.x, playerDetails.target.y);
       String cellDescription;
 
       if (cell.forgotten) {
@@ -304,7 +309,8 @@ public class HudRenderer {
         cellDescription = "You see " + cell.description;
       }
 
-      Entity entity = WorldManager.mapHelpers.getEntityAt(playerDetails.target.x, playerDetails.target.y);
+      Entity entity
+          = WorldManager.mapHelpers.getEntityAt(playerDetails.target.x, playerDetails.target.y);
 
       if (!WorldManager.entityHelpers.canSee(WorldManager.player, entity)) {
         entity = null;
@@ -331,7 +337,8 @@ public class HudRenderer {
           AttributesComponent enemyAttributes = ComponentMappers.attributes.get(entity);
 
           BrainComponent brain = ComponentMappers.brain.get(entity);
-          entityName = "[RED]" + enemyAttributes.name + " [DARK_GRAY]" + brain.stateMachine.getCurrentState().name();
+          entityName = "[RED]" + enemyAttributes.name
+              + " [DARK_GRAY]" + brain.stateMachine.getCurrentState().name();
 
           entityDescription = WordUtils.wrap(enemyAttributes.description, 50);
         }
@@ -346,27 +353,27 @@ public class HudRenderer {
 
   private void showDeathDialog() {
     if (WorldManager.state == WorldManager.State.DEAD && !deathDialogShowing) {
+      Table table = deathDialog.getContentTable();
+      table.pad(0);
+      table.add(new Label("YOU HAVE FAILED", Main.skin)).center().row();
+
       String depth = "[LIGHT_GRAY]You made it to depth[] " + playerDetails.lowestDepth;
+      table.add(new Label(depth, Main.skin)).left().row();
 
       String hits = "[LIGHT_GRAY]You hit enemies[] " + playerDetails.totalHits
           + "[LIGHT_GRAY] times and missed[] " + playerDetails.totalMisses;
+      table.add(new Label(hits, Main.skin)).left().row();
 
       String damage = "[LIGHT_GRAY]You did[] " + playerDetails.totalDamageDone
           + "[LIGHT_GRAY] damage, took[] " + playerDetails.totalDamageReceived
           + "[LIGHT_GRAY], and healed[] " + playerDetails.totalDamageHealed;
+      table.add(new Label(damage, Main.skin)).left().row();
 
       String kills = "[LIGHT_GRAY]You killed[] "
           + playerDetails.totalKills + "[LIGHT_GRAY] enemies";
-
-      Table table = deathDialog.getContentTable();
-      table.pad(0);
-      table.add(new Label("YOU HAVE FAILED", Main.skin)).center().row();
-      table.add(new Label(depth, Main.skin)).left().row();
-      table.add(new Label(hits, Main.skin)).left().row();
-      table.add(new Label(damage, Main.skin)).left().row();
       table.add(new Label(kills, Main.skin)).left().row();
-      deathDialog.getButtonTable().pad(5, 0, 0, 0);
 
+      deathDialog.getButtonTable().pad(5, 0, 0, 0);
       deathDialogShowing = true;
       deathDialog.show(stage);
 
@@ -380,7 +387,8 @@ public class HudRenderer {
     AttributesComponent attributes = ComponentMappers.attributes.get(entity);
 
     String healthTextColor = attributes.health < attributes.maxHealth / 2 ? "[RED]" : "[WHITE]";
-    String healthText = healthTextColor + attributes.health + "[LIGHT_GRAY]/" + attributes.maxHealth;
+    String healthText = healthTextColor + attributes.health
+        + "[LIGHT_GRAY]/" + attributes.maxHealth;
     String healthBar = "[LIGHT_GRAY][";
 
     for (int i = 0; i < MathUtils.floor(attributes.maxHealth / 10); i++) {
@@ -400,7 +408,8 @@ public class HudRenderer {
     AttributesComponent attributes = ComponentMappers.attributes.get(entity);
 
     String healthTextColor = attributes.oxygen < attributes.maxOxygen / 2 ? "[RED]" : "[CYAN]";
-    String healthText = healthTextColor + attributes.oxygen + "[LIGHT_GRAY]/" + attributes.maxOxygen;
+    String healthText = healthTextColor + attributes.oxygen
+        + "[LIGHT_GRAY]/" + attributes.maxOxygen;
     String healthBar = "[LIGHT_GRAY][";
 
     for (int i = 0; i < MathUtils.floor(attributes.maxOxygen / 4); i++) {

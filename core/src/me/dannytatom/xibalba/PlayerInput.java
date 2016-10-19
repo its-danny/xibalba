@@ -19,8 +19,7 @@ import me.dannytatom.xibalba.world.WorldManager;
 
 import java.util.Objects;
 
-public class
-PlayerInput implements InputProcessor {
+public class PlayerInput implements InputProcessor {
   private final OrthographicCamera worldCamera;
   public int keyHeld = -1;
   private boolean holdingShift = false;
@@ -314,7 +313,8 @@ PlayerInput implements InputProcessor {
     Vector2 mousePosition = Main.mousePositionToWorld(worldCamera);
     Vector2 relativeToPlayer = mousePosition.cpy().sub(playerPosition.pos);
 
-    if (playerDetails.target != null && playerDetails.target.epsilonEquals(mousePosition, 0.00001f)) {
+    if (playerDetails.target != null
+        && playerDetails.target.epsilonEquals(mousePosition, 0.00001f)) {
       return false;
     }
 

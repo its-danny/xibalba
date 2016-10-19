@@ -74,7 +74,9 @@ public class ItemHelpers {
         ItemComponent itemDetails = ComponentMappers.item.get(item);
 
         if (log) {
-          WorldManager.log.add("inventory.pickedUp", WorldManager.itemHelpers.getName(entity, item));
+          WorldManager.log.add(
+              "inventory.pickedUp", WorldManager.itemHelpers.getName(entity, item)
+          );
         }
 
         if (itemDetails.twoHanded && ComponentMappers.oneArm.has(entity)) {
@@ -86,7 +88,9 @@ public class ItemHelpers {
             if (equipment.slots.get("right hand") == null) {
               hold(entity, item);
 
-              WorldManager.log.add("inventory.holding", WorldManager.itemHelpers.getName(entity, item));
+              WorldManager.log.add(
+                  "inventory.holding", WorldManager.itemHelpers.getName(entity, item)
+              );
             }
           }
         }
@@ -137,8 +141,10 @@ public class ItemHelpers {
 
           switch (arr[0]) {
             case "raiseSpeed":
-              ComponentMappers.attributes.get(WorldManager.player).speed += Integer.parseInt(arr[1]);
+              ComponentMappers.attributes.get(WorldManager.player).speed
+                  += Integer.parseInt(arr[1]);
               break;
+            default:
           }
         }
       }
@@ -242,7 +248,8 @@ public class ItemHelpers {
 
           switch (arr[0]) {
             case "raiseSpeed":
-              ComponentMappers.attributes.get(WorldManager.player).speed -= Integer.parseInt(arr[1]);
+              ComponentMappers.attributes.get(WorldManager.player).speed
+                  -= Integer.parseInt(arr[1]);
               break;
             default:
           }

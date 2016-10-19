@@ -37,6 +37,12 @@ public class YouScreen implements Screen {
   private Section sectionSelected = Section.ATTRIBUTES;
   private int itemSelected = 0;
 
+  /**
+   * Where the player sets up attributes, skills,
+   * traits, and defects.
+   *
+   * @param main Instance of the main class
+   */
   public YouScreen(Main main) {
     attributePoints = 5;
     skillPoints = 10;
@@ -49,12 +55,13 @@ public class YouScreen implements Screen {
     table.left().top();
     table.pad(10);
     stage.addActor(table);
+    float width = Gdx.graphics.getWidth() / 2;
 
     Table titleTable = new Table();
 
     HorizontalGroup titleGroup = new HorizontalGroup().align(Align.center | Align.left);
     titleGroup.space(10);
-    titleTable.add(titleGroup).pad(0, 0, 10, 0).width(Gdx.graphics.getWidth() - 20).top().left();
+    titleTable.add(titleGroup).pad(0, 0, 10, 0).width(Gdx.graphics.getWidth()).top().left();
 
     ActionButton backButton = new ActionButton("Q", "Back");
     backButton.setKeys(Input.Keys.Q);
@@ -65,24 +72,23 @@ public class YouScreen implements Screen {
     titleGroup.addActor(title);
 
     Label instructions = new Label(
-        "[LIGHT_GRAY]Up & down to navigate a list, left & right to switch lists." +
-            " x to add a point or trait/defect, z to remove.",
+        "[LIGHT_GRAY]Up & down to navigate a list, left & right to switch lists."
+            + " x to add a point or trait/defect, z to remove.",
         Main.skin
     );
     titleGroup.addActor(instructions);
-
-    Table mainTable = new Table();
 
     attributesGroup = new VerticalGroup().align(Align.top | Align.left);
     skillsGroup = new VerticalGroup().align(Align.top | Align.left);
     defectsGroup = new VerticalGroup().align(Align.top | Align.left);
     traitsGroup = new VerticalGroup().align(Align.top | Align.left);
 
-    mainTable.add(attributesGroup).pad(0, 0, 10, 0).width(Gdx.graphics.getWidth() / 2 - 10).top().left();
-    mainTable.add(skillsGroup).pad(0, 0, 10, 0).width(Gdx.graphics.getWidth() / 2 - 10).top().left();
+    Table mainTable = new Table();
+    mainTable.add(attributesGroup).pad(0, 0, 10, 0).width(width).top().left();
+    mainTable.add(skillsGroup).pad(0, 0, 10, 0).width(width).top().left();
     mainTable.row();
-    mainTable.add(defectsGroup).pad(0, 0, 10, 0).width(Gdx.graphics.getWidth() / 2 - 10).top().left();
-    mainTable.add(traitsGroup).pad(0, 0, 10, 0).width(Gdx.graphics.getWidth() / 2 - 10).top().left();
+    mainTable.add(defectsGroup).pad(0, 0, 10, 0).width(width).top().left();
+    mainTable.add(traitsGroup).pad(0, 0, 10, 0).width(width).top().left();
 
     ActionButton continueButton = new ActionButton("ENTER", "Enter Your Name");
     continueButton.setKeys(Input.Keys.ENTER);
@@ -307,9 +313,17 @@ public class YouScreen implements Screen {
     attributesGroup.addActor(pointsLeft);
     attributesGroup.addActor(new Label("", Main.skin));
 
-    attributesGroup.addActor(new Label(createAttributeText(0, "Agility", playerSetup.attributes.agility), Main.skin));
-    attributesGroup.addActor(new Label(createAttributeText(1, "Strength", playerSetup.attributes.strength), Main.skin));
-    attributesGroup.addActor(new Label(createAttributeText(2, "Toughness", playerSetup.attributes.toughness), Main.skin));
+    attributesGroup.addActor(
+        new Label(createAttributeText(0, "Agility", playerSetup.attributes.agility), Main.skin)
+    );
+
+    attributesGroup.addActor(
+        new Label(createAttributeText(1, "Strength", playerSetup.attributes.strength), Main.skin)
+    );
+
+    attributesGroup.addActor(
+        new Label(createAttributeText(2, "Toughness", playerSetup.attributes.toughness), Main.skin)
+    );
   }
 
   private void updateSkillsGroup() {
@@ -318,7 +332,13 @@ public class YouScreen implements Screen {
     skillsGroup.addActor(new Label("Skills", Main.skin));
     skillsGroup.addActor(new Label("", Main.skin));
 
-    Label instructions = new Label(WordUtils.wrap("[DARK_GRAY]1 point is 1 die upgrade up to the related attribute level, above that is 2 points", 70), Main.skin);
+    Label instructions = new Label(
+        WordUtils.wrap(
+            "[DARK_GRAY]1 point is 1 die upgrade up to the related "
+                + "attribute level, above that is 2 points", 70
+        ), Main.skin
+    );
+
     skillsGroup.addActor(instructions);
     Label pointsLeft = new Label(skillPoints + "[LIGHT_GRAY] points left", Main.skin);
     skillsGroup.addActor(pointsLeft);
@@ -342,20 +362,29 @@ public class YouScreen implements Screen {
     defectsGroup.addActor(new Label("Defects", Main.skin));
     defectsGroup.addActor(new Label("", Main.skin));
 
-    Label instructions = new Label(WordUtils.wrap("[DARK_GRAY]Taking a major defect gives you 2 points, taking a minor gives you 1", 70), Main.skin);
+    Label instructions = new Label(
+        WordUtils.wrap(
+            "[DARK_GRAY]Taking a major defect gives you 2 points, taking a minor gives you 1", 70
+        ), Main.skin
+    );
+
     defectsGroup.addActor(instructions);
     defectsGroup.addActor(new Label("", Main.skin));
 
     defectsGroup.addActor(
         new Label(
-            createDefectText(0, OneArmComponent.name, OneArmComponent.description, OneArmComponent.reward),
-            Main.skin)
+            createDefectText(
+                0, OneArmComponent.name, OneArmComponent.description, OneArmComponent.reward
+            ), Main.skin
+        )
     );
 
     defectsGroup.addActor(
         new Label(
-            createDefectText(1, MyopiaComponent.name, MyopiaComponent.description, MyopiaComponent.reward),
-            Main.skin)
+            createDefectText(
+                1, MyopiaComponent.name, MyopiaComponent.description, MyopiaComponent.reward
+            ), Main.skin
+        )
     );
   }
 
@@ -371,14 +400,19 @@ public class YouScreen implements Screen {
 
     traitsGroup.addActor(
         new Label(
-            createTraitText(0, ScoutComponent.name, ScoutComponent.description, ScoutComponent.cost),
-            Main.skin)
+            createTraitText(
+                0, ScoutComponent.name, ScoutComponent.description, ScoutComponent.cost
+            ), Main.skin
+        )
     );
 
     traitsGroup.addActor(
         new Label(
-            createTraitText(1, PerceptiveComponent.name, PerceptiveComponent.description, PerceptiveComponent.cost),
-            Main.skin)
+            createTraitText(
+                1, PerceptiveComponent.name, PerceptiveComponent.description,
+                PerceptiveComponent.cost
+            ), Main.skin
+        )
     );
   }
 
@@ -612,14 +646,16 @@ public class YouScreen implements Screen {
   private void addTrait() {
     switch (itemSelected) {
       case 0:
-        if (!playerSetup.traits.contains(ScoutComponent.name, false) && traitPoints >= ScoutComponent.cost) {
+        if (!playerSetup.traits.contains(ScoutComponent.name, false)
+            && traitPoints >= ScoutComponent.cost) {
           playerSetup.traits.add(ScoutComponent.name);
           traitPoints -= ScoutComponent.cost;
         }
 
         break;
       case 1:
-        if (!playerSetup.traits.contains(PerceptiveComponent.name, false) && traitPoints >= PerceptiveComponent.cost) {
+        if (!playerSetup.traits.contains(PerceptiveComponent.name, false)
+            && traitPoints >= PerceptiveComponent.cost) {
           playerSetup.traits.add(PerceptiveComponent.name);
           traitPoints -= PerceptiveComponent.cost;
         }

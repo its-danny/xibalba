@@ -57,7 +57,7 @@ class NameScreen implements Screen {
     table.add(worldSeedLabel).pad(0, 0, 10, 0).width(Gdx.graphics.getWidth() / 2);
     table.row();
     worldSeedField = new TextField(worldSeed + "", Main.skin);
-    table.add(worldSeedField).pad(0, 0, 10, 0).width(Gdx.graphics.getWidth() / 2 );
+    table.add(worldSeedField).pad(0, 0, 10, 0).width(Gdx.graphics.getWidth() / 2);
 
     table.row();
     Label playerNameLabel = new Label("Name", Main.skin);

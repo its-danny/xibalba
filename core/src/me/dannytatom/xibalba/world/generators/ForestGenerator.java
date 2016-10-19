@@ -133,6 +133,7 @@ public class ForestGenerator {
 
     int openCount = 0;
 
+    //noinspection ForLoopReplaceableByForEach
     for (int x = 0; x < geometry.length; x++) {
       for (int y = 0; y < geometry[0].length; y++) {
         if (geometry[x][y] == MapCell.Type.FLOOR) {

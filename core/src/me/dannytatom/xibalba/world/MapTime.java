@@ -7,11 +7,18 @@ public class MapTime {
   public float shadow = 0;
   private int counter = 0;
 
-  public MapTime() {
+  /**
+   * Handles day/night cycle in the forest.
+   */
+  MapTime() {
     time = Time.DAWN;
     shadow = .15f;
   }
 
+  /**
+   * Update time depending on how many turns have been made.
+   * Every 25 turns we move to the next time cycle: Dawn > Day > Dusk > Night
+   */
   public void update() {
     if (Objects.equals(WorldManager.world.getCurrentMap().type, "forest")) {
       if (counter >= 0 && counter < 25) {

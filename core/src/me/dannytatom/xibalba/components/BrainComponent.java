@@ -10,7 +10,7 @@ import org.xguzm.pathfinding.grid.GridCell;
 import java.util.List;
 
 public class BrainComponent implements Component {
-  public StateMachine<Entity, DefaultBrain> stateMachine;
+  public final StateMachine<Entity, DefaultBrain> stateMachine;
   public List<GridCell> path;
   public Entity target;
 

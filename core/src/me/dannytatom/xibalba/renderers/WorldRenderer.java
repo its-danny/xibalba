@@ -188,7 +188,10 @@ public class WorldRenderer {
       if (WorldManager.entityHelpers.isVisible(entity)) {
         ComponentMappers.visual.get(entity).sprite.draw(batch);
       } else if (WorldManager.entityHelpers.canHear(WorldManager.player, entity)) {
-        question.setPosition(position.pos.x * Main.SPRITE_WIDTH, position.pos.y * Main.SPRITE_HEIGHT);
+        question.setPosition(
+            position.pos.x * Main.SPRITE_WIDTH, position.pos.y * Main.SPRITE_HEIGHT
+        );
+
         question.draw(batch);
       }
     }

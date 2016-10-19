@@ -17,7 +17,7 @@ import me.dannytatom.xibalba.world.WorldManager;
 import java.util.Objects;
 
 public class EntityHelpers {
-  private ShadowCaster caster;
+  private final ShadowCaster caster;
 
   /**
    * EntityHelpers constructor, clearly.
@@ -26,6 +26,16 @@ public class EntityHelpers {
     caster = new ShadowCaster();
   }
 
+  /**
+   * Should this entity skip it's turn?
+   * </p>
+   * They should skip a turn if they're crippled and the turn counter isn't 0
+   * or if they're stuck.
+   *
+   * @param entity The entity to check
+   *
+   * @return If they should
+   */
   public boolean shouldSkipTurn(Entity entity) {
     return (ComponentMappers.crippled.has(entity)
         && ComponentMappers.crippled.get(entity).turnCounter != 0)
@@ -70,6 +80,11 @@ public class EntityHelpers {
     return ComponentMappers.attributes.get(WorldManager.player).health > 0;
   }
 
+  /**
+   * Update an entity's senses.
+   *
+   * @param entity The entity
+   */
   public void updateSenses(Entity entity) {
     AttributesComponent attributes = ComponentMappers.attributes.get(entity);
     PositionComponent position = ComponentMappers.position.get(entity);
@@ -85,6 +100,14 @@ public class EntityHelpers {
     );
   }
 
+  /**
+   * Check if an entity can see another entity.
+   *
+   * @param looker Who looking
+   * @param target Who they looking for
+   *
+   * @return Yes/no
+   */
   public boolean canSee(Entity looker, Entity target) {
     if (target == null) {
       return false;
@@ -96,10 +119,25 @@ public class EntityHelpers {
     return attributes.visionMap[(int) targetPosition.pos.x][(int) targetPosition.pos.y] > 0;
   }
 
-  public boolean canSeePlayer(Entity entity) {
+  /**
+   * Small convenience method to check if an entity can see the player.
+   *
+   * @param entity Who looking
+   *
+   * @return Yes/no
+   */
+  private boolean canSeePlayer(Entity entity) {
     return canSee(entity, WorldManager.player);
   }
 
+  /**
+   * Check if an entity can hear another entity.
+   *
+   * @param listener Who listening
+   * @param target   Who they listening for
+   *
+   * @return Yes/no
+   */
   public boolean canHear(Entity listener, Entity target) {
     AttributesComponent attributes = ComponentMappers.attributes.get(listener);
     PositionComponent targetPosition = ComponentMappers.position.get(target);
@@ -107,10 +145,24 @@ public class EntityHelpers {
     return attributes.hearingMap[(int) targetPosition.pos.x][(int) targetPosition.pos.y] > 0;
   }
 
-  public boolean canHearPlayer(Entity entity) {
+  /**
+   * Small convenience method to check if an entity can hear the player.
+   *
+   * @param entity Who listening
+   *
+   * @return Yes/no
+   */
+  private boolean canHearPlayer(Entity entity) {
     return canHear(entity, WorldManager.player);
   }
 
+  /**
+   * Can the entity see or hear the player.
+   *
+   * @param entity Who tryna find the player
+   *
+   * @return Yes/no
+   */
   public boolean canSensePlayer(Entity entity) {
     return canSeePlayer(entity) || canHearPlayer(entity);
   }
@@ -122,7 +174,7 @@ public class EntityHelpers {
    *
    * @return Their combined defense
    */
-  public int getCombinedDefense(Entity entity) {
+  int getCombinedDefense(Entity entity) {
     AttributesComponent attributes = ComponentMappers.attributes.get(entity);
 
     return MathUtils.random(1, attributes.toughness) + getArmorDefense(entity);
@@ -170,6 +222,12 @@ public class EntityHelpers {
     position.pos.set(newPosition);
   }
 
+  /**
+   * Update sprite position (called after turn is over, after all tweens etc).
+   *
+   * @param entity   Entity to update
+   * @param position Their world position
+   */
   public void updateSpritePosition(Entity entity, Vector2 position) {
     VisualComponent visual = ComponentMappers.visual.get(entity);
     visual.sprite.setPosition(
@@ -201,7 +259,8 @@ public class EntityHelpers {
         takeDamage(entity, Integer.parseInt(params[0]));
         break;
       case "poison":
-        poison(entity, Integer.parseInt(params[0]), Integer.parseInt(params[1]), Integer.parseInt(params[2]));
+        poison(entity, Integer.parseInt(params[0]),
+            Integer.parseInt(params[1]), Integer.parseInt(params[2]));
         break;
       default:
     }
@@ -249,6 +308,12 @@ public class EntityHelpers {
     }
   }
 
+  /**
+   * Take some damage.
+   *
+   * @param entity Who gettin' hurt
+   * @param amount How much
+   */
   public void takeDamage(Entity entity, int amount) {
     AttributesComponent attributes = ComponentMappers.attributes.get(entity);
 

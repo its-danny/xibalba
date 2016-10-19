@@ -5,12 +5,19 @@ import com.badlogic.ashley.core.Component;
 import java.util.TreeMap;
 
 public class CorpseComponent implements Component {
-  public final String entityName;
+  public final String entity;
   public TreeMap<String, Integer> parts;
   public TreeMap<String, String> wearable;
 
-  public CorpseComponent(String entityName, TreeMap<String, Integer> parts, TreeMap<String, String> wearable) {
-    this.entityName = entityName;
+  /**
+   * A corpse.
+   *
+   * @param entity   Name of the entity this corpse belongs to
+   * @param parts    What parts it has that can be dismembered
+   * @param wearable What parts of it are wearable
+   */
+  public CorpseComponent(String entity, TreeMap<String, Integer> parts, TreeMap<String, String> wearable) {
+    this.entity = entity;
     this.parts = parts;
     this.wearable = wearable;
   }

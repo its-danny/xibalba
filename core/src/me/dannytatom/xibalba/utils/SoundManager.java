@@ -34,7 +34,7 @@ public class SoundManager {
   }
 
   public void slashing() {
-    // TODO: Sounds!
+
   }
 
   public void piercing() {
@@ -43,6 +43,6 @@ public class SoundManager {
   }
 
   public void bashing() {
-    // TODO: Sounds!
+
   }
 }

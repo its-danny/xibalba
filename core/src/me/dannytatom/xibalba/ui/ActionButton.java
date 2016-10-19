@@ -12,8 +12,6 @@ import java.util.List;
 
 public class ActionButton extends TextButton {
   private List<Integer> keys = null;
-  private ClickListener clickListener;
-  private InputListener inputListener;
 
   /**
    * Create an action button with letter and text.
@@ -48,7 +46,7 @@ public class ActionButton extends TextButton {
    * @param action The action
    */
   public void setAction(Actor parent, Runnable action) {
-    clickListener = new ClickListener() {
+    ClickListener clickListener = new ClickListener() {
       @Override
       public void enter(InputEvent event, float positionX, float positionY,
                         int pointer, Actor fromActor) {
@@ -71,7 +69,7 @@ public class ActionButton extends TextButton {
 
     addListener(clickListener);
 
-    inputListener = new InputListener() {
+    InputListener inputListener = new InputListener() {
       @Override
       public boolean keyDown(InputEvent event, int keycode) {
         if (keys != null && keys.contains(keycode)) {

@@ -173,9 +173,12 @@ public class LoadingScreen implements Screen {
       Entity entrance = WorldManager.entityFactory.createEntrance(mapIndex);
 
       WorldManager.world.entities.get(mapIndex).add(entrance);
-      WorldManager.world.getMap(mapIndex).entrance = ComponentMappers.position.get(entrance).pos;
+
+      WorldManager.world.getMap(mapIndex).entrance
+          = ComponentMappers.position.get(entrance).pos;
     } else {
-      WorldManager.world.getMap(mapIndex).entrance = WorldManager.mapHelpers.getRandomOpenPosition();
+      WorldManager.world.getMap(mapIndex).entrance
+          = WorldManager.mapHelpers.getRandomOpenPosition();
     }
 
     // Spawn an exit on every level but last

@@ -34,6 +34,10 @@ public class PlayerSetup {
   public String color;
   public String name;
 
+  /**
+   * Setup player defaults.
+   * This is used during character creation.
+   */
   public PlayerSetup() {
     rnMap.put(1000, "M");
     rnMap.put(900, "CM");
@@ -68,21 +72,32 @@ public class PlayerSetup {
     return rnMap.get(floored) + intToRoman(number - floored);
   }
 
+  /**
+   * Create the player.
+   * </p>
+   * This is called when character creation is done and
+   * we want to create the actual entity.
+   *
+   * @return The player entity
+   */
   public Entity create() {
-    Entity player = new Entity();
-
     attributes.maxHealth = attributes.toughness * 10;
     attributes.health = attributes.maxHealth;
 
     attributes.maxOxygen = attributes.toughness * 4;
     attributes.oxygen = attributes.maxOxygen;
 
+    Entity player = new Entity();
+
     player.add(skills);
     player.add(attributes);
 
     Vector2 position = WorldManager.world.getCurrentMap().entrance;
     player.add(new PositionComponent(position));
-    player.add(new VisualComponent(Main.asciiAtlas.createSprite("0004"), position, Main.parseColor(color)));
+    player.add(
+        new VisualComponent(Main.asciiAtlas.createSprite("0004"), position, Main.parseColor(color))
+    );
+
     player.add(new PlayerComponent());
     player.add(new InventoryComponent());
     player.add(new EquipmentComponent());

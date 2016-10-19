@@ -41,6 +41,10 @@ public class Map {
     this.time = new MapTime();
   }
 
+  /**
+   * Turn geometry into a MapCell[][] of real tiles
+   * based on map type.
+   */
   public void paint() {
     switch (type) {
       case "forest":
@@ -143,12 +147,24 @@ public class Map {
 
           if (getGroundNeighbours(x, y) < 8) {
             waterType = MapCell.Type.SHALLOW_WATER;
-            lightColor = Colors.get(Objects.equals(type, "forest") ? "waterShallowLightBlue" : "waterShallowLightGreen");
-            darkColor = Colors.get(Objects.equals(type, "forest") ? "waterShallowDarkBlue" : "waterShallowDarkGreen");
+
+            lightColor = Colors.get(
+                Objects.equals(type, "forest") ? "waterShallowLightBlue" : "waterShallowLightGreen"
+            );
+
+            darkColor = Colors.get(
+                Objects.equals(type, "forest") ? "waterShallowDarkBlue" : "waterShallowDarkGreen"
+            );
           } else {
             waterType = MapCell.Type.DEEP_WATER;
-            lightColor = Colors.get(Objects.equals(type, "forest") ? "waterDeepLightBlue" : "waterDeepLightGreen");
-            darkColor = Colors.get(Objects.equals(type, "forest") ? "waterDeepDarkBlue" : "waterDeepDarkGreen");
+
+            lightColor = Colors.get(
+                Objects.equals(type, "forest") ? "waterDeepLightBlue" : "waterDeepLightGreen"
+            );
+
+            darkColor = Colors.get(
+                Objects.equals(type, "forest") ? "waterDeepDarkBlue" : "waterDeepDarkGreen"
+            );
           }
 
           water.setColor(lightColor);

@@ -16,16 +16,21 @@ public class InputHelpers {
     enemiesAround = new ArrayList<>();
   }
 
+  /**
+   * Decide where to place cursor when the player has switched
+   * to targeting.
+   */
   public void startTargeting() {
     WorldManager.state = WorldManager.State.TARGETING;
 
-    enemiesAround = WorldManager.mapHelpers.getEnemiesInVision();
+    enemiesAround = WorldManager.mapHelpers.getEnemiesInPlayerVision();
 
     PlayerComponent playerDetails = ComponentMappers.player.get(WorldManager.player);
     PositionComponent playerPosition = ComponentMappers.position.get(WorldManager.player);
 
     if (playerDetails.lastHitEntity != null) {
-      PositionComponent lastHitEntityPosition = ComponentMappers.position.get(playerDetails.lastHitEntity);
+      PositionComponent lastHitEntityPosition
+          = ComponentMappers.position.get(playerDetails.lastHitEntity);
       handleTargeting(lastHitEntityPosition.pos.cpy().sub(playerPosition.pos));
     } else if (enemiesAround.size() > 0) {
       PositionComponent closestPosition = ComponentMappers.position.get(enemiesAround.get(0));
@@ -36,9 +41,14 @@ public class InputHelpers {
     }
   }
 
-  public void handleTargeting(Vector2 pos) {
+  /**
+   * Create targeting path.
+   *
+   * @param target Target position.
+   */
+  public void handleTargeting(Vector2 target) {
     PositionComponent playerPosition = ComponentMappers.position.get(WorldManager.player);
 
-    WorldManager.mapHelpers.createTargetingPath(playerPosition.pos, pos);
+    WorldManager.mapHelpers.createTargetingPath(playerPosition.pos, target);
   }
 }
