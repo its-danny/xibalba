@@ -1,6 +1,7 @@
 package me.dannytatom.xibalba.helpers;
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import me.dannytatom.xibalba.Main;
@@ -239,8 +240,10 @@ public class EntityHelpers {
     MapCell cell = WorldManager.mapHelpers.getCell(position.x, position.y);
 
     if (cell.isWater()) {
-      if (visual.sprite.getColor() != cell.sprite.getColor()) {
-        visual.sprite.setColor(cell.sprite.getColor());
+      Color tinted = visual.color.cpy().lerp(cell.sprite.getColor(), .5f);
+
+      if (visual.sprite.getColor() != tinted) {
+        visual.sprite.setColor(tinted);
       }
     } else {
       if (visual.sprite.getColor() != visual.color) {
