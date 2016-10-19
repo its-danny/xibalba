@@ -63,7 +63,7 @@ public class MapWeather {
 
           visual.sprite.set(falling);
           WorldManager.entityHelpers.updatePosition(drop, newPosition);
-          WorldManager.entityHelpers.updateSpritePosition(drop, newPosition);
+          WorldManager.entityHelpers.updateSprite(drop, newPosition);
 
           stats.life += 1;
         } else if (stats.life >= 2 && stats.life <= 4) {
@@ -73,18 +73,18 @@ public class MapWeather {
             stats.life = 5;
           } else {
             WorldManager.entityHelpers.updatePosition(drop, newPosition);
-            WorldManager.entityHelpers.updateSpritePosition(drop, newPosition);
+            WorldManager.entityHelpers.updateSprite(drop, newPosition);
 
             stats.life += 1;
           }
         } else if (stats.life == 5) {
           visual.sprite.set(splash);
-          WorldManager.entityHelpers.updateSpritePosition(drop, position.pos);
+          WorldManager.entityHelpers.updateSprite(drop, position.pos);
 
           stats.life += 1;
         } else if (stats.life == 6) {
           visual.sprite.set(fading);
-          WorldManager.entityHelpers.updateSpritePosition(drop, position.pos);
+          WorldManager.entityHelpers.updateSprite(drop, position.pos);
           WorldManager.mapHelpers.makeFloorWet(position.pos);
 
           stats.life += 1;

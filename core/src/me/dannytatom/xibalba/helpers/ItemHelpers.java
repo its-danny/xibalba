@@ -274,7 +274,7 @@ public class ItemHelpers {
       }
 
       WorldManager.entityHelpers.updatePosition(item, position);
-      WorldManager.entityHelpers.updateSpritePosition(item, position);
+      WorldManager.entityHelpers.updateSprite(item, position);
 
       inventory.items.remove(item);
 

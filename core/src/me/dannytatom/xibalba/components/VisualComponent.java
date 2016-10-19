@@ -8,6 +8,7 @@ import me.dannytatom.xibalba.Main;
 
 public class VisualComponent implements Component {
   public Sprite sprite = null;
+  public Color color = Color.WHITE;
 
   public VisualComponent(Sprite sprite, Vector2 position) {
     this(sprite, position, Color.WHITE, 1f);
@@ -27,6 +28,8 @@ public class VisualComponent implements Component {
    */
   public VisualComponent(Sprite sprite, Vector2 position, Color color, float alpha) {
     this.sprite = sprite;
+    this.color = color;
+
     this.sprite.setPosition(position.x * Main.SPRITE_WIDTH, position.y * Main.SPRITE_HEIGHT);
     this.sprite.setColor(color);
     this.sprite.setAlpha(alpha);

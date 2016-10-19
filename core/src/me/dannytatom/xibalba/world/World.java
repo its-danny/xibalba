@@ -90,7 +90,7 @@ public class World {
               : WorldManager.world.getCurrentMap().exit;
 
           WorldManager.entityHelpers.updatePosition(entity, position);
-          WorldManager.entityHelpers.updateSpritePosition(entity, position);
+          WorldManager.entityHelpers.updateSprite(entity, position);
         }
 
         WorldManager.entityHelpers.updateSenses(entity);

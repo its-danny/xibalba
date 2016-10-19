@@ -11,6 +11,7 @@ import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.VisualComponent;
 import me.dannytatom.xibalba.components.statuses.PoisonedComponent;
 import me.dannytatom.xibalba.utils.ComponentMappers;
+import me.dannytatom.xibalba.world.MapCell;
 import me.dannytatom.xibalba.world.ShadowCaster;
 import me.dannytatom.xibalba.world.WorldManager;
 
@@ -223,16 +224,29 @@ public class EntityHelpers {
   }
 
   /**
-   * Update sprite position (called after turn is over, after all tweens etc).
+   * Update sprite position (called after turn is over, after all tweens etc),
+   * and update the sprite color based on cell they're in.
    *
    * @param entity   Entity to update
    * @param position Their world position
    */
-  public void updateSpritePosition(Entity entity, Vector2 position) {
+  public void updateSprite(Entity entity, Vector2 position) {
     VisualComponent visual = ComponentMappers.visual.get(entity);
     visual.sprite.setPosition(
         position.x * Main.SPRITE_WIDTH, position.y * Main.SPRITE_HEIGHT
     );
+
+    MapCell cell = WorldManager.mapHelpers.getCell(position.x, position.y);
+
+    if (cell.isWater()) {
+      if (visual.sprite.getColor() != cell.sprite.getColor()) {
+        visual.sprite.setColor(cell.sprite.getColor());
+      }
+    } else {
+      if (visual.sprite.getColor() != visual.color) {
+        visual.sprite.setColor(visual.color);
+      }
+    }
   }
 
   /**

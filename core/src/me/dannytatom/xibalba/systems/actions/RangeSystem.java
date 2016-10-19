@@ -54,7 +54,7 @@ public class RangeSystem extends UsesEnergySystem {
     // position it had before it ended up in your inventory.
     PositionComponent throwerPosition = ComponentMappers.position.get(entity);
     WorldManager.entityHelpers.updatePosition(item, throwerPosition.pos);
-    WorldManager.entityHelpers.updateSpritePosition(item, throwerPosition.pos);
+    WorldManager.entityHelpers.updateSprite(item, throwerPosition.pos);
 
     VisualComponent itemVisual = ComponentMappers.visual.get(item);
 
