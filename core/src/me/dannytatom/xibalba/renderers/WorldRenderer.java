@@ -168,8 +168,16 @@ public class WorldRenderer {
         );
 
     for (Entity entity : entities) {
-      if (WorldManager.entityHelpers.isVisible(entity)) {
-        ComponentMappers.visual.get(entity).sprite.draw(batch);
+      if (ComponentMappers.position.has(entity)) {
+        PositionComponent position = ComponentMappers.position.get(entity);
+
+        if (Main.tweenManager.getRunningTimelinesCount() == 0) {
+          WorldManager.entityHelpers.updateSprite(entity, position.pos);
+        }
+
+        if (WorldManager.entityHelpers.isVisible(entity)) {
+          ComponentMappers.visual.get(entity).sprite.draw(batch);
+        }
       }
     }
   }
