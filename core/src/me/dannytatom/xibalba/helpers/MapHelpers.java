@@ -185,7 +185,10 @@ public class MapHelpers {
         (int) playerDetails.target.x, (int) playerDetails.target.y, grid
     );
 
-    if (playerDetails.path == null || playerDetails.path.size() > 5) {
+    AttributesComponent playerAttributes = ComponentMappers.attributes.get(WorldManager.player);
+    int maxDistance = (playerAttributes.strength <= 4 ? 4 : playerAttributes.strength);
+
+    if (playerDetails.path == null || playerDetails.path.size() > maxDistance) {
       playerDetails.target = oldTarget;
 
       if (playerDetails.target != null) {
