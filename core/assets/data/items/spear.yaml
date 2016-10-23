@@ -6,6 +6,7 @@ description: A spear is a pole weapon consisting of a shaft, usually of wood, wi
   a pointed head. The head may be simply the sharpened end of the shaft itself, as
   is the case with fire hardened spears, or it may be made of a more durable material
   fastened to the shaft, such as flint, obsidian, or chert.
+weight: 3
 
 visual:
   character: "1502"

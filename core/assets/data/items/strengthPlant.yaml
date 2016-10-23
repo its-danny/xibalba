@@ -2,6 +2,7 @@
 type: consumable
 name: Strength Plant
 description: It ups yo strength you some
+weight: 0.25
 
 visual:
   character: "1114"

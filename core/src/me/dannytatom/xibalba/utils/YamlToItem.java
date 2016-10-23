@@ -10,6 +10,7 @@ public class YamlToItem {
   public String armorType;
   public String name;
   public String description;
+  public float weight;
   public HashMap<String, String> visual;
 
   public boolean twoHanded;

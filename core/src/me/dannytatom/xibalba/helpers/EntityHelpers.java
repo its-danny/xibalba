@@ -31,7 +31,7 @@ public class EntityHelpers {
   /**
    * Should this entity skip it's turn?
    * </p>
-   * They should skip a turn if they're crippled and the turn counter isn't 0
+   * They should skip a turn if they're crippled and the turn turnCounter isn't 0
    * or if they're stuck.
    *
    * @param entity The entity to check
@@ -39,7 +39,9 @@ public class EntityHelpers {
    * @return If they should
    */
   public boolean shouldSkipTurn(Entity entity) {
-    return (ComponentMappers.crippled.has(entity)
+    return (ComponentMappers.encumbered.has(entity)
+        && ComponentMappers.encumbered.get(entity).turnCounter != 0)
+        || (ComponentMappers.crippled.has(entity)
         && ComponentMappers.crippled.get(entity).turnCounter != 0)
         || (ComponentMappers.stuck.has(entity));
   }

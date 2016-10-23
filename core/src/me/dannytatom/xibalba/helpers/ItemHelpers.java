@@ -2,6 +2,7 @@ package me.dannytatom.xibalba.helpers;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.Vector2;
+import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.EffectsComponent;
 import me.dannytatom.xibalba.components.EquipmentComponent;
 import me.dannytatom.xibalba.components.InventoryComponent;
@@ -9,6 +10,7 @@ import me.dannytatom.xibalba.components.ItemComponent;
 import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.items.AmmunitionComponent;
+import me.dannytatom.xibalba.components.statuses.EncumberedComponent;
 import me.dannytatom.xibalba.utils.ComponentMappers;
 import me.dannytatom.xibalba.world.WorldManager;
 
@@ -64,36 +66,60 @@ public class ItemHelpers {
    */
   public void addToInventory(Entity entity, Entity item, boolean log) {
     InventoryComponent inventory = ComponentMappers.inventory.get(entity);
+    AttributesComponent attributes = ComponentMappers.attributes.get(WorldManager.player);
 
     if (inventory != null) {
-      if (inventory.items.size() < 20) {
-        item.remove(PositionComponent.class);
-        inventory.items.add(item);
+      item.remove(PositionComponent.class);
+      inventory.items.add(item);
 
-        EquipmentComponent equipment = ComponentMappers.equipment.get(entity);
-        ItemComponent itemDetails = ComponentMappers.item.get(item);
+      EquipmentComponent equipment = ComponentMappers.equipment.get(entity);
+      ItemComponent itemDetails = ComponentMappers.item.get(item);
 
-        if (log) {
-          WorldManager.log.add(
-              "inventory.pickedUp", WorldManager.itemHelpers.getName(entity, item)
-          );
-        }
+      if (log) {
+        WorldManager.log.add(
+            "inventory.pickedUp", WorldManager.itemHelpers.getName(entity, item)
+        );
+      }
 
-        if (itemDetails.twoHanded && ComponentMappers.oneArm.has(entity)) {
-          return;
-        }
+      if (itemDetails.twoHanded && ComponentMappers.oneArm.has(entity)) {
+        return;
+      }
 
-        if (Objects.equals(itemDetails.type, "weapon")) {
-          if (!itemDetails.twoHanded || !ComponentMappers.oneArm.has(entity)) {
-            if (equipment.slots.get("right hand") == null) {
-              hold(entity, item);
+      if (Objects.equals(itemDetails.type, "weapon")) {
+        if (!itemDetails.twoHanded || !ComponentMappers.oneArm.has(entity)) {
+          if (equipment.slots.get("right hand") == null) {
+            hold(entity, item);
 
-              WorldManager.log.add(
-                  "inventory.holding", WorldManager.itemHelpers.getName(entity, item)
-              );
-            }
+            WorldManager.log.add(
+                "inventory.holding", WorldManager.itemHelpers.getName(entity, item)
+            );
           }
         }
+      }
+
+      if (getTotalWeight(entity) > attributes.strength * 5) {
+        entity.add(new EncumberedComponent());
+
+        if (ComponentMappers.player.has(entity)) {
+          WorldManager.log.add("effects.encumbered.started");
+        }
+      }
+    }
+  }
+
+  public void removeFromInventory(Entity entity, Entity item) {
+    InventoryComponent inventory = ComponentMappers.inventory.get(entity);
+
+    inventory.items.remove(item);
+
+    AttributesComponent attributes = ComponentMappers.attributes.get(entity);
+
+    if (getTotalWeight(entity) <= attributes.strength * 5
+        && ComponentMappers.encumbered.has(entity)) {
+      entity.remove(EncumberedComponent.class);
+
+      if (ComponentMappers.player.has(entity)) {
+        WorldManager.log.add("effects.encumbered.stopped");
       }
     }
   }
@@ -275,7 +301,7 @@ public class ItemHelpers {
 
       WorldManager.entityHelpers.updatePosition(item, position);
 
-      inventory.items.remove(item);
+      removeFromInventory(entity, item);
 
       if (ComponentMappers.player.has(entity)) {
         WorldManager.log.add("inventory.dropped", WorldManager.itemHelpers.getName(entity, item));
@@ -305,7 +331,7 @@ public class ItemHelpers {
     InventoryComponent inventory = ComponentMappers.inventory.get(entity);
 
     if (inventory != null && item != null) {
-      inventory.items.remove(item);
+      removeFromInventory(entity, item);
       WorldManager.world.removeEntity(item);
     }
   }
@@ -326,6 +352,23 @@ public class ItemHelpers {
 
   public Entity getRightHand(Entity entity) {
     return ComponentMappers.equipment.get(entity).slots.get("right hand");
+  }
+
+  /**
+   * Get total weight of all items carried.
+   *
+   * @return Weight
+   */
+  public float getTotalWeight(Entity entity) {
+    InventoryComponent inventory = ComponentMappers.inventory.get(entity);
+
+    float total = 0;
+
+    for (Entity item : inventory.items) {
+      total += ComponentMappers.item.get(item).weight;
+    }
+
+    return total;
   }
 
   /**

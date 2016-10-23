@@ -2,6 +2,7 @@
 type: consumable
 name: Poison Plant
 description: It poisons you some
+weight: 0.25
 
 visual:
   character: "1114"

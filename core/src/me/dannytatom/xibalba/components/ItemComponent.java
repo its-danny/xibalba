@@ -9,6 +9,7 @@ import java.util.HashMap;
 public class ItemComponent implements Component {
   public final String type;
   public final String description;
+  public final float weight;
   public final boolean twoHanded;
   public final String skill;
   public final HashMap<String, Integer> attributes;
@@ -27,6 +28,7 @@ public class ItemComponent implements Component {
     this.type = data.type;
     this.name = data.name;
     this.description = data.description;
+    this.weight = data.weight;
     this.location = data.location;
     this.twoHanded = data.twoHanded;
     this.skill = data.skill;

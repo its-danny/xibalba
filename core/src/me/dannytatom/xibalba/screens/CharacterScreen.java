@@ -275,9 +275,22 @@ public class CharacterScreen implements Screen {
         )
     );
 
+    // Encumbrance
+    attributesGroup.addActor(
+        new Label(
+            "[LIGHT_GRAY]Carrying [WHITE]" + WorldManager.itemHelpers.getTotalWeight(player)
+                + "[DARK_GRAY]/" + attributes.strength * 5 + "lb",
+            Main.skin
+        )
+    );
+
     // Statuses
 
     Array<String> statuses = new Array<>();
+
+    if (ComponentMappers.encumbered.has(player)) {
+      statuses.add("[DARK_GRAY]ENCUMBERED[]");
+    }
 
     if (ComponentMappers.crippled.has(player)) {
       statuses.add("[DARK_GRAY]CRIPPLED[]");
@@ -443,6 +456,13 @@ public class CharacterScreen implements Screen {
 
         itemDetailsGroup.addActor(new Label("", Main.skin));
       }
+
+      // Weight
+
+      itemDetailsGroup.addActor(new Label("", Main.skin));
+      itemDetailsGroup.addActor(new Label("[LIGHT_GRAY]" + details.weight + "lb", Main.skin));
+
+      // Stats & restrictions
 
       VerticalGroup statsGroup = new VerticalGroup().align(Align.top | Align.left);
       VerticalGroup restrictionsGroup = new VerticalGroup().align(Align.top | Align.left);

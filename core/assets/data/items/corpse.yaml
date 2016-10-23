@@ -2,6 +2,7 @@
 type: corpse
 name: Corpse
 description: A rotting corpse.
+weight: 5
 
 visual:
   character: "0109"

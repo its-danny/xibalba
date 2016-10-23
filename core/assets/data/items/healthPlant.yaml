@@ -2,6 +2,7 @@
 type: consumable
 name: Health Plant
 description: It heals you some
+weight: 0
 
 visual:
   character: "1114"

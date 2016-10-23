@@ -428,6 +428,10 @@ public class HudRenderer {
   private String createEntityStatus(Entity entity) {
     Array<String> statuses = new Array<>();
 
+    if (ComponentMappers.encumbered.has(player)) {
+      statuses.add("[DARK_GRAY]ENCUMBERED[]");
+    }
+
     if (ComponentMappers.crippled.has(entity)) {
       statuses.add("[DARK_GRAY]CRIPPLED[]");
     }

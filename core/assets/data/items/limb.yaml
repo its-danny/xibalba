@@ -2,6 +2,7 @@
 type: limb
 name: Limb
 description: A rotting limb.
+weight: 2
 
 visual:
   character: "0109"
