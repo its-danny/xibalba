@@ -172,7 +172,7 @@ public class WorldRenderer {
         PositionComponent position = ComponentMappers.position.get(entity);
 
         if (Main.tweenManager.getRunningTimelinesCount() == 0) {
-          WorldManager.entityHelpers.updateSprite(entity, position.pos);
+          WorldManager.entityHelpers.updateSprite(entity, position.pos.x, position.pos.y);
         }
 
         if (WorldManager.entityHelpers.isVisible(entity)) {
@@ -190,7 +190,7 @@ public class WorldRenderer {
       PositionComponent position = ComponentMappers.position.get(entity);
 
       if (Main.tweenManager.getRunningTimelinesCount() == 0) {
-        WorldManager.entityHelpers.updateSprite(entity, position.pos);
+        WorldManager.entityHelpers.updateSprite(entity, position.pos.x, position.pos.y);
       }
 
       if (WorldManager.entityHelpers.isVisible(entity)) {
@@ -214,7 +214,7 @@ public class WorldRenderer {
 
       if (Main.tweenManager.getRunningTimelinesCount() == 0) {
         PositionComponent position = ComponentMappers.position.get(player);
-        WorldManager.entityHelpers.updateSprite(player, position.pos);
+        WorldManager.entityHelpers.updateSprite(player, position.pos.x, position.pos.y);
       }
 
       ComponentMappers.visual.get(player).sprite.draw(batch);

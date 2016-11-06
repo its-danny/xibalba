@@ -52,9 +52,10 @@ public class RangeSystem extends UsesEnergySystem {
   private void doThrowAnimation(Entity entity, Entity item, Vector2 position, boolean destroy) {
     // We have to set the items position before starting the tween since who knows wtf
     // position it had before it ended up in your inventory.
-    PositionComponent throwerPosition = ComponentMappers.position.get(entity);
-    WorldManager.entityHelpers.updatePosition(item, throwerPosition.pos);
-    WorldManager.entityHelpers.updateSprite(item, throwerPosition.pos);
+    PositionComponent entityPosition = ComponentMappers.position.get(entity);
+
+    WorldManager.entityHelpers.updatePosition(item, entityPosition.pos.x, entityPosition.pos.y);
+    WorldManager.entityHelpers.updateSprite(item, entityPosition.pos.x, entityPosition.pos.y);
 
     VisualComponent itemVisual = ComponentMappers.visual.get(item);
 

@@ -299,7 +299,7 @@ public class ItemHelpers {
         remove(entity, item);
       }
 
-      WorldManager.entityHelpers.updatePosition(item, position);
+      WorldManager.entityHelpers.updatePosition(item, position.x, position.y);
 
       removeFromInventory(entity, item);
 

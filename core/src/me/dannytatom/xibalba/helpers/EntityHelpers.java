@@ -3,7 +3,6 @@ package me.dannytatom.xibalba.helpers;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Vector2;
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.EquipmentComponent;
@@ -214,32 +213,32 @@ public class EntityHelpers {
   /**
    * Update an entity's position.
    *
-   * @param entity      The entity
-   * @param newPosition Where they're going
+   * @param entity The entity
+   * @param x
+   * @param y
    */
-  public void updatePosition(Entity entity, Vector2 newPosition) {
+  public void updatePosition(Entity entity, float x, float y) {
     if (!ComponentMappers.position.has(entity)) {
-      entity.add(new PositionComponent());
+      entity.add(new PositionComponent((int) x, (int) y));
+    } else {
+      PositionComponent position = ComponentMappers.position.get(entity);
+      position.pos.set(x, y);
     }
-
-    PositionComponent position = ComponentMappers.position.get(entity);
-    position.pos.set(newPosition);
   }
 
   /**
    * Update sprite position (called after turn is over, after all tweens etc),
    * and update the sprite color based on cell they're in.
    *
-   * @param entity   Entity to update
-   * @param position Their world position
+   * @param entity The entity
+   * @param x
+   * @param y
    */
-  public void updateSprite(Entity entity, Vector2 position) {
+  public void updateSprite(Entity entity, float x, float y) {
     VisualComponent visual = ComponentMappers.visual.get(entity);
-    visual.sprite.setPosition(
-        position.x * Main.SPRITE_WIDTH, position.y * Main.SPRITE_HEIGHT
-    );
+    visual.sprite.setPosition(x * Main.SPRITE_WIDTH, y * Main.SPRITE_HEIGHT);
 
-    MapCell cell = WorldManager.mapHelpers.getCell(position.x, position.y);
+    MapCell cell = WorldManager.mapHelpers.getCell(x, y);
 
     if (cell.isWater()) {
       Color tinted = visual.color.cpy().lerp(cell.sprite.getColor(), .5f);

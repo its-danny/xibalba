@@ -89,8 +89,8 @@ public class World {
               ? WorldManager.world.getCurrentMap().entrance
               : WorldManager.world.getCurrentMap().exit;
 
-          WorldManager.entityHelpers.updatePosition(entity, position);
-          WorldManager.entityHelpers.updateSprite(entity, position);
+          WorldManager.entityHelpers.updatePosition(entity, position.x, position.y);
+          WorldManager.entityHelpers.updateSprite(entity, position.x, position.y);
         }
 
         WorldManager.entityHelpers.updateSenses(entity);
