@@ -54,6 +54,9 @@ public class CameraShake {
 
       currentTime += delta;
     } else {
+      time = 0;
+      currentTime = 0;
+
       camera.position.set(
           position.x * Main.SPRITE_WIDTH,
           position.y * Main.SPRITE_HEIGHT, 0

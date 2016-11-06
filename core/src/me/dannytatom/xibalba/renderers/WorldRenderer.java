@@ -35,6 +35,7 @@ public class WorldRenderer {
 
   private final PlayerComponent playerDetails;
   private final AttributesComponent playerAttributes;
+  private final PositionComponent playerPosition;
 
   // These get reused a ton
   private final Sprite shadow;
@@ -54,6 +55,7 @@ public class WorldRenderer {
 
     playerDetails = ComponentMappers.player.get(WorldManager.player);
     playerAttributes = ComponentMappers.attributes.get(WorldManager.player);
+    playerPosition = ComponentMappers.position.get(WorldManager.player);
 
     shadow = Main.asciiAtlas.createSprite("1113");
     question = Main.asciiAtlas.createSprite("1503");
@@ -63,18 +65,11 @@ public class WorldRenderer {
    * Render shit.
    */
   public void render(float delta) {
-    // Get playerDetails position
-    PositionComponent playerPosition = ComponentMappers.position.get(WorldManager.player);
+    Main.handheldCamera.update(delta, worldCamera, playerPosition.pos);
 
     // Handle screen shake
     if (Main.cameraShake.time > 0) {
       Main.cameraShake.update(delta, worldCamera, playerPosition.pos);
-    } else {
-      // Set worldCamera to follow player
-      worldCamera.position.set(
-          playerPosition.pos.x * Main.SPRITE_WIDTH,
-          playerPosition.pos.y * Main.SPRITE_HEIGHT, 0
-      );
     }
 
     worldCamera.update();

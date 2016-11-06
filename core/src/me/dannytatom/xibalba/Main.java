@@ -18,6 +18,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import me.dannytatom.xibalba.screens.MainMenuScreen;
 import me.dannytatom.xibalba.utils.CameraShake;
+import me.dannytatom.xibalba.utils.HandheldCamera;
 import me.dannytatom.xibalba.utils.SoundManager;
 import me.dannytatom.xibalba.utils.SpriteAccessor;
 
@@ -31,6 +32,7 @@ public class Main extends Game {
   public static Screen playScreen;
   public static TweenManager tweenManager;
   public static SoundManager soundManager;
+  public static HandheldCamera handheldCamera;
   public static CameraShake cameraShake;
 
   /**
@@ -148,7 +150,8 @@ public class Main extends Game {
     tweenManager = new TweenManager();
     Tween.registerAccessor(Sprite.class, new SpriteAccessor());
 
-    // Screen shaker!
+    // Cameras
+    handheldCamera = new HandheldCamera();
     cameraShake = new CameraShake();
 
     // Start the main menu
