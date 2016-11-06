@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Colors;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.I18NBundle;
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.BodyComponent;
@@ -32,8 +33,10 @@ import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 
 public class EntityFactory {
-  public EntityFactory() {
+  private I18NBundle i18n;
 
+  public EntityFactory() {
+    i18n = Main.assets.get("i18n/xibalba", I18NBundle.class);
   }
 
   /**
@@ -64,8 +67,8 @@ public class EntityFactory {
     );
 
     entity.add(new AttributesComponent(
-        data.name,
-        data.description,
+        i18n.get("entities.enemies." + name + ".name"),
+        i18n.get("entities.enemies." + name + ".description"),
         data.attributes.get("speed"),
         data.attributes.get("vision"),
         data.attributes.get("hearing"),
@@ -100,7 +103,13 @@ public class EntityFactory {
     Entity entity = new Entity();
 
     entity.add(new PositionComponent(position));
-    entity.add(new ItemComponent(data));
+    entity.add(
+        new ItemComponent(
+            i18n.get("entities.items." + name + ".name"),
+            i18n.get("entities.items." + name + ".description"),
+            data
+        )
+    );
 
     switch (data.type) {
       case "ammunition":

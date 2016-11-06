@@ -1,7 +1,5 @@
 ---
 type: corpse
-name: Corpse
-description: A rotting corpse.
 weight: 5
 
 visual:

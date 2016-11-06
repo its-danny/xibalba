@@ -24,10 +24,10 @@ public class ItemComponent implements Component {
    *
    * @param data YamlToItem instance containing data from relevant yaml file
    */
-  public ItemComponent(YamlToItem data) {
+  public ItemComponent(String name, String description, YamlToItem data) {
+    this.name = name;
+    this.description = description;
     this.type = data.type;
-    this.name = data.name;
-    this.description = data.description;
     this.weight = data.weight;
     this.location = data.location;
     this.twoHanded = data.twoHanded;

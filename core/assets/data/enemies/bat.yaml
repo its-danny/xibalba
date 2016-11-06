@@ -1,8 +1,4 @@
 ---
-name: Bat
-description: Bats are mammals of the order Chiroptera whose forelimbs form webbed wings,
-  making them the only mammals naturally capable of true and sustained flight.
-
 visual:
   character: "1301"
   color: 8FA9BA

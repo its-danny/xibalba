@@ -1,7 +1,5 @@
 ---
 type: bandage
-name: Skin
-description: Can be used to bandage wounds.
 weight: 0.25
 
 visual:

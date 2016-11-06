@@ -1,12 +1,4 @@
 ---
-name: Poison Dart Frog
-description: These species are diurnal and often have brightly colored bodies.
-  This bright coloration is correlated with the toxicity of the brightly colored species,
-  making these species aposematic. Some species of the Dendrobatidae family exhibit extremely
-  bright coloration along with high toxicity, while others have cryptic coloration with minimal
-  to no amount of observed toxicity. The species that have great toxicity,
-  derive this from their diet of ants, mites and termites.
-
 visual:
   character: "0606"
   color: 5CB1E6

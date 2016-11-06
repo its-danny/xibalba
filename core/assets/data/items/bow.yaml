@@ -1,9 +1,6 @@
 ---
 type: weapon
 weaponType: range
-name: Wooden Bow
-description: The bow and arrow is a projectile weapon system (a bow with arrows) that
-  predates recorded history and is common to most cultures.
 weight: 3
 
 visual:

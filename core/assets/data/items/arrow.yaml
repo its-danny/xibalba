@@ -1,8 +1,6 @@
 ---
 type: ammunition
 ammunitionType: arrow
-name: Wooden Arrow
-description: A shafted projectile that is shot with a bow.
 skill: archery
 weight: 0.5
 

@@ -8,8 +8,6 @@ public class YamlToItem {
   public String weaponType;
   public String ammunitionType;
   public String armorType;
-  public String name;
-  public String description;
   public float weight;
   public HashMap<String, String> visual;
 

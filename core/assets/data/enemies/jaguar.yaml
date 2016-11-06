@@ -1,9 +1,4 @@
 ---
-name: Jaguar
-description: The jaguar is a big cat, a feline in the Panthera genus, and is the only
-  extant Panthera species native to the Americas. The jaguar is the third-largest
-  feline after the tiger and the lion, and the largest in the Americas.
-
 visual:
   character: "1006"
   color: D0852B
