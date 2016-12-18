@@ -17,7 +17,7 @@ allprojects {
 
     ext {
         appName = 'xibalba'
-        gdxVersion = '1.9.5'
+        gdxVersion = '1.9.3'
     }
 
     repositories {
@@ -35,10 +35,10 @@ project(":core") {
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
-        compile "com.badlogicgames.gdx:gdx-ai:1.8.0"
-        compile "com.badlogicgames.ashley:ashley:1.7.3"
-        compile "org.yaml:snakeyaml:1.17"
-        compile "org.apache.commons:commons-lang3:3.5"
+        compile "com.badlogicgames.gdx:gdx-ai:1.7.0"
+        compile "com.badlogicgames.ashley:ashley:1.7.0"
+        compile "org.yaml:snakeyaml:1.16"
+        compile "org.apache.commons:commons-lang3:3.4"
         compile "com.github.xaguzman:pathfinding:0.2.6"
         compile "com.esotericsoftware:kryo:4.0.0"
 
