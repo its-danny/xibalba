@@ -37,12 +37,6 @@ public class YouScreen implements Screen {
   private Section sectionSelected = Section.ATTRIBUTES;
   private int itemSelected = 0;
 
-  /**
-   * Where the player sets up attributes, skills,
-   * traits, and defects.
-   *
-   * @param main Instance of the main class
-   */
   public YouScreen(Main main) {
     attributePoints = 5;
     skillPoints = 10;
@@ -55,7 +49,6 @@ public class YouScreen implements Screen {
     table.left().top();
     table.pad(10);
     stage.addActor(table);
-    float width = Gdx.graphics.getWidth() / 2;
 
     Table titleTable = new Table();
 
@@ -83,6 +76,7 @@ public class YouScreen implements Screen {
     defectsGroup = new VerticalGroup().align(Align.top | Align.left);
     traitsGroup = new VerticalGroup().align(Align.top | Align.left);
 
+    float width = Gdx.graphics.getWidth() / 2;
     Table mainTable = new Table();
     mainTable.add(attributesGroup).pad(0, 0, 10, 0).width(width).top().left();
     mainTable.add(skillsGroup).pad(0, 0, 10, 0).width(width).top().left();
@@ -90,9 +84,9 @@ public class YouScreen implements Screen {
     mainTable.add(defectsGroup).pad(0, 0, 10, 0).width(width).top().left();
     mainTable.add(traitsGroup).pad(0, 0, 10, 0).width(width).top().left();
 
-    ActionButton continueButton = new ActionButton("ENTER", "Enter Your Name");
+    ActionButton continueButton = new ActionButton("ENTER", "Select Your God");
     continueButton.setKeys(Input.Keys.ENTER);
-    continueButton.setAction(table, () -> main.setScreen(new NameScreen(main, playerSetup)));
+    continueButton.setAction(table, () -> main.setScreen(new GodScreen(main, playerSetup)));
 
     table.add(titleTable);
     table.row();
