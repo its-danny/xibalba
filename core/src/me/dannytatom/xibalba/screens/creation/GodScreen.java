@@ -73,7 +73,6 @@ public class GodScreen implements Screen {
     titleGroup.addActor(instructions);
 
     godsGroup = new VerticalGroup().left();
-    godsGroup.setDebug(true);
     abilityGroup = new VerticalGroup().left();
 
     float width = Gdx.graphics.getWidth() / 2;
