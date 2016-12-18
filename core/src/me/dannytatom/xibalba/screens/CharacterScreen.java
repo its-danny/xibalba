@@ -21,9 +21,11 @@ import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.CorpseComponent;
 import me.dannytatom.xibalba.components.EffectsComponent;
 import me.dannytatom.xibalba.components.EquipmentComponent;
+import me.dannytatom.xibalba.components.GodComponent;
 import me.dannytatom.xibalba.components.InventoryComponent;
 import me.dannytatom.xibalba.components.ItemComponent;
 import me.dannytatom.xibalba.components.SkillsComponent;
+import me.dannytatom.xibalba.components.abilities.SummonBeesComponent;
 import me.dannytatom.xibalba.components.defects.MyopiaComponent;
 import me.dannytatom.xibalba.components.defects.OneArmComponent;
 import me.dannytatom.xibalba.components.statuses.BleedingComponent;
@@ -51,6 +53,7 @@ public class CharacterScreen implements Screen {
   private final VerticalGroup attributesGroup;
   private final VerticalGroup skillsGroup;
   private final VerticalGroup traitsGroup;
+  private final VerticalGroup abilitiesGroup;
   private final VerticalGroup inventoryGroup;
   private final VerticalGroup itemDetailsGroup;
   private final VerticalGroup equipmentGroup;
@@ -111,28 +114,34 @@ public class CharacterScreen implements Screen {
     attributesGroup = new VerticalGroup().align(Align.top | Align.left);
     skillsGroup = new VerticalGroup().align(Align.top | Align.left);
     traitsGroup = new VerticalGroup().align(Align.top | Align.left);
+    abilitiesGroup = new VerticalGroup().align(Align.top | Align.left);
     inventoryGroup = new VerticalGroup().align(Align.top | Align.left);
     itemDetailsGroup = new VerticalGroup().align(Align.top | Align.left);
     equipmentGroup = new VerticalGroup().align(Align.top | Align.left);
     itemActionTable = new Table().align(Align.top | Align.left);
 
-    Table mainTable = new Table();
-    mainTable.add(attributesGroup).pad(10).width(Gdx.graphics.getWidth() / 3 - 20).top().left();
-    mainTable.add(skillsGroup).pad(10).width(Gdx.graphics.getWidth() / 3 - 20).top().left();
-    mainTable.add(traitsGroup).pad(10).width(Gdx.graphics.getWidth() / 3 - 20).top().left();
-    mainTable.row();
-    mainTable.add(inventoryGroup).pad(10).width(Gdx.graphics.getWidth() / 3 - 20).top().left();
-    mainTable.add(itemDetailsGroup).pad(10).width(Gdx.graphics.getWidth() / 3 - 20).top().left();
-    mainTable.add(equipmentGroup).pad(10).width(Gdx.graphics.getWidth() / 3 - 20).top().left();
+    Table topTable = new Table();
+    topTable.add(attributesGroup).pad(10).width(Gdx.graphics.getWidth() / 6 - 20).top().left();
+    topTable.add(skillsGroup).pad(10).width(Gdx.graphics.getWidth() / 6 - 20).top().left();
+    topTable.add(traitsGroup).pad(10).width(Gdx.graphics.getWidth() / 6 * 2 - 20).top().left();
+    topTable.add(abilitiesGroup).pad(10).width(Gdx.graphics.getWidth() / 6 * 2 - 20).top().left();
+
+    Table bottomTable = new Table();
+    bottomTable.add(inventoryGroup).pad(10).width(Gdx.graphics.getWidth() / 3 - 20).top().left();
+    bottomTable.add(itemDetailsGroup).pad(10).width(Gdx.graphics.getWidth() / 3 - 20).top().left();
+    bottomTable.add(equipmentGroup).pad(10).width(Gdx.graphics.getWidth() / 3 - 20).top().left();
 
     table.add(titleTable);
     table.row();
-    table.add(mainTable);
+    table.add(topTable);
+    table.row();
+    table.add(bottomTable);
 
     setupActionButtons();
     updateAttributesGroup();
     updateSkillsGroup();
     updateTraitsGroup();
+    updateAbilitiesGroup();
     updateInventoryGroup();
     updateItemDetailsGroup();
     updateEquipmentGroup();
@@ -381,6 +390,24 @@ public class CharacterScreen implements Screen {
               ), Main.skin
           )
       );
+    }
+  }
+
+  private void updateAbilitiesGroup() {
+    abilitiesGroup.clear();
+
+    GodComponent god = ComponentMappers.god.get(player);
+
+    abilitiesGroup.addActor(new Label(god.name + " Abilities", Main.skin));
+    abilitiesGroup.addActor(new Label("", Main.skin));
+
+    if (ComponentMappers.summonBees.has(player)) {
+      abilitiesGroup.addActor(new Label(
+          SummonBeesComponent.name + "[LIGHT_GRAY] every "
+              + SummonBeesComponent.rechargeRate + " turns\n" + "[DARK_GRAY]"
+              + WordUtils.wrap(SummonBeesComponent.description, 70),
+          Main.skin
+      ));
     }
   }
 

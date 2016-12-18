@@ -9,11 +9,13 @@ import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.BodyComponent;
 import me.dannytatom.xibalba.components.EquipmentComponent;
+import me.dannytatom.xibalba.components.GodComponent;
 import me.dannytatom.xibalba.components.InventoryComponent;
 import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.SkillsComponent;
 import me.dannytatom.xibalba.components.VisualComponent;
+import me.dannytatom.xibalba.components.abilities.SummonBeesComponent;
 import me.dannytatom.xibalba.components.defects.MyopiaComponent;
 import me.dannytatom.xibalba.components.defects.OneArmComponent;
 import me.dannytatom.xibalba.components.traits.PerceptiveComponent;
@@ -30,6 +32,7 @@ public class PlayerSetup {
   public final SkillsComponent skills;
   public final Array<String> traits;
   public final Array<String> defects;
+  public YamlToGod god;
 
   public String color;
   public String name;
@@ -143,6 +146,12 @@ public class PlayerSetup {
 
       AttributesComponent attributes = ComponentMappers.attributes.get(player);
       attributes.hearing = attributes.vision * 2;
+    }
+
+    player.add(new GodComponent(god.name, god.description));
+
+    if (god.abilities.contains("Summon Bees")) {
+      player.add(new SummonBeesComponent());
     }
 
     return player;

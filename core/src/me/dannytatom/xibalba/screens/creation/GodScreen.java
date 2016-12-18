@@ -83,7 +83,7 @@ public class GodScreen implements Screen {
 
     ActionButton continueButton = new ActionButton("ENTER", "Enter Your Name");
     continueButton.setKeys(Input.Keys.ENTER);
-    continueButton.setAction(table, () -> main.setScreen(new NameScreen(main, playerSetup)));
+    continueButton.setAction(table, () -> goToNameScreen(main));
 
     table.add(titleTable);
     table.row();
@@ -170,6 +170,11 @@ public class GodScreen implements Screen {
           new Label(createAbilityText(SummonBeesComponent.name, SummonBeesComponent.description, SummonBeesComponent.rechargeRate), Main.skin)
       );
     }
+  }
+
+  public void goToNameScreen(Main main) {
+    playerSetup.god = godList.get(godSelected);
+    main.setScreen(new NameScreen(main, playerSetup));
   }
 
   private String createAbilityText(String name, String description, int rechargeRate) {

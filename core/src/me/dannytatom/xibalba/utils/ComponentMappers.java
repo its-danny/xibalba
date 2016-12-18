@@ -11,6 +11,7 @@ import me.dannytatom.xibalba.components.EnemyComponent;
 import me.dannytatom.xibalba.components.EntranceComponent;
 import me.dannytatom.xibalba.components.EquipmentComponent;
 import me.dannytatom.xibalba.components.ExitComponent;
+import me.dannytatom.xibalba.components.GodComponent;
 import me.dannytatom.xibalba.components.InventoryComponent;
 import me.dannytatom.xibalba.components.ItemComponent;
 import me.dannytatom.xibalba.components.MouseMovementComponent;
@@ -20,6 +21,7 @@ import me.dannytatom.xibalba.components.RainDropComponent;
 import me.dannytatom.xibalba.components.SkillsComponent;
 import me.dannytatom.xibalba.components.TrapComponent;
 import me.dannytatom.xibalba.components.VisualComponent;
+import me.dannytatom.xibalba.components.abilities.SummonBeesComponent;
 import me.dannytatom.xibalba.components.actions.MeleeComponent;
 import me.dannytatom.xibalba.components.actions.MovementComponent;
 import me.dannytatom.xibalba.components.actions.RangeComponent;
@@ -62,6 +64,12 @@ public final class ComponentMappers {
 
   public static final ComponentMapper<SkillsComponent> skills =
       ComponentMapper.getFor(SkillsComponent.class);
+
+  public static final ComponentMapper<GodComponent> god =
+      ComponentMapper.getFor(GodComponent.class);
+
+  public static final ComponentMapper<SummonBeesComponent> summonBees =
+      ComponentMapper.getFor(SummonBeesComponent.class);
 
   public static final ComponentMapper<EncumberedComponent> encumbered =
       ComponentMapper.getFor(EncumberedComponent.class);
