@@ -12,13 +12,13 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.PlayerInput;
 import me.dannytatom.xibalba.components.AttributesComponent;
+import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.renderers.HudRenderer;
 import me.dannytatom.xibalba.renderers.WorldRenderer;
 import me.dannytatom.xibalba.utils.ComponentMappers;
 import me.dannytatom.xibalba.world.WorldManager;
 
 public class PlayScreen implements Screen {
-
   private final WorldRenderer worldRenderer;
   private final HudRenderer hudRenderer;
   private final PlayerInput playerInput;

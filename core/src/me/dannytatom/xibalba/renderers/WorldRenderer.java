@@ -264,5 +264,11 @@ public class WorldRenderer {
 
   public void resize(int width, int height) {
     viewport.update(width, height, true);
+
+    worldCamera.position.set(
+        playerPosition.pos.x * Main.SPRITE_WIDTH,
+        playerPosition.pos.y * Main.SPRITE_HEIGHT,
+        0
+    );
   }
 }
