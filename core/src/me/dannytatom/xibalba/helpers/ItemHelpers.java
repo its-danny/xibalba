@@ -107,6 +107,12 @@ public class ItemHelpers {
     }
   }
 
+  /**
+   * Remove an item from inventory.
+   *
+   * @param entity Who's inventory
+   * @param item   The item
+   */
   public void removeFromInventory(Entity entity, Entity item) {
     InventoryComponent inventory = ComponentMappers.inventory.get(entity);
 

@@ -25,7 +25,6 @@ import me.dannytatom.xibalba.components.GodComponent;
 import me.dannytatom.xibalba.components.InventoryComponent;
 import me.dannytatom.xibalba.components.ItemComponent;
 import me.dannytatom.xibalba.components.SkillsComponent;
-import me.dannytatom.xibalba.components.abilities.SummonBeesComponent;
 import me.dannytatom.xibalba.components.defects.MyopiaComponent;
 import me.dannytatom.xibalba.components.defects.OneArmComponent;
 import me.dannytatom.xibalba.components.statuses.BleedingComponent;
@@ -33,10 +32,10 @@ import me.dannytatom.xibalba.components.traits.PerceptiveComponent;
 import me.dannytatom.xibalba.components.traits.ScoutComponent;
 import me.dannytatom.xibalba.ui.ActionButton;
 import me.dannytatom.xibalba.utils.ComponentMappers;
+import me.dannytatom.xibalba.utils.YamlToAbility;
 import me.dannytatom.xibalba.world.WorldManager;
 import org.apache.commons.lang3.text.WordUtils;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -226,7 +225,6 @@ public class CharacterScreen implements Screen {
     attributesGroup.addActor(new Label("", Main.skin));
 
     // Health
-
     String healthColor;
 
     if (attributes.health / attributes.maxHealth <= 0.5f) {
@@ -242,16 +240,25 @@ public class CharacterScreen implements Screen {
         )
     );
 
-    // Energy & Speed
+    // Divine Favor
+    String divineFavorColor;
+
+    if (attributes.divineFavor <= 0) {
+      divineFavorColor = "[RED]";
+    } else if (attributes.divineFavor / 100 <= 0.5f) {
+      divineFavorColor = "[YELLOW]";
+    } else {
+      divineFavorColor = "[WHITE]";
+    }
+
     attributesGroup.addActor(
         new Label(
-            "[LIGHT_GRAY]ENG []" + attributes.energy
-                + " [LIGHT_GRAY]SPD []" + attributes.speed, Main.skin
+            "[LIGHT_GRAY]DF " + divineFavorColor + attributes.divineFavor
+                + "[LIGHT_GRAY]/100", Main.skin
         )
     );
 
     // Toughness & defense
-
     int toughness = attributes.toughness;
     int defense = WorldManager.entityHelpers.getArmorDefense(player);
 
@@ -265,7 +272,6 @@ public class CharacterScreen implements Screen {
     );
 
     // Strength & damage
-
     int strength = attributes.strength;
     int damage = 0;
 
@@ -294,7 +300,6 @@ public class CharacterScreen implements Screen {
     );
 
     // Statuses
-
     Array<String> statuses = new Array<>();
 
     if (ComponentMappers.encumbered.has(player)) {
@@ -396,16 +401,20 @@ public class CharacterScreen implements Screen {
   private void updateAbilitiesGroup() {
     abilitiesGroup.clear();
 
-    GodComponent god = ComponentMappers.god.get(player);
+    GodComponent god = ComponentMappers.god.get(WorldManager.god);
 
     abilitiesGroup.addActor(new Label(god.name + " Abilities", Main.skin));
     abilitiesGroup.addActor(new Label("", Main.skin));
 
-    if (ComponentMappers.summonBees.has(player)) {
+    Array<YamlToAbility> abilities = ComponentMappers.abilities.get(player).abilities;
+
+    for (int i = 0; i < abilities.size; i++) {
+      YamlToAbility ability = abilities.get(i);
+
       abilitiesGroup.addActor(new Label(
-          SummonBeesComponent.name + "[LIGHT_GRAY] every "
-              + SummonBeesComponent.rechargeRate + " turns\n" + "[DARK_GRAY]"
-              + WordUtils.wrap(SummonBeesComponent.description, 70),
+          ability.name + "[LIGHT_GRAY] every "
+              + ability.recharge + " turns\n" + "[DARK_GRAY]"
+              + WordUtils.wrap(ability.description, 70),
           Main.skin
       ));
     }
@@ -417,7 +426,7 @@ public class CharacterScreen implements Screen {
     inventoryGroup.addActor(new Label("Inventory", Main.skin));
     inventoryGroup.addActor(new Label("", Main.skin));
 
-    Collections.sort(inventory.items, (e1, e2) -> {
+    (inventory.items).sort((e1, e2) -> {
       ItemComponent e1i = ComponentMappers.item.get(e1);
       ItemComponent e2i = ComponentMappers.item.get(e2);
 

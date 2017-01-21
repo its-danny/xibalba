@@ -12,6 +12,7 @@ import java.util.List;
 
 public class ActionButton extends TextButton {
   private List<Integer> keys = null;
+  private String letter = null;
 
   /**
    * Create an action button with letter and text.
@@ -22,7 +23,9 @@ public class ActionButton extends TextButton {
   public ActionButton(String letter, String text) {
     super(null, Main.skin);
 
-    setText(createText(text, letter));
+    this.letter = letter;
+
+    setText(createText(text));
     pad(5);
   }
 
@@ -35,8 +38,14 @@ public class ActionButton extends TextButton {
   public ActionButton(int number, String text) {
     super(null, Main.skin);
 
-    setText(createText(text, number + ""));
+    this.letter = number + "";
+
+    setText(createText(text));
     pad(5);
+  }
+
+  public void setLabel(String text) {
+    setText(createText(text));
   }
 
   /**
@@ -111,7 +120,7 @@ public class ActionButton extends TextButton {
     }
   }
 
-  private String createText(String text, String letter) {
+  private String createText(String text) {
     if (letter != null && text != null) {
       return "[DARK_GRAY][ [CYAN]" + letter + "[DARK_GRAY] ][WHITE] " + text;
     } else if (text == null) {

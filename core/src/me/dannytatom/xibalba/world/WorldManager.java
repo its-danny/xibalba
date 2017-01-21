@@ -5,11 +5,13 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.utils.Array;
 import me.dannytatom.xibalba.ActionLog;
+import me.dannytatom.xibalba.helpers.AbilityHelpers;
 import me.dannytatom.xibalba.helpers.CombatHelpers;
 import me.dannytatom.xibalba.helpers.EntityHelpers;
 import me.dannytatom.xibalba.helpers.InputHelpers;
 import me.dannytatom.xibalba.helpers.ItemHelpers;
 import me.dannytatom.xibalba.helpers.MapHelpers;
+import me.dannytatom.xibalba.systems.AbilitiesSystem;
 import me.dannytatom.xibalba.systems.AttributesSystem;
 import me.dannytatom.xibalba.systems.BrainSystem;
 import me.dannytatom.xibalba.systems.DeathSystem;
@@ -40,7 +42,9 @@ public class WorldManager {
   public static CombatHelpers combatHelpers;
   public static EntityHelpers entityHelpers;
   public static ItemHelpers itemHelpers;
+  public static AbilityHelpers abilityHelpers;
   public static Entity player;
+  public static Entity god;
   public static boolean executeTurn;
   public static int turnCount;
 
@@ -59,12 +63,14 @@ public class WorldManager {
     entityHelpers = new EntityHelpers();
     itemHelpers = new ItemHelpers();
     combatHelpers = new CombatHelpers();
+    abilityHelpers = new AbilityHelpers();
 
     executeTurn = false;
     turnCount = 0;
 
     // Setup engine (systems are run in order added)
     engine.addSystem(new AttributesSystem());
+    engine.addSystem(new AbilitiesSystem());
     engine.addSystem(new TimeSystem());
     engine.addSystem(new MouseMovementSystem());
     engine.addSystem(new BrainSystem());

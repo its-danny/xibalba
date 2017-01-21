@@ -37,6 +37,11 @@ public class YouScreen implements Screen {
   private Section sectionSelected = Section.ATTRIBUTES;
   private int itemSelected = 0;
 
+  /**
+   * Character Creation: You Screen.
+   *
+   * @param main Instance of main class
+   */
   public YouScreen(Main main) {
     attributePoints = 5;
     skillPoints = 10;

@@ -17,6 +17,7 @@ public class AttributesComponent implements Component {
   public int health;
   public int oxygen;
   public int energy;
+  public int divineFavor;
   public float[][] visionMap;
   public float[][] hearingMap;
 
@@ -48,5 +49,6 @@ public class AttributesComponent implements Component {
     this.hearing = hearing;
     this.health = maxHealth;
     this.oxygen = maxOxygen;
+    this.divineFavor = 100;
   }
 }

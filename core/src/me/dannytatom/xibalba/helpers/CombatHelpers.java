@@ -205,7 +205,8 @@ public class CombatHelpers {
     return hitRoll;
   }
 
-  private int rollDamage(AttackType attackType, Entity starter, Entity target, Entity item, int hitRoll, String bodyPart) {
+  private int rollDamage(AttackType attackType, Entity starter, Entity target,
+                         Entity item, int hitRoll, String bodyPart) {
     int baseDamage = 0;
 
     switch (attackType) {
@@ -263,7 +264,8 @@ public class CombatHelpers {
     return totalDamage;
   }
 
-  private void applyDamage(Entity starter, Entity target, Entity item, int damage, String skill, String bodyPart) {
+  private void applyDamage(Entity starter, Entity target, Entity item,
+                           int damage, String skill, String bodyPart) {
     int defense = WorldManager.entityHelpers.getCombinedDefense(target);
 
     if (damage > defense) {

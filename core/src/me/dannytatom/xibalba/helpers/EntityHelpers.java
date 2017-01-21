@@ -214,15 +214,15 @@ public class EntityHelpers {
    * Update an entity's position.
    *
    * @param entity The entity
-   * @param x
-   * @param y
+   * @param cellX  x position
+   * @param cellY  y position
    */
-  public void updatePosition(Entity entity, float x, float y) {
+  public void updatePosition(Entity entity, float cellX, float cellY) {
     if (!ComponentMappers.position.has(entity)) {
-      entity.add(new PositionComponent((int) x, (int) y));
+      entity.add(new PositionComponent((int) cellX, (int) cellY));
     } else {
       PositionComponent position = ComponentMappers.position.get(entity);
-      position.pos.set(x, y);
+      position.pos.set(cellX, cellY);
     }
   }
 
@@ -231,14 +231,14 @@ public class EntityHelpers {
    * and update the sprite color based on cell they're in.
    *
    * @param entity The entity
-   * @param x
-   * @param y
+   * @param cellX  x position
+   * @param cellY  y position
    */
-  public void updateSprite(Entity entity, float x, float y) {
+  public void updateSprite(Entity entity, float cellX, float cellY) {
     VisualComponent visual = ComponentMappers.visual.get(entity);
-    visual.sprite.setPosition(x * Main.SPRITE_WIDTH, y * Main.SPRITE_HEIGHT);
+    visual.sprite.setPosition(cellX * Main.SPRITE_WIDTH, cellY * Main.SPRITE_HEIGHT);
 
-    MapCell cell = WorldManager.mapHelpers.getCell(x, y);
+    MapCell cell = WorldManager.mapHelpers.getCell(cellX, cellY);
 
     if (cell.isWater()) {
       Color tinted = visual.color.cpy().lerp(cell.sprite.getColor(), .5f);
@@ -290,19 +290,21 @@ public class EntityHelpers {
    * @param entity Entity whose health we're raising
    * @param amount How much
    */
-  private void raiseHealth(Entity entity, int amount) {
+  public void raiseHealth(Entity entity, int amount) {
     AttributesComponent attributes = ComponentMappers.attributes.get(entity);
 
     if (attributes.health + amount < attributes.maxHealth) {
       attributes.health += amount;
+    } else {
+      attributes.health = attributes.maxHealth;
+    }
 
-      if (ComponentMappers.player.has(entity)) {
-        WorldManager.log.add("stats.healthRaised", "You", amount);
+    if (ComponentMappers.player.has(entity)) {
+      WorldManager.log.add("stats.healthRaised", "You", amount);
 
-        ComponentMappers.player.get(entity).totalDamageHealed += amount;
-      } else {
-        WorldManager.log.add("stats.healthRaised", attributes.name, amount);
-      }
+      ComponentMappers.player.get(entity).totalDamageHealed += amount;
+    } else {
+      WorldManager.log.add("stats.healthRaised", attributes.name, amount);
     }
   }
 

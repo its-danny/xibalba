@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import me.dannytatom.xibalba.Main;
+import me.dannytatom.xibalba.components.AbilitiesComponent;
 import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.BodyComponent;
 import me.dannytatom.xibalba.components.EquipmentComponent;
@@ -15,12 +16,13 @@ import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.SkillsComponent;
 import me.dannytatom.xibalba.components.VisualComponent;
-import me.dannytatom.xibalba.components.abilities.SummonBeesComponent;
 import me.dannytatom.xibalba.components.defects.MyopiaComponent;
 import me.dannytatom.xibalba.components.defects.OneArmComponent;
 import me.dannytatom.xibalba.components.traits.PerceptiveComponent;
 import me.dannytatom.xibalba.components.traits.ScoutComponent;
 import me.dannytatom.xibalba.world.WorldManager;
+import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.constructor.Constructor;
 
 import java.util.Calendar;
 import java.util.TreeMap;
@@ -148,11 +150,22 @@ public class PlayerSetup {
       attributes.hearing = attributes.vision * 2;
     }
 
-    player.add(new GodComponent(god.name, god.description));
+    WorldManager.god = new Entity();
+    WorldManager.god.add(new GodComponent(god.name, god.description));
 
-    if (god.abilities.contains("Summon Bees")) {
-      player.add(new SummonBeesComponent());
-    }
+    AbilitiesComponent abilitiesComponent = new AbilitiesComponent();
+
+    Yaml yaml = new Yaml(new Constructor(YamlToAbility.class));
+    god.abilities.forEach((String ability) -> {
+      YamlToAbility details = (YamlToAbility) yaml.load(
+          Gdx.files.internal("data/abilities/" + ability + ".yaml").read()
+      );
+
+      details.counter = details.recharge;
+      abilitiesComponent.abilities.add(details);
+    });
+
+    player.add(abilitiesComponent);
 
     return player;
   }

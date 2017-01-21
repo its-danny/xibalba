@@ -13,9 +13,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import me.dannytatom.xibalba.Main;
-import me.dannytatom.xibalba.components.abilities.SummonBeesComponent;
 import me.dannytatom.xibalba.ui.ActionButton;
 import me.dannytatom.xibalba.utils.PlayerSetup;
+import me.dannytatom.xibalba.utils.YamlToAbility;
 import me.dannytatom.xibalba.utils.YamlToGod;
 import org.apache.commons.lang3.text.WordUtils;
 import org.yaml.snakeyaml.Yaml;
@@ -32,6 +32,12 @@ public class GodScreen implements Screen {
   private final VerticalGroup abilityGroup;
   private int godSelected = 0;
 
+  /**
+   * Character Creation: God Screen.
+   *
+   * @param main        Instance of main class
+   * @param playerSetup Instance of PlayerSetup (used to store creation info)
+   */
   public GodScreen(Main main, PlayerSetup playerSetup) {
     this.playerSetup = playerSetup;
 
@@ -164,11 +170,18 @@ public class GodScreen implements Screen {
 
     YamlToGod god = godList.get(godSelected);
 
-    if (god.abilities.contains("Summon Bees")) {
-      abilityGroup.addActor(
-          new Label(createAbilityText(SummonBeesComponent.name, SummonBeesComponent.description, SummonBeesComponent.rechargeRate), Main.skin)
+    Yaml yaml = new Yaml(new Constructor(YamlToAbility.class));
+    god.abilities.forEach((String ability) -> {
+      YamlToAbility details = (YamlToAbility) yaml.load(
+          Gdx.files.internal("data/abilities/" + ability + ".yaml").read()
       );
-    }
+
+      abilityGroup.addActor(
+          new Label(
+              createAbilityText(details.name, details.description, details.recharge
+              ), Main.skin)
+      );
+    });
   }
 
   public void goToNameScreen(Main main) {
@@ -176,10 +189,10 @@ public class GodScreen implements Screen {
     main.setScreen(new NameScreen(main, playerSetup));
   }
 
-  private String createAbilityText(String name, String description, int rechargeRate) {
+  private String createAbilityText(String name, String description, int recharge) {
     String desc = WordUtils.wrap(description, 70);
 
-    return name + "[LIGHT_GRAY] every " + rechargeRate + " turns\n" + "[DARK_GRAY]" + desc;
+    return name + "[LIGHT_GRAY] every " + recharge + " turns\n" + "[DARK_GRAY]" + desc;
   }
 
   @Override

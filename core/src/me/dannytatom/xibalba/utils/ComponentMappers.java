@@ -1,6 +1,7 @@
 package me.dannytatom.xibalba.utils;
 
 import com.badlogic.ashley.core.ComponentMapper;
+import me.dannytatom.xibalba.components.AbilitiesComponent;
 import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.BodyComponent;
 import me.dannytatom.xibalba.components.BrainComponent;
@@ -21,7 +22,6 @@ import me.dannytatom.xibalba.components.RainDropComponent;
 import me.dannytatom.xibalba.components.SkillsComponent;
 import me.dannytatom.xibalba.components.TrapComponent;
 import me.dannytatom.xibalba.components.VisualComponent;
-import me.dannytatom.xibalba.components.abilities.SummonBeesComponent;
 import me.dannytatom.xibalba.components.actions.MeleeComponent;
 import me.dannytatom.xibalba.components.actions.MovementComponent;
 import me.dannytatom.xibalba.components.actions.RangeComponent;
@@ -65,11 +65,11 @@ public final class ComponentMappers {
   public static final ComponentMapper<SkillsComponent> skills =
       ComponentMapper.getFor(SkillsComponent.class);
 
+  public static final ComponentMapper<AbilitiesComponent> abilities =
+      ComponentMapper.getFor(AbilitiesComponent.class);
+
   public static final ComponentMapper<GodComponent> god =
       ComponentMapper.getFor(GodComponent.class);
-
-  public static final ComponentMapper<SummonBeesComponent> summonBees =
-      ComponentMapper.getFor(SummonBeesComponent.class);
 
   public static final ComponentMapper<EncumberedComponent> encumbered =
       ComponentMapper.getFor(EncumberedComponent.class);
