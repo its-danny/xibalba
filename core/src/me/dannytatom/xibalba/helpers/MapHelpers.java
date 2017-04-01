@@ -126,13 +126,8 @@ public class MapHelpers {
     return cells;
   }
 
-  /**
-   * Get starting light world. 1 is blocked, 0 is not.
-   *
-   * @return Resistance world
-   */
-  float[][] createFovMap() {
-    Map map = WorldManager.world.getCurrentMap();
+  public float[][] createFovMapFor(int mapIndex) {
+    Map map = WorldManager.world.getMap(mapIndex);
     float[][] resistanceMap = new float[map.width][map.height];
 
     for (int x = 0; x < map.width; x++) {
@@ -142,6 +137,15 @@ public class MapHelpers {
     }
 
     return resistanceMap;
+  }
+
+  /**
+   * Get starting light world. 1 is blocked, 0 is not.
+   *
+   * @return Resistance world
+   */
+  public float[][] createFovMap() {
+    return createFovMapFor(WorldManager.world.currentMapIndex);
   }
 
   /**

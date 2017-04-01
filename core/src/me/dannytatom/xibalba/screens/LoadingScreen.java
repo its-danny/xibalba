@@ -21,6 +21,7 @@ import me.dannytatom.xibalba.utils.JsonToLevel;
 import me.dannytatom.xibalba.utils.PlayerSetup;
 import me.dannytatom.xibalba.utils.SoundManager;
 import me.dannytatom.xibalba.world.Map;
+import me.dannytatom.xibalba.world.MapLight;
 import me.dannytatom.xibalba.world.MapWeather;
 import me.dannytatom.xibalba.world.WorldManager;
 import me.dannytatom.xibalba.world.generators.CaveGenerator;
@@ -243,6 +244,7 @@ public class LoadingScreen implements Screen {
 
     // Other things
     if (Objects.equals(level.type, "forest")) {
+      WorldManager.world.getMap(mapIndex).light = new MapLight(mapIndex);
       WorldManager.world.getMap(mapIndex).weather = new MapWeather(mapIndex);
     }
   }

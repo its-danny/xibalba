@@ -12,7 +12,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.PlayerInput;
 import me.dannytatom.xibalba.components.AttributesComponent;
-import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.renderers.HudRenderer;
 import me.dannytatom.xibalba.renderers.WorldRenderer;
 import me.dannytatom.xibalba.utils.ComponentMappers;
@@ -74,6 +73,9 @@ public class PlayScreen implements Screen {
 
     autoTimer += delta;
     keyHoldTimer += delta;
+
+    // Light
+    WorldManager.world.getCurrentMap().light.update(delta);
 
     // Weather!
     if (WorldManager.world.getCurrentMap().weather != null) {

@@ -18,6 +18,7 @@ import me.dannytatom.xibalba.components.EnemyComponent;
 import me.dannytatom.xibalba.components.EntranceComponent;
 import me.dannytatom.xibalba.components.ExitComponent;
 import me.dannytatom.xibalba.components.ItemComponent;
+import me.dannytatom.xibalba.components.LightComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.RainDropComponent;
 import me.dannytatom.xibalba.components.SkillsComponent;
@@ -120,6 +121,9 @@ public class EntityFactory {
         break;
       case "weapon":
         entity.add(new WeaponComponent(data));
+        break;
+      case "light":
+        entity.add(new LightComponent(data));
         break;
       default:
     }

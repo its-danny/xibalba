@@ -1,0 +1,17 @@
+---
+type: light
+weight: 0.5
+
+visual:
+  character: "0407"
+  color: BD977D
+
+actions:
+  - throw
+  - hold
+
+lightRadius: 5
+lightFlickers: true
+lightColors:
+  - "EAF27B"
+  - "EF5D43"

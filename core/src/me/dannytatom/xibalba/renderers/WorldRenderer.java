@@ -77,6 +77,21 @@ public class WorldRenderer {
     batch.setProjectionMatrix(worldCamera.combined);
     batch.begin();
 
+    renderCells();
+    renderStairs();
+    renderDecorations();
+    renderTraps();
+    renderItems();
+    renderEnemies();
+    renderPlayer();
+    renderShadows();
+    renderLights();
+    renderHighlights();
+
+    batch.end();
+  }
+
+  private void renderCells() {
     Map map = WorldManager.world.getCurrentMap();
 
     for (int x = 0; x < map.width - 1; x++) {
@@ -104,17 +119,6 @@ public class WorldRenderer {
         }
       }
     }
-
-    renderStairs();
-    renderDecorations();
-    renderTraps();
-    renderItems();
-    renderEnemies();
-    renderPlayer();
-    renderShadows();
-    renderHighlights();
-
-    batch.end();
   }
 
   private void renderStairs() {
@@ -236,11 +240,46 @@ public class WorldRenderer {
           continue;
         }
 
-        float alpha = playerAttributes.visionMap[x][y] <= map.time.shadow
-            ? map.time.shadow : playerAttributes.visionMap[x][y];
+        float alpha = playerAttributes.visionMap[x][y];
+
+        if (alpha > 0) {
+          if (alpha + map.light.lightMap[x][y] > 1) {
+            alpha = 0.9f;
+          } else {
+            alpha += map.light.lightMap[x][y];
+          }
+        }
+
+        alpha = alpha <= map.time.shadow ? map.time.shadow : alpha;
 
         shadow.setColor(Colors.get(WorldManager.world.getCurrentMap().type + "Background"));
         shadow.setAlpha(-alpha);
+        shadow.setPosition(x * Main.SPRITE_WIDTH, y * Main.SPRITE_HEIGHT);
+
+        shadow.draw(batch);
+      }
+    }
+  }
+
+  private void renderLights() {
+    Map map = WorldManager.world.getCurrentMap();
+
+    for (int x = 0; x < map.width - 1; x++) {
+      for (int y = 0; y < map.height - 1; y++) {
+        MapCell cell = WorldManager.mapHelpers.getCell(x, y);
+
+        if (cell.hidden || cell.forgotten) {
+          continue;
+        }
+
+        float alpha = map.light.lightMap[x][y];
+
+        if (alpha + map.light.lightMap[x][y] > 1) {
+          alpha = 0.9f;
+        }
+
+        shadow.setColor(map.light.colorMap[x][y]);
+        shadow.setAlpha(alpha / 10);
         shadow.setPosition(x * Main.SPRITE_WIDTH, y * Main.SPRITE_HEIGHT);
 
         shadow.draw(batch);

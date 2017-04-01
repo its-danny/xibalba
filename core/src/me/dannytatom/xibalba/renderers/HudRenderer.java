@@ -352,6 +352,9 @@ public class HudRenderer {
         cellDescription = "You see " + cell.description;
       }
 
+      cellDescription += "\nV " + playerAttributes.visionMap[(int) playerDetails.target.x][(int) playerDetails.target.y];
+      cellDescription += "\nL " + WorldManager.world.getCurrentMap().light.lightMap[(int) playerDetails.target.x][(int) playerDetails.target.y];
+
       Entity entity
           = WorldManager.mapHelpers.getEntityAt(playerDetails.target.x, playerDetails.target.y);
 

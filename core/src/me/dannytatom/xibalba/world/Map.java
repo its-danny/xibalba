@@ -21,6 +21,7 @@ public class Map {
   public final MapTime time;
   public Vector2 entrance;
   public Vector2 exit;
+  public MapLight light;
   public MapWeather weather;
   private MapCell[][] map;
   private MapCell.Type[][] flooded;

@@ -94,12 +94,12 @@ public class EntityHelpers {
 
     float[][] fovMap = WorldManager.mapHelpers.createFovMap();
 
-    attributes.visionMap = caster.calculateFov(
-        fovMap, (int) position.pos.x, (int) position.pos.y, attributes.vision
-    );
-
     attributes.hearingMap = caster.calculateFov(
         fovMap, (int) position.pos.x, (int) position.pos.y, attributes.hearing
+    );
+
+    attributes.visionMap = caster.calculateFov(
+        fovMap, (int) position.pos.x, (int) position.pos.y, attributes.vision
     );
   }
 
@@ -119,7 +119,10 @@ public class EntityHelpers {
     AttributesComponent attributes = ComponentMappers.attributes.get(looker);
     PositionComponent targetPosition = ComponentMappers.position.get(target);
 
-    return attributes.visionMap[(int) targetPosition.pos.x][(int) targetPosition.pos.y] > 0;
+    int x = (int) targetPosition.pos.x;
+    int y = (int) targetPosition.pos.y;
+
+    return attributes.visionMap[x][y] > 0;
   }
 
   /**

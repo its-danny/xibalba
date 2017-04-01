@@ -36,7 +36,7 @@ public class ShadowCaster {
     lightMap = new float[width][height];
 
     float force = 1;
-    lightMap[startX][startY] = force; //light the starting cell
+    lightMap[startX][startY] = force; // light the starting cell
 
     for (Direction d : Direction.DIAGONALS) {
       castLight(1, 1.0f, 0.0f, 0, d.deltaX, d.deltaY, 0);
@@ -48,15 +48,20 @@ public class ShadowCaster {
 
   private void castLight(int row, float start, float end, int xx, int xy, int yx, int yy) {
     float newStart = 0.0f;
+
     if (start < end) {
       return;
     }
+
     boolean blocked = false;
+
     for (int distance = row; distance <= radius && !blocked; distance++) {
       int deltaY = -distance;
+
       for (int deltaX = -distance; deltaX <= 0; deltaX++) {
         int currentX = startX + deltaX * xx + deltaY * xy;
         int currentY = startY + deltaX * yx + deltaY * yy;
+
         float leftSlope = (deltaX - 0.5f) / (deltaY + 0.5f);
         float rightSlope = (deltaX + 0.5f) / (deltaY - 0.5f);
 
@@ -69,7 +74,7 @@ public class ShadowCaster {
           break;
         }
 
-        //check if it's within the lightable area and light if needed
+        // Check if it's within the lightable area and light if needed
         if (radius(deltaX, deltaY) <= radius) {
           float bright = (1 - (radius(deltaX, deltaY) / radius));
           lightMap[currentX][currentY] = bright;
@@ -89,7 +94,6 @@ public class ShadowCaster {
         } else {
           if (resistanceMap[currentX][currentY] >= 1 && distance < radius) {
             // Hit a wall within sight line
-
             blocked = true;
             castLight(distance + 1, start, leftSlope, xx, xy, yx, yy);
             newStart = rightSlope;

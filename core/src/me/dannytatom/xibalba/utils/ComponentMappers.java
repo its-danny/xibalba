@@ -15,6 +15,7 @@ import me.dannytatom.xibalba.components.ExitComponent;
 import me.dannytatom.xibalba.components.GodComponent;
 import me.dannytatom.xibalba.components.InventoryComponent;
 import me.dannytatom.xibalba.components.ItemComponent;
+import me.dannytatom.xibalba.components.LightComponent;
 import me.dannytatom.xibalba.components.MouseMovementComponent;
 import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
@@ -118,6 +119,9 @@ public final class ComponentMappers {
 
   public static final ComponentMapper<DecorationComponent> decoration =
       ComponentMapper.getFor(DecorationComponent.class);
+
+  public static final ComponentMapper<LightComponent> light =
+      ComponentMapper.getFor(LightComponent.class);
 
   public static final ComponentMapper<RainDropComponent> rainDrop =
       ComponentMapper.getFor(RainDropComponent.class);
