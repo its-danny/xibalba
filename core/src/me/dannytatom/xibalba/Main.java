@@ -102,7 +102,7 @@ public class Main extends Game {
 
     // Create UI skin
     skin = new Skin();
-    skin.add("Inconsolata", font, BitmapFont.class);
+    skin.add("Aller", font, BitmapFont.class);
     skin.addRegions(new TextureAtlas(Gdx.files.internal("ui/uiskin.atlas")));
     skin.load(Gdx.files.internal("ui/uiskin.json"));
     skin.getFont("default-font").getData().markupEnabled = true;
