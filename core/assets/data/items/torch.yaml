@@ -6,6 +6,10 @@ visual:
   character: "0407"
   color: BD977D
 
+attributes:
+  throwDamage: 2
+  hitDamage: 2
+
 actions:
   - throw
   - hold

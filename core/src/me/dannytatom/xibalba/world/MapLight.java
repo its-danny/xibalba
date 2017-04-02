@@ -40,6 +40,14 @@ public class MapLight {
         LightComponent light = ComponentMappers.light.get(lightSource);
         PositionComponent position = ComponentMappers.position.get(lightSource);
 
+        if (position == null) {
+          if (WorldManager.itemHelpers.isEquipped(WorldManager.player, lightSource)) {
+            position = ComponentMappers.position.get(WorldManager.player);
+          } else {
+            continue;
+          }
+        }
+
         float radius = light.radius;
 
         if (light.flickers) {
