@@ -18,6 +18,7 @@ import me.dannytatom.xibalba.components.SkillsComponent;
 import me.dannytatom.xibalba.components.VisualComponent;
 import me.dannytatom.xibalba.components.defects.MyopiaComponent;
 import me.dannytatom.xibalba.components.defects.OneArmComponent;
+import me.dannytatom.xibalba.components.traits.CarnivoreComponent;
 import me.dannytatom.xibalba.components.traits.PerceptiveComponent;
 import me.dannytatom.xibalba.components.traits.ScoutComponent;
 import me.dannytatom.xibalba.world.WorldManager;
@@ -148,6 +149,10 @@ public class PlayerSetup {
 
       AttributesComponent attributes = ComponentMappers.attributes.get(player);
       attributes.hearing = attributes.vision * 2;
+    }
+
+    if (traits.contains(CarnivoreComponent.name, false)) {
+      player.add(new CarnivoreComponent());
     }
 
     WorldManager.god = new Entity();

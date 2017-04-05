@@ -364,4 +364,11 @@ public class EntityHelpers {
       }
     }
   }
+
+  public void vomit(Entity entity, int damage) {
+    takeDamage(entity, damage);
+
+    PositionComponent position = ComponentMappers.position.get(entity);
+    WorldManager.mapHelpers.makeFloorVomit(position.pos);
+  }
 }

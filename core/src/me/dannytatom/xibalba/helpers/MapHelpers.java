@@ -513,4 +513,8 @@ public class MapHelpers {
   public void makeFloorBloody(Vector2 position) {
     getCell(position.x, position.y).sprite.setColor(Colors.get("RED"));
   }
+
+  public void makeFloorVomit(Vector2 position) {
+    getCell(position.x, position.y).sprite.setColor(Colors.get("YELLOW"));
+  }
 }

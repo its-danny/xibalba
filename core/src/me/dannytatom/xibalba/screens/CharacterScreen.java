@@ -28,6 +28,7 @@ import me.dannytatom.xibalba.components.SkillsComponent;
 import me.dannytatom.xibalba.components.defects.MyopiaComponent;
 import me.dannytatom.xibalba.components.defects.OneArmComponent;
 import me.dannytatom.xibalba.components.statuses.BleedingComponent;
+import me.dannytatom.xibalba.components.traits.CarnivoreComponent;
 import me.dannytatom.xibalba.components.traits.PerceptiveComponent;
 import me.dannytatom.xibalba.components.traits.ScoutComponent;
 import me.dannytatom.xibalba.ui.ActionButton;
@@ -392,6 +393,16 @@ public class CharacterScreen implements Screen {
           new Label(
               "[GREEN]" + PerceptiveComponent.name + "\n[DARK_GRAY]" + WordUtils.wrap(
                   PerceptiveComponent.description, 50
+              ), Main.skin
+          )
+      );
+    }
+
+    if (ComponentMappers.carnivore.has(player)) {
+      traitsGroup.addActor(
+          new Label(
+              "[GREEN]" + CarnivoreComponent.name + "\n[DARK_GRAY]" + WordUtils.wrap(
+                  CarnivoreComponent.description, 50
               ), Main.skin
           )
       );

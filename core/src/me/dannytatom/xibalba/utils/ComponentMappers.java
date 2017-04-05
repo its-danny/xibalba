@@ -35,8 +35,10 @@ import me.dannytatom.xibalba.components.statuses.CrippledComponent;
 import me.dannytatom.xibalba.components.statuses.DrowningComponent;
 import me.dannytatom.xibalba.components.statuses.EncumberedComponent;
 import me.dannytatom.xibalba.components.statuses.PoisonedComponent;
+import me.dannytatom.xibalba.components.statuses.SickComponent;
 import me.dannytatom.xibalba.components.statuses.StuckComponent;
 import me.dannytatom.xibalba.components.statuses.WetComponent;
+import me.dannytatom.xibalba.components.traits.CarnivoreComponent;
 import me.dannytatom.xibalba.components.traits.PerceptiveComponent;
 import me.dannytatom.xibalba.components.traits.ScoutComponent;
 import me.dannytatom.xibalba.components.traps.SpiderWebComponent;
@@ -89,6 +91,9 @@ public final class ComponentMappers {
 
   public static final ComponentMapper<PoisonedComponent> poisoned =
       ComponentMapper.getFor(PoisonedComponent.class);
+
+  public static final ComponentMapper<SickComponent> sick =
+      ComponentMapper.getFor(SickComponent.class);
 
   public static final ComponentMapper<WetComponent> wet =
       ComponentMapper.getFor(WetComponent.class);
@@ -158,4 +163,7 @@ public final class ComponentMappers {
 
   public static final ComponentMapper<PerceptiveComponent> perceptive =
       ComponentMapper.getFor(PerceptiveComponent.class);
+
+  public static final ComponentMapper<CarnivoreComponent> carnivore =
+      ComponentMapper.getFor(CarnivoreComponent.class);
 }

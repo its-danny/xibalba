@@ -15,6 +15,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.components.defects.MyopiaComponent;
 import me.dannytatom.xibalba.components.defects.OneArmComponent;
+import me.dannytatom.xibalba.components.traits.CarnivoreComponent;
 import me.dannytatom.xibalba.components.traits.PerceptiveComponent;
 import me.dannytatom.xibalba.components.traits.ScoutComponent;
 import me.dannytatom.xibalba.screens.MainMenuScreen;
@@ -413,6 +414,15 @@ public class YouScreen implements Screen {
             ), Main.skin
         )
     );
+
+    traitsGroup.addActor(
+        new Label(
+            createTraitText(
+                2, CarnivoreComponent.name, CarnivoreComponent.description,
+                CarnivoreComponent.cost
+            ), Main.skin
+        )
+    );
   }
 
   private String createAttributeText(int index, String name, int level) {
@@ -660,6 +670,14 @@ public class YouScreen implements Screen {
         }
 
         break;
+      case 2:
+        if (!playerSetup.traits.contains(CarnivoreComponent.name, false)
+            && traitPoints >= CarnivoreComponent.cost) {
+          playerSetup.traits.add(CarnivoreComponent.name);
+          traitPoints -= CarnivoreComponent.cost;
+        }
+
+        break;
       default:
     }
   }
@@ -677,6 +695,13 @@ public class YouScreen implements Screen {
         if (playerSetup.traits.contains(PerceptiveComponent.name, false)) {
           playerSetup.traits.removeValue(PerceptiveComponent.name, false);
           traitPoints += PerceptiveComponent.cost;
+        }
+
+        break;
+      case 2:
+        if (playerSetup.traits.contains(CarnivoreComponent.name, false)) {
+          playerSetup.traits.removeValue(CarnivoreComponent.name, false);
+          traitPoints += CarnivoreComponent.cost;
         }
 
         break;

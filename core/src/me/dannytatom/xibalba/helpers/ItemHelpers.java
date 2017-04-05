@@ -1,6 +1,7 @@
 package me.dannytatom.xibalba.helpers;
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.EffectsComponent;
@@ -11,6 +12,7 @@ import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.items.AmmunitionComponent;
 import me.dannytatom.xibalba.components.statuses.EncumberedComponent;
+import me.dannytatom.xibalba.components.statuses.SickComponent;
 import me.dannytatom.xibalba.utils.ComponentMappers;
 import me.dannytatom.xibalba.world.WorldManager;
 
@@ -214,6 +216,26 @@ public class ItemHelpers {
 
           if (Objects.equals(event, "onConsume")) {
             WorldManager.entityHelpers.applyEffect(entity, action);
+          }
+        }
+      }
+
+      if (Objects.equals(itemDetails.type, "corpse") || Objects.equals(itemDetails.type, "limb")) {
+        if (ComponentMappers.carnivore.has(entity)) {
+          if (MathUtils.random() > 0.5) {
+            WorldManager.entityHelpers.raiseHealth(entity, MathUtils.random(5, 20));
+          }
+        } else {
+          if (MathUtils.random() > 0.75) {
+            if (ComponentMappers.player.has(entity)) {
+              WorldManager.log.add("effects.sick.started", "You", "are");
+            } else {
+              AttributesComponent attributes = ComponentMappers.attributes.get(entity);
+
+              WorldManager.log.add("effects.sick.started", attributes.name, "is");
+            }
+
+            entity.add(new SickComponent(MathUtils.random(5, 20)));
           }
         }
       }

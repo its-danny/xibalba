@@ -534,6 +534,10 @@ public class HudRenderer {
       statuses.add("[DARK_GRAY]POISONED[]");
     }
 
+    if (ComponentMappers.sick.has(entity)) {
+      statuses.add("[DARK_GRAY]SICK[]");
+    }
+
     if (ComponentMappers.drowning.has(entity)) {
       statuses.add("[DARK_GRAY]DROWNING[]");
     }
