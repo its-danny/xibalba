@@ -1,2 +1,4 @@
+image: openjdk:8
+
 test:
   script: ./gradlew test
