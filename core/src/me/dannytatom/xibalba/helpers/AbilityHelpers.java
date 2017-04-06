@@ -16,17 +16,19 @@ public class AbilityHelpers {
    * @param ability The ability they want to do
    */
   public void doAbility(Entity entity, YamlToAbility ability) {
-    String[] split = ability.effect.split(":");
-    String name = split[0];
-    String[] params = split[1].split(",");
+    if (ability.counter == ability.recharge) {
+      String[] split = ability.effect.split(":");
+      String name = split[0];
+      String[] params = split[1].split(",");
 
-    switch (name) {
-      case "healSelf":
-        WorldManager.entityHelpers.raiseHealth(entity, Integer.parseInt(params[0]));
-        break;
-      default:
+      switch (name) {
+        case "healSelf":
+          WorldManager.entityHelpers.raiseHealth(entity, Integer.parseInt(params[0]));
+          break;
+        default:
+      }
+
+      ability.counter = 0;
     }
-
-    ability.counter = 0;
   }
 }
