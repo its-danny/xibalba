@@ -11,6 +11,7 @@ public class RangeComponent implements Component {
   public final Entity item;
   public final String skill;
   public final String bodyPart;
+  public final boolean isFocused;
 
   /**
    * It's a constructor, idk wtf I'm supposed to comment here.
@@ -20,10 +21,11 @@ public class RangeComponent implements Component {
    * @param skill    What skill is associated with that item
    * @param bodyPart Where we're aiming
    */
-  public RangeComponent(Vector2 position, Entity item, String skill, String bodyPart) {
+  public RangeComponent(Vector2 position, Entity item, String skill, String bodyPart, boolean isFocused) {
     this.position = position;
     this.item = item;
     this.skill = skill;
     this.bodyPart = bodyPart;
+    this.isFocused = isFocused;
   }
 }

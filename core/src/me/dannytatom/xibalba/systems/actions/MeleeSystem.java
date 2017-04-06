@@ -19,7 +19,7 @@ public class MeleeSystem extends UsesEnergySystem {
     AttributesComponent attributes = ComponentMappers.attributes.get(entity);
 
     if (melee.target != null && !entity.isScheduledForRemoval()) {
-      WorldManager.combatHelpers.melee(entity, melee.target, melee.bodyPart);
+      WorldManager.combatHelpers.melee(entity, melee.target, melee.bodyPart, melee.isFocused);
     }
 
     attributes.energy -= MeleeComponent.COST;

@@ -34,11 +34,11 @@ public class CombatHelpers {
    * @param enemy    Who ya hitting
    * @param bodyPart Where ya hitting them at
    */
-  public void preparePlayerForMelee(Entity enemy, String bodyPart) {
+  public void preparePlayerForMelee(Entity enemy, String bodyPart, boolean isFocused) {
     AttributesComponent attributes = ComponentMappers.attributes.get(WorldManager.player);
 
     if (attributes.energy >= MeleeComponent.COST) {
-      WorldManager.player.add(new MeleeComponent(enemy, bodyPart));
+      WorldManager.player.add(new MeleeComponent(enemy, bodyPart, isFocused));
     }
   }
 
@@ -48,13 +48,13 @@ public class CombatHelpers {
    * @param position Where ya throwing
    * @param bodyPart Where you trying to hit em
    */
-  public void preparePlayerForThrowing(Vector2 position, String bodyPart) {
+  public void preparePlayerForThrowing(Vector2 position, String bodyPart, boolean isFocused) {
     AttributesComponent attributes = ComponentMappers.attributes.get(WorldManager.player);
 
     if (attributes.energy >= RangeComponent.COST) {
       Entity item = WorldManager.itemHelpers.getThrowing(WorldManager.player);
 
-      WorldManager.player.add(new RangeComponent(position, item, "throwing", bodyPart));
+      WorldManager.player.add(new RangeComponent(position, item, "throwing", bodyPart, isFocused));
     }
   }
 
@@ -64,7 +64,7 @@ public class CombatHelpers {
    * @param position Where ya shooting
    * @param bodyPart Where you trying to hit em
    */
-  public void preparePlayerForRanged(Vector2 position, String bodyPart) {
+  public void preparePlayerForRanged(Vector2 position, String bodyPart, boolean isFocused) {
     AttributesComponent attributes = ComponentMappers.attributes.get(WorldManager.player);
 
     if (attributes.energy >= RangeComponent.COST) {
@@ -78,7 +78,7 @@ public class CombatHelpers {
       ItemComponent itemDetails = ComponentMappers.item.get(item);
 
       WorldManager.player.add(
-          new RangeComponent(position, item, itemDetails.skill, bodyPart)
+          new RangeComponent(position, item, itemDetails.skill, bodyPart, isFocused)
       );
     }
   }
@@ -90,7 +90,7 @@ public class CombatHelpers {
    * @param target   Who they fightin'
    * @param bodyPart Where they hittin'
    */
-  public void melee(Entity starter, Entity target, String bodyPart) {
+  public void melee(Entity starter, Entity target, String bodyPart, boolean isFocused) {
     Entity item = null;
 
     if (ComponentMappers.equipment.has(starter)) {
@@ -114,7 +114,7 @@ public class CombatHelpers {
 
       int damage = rollDamage(AttackType.MELEE, starter, target, item, hit, bodyPart);
 
-      applyDamage(starter, target, item, damage, skill, bodyPart);
+      applyDamage(starter, target, item, damage, skill, bodyPart, isFocused);
     } else {
       if (ComponentMappers.player.has(starter)) {
         ComponentMappers.player.get(starter).totalMisses += 1;
@@ -131,7 +131,7 @@ public class CombatHelpers {
    * @param item     What item they're hitting them w/
    * @param skill    What skill to use (throw if throwing, archery if bow, etc0
    */
-  public void range(Entity starter, Entity target, String bodyPart, Entity item, String skill) {
+  public void range(Entity starter, Entity target, String bodyPart, Entity item, String skill, boolean isFocused) {
     SkillsComponent starterSkills = ComponentMappers.skills.get(starter);
     int skillLevel = starterSkills.levels.get(skill);
 
@@ -149,7 +149,7 @@ public class CombatHelpers {
           ? AttackType.THROW
           : AttackType.RANGE, starter, target, item, hit, bodyPart);
 
-      applyDamage(starter, target, item, damage, skill, bodyPart);
+      applyDamage(starter, target, item, damage, skill, bodyPart, isFocused);
     } else {
       if (ComponentMappers.player.has(starter)) {
         ComponentMappers.player.get(starter).totalMisses += 1;
@@ -265,7 +265,7 @@ public class CombatHelpers {
   }
 
   private void applyDamage(Entity starter, Entity target, Entity item,
-                           int damage, String skill, String bodyPart) {
+                           int damage, String skill, String bodyPart, boolean isFocused) {
     int defense = WorldManager.entityHelpers.getCombinedDefense(target);
 
     if (damage > defense) {
@@ -338,6 +338,20 @@ public class CombatHelpers {
         }
       }
 
+      AttributesComponent starterAttributes = ComponentMappers.attributes.get(starter);
+
+      // 25% chance to raise agility if focused
+      if (isFocused && MathUtils.random() > .75) {
+        if (starterAttributes.agility < 12) {
+          starterAttributes.agility
+              = starterAttributes.agility == 0 ? 4 : starterAttributes.agility + 2;
+        }
+
+        if (ComponentMappers.player.has(starter)) {
+          WorldManager.log.add("skills.increased", "agility");
+        }
+      }
+
       // Give skill experience
 
       SkillsComponent skills = ComponentMappers.skills.get(starter);
@@ -355,8 +369,6 @@ public class CombatHelpers {
         }
 
         if (MathUtils.random() > .25) {
-          AttributesComponent starterAttributes = ComponentMappers.attributes.get(starter);
-
           switch (skills.associations.get(skill)) {
             case "agility":
               if (starterAttributes.agility < 12) {
@@ -426,8 +438,6 @@ public class CombatHelpers {
 
           WorldManager.log.add("combat.playerKilledEnemy", targetAttributes.name);
         } else {
-          AttributesComponent starterAttributes = ComponentMappers.attributes.get(starter);
-
           WorldManager.log.add("combat.enemyKilledPlayer", starterAttributes.name);
         }
       }

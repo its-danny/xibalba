@@ -555,11 +555,11 @@ public class HudRenderer {
     PositionComponent focusedPosition = ComponentMappers.position.get(playerDetails.focusedEntity);
 
     if (playerDetails.focusedAction == PlayerComponent.FocusedAction.MELEE) {
-      WorldManager.combatHelpers.preparePlayerForMelee(playerDetails.focusedEntity, part);
+      WorldManager.combatHelpers.preparePlayerForMelee(playerDetails.focusedEntity, part, true);
     } else if (playerDetails.focusedAction == PlayerComponent.FocusedAction.THROWING) {
-      WorldManager.combatHelpers.preparePlayerForThrowing(focusedPosition.pos, part);
+      WorldManager.combatHelpers.preparePlayerForThrowing(focusedPosition.pos, part, true);
     } else if (playerDetails.focusedAction == PlayerComponent.FocusedAction.RANGED) {
-      WorldManager.combatHelpers.preparePlayerForRanged(focusedPosition.pos, part);
+      WorldManager.combatHelpers.preparePlayerForRanged(focusedPosition.pos, part, true);
     }
 
     WorldManager.state = WorldManager.State.PLAYING;

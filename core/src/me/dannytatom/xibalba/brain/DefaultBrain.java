@@ -74,7 +74,7 @@ public enum DefaultBrain implements State<Entity> {
       boolean playerIsAlive = WorldManager.entityHelpers.isPlayerAlive();
 
       if (isNearPlayer && playerIsAlive && !shouldFlee(entity) && canAttack(entity)) {
-        entity.add(new MeleeComponent(brain.target, "body"));
+        entity.add(new MeleeComponent(brain.target, "body", false));
       } else {
         if (canMove(entity)) {
           brain.stateMachine.changeState(WANDER);

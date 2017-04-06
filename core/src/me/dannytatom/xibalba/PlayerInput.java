@@ -417,7 +417,7 @@ public class PlayerInput implements InputProcessor {
         player.focusedEntity = enemy;
       }
     } else {
-      WorldManager.combatHelpers.preparePlayerForThrowing(playerDetails.target, "body");
+      WorldManager.combatHelpers.preparePlayerForThrowing(playerDetails.target, "body", false);
       WorldManager.executeTurn = true;
 
       WorldManager.state = WorldManager.State.PLAYING;
@@ -443,7 +443,7 @@ public class PlayerInput implements InputProcessor {
         player.focusedEntity = enemy;
       }
     } else {
-      WorldManager.combatHelpers.preparePlayerForRanged(playerDetails.target, "body");
+      WorldManager.combatHelpers.preparePlayerForRanged(playerDetails.target, "body", false);
       WorldManager.executeTurn = true;
 
       WorldManager.state = WorldManager.State.PLAYING;

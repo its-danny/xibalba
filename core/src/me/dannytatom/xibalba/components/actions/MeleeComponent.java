@@ -8,9 +8,11 @@ public class MeleeComponent implements Component {
 
   public final Entity target;
   public final String bodyPart;
+  public final boolean isFocused;
 
-  public MeleeComponent(Entity target, String bodyPart) {
+  public MeleeComponent(Entity target, String bodyPart, boolean isFocused) {
     this.target = target;
     this.bodyPart = bodyPart;
+    this.isFocused = isFocused;
   }
 }

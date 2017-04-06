@@ -31,7 +31,7 @@ public class RangeSystem extends UsesEnergySystem {
       Entity target = WorldManager.mapHelpers.getEnemyAt(range.position);
 
       if (target != null) {
-        WorldManager.combatHelpers.range(entity, target, range.bodyPart, range.item, range.skill);
+        WorldManager.combatHelpers.range(entity, target, range.bodyPart, range.item, range.skill, range.isFocused);
       }
 
       if (Objects.equals(range.skill, "throwing")) {

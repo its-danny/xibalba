@@ -55,7 +55,7 @@ public class MovementSystem extends UsesEnergySystem {
 
           attributes.energy -= MovementComponent.COST;
         } else if (ComponentMappers.enemy.has(thing)) {
-          WorldManager.combatHelpers.preparePlayerForMelee(thing, "body");
+          WorldManager.combatHelpers.preparePlayerForMelee(thing, "body", false);
         } else if (ComponentMappers.exit.has(thing)) {
           WorldManager.state = WorldManager.State.GOING_DOWN;
           attributes.energy -= MovementComponent.COST;
