@@ -8,6 +8,7 @@ import me.dannytatom.xibalba.components.EffectsComponent;
 import me.dannytatom.xibalba.components.EquipmentComponent;
 import me.dannytatom.xibalba.components.InventoryComponent;
 import me.dannytatom.xibalba.components.ItemComponent;
+import me.dannytatom.xibalba.components.LimbComponent;
 import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.items.AmmunitionComponent;
@@ -159,6 +160,16 @@ public class ItemHelpers {
   public void wear(Entity entity, Entity item) {
     ItemComponent itemDetails = ComponentMappers.item.get(item);
     EquipmentComponent equipment = ComponentMappers.equipment.get(entity);
+
+    if (ComponentMappers.limb.has(item)) {
+      LimbComponent limb = ComponentMappers.limb.get(item);
+
+      if (!limb.deboned) {
+        limb.deboned = true;
+
+        WorldManager.log.add("inventory.deboned", itemDetails.name);
+      }
+    }
 
     equipment.slots.put(itemDetails.location, item);
 

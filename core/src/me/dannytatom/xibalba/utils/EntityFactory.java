@@ -19,6 +19,7 @@ import me.dannytatom.xibalba.components.EntranceComponent;
 import me.dannytatom.xibalba.components.ExitComponent;
 import me.dannytatom.xibalba.components.ItemComponent;
 import me.dannytatom.xibalba.components.LightComponent;
+import me.dannytatom.xibalba.components.LimbComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.RainDropComponent;
 import me.dannytatom.xibalba.components.SkillsComponent;
@@ -193,6 +194,8 @@ public class EntityFactory {
 
     item.name = ComponentMappers.corpse.get(corpse).entity
         + " " + part.replace("left ", "").replace("right ", "");
+
+    entity.add(new LimbComponent());
 
     CorpseComponent body = ComponentMappers.corpse.get(corpse);
 

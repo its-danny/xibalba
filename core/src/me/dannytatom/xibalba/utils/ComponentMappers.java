@@ -16,6 +16,7 @@ import me.dannytatom.xibalba.components.GodComponent;
 import me.dannytatom.xibalba.components.InventoryComponent;
 import me.dannytatom.xibalba.components.ItemComponent;
 import me.dannytatom.xibalba.components.LightComponent;
+import me.dannytatom.xibalba.components.LimbComponent;
 import me.dannytatom.xibalba.components.MouseMovementComponent;
 import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
@@ -139,6 +140,9 @@ public final class ComponentMappers {
 
   public static final ComponentMapper<CorpseComponent> corpse =
       ComponentMapper.getFor(CorpseComponent.class);
+
+  public static final ComponentMapper<LimbComponent> limb =
+      ComponentMapper.getFor(LimbComponent.class);
 
   public static final ComponentMapper<EntranceComponent> entrance =
       ComponentMapper.getFor(EntranceComponent.class);
