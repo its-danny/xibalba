@@ -41,6 +41,7 @@ import me.dannytatom.xibalba.components.statuses.StuckComponent;
 import me.dannytatom.xibalba.components.statuses.WetComponent;
 import me.dannytatom.xibalba.components.traits.CarnivoreComponent;
 import me.dannytatom.xibalba.components.traits.PerceptiveComponent;
+import me.dannytatom.xibalba.components.traits.QuickComponent;
 import me.dannytatom.xibalba.components.traits.ScoutComponent;
 import me.dannytatom.xibalba.components.traps.SpiderWebComponent;
 
@@ -170,4 +171,7 @@ public final class ComponentMappers {
 
   public static final ComponentMapper<CarnivoreComponent> carnivore =
       ComponentMapper.getFor(CarnivoreComponent.class);
+
+  public static final ComponentMapper<QuickComponent> quick =
+      ComponentMapper.getFor(QuickComponent.class);
 }

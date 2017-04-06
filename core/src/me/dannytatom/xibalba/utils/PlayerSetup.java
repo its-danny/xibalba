@@ -20,6 +20,7 @@ import me.dannytatom.xibalba.components.defects.MyopiaComponent;
 import me.dannytatom.xibalba.components.defects.OneArmComponent;
 import me.dannytatom.xibalba.components.traits.CarnivoreComponent;
 import me.dannytatom.xibalba.components.traits.PerceptiveComponent;
+import me.dannytatom.xibalba.components.traits.QuickComponent;
 import me.dannytatom.xibalba.components.traits.ScoutComponent;
 import me.dannytatom.xibalba.world.WorldManager;
 import org.yaml.snakeyaml.Yaml;
@@ -153,6 +154,13 @@ public class PlayerSetup {
 
     if (traits.contains(CarnivoreComponent.name, false)) {
       player.add(new CarnivoreComponent());
+    }
+
+    if (traits.contains(QuickComponent.name, false)) {
+      player.add(new QuickComponent());
+
+      AttributesComponent attributes = ComponentMappers.attributes.get(player);
+      attributes.speed = attributes.speed + MathUtils.round(attributes.speed * .5f);
     }
 
     WorldManager.god = new Entity();

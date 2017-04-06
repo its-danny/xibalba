@@ -11,13 +11,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.reflect.ClassReflection;
+import com.badlogic.gdx.utils.reflect.Field;
+import com.badlogic.gdx.utils.reflect.ReflectionException;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import me.dannytatom.xibalba.Main;
-import me.dannytatom.xibalba.components.defects.MyopiaComponent;
-import me.dannytatom.xibalba.components.defects.OneArmComponent;
-import me.dannytatom.xibalba.components.traits.CarnivoreComponent;
-import me.dannytatom.xibalba.components.traits.PerceptiveComponent;
-import me.dannytatom.xibalba.components.traits.ScoutComponent;
 import me.dannytatom.xibalba.screens.MainMenuScreen;
 import me.dannytatom.xibalba.ui.ActionButton;
 import me.dannytatom.xibalba.utils.PlayerSetup;
@@ -371,21 +369,26 @@ public class YouScreen implements Screen {
     defectsGroup.addActor(instructions);
     defectsGroup.addActor(new Label("", Main.skin));
 
-    defectsGroup.addActor(
-        new Label(
-            createDefectText(
-                0, OneArmComponent.name, OneArmComponent.description, OneArmComponent.reward
-            ), Main.skin
-        )
-    );
+    for (int defectIndex = 0; defectIndex < Main.defects.size; defectIndex++) {
+      String defectName = Main.defects.get(defectIndex);
 
-    defectsGroup.addActor(
-        new Label(
-            createDefectText(
-                1, MyopiaComponent.name, MyopiaComponent.description, MyopiaComponent.reward
-            ), Main.skin
-        )
-    );
+      try {
+        Class clazz = ClassReflection.forName(defectName);
+        Field name = ClassReflection.getField(clazz, "name");
+        Field description = ClassReflection.getField(clazz, "description");
+        Field reward = ClassReflection.getField(clazz, "reward");
+
+        defectsGroup.addActor(
+            new Label(
+                createDefectText(defectIndex,
+                    (String) name.get(clazz), (String) description.get(clazz), (int) reward.get(clazz)
+                ), Main.skin
+            )
+        );
+      } catch (ReflectionException e) {
+        e.printStackTrace();
+      }
+    }
   }
 
   private void updateTraitsGroup() {
@@ -398,31 +401,26 @@ public class YouScreen implements Screen {
     traitsGroup.addActor(pointsLeft);
     traitsGroup.addActor(new Label("", Main.skin));
 
-    traitsGroup.addActor(
-        new Label(
-            createTraitText(
-                0, ScoutComponent.name, ScoutComponent.description, ScoutComponent.cost
-            ), Main.skin
-        )
-    );
+    for (int traitIndex = 0; traitIndex < Main.traits.size; traitIndex++) {
+      String traitName = Main.traits.get(traitIndex);
 
-    traitsGroup.addActor(
-        new Label(
-            createTraitText(
-                1, PerceptiveComponent.name, PerceptiveComponent.description,
-                PerceptiveComponent.cost
-            ), Main.skin
-        )
-    );
+      try {
+        Class clazz = ClassReflection.forName(traitName);
+        Field name = ClassReflection.getField(clazz, "name");
+        Field description = ClassReflection.getField(clazz, "description");
+        Field cost = ClassReflection.getField(clazz, "cost");
 
-    traitsGroup.addActor(
-        new Label(
-            createTraitText(
-                2, CarnivoreComponent.name, CarnivoreComponent.description,
-                CarnivoreComponent.cost
-            ), Main.skin
-        )
-    );
+        traitsGroup.addActor(
+            new Label(
+                createTraitText(traitIndex,
+                    (String) name.get(clazz), (String) description.get(clazz), (int) cost.get(clazz)
+                ), Main.skin
+            )
+        );
+      } catch (ReflectionException e) {
+        e.printStackTrace();
+      }
+    }
   }
 
   private String createAttributeText(int index, String name, int level) {
@@ -613,99 +611,70 @@ public class YouScreen implements Screen {
   }
 
   private void addDefect() {
-    switch (itemSelected) {
-      case 0:
-        if (!playerSetup.defects.contains(OneArmComponent.name, false)) {
-          playerSetup.defects.add(OneArmComponent.name);
-          traitPoints += OneArmComponent.reward;
-        }
+    try {
+      Class clazz = ClassReflection.forName(Main.defects.get(itemSelected));
+      Field nameField = ClassReflection.getField(clazz, "name");
+      String name = (String) nameField.get(clazz);
+      Field rewardField = ClassReflection.getField(clazz, "reward");
+      int reward = (int) rewardField.get(clazz);
 
-        break;
-      case 1:
-        if (!playerSetup.defects.contains(MyopiaComponent.name, false)) {
-          playerSetup.defects.add(MyopiaComponent.name);
-          traitPoints += MyopiaComponent.reward;
-        }
-
-        break;
-      default:
+      if (!playerSetup.defects.contains(name, false)) {
+        playerSetup.defects.add(name);
+        traitPoints += reward;
+      }
+    } catch (ReflectionException e) {
+      e.printStackTrace();
     }
   }
 
   private void removeDefect() {
-    switch (itemSelected) {
-      case 0:
-        if (playerSetup.defects.contains(OneArmComponent.name, false)) {
-          playerSetup.defects.removeValue(OneArmComponent.name, false);
-          traitPoints -= OneArmComponent.reward;
-        }
+    try {
+      Class clazz = ClassReflection.forName(Main.defects.get(itemSelected));
+      Field nameField = ClassReflection.getField(clazz, "name");
+      String name = (String) nameField.get(clazz);
+      Field rewardField = ClassReflection.getField(clazz, "reward");
+      int reward = (int) rewardField.get(clazz);
 
-        break;
-      case 1:
-        if (playerSetup.defects.contains(MyopiaComponent.name, false)) {
-          playerSetup.defects.removeValue(MyopiaComponent.name, false);
-          traitPoints -= MyopiaComponent.reward;
-        }
-
-        break;
-      default:
+      if (playerSetup.defects.contains(name, false)) {
+        playerSetup.defects.removeValue(name, false);
+        traitPoints -= reward;
+      }
+    } catch (ReflectionException e) {
+      e.printStackTrace();
     }
   }
 
   private void addTrait() {
-    switch (itemSelected) {
-      case 0:
-        if (!playerSetup.traits.contains(ScoutComponent.name, false)
-            && traitPoints >= ScoutComponent.cost) {
-          playerSetup.traits.add(ScoutComponent.name);
-          traitPoints -= ScoutComponent.cost;
-        }
+    try {
+      Class clazz = ClassReflection.forName(Main.traits.get(itemSelected));
+      Field nameField = ClassReflection.getField(clazz, "name");
+      String name = (String) nameField.get(clazz);
+      Field costField = ClassReflection.getField(clazz, "cost");
+      int cost = (int) costField.get(clazz);
 
-        break;
-      case 1:
-        if (!playerSetup.traits.contains(PerceptiveComponent.name, false)
-            && traitPoints >= PerceptiveComponent.cost) {
-          playerSetup.traits.add(PerceptiveComponent.name);
-          traitPoints -= PerceptiveComponent.cost;
-        }
-
-        break;
-      case 2:
-        if (!playerSetup.traits.contains(CarnivoreComponent.name, false)
-            && traitPoints >= CarnivoreComponent.cost) {
-          playerSetup.traits.add(CarnivoreComponent.name);
-          traitPoints -= CarnivoreComponent.cost;
-        }
-
-        break;
-      default:
+      if (!playerSetup.traits.contains(name, false) && traitPoints >= cost) {
+        playerSetup.traits.add(name);
+        traitPoints -= cost;
+      }
+    } catch (ReflectionException e) {
+      e.printStackTrace();
     }
   }
 
   private void removeTrait() {
-    switch (itemSelected) {
-      case 0:
-        if (playerSetup.traits.contains(ScoutComponent.name, false)) {
-          playerSetup.traits.removeValue(ScoutComponent.name, false);
-          traitPoints += ScoutComponent.cost;
-        }
+    try {
+      Class clazz = ClassReflection.forName(Main.traits.get(itemSelected));
+      Field nameField = ClassReflection.getField(clazz, "name");
+      String name = (String) nameField.get(clazz);
+      Field costField = ClassReflection.getField(clazz, "cost");
+      int cost = (int) costField.get(clazz);
 
-        break;
-      case 1:
-        if (playerSetup.traits.contains(PerceptiveComponent.name, false)) {
-          playerSetup.traits.removeValue(PerceptiveComponent.name, false);
-          traitPoints += PerceptiveComponent.cost;
-        }
-
-        break;
-      case 2:
-        if (playerSetup.traits.contains(CarnivoreComponent.name, false)) {
-          playerSetup.traits.removeValue(CarnivoreComponent.name, false);
-          traitPoints += CarnivoreComponent.cost;
-        }
-
-        break;
-      default:
+      if (playerSetup.traits.contains(name, false)) {
+        playerSetup.traits.removeValue(name, false);
+        traitPoints += cost;
+      }
+    } catch (ReflectionException e) {
+      e.printStackTrace();
     }
   }
 

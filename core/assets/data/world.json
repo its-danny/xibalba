@@ -6,26 +6,60 @@
       "height": "100,150"
     },
     "enemies": [
-      { "name": "spiderMonkey", "spawnRange": "2,5" },
-      { "name": "jaguar", "spawnRange": "0,1" },
-      { "name": "sloth", "spawnRange": "1,2" },
-      { "name": "anaconda", "spawnRange": "0,1" },
-      { "name": "poisonDartFrog", "spawnRange": "3,5" }
+      {
+        "name": "spiderMonkey",
+        "spawnRange": "2,5"
+      },
+      {
+        "name": "jaguar",
+        "spawnRange": "0,1"
+      },
+      {
+        "name": "sloth",
+        "spawnRange": "1,2"
+      },
+      {
+        "name": "anaconda",
+        "spawnRange": "0,1"
+      },
+      {
+        "name": "poisonDartFrog",
+        "spawnRange": "3,5"
+      }
     ],
     "items": [
-      { "name": "bow", "spawnRange": "0,1" },
-      { "name": "arrow", "spawnRange": "5,10" },
-      { "name": "shield", "spawnRange": "0,1" },
-      { "name": "chippedFlint", "spawnRange": "1,1" },
-      { "name": "poisonPlant", "spawnRange": "0,1" },
-      { "name": "healthPlant", "spawnRange": "0,1" },
-      { "name": "torch", "spawnRange": "5,10" }
+      {
+        "name": "bow",
+        "spawnRange": "0,1"
+      },
+      {
+        "name": "arrow",
+        "spawnRange": "5,10"
+      },
+      {
+        "name": "shield",
+        "spawnRange": "0,1"
+      },
+      {
+        "name": "chippedFlint",
+        "spawnRange": "1,1"
+      },
+      {
+        "name": "poisonPlant",
+        "spawnRange": "0,1"
+      },
+      {
+        "name": "healthPlant",
+        "spawnRange": "0,1"
+      },
+      {
+        "name": "torch",
+        "spawnRange": "5,10"
+      }
     ],
     "traps": [
-
     ]
   },
-
   {
     "type": "cave",
     "size": {
@@ -33,21 +67,44 @@
       "height": "80,120"
     },
     "enemies": [
-      { "name": "spiderMonkey", "spawnRange": "3,6" },
-      { "name": "jaguar", "spawnRange": "0,2" },
-      { "name": "tarantula", "spawnRange": "1,2" }
+      {
+        "name": "spiderMonkey",
+        "spawnRange": "3,6"
+      },
+      {
+        "name": "jaguar",
+        "spawnRange": "0,2"
+      },
+      {
+        "name": "tarantula",
+        "spawnRange": "1,2"
+      }
     ],
     "items": [
-      { "name": "chippedFlint", "spawnRange": "3,5" },
-      { "name": "bow", "spawnRange": "1,2" },
-      { "name": "arrow", "spawnRange": "5,10" },
-      { "name": "healthPlant", "spawnRange": "1,3" }
+      {
+        "name": "chippedFlint",
+        "spawnRange": "3,5"
+      },
+      {
+        "name": "bow",
+        "spawnRange": "1,2"
+      },
+      {
+        "name": "arrow",
+        "spawnRange": "5,10"
+      },
+      {
+        "name": "healthPlant",
+        "spawnRange": "1,3"
+      }
     ],
     "traps": [
-      { "name": "spiderWeb", "spawnRange": "1,3" }
+      {
+        "name": "spiderWeb",
+        "spawnRange": "1,3"
+      }
     ]
   },
-
   {
     "type": "cave",
     "size": {
@@ -55,17 +112,38 @@
       "height": "100,150"
     },
     "enemies": [
-      { "name": "spiderMonkey", "spawnRange": "1,3" },
-      { "name": "bat", "spawnRange": "3,6" },
-      { "name": "tarantula", "spawnRange": "1,2" }
+      {
+        "name": "spiderMonkey",
+        "spawnRange": "1,3"
+      },
+      {
+        "name": "bat",
+        "spawnRange": "3,6"
+      },
+      {
+        "name": "tarantula",
+        "spawnRange": "1,2"
+      }
     ],
     "items": [
-      { "name": "macuahuitl", "spawnRange": "1,1" },
-      { "name": "healthPlant", "spawnRange": "1,3" },
-      { "name": "strengthPlant", "spawnRange": "1,3" }
+      {
+        "name": "macuahuitl",
+        "spawnRange": "1,1"
+      },
+      {
+        "name": "healthPlant",
+        "spawnRange": "1,3"
+      },
+      {
+        "name": "strengthPlant",
+        "spawnRange": "1,3"
+      }
     ],
     "traps": [
-      { "name": "spiderWeb", "spawnRange": "2,5" }
+      {
+        "name": "spiderWeb",
+        "spawnRange": "2,5"
+      }
     ]
   }
 ]

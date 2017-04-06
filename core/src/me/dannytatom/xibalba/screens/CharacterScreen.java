@@ -15,6 +15,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.reflect.ClassReflection;
+import com.badlogic.gdx.utils.reflect.Field;
+import com.badlogic.gdx.utils.reflect.ReflectionException;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.components.AttributesComponent;
@@ -25,12 +28,7 @@ import me.dannytatom.xibalba.components.GodComponent;
 import me.dannytatom.xibalba.components.InventoryComponent;
 import me.dannytatom.xibalba.components.ItemComponent;
 import me.dannytatom.xibalba.components.SkillsComponent;
-import me.dannytatom.xibalba.components.defects.MyopiaComponent;
-import me.dannytatom.xibalba.components.defects.OneArmComponent;
 import me.dannytatom.xibalba.components.statuses.BleedingComponent;
-import me.dannytatom.xibalba.components.traits.CarnivoreComponent;
-import me.dannytatom.xibalba.components.traits.PerceptiveComponent;
-import me.dannytatom.xibalba.components.traits.ScoutComponent;
 import me.dannytatom.xibalba.ui.ActionButton;
 import me.dannytatom.xibalba.utils.ComponentMappers;
 import me.dannytatom.xibalba.utils.YamlToAbility;
@@ -52,7 +50,7 @@ public class CharacterScreen implements Screen {
   private final Table table;
   private final VerticalGroup attributesGroup;
   private final VerticalGroup skillsGroup;
-  private final VerticalGroup traitsGroup;
+  private final VerticalGroup traitsAndDefectsGroup;
   private final VerticalGroup abilitiesGroup;
   private final VerticalGroup inventoryGroup;
   private final VerticalGroup itemDetailsGroup;
@@ -113,7 +111,7 @@ public class CharacterScreen implements Screen {
 
     attributesGroup = new VerticalGroup().align(Align.top | Align.left);
     skillsGroup = new VerticalGroup().align(Align.top | Align.left);
-    traitsGroup = new VerticalGroup().align(Align.top | Align.left);
+    traitsAndDefectsGroup = new VerticalGroup().align(Align.top | Align.left);
     abilitiesGroup = new VerticalGroup().align(Align.top | Align.left);
     inventoryGroup = new VerticalGroup().align(Align.top | Align.left);
     itemDetailsGroup = new VerticalGroup().align(Align.top | Align.left);
@@ -123,7 +121,7 @@ public class CharacterScreen implements Screen {
     Table topTable = new Table();
     topTable.add(attributesGroup).pad(10).width(Gdx.graphics.getWidth() / 6 - 20).top().left();
     topTable.add(skillsGroup).pad(10).width(Gdx.graphics.getWidth() / 6 - 20).top().left();
-    topTable.add(traitsGroup).pad(10).width(Gdx.graphics.getWidth() / 6 * 2 - 20).top().left();
+    topTable.add(traitsAndDefectsGroup).pad(10).width(Gdx.graphics.getWidth() / 6 * 2 - 20).top().left();
     topTable.add(abilitiesGroup).pad(10).width(Gdx.graphics.getWidth() / 6 * 2 - 20).top().left();
 
     Table bottomTable = new Table();
@@ -353,59 +351,55 @@ public class CharacterScreen implements Screen {
   }
 
   private void updateTraitsGroup() {
-    traitsGroup.clear();
+    traitsAndDefectsGroup.clear();
 
-    traitsGroup.addActor(new Label("Traits & Defects", Main.skin));
-    traitsGroup.addActor(new Label("", Main.skin));
+    traitsAndDefectsGroup.addActor(new Label("Traits & Defects", Main.skin));
+    traitsAndDefectsGroup.addActor(new Label("", Main.skin));
 
-    if (ComponentMappers.oneArm.has(player)) {
-      traitsGroup.addActor(
-          new Label(
-              "[RED]" + OneArmComponent.name + "\n[DARK_GRAY]" + WordUtils.wrap(
-                  OneArmComponent.description, 50
-              ), Main.skin
-          )
-      );
+    for (String defectName : Main.defects) {
+      try {
+        Class clazz = ClassReflection.forName(defectName);
+
+        if (WorldManager.player.getComponent(clazz) != null) {
+          Field nameField = ClassReflection.getField(clazz, "name");
+          String name = (String) nameField.get(clazz);
+          Field descriptionField = ClassReflection.getField(clazz, "description");
+          String description = (String) descriptionField.get(clazz);
+
+          traitsAndDefectsGroup.addActor(
+              new Label(
+                  "[RED]" + name + "\n[DARK_GRAY]" + WordUtils.wrap(
+                      description, 50
+                  ), Main.skin
+              )
+          );
+        }
+      } catch (ReflectionException e) {
+        e.printStackTrace();
+      }
     }
 
-    if (ComponentMappers.myopia.has(player)) {
-      traitsGroup.addActor(
-          new Label(
-              "[RED]" + MyopiaComponent.name + "\n[DARK_GRAY]" + WordUtils.wrap(
-                  MyopiaComponent.description, 50
-              ), Main.skin
-          )
-      );
-    }
+    for (String traitName : Main.traits) {
+      try {
+        Class clazz = ClassReflection.forName(traitName);
 
-    if (ComponentMappers.scout.has(player)) {
-      traitsGroup.addActor(
-          new Label(
-              "[GREEN]" + ScoutComponent.name + "\n[DARK_GRAY]" + WordUtils.wrap(
-                  ScoutComponent.description, 50
-              ), Main.skin
-          )
-      );
-    }
+        if (WorldManager.player.getComponent(clazz) != null) {
+          Field nameField = ClassReflection.getField(clazz, "name");
+          String name = (String) nameField.get(clazz);
+          Field descriptionField = ClassReflection.getField(clazz, "description");
+          String description = (String) descriptionField.get(clazz);
 
-    if (ComponentMappers.perceptive.has(player)) {
-      traitsGroup.addActor(
-          new Label(
-              "[GREEN]" + PerceptiveComponent.name + "\n[DARK_GRAY]" + WordUtils.wrap(
-                  PerceptiveComponent.description, 50
-              ), Main.skin
-          )
-      );
-    }
-
-    if (ComponentMappers.carnivore.has(player)) {
-      traitsGroup.addActor(
-          new Label(
-              "[GREEN]" + CarnivoreComponent.name + "\n[DARK_GRAY]" + WordUtils.wrap(
-                  CarnivoreComponent.description, 50
-              ), Main.skin
-          )
-      );
+          traitsAndDefectsGroup.addActor(
+              new Label(
+                  "[GREEN]" + name + "\n[DARK_GRAY]" + WordUtils.wrap(
+                      description, 50
+                  ), Main.skin
+              )
+          );
+        }
+      } catch (ReflectionException e) {
+        e.printStackTrace();
+      }
     }
   }
 

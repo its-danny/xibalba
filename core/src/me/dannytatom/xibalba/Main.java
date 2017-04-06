@@ -16,6 +16,7 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.utils.Array;
 import me.dannytatom.xibalba.screens.MainMenuScreen;
 import me.dannytatom.xibalba.utils.CameraShake;
 import me.dannytatom.xibalba.utils.HandheldCamera;
@@ -28,6 +29,8 @@ public class Main extends Game {
   public static AssetManager assets;
   public static TextureAtlas spriteAtlas;
   public static TextureAtlas asciiAtlas;
+  public static Array<String> traits;
+  public static Array<String> defects;
   public static Skin skin;
   public static Screen playScreen;
   public static TweenManager tweenManager;
@@ -106,6 +109,18 @@ public class Main extends Game {
     skin.addRegions(new TextureAtlas(Gdx.files.internal("ui/uiskin.atlas")));
     skin.load(Gdx.files.internal("ui/uiskin.json"));
     skin.getFont("default-font").getData().markupEnabled = true;
+
+    // Traits
+    traits = new Array<>();
+    traits.add("me.dannytatom.xibalba.components.traits.ScoutComponent");
+    traits.add("me.dannytatom.xibalba.components.traits.PerceptiveComponent");
+    traits.add("me.dannytatom.xibalba.components.traits.CarnivoreComponent");
+    traits.add("me.dannytatom.xibalba.components.traits.QuickComponent");
+
+    // Defects
+    defects = new Array<>();
+    defects.add("me.dannytatom.xibalba.components.defects.MyopiaComponent");
+    defects.add("me.dannytatom.xibalba.components.defects.OneArmComponent");
 
     // Setup text colors
     Colors.put("LIGHT_GRAY", parseColor("c2c2c2"));
