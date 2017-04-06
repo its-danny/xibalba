@@ -697,6 +697,7 @@ public class CharacterScreen implements Screen {
               Vector2 position = ComponentMappers.position.get(player).pos;
 
               Entity limb = WorldManager.entityFactory.createLimb(corpse, part, position);
+              WorldManager.world.addEntity(limb);
               WorldManager.itemHelpers.addToInventory(player, limb, false);
               body.parts.remove(part);
 
@@ -909,6 +910,7 @@ public class CharacterScreen implements Screen {
               inventory.items.get(itemSelected), position
           );
 
+          WorldManager.world.addEntity(skin);
           WorldManager.itemHelpers.addToInventory(player, skin, false);
         }
 

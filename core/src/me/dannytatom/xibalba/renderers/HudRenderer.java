@@ -257,20 +257,21 @@ public class HudRenderer {
   }
 
   private void updateDebugInfo() {
+    String performanceInfo = "[DARK_GRAY]v0.1.0 FPS " + Gdx.graphics.getFramesPerSecond();
     String playerInfo = "[DARK_GRAY]" + WorldManager.world.getCurrentMap().time.time.toString()
         + ", Depth " + (WorldManager.world.currentMapIndex + 1)
         + ", Turn " + WorldManager.turnCount
-        + ", " + (int) playerPosition.pos.x + ":" + (int) playerPosition.pos.y;
-    String performanceInfo = "[DARK_GRAY]v0.1.0 FPS " + Gdx.graphics.getFramesPerSecond();
+        + ", " + playerPosition.pos.toString()
+        + ", " + (playerDetails.target != null ? playerDetails.target.toString() : "");
 
     if (debugInfo.getChildren().size == 0) {
-      debugInfo.addActor(new Label(playerInfo, Main.skin));
       debugInfo.addActor(new Label(performanceInfo, Main.skin));
+      debugInfo.addActor(new Label(playerInfo, Main.skin));
     } else {
-      Label playerInfoLabel = (Label) debugInfo.getChildren().get(0);
-      playerInfoLabel.setText(playerInfo);
-      Label performanceInfoLabel = (Label) debugInfo.getChildren().get(1);
+      Label performanceInfoLabel = (Label) debugInfo.getChildren().get(0);
       performanceInfoLabel.setText(performanceInfo);
+      Label playerInfoLabel = (Label) debugInfo.getChildren().get(1);
+      playerInfoLabel.setText(playerInfo);
     }
   }
 
@@ -351,9 +352,6 @@ public class HudRenderer {
       } else {
         cellDescription = "You see " + cell.description;
       }
-
-      cellDescription += "\nV " + playerAttributes.visionMap[(int) playerDetails.target.x][(int) playerDetails.target.y];
-      cellDescription += "\nL " + WorldManager.world.getCurrentMap().light.lightMap[(int) playerDetails.target.x][(int) playerDetails.target.y];
 
       Entity entity
           = WorldManager.mapHelpers.getEntityAt(playerDetails.target.x, playerDetails.target.y);

@@ -3,7 +3,7 @@ type: limb
 weight: 2
 
 visual:
-  character: "0109"
+  character: "1407"
   color: D67474
 
 skill: bashing

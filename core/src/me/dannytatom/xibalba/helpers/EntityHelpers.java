@@ -224,8 +224,7 @@ public class EntityHelpers {
     if (!ComponentMappers.position.has(entity)) {
       entity.add(new PositionComponent((int) cellX, (int) cellY));
     } else {
-      PositionComponent position = ComponentMappers.position.get(entity);
-      position.pos.set(cellX, cellY);
+      ComponentMappers.position.get(entity).pos.set(cellX, cellY);
     }
   }
 

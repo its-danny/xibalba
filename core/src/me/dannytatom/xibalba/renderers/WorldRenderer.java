@@ -21,6 +21,7 @@ import me.dannytatom.xibalba.components.ItemComponent;
 import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.TrapComponent;
+import me.dannytatom.xibalba.components.VisualComponent;
 import me.dannytatom.xibalba.utils.ComponentMappers;
 import me.dannytatom.xibalba.world.Map;
 import me.dannytatom.xibalba.world.MapCell;
@@ -163,20 +164,18 @@ public class WorldRenderer {
   private void renderItems() {
     ImmutableArray<Entity> entities =
         WorldManager.engine.getEntitiesFor(
-            Family.all(ItemComponent.class).get()
+            Family.all(ItemComponent.class, PositionComponent.class, VisualComponent.class).get()
         );
 
     for (Entity entity : entities) {
-      if (ComponentMappers.position.has(entity)) {
-        PositionComponent position = ComponentMappers.position.get(entity);
+      PositionComponent position = ComponentMappers.position.get(entity);
 
-        if (Main.tweenManager.getRunningTimelinesCount() == 0) {
-          WorldManager.entityHelpers.updateSprite(entity, position.pos.x, position.pos.y);
-        }
+      if (Main.tweenManager.getRunningTimelinesCount() == 0) {
+        WorldManager.entityHelpers.updateSprite(entity, position.pos.x, position.pos.y);
+      }
 
-        if (WorldManager.entityHelpers.isVisible(entity)) {
-          ComponentMappers.visual.get(entity).sprite.draw(batch);
-        }
+      if (WorldManager.entityHelpers.isVisible(entity)) {
+        ComponentMappers.visual.get(entity).sprite.draw(batch);
       }
     }
   }

@@ -1,6 +1,7 @@
 package me.dannytatom.xibalba.helpers;
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import me.dannytatom.xibalba.components.AttributesComponent;
@@ -117,7 +118,6 @@ public class ItemHelpers {
    */
   public void removeFromInventory(Entity entity, Entity item) {
     InventoryComponent inventory = ComponentMappers.inventory.get(entity);
-
     inventory.items.remove(item);
 
     AttributesComponent attributes = ComponentMappers.attributes.get(entity);
@@ -320,16 +320,14 @@ public class ItemHelpers {
    * @param position Where we gonna drop it
    */
   public void drop(Entity entity, Entity item, Vector2 position) {
-    InventoryComponent inventory = ComponentMappers.inventory.get(entity);
-
-    if (inventory != null) {
+    if (ComponentMappers.inventory.has(entity)) {
       if (isEquipped(entity, item)) {
         remove(entity, item);
       }
 
-      WorldManager.entityHelpers.updatePosition(item, position.x, position.y);
-
       removeFromInventory(entity, item);
+
+      WorldManager.entityHelpers.updatePosition(item, position.x, position.y);
 
       if (ComponentMappers.player.has(entity)) {
         WorldManager.log.add("inventory.dropped", WorldManager.itemHelpers.getName(entity, item));
