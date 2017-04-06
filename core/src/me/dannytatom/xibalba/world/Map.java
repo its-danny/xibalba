@@ -71,11 +71,13 @@ public class Map {
         if (geometry[x][y] == MapCell.Type.FLOOR) {
           Sprite floor = Main.asciiAtlas.createSprite(floorTypes.random());
           floor.setColor(Colors.get("forestFloor"));
-          map[x][y] = new MapCell(floor, MapCell.Type.FLOOR, "the forest floor");
+          floor.setFlip(MathUtils.randomBoolean(), false);
+          map[x][y] = new MapCell(floor, Colors.get("forestFloor"), MapCell.Type.FLOOR, "the forest floor");
         } else {
           Sprite wall = Main.asciiAtlas.createSprite("0" + MathUtils.random(5, 6) + "00");
-          wall.setColor(Colors.get("forestTree-" + MathUtils.random(1, 3)));
-          map[x][y] = new MapCell(wall, MapCell.Type.WALL, "a tree");
+          Color color = Colors.get("forestTree-" + MathUtils.random(1, 3));
+          wall.setColor(color);
+          map[x][y] = new MapCell(wall, color, MapCell.Type.WALL, "a tree");
         }
 
         map[x][y].sprite.setPosition(x * Main.SPRITE_WIDTH, y * Main.SPRITE_HEIGHT);
@@ -94,18 +96,19 @@ public class Map {
       for (int y = 0; y < geometry[x].length; y++) {
         if (geometry[x][y] == MapCell.Type.FLOOR) {
           Sprite floor = Main.asciiAtlas.createSprite("0915");
-          floor.setColor(Colors.get("caveFloor-" + +MathUtils.random(1, 3)));
-          map[x][y] = new MapCell(floor, MapCell.Type.FLOOR, "a cave floor");
+          Color color = Colors.get("caveFloor-" + +MathUtils.random(1, 3));
+          floor.setColor(color);
+          map[x][y] = new MapCell(floor, color, MapCell.Type.FLOOR, "a cave floor");
         } else {
           int neighbours = getGroundNeighbours(x, y);
 
           if (neighbours > 0) {
             Sprite wall = Main.asciiAtlas.createSprite("1113");
             wall.setColor(Colors.get("caveWall"));
-            map[x][y] = new MapCell(wall, MapCell.Type.WALL, "a cave wall");
+            map[x][y] = new MapCell(wall, Colors.get("caveWall"), MapCell.Type.WALL, "a cave wall");
           } else {
             Sprite nothing = Main.asciiAtlas.createSprite("0000");
-            map[x][y] = new MapCell(nothing, MapCell.Type.NOTHING, "nothing");
+            map[x][y] = new MapCell(nothing, null, MapCell.Type.NOTHING, "nothing");
           }
         }
 
@@ -173,7 +176,7 @@ public class Map {
               darkColor.r, darkColor.g, darkColor.b
           ).repeatYoyo(Tween.INFINITY, MathUtils.random());
 
-          map[x][y] = new MapCell(water, waterType, "water", tween);
+          map[x][y] = new MapCell(water, lightColor, waterType, "water", tween);
         }
       }
     }

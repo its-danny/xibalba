@@ -1,7 +1,6 @@
 package me.dannytatom.xibalba.helpers;
 
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import me.dannytatom.xibalba.components.AttributesComponent;
