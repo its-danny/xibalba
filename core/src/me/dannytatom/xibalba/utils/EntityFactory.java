@@ -232,7 +232,7 @@ public class EntityFactory {
 
         entity.add(new VisualComponent(
             Main.asciiAtlas.createSprite("0302"), position, Color.WHITE,
-            ComponentMappers.perceptive.has(WorldManager.player) ? .5f : .1f
+            WorldManager.entityHelpers.hasTrait(WorldManager.player, "Perceptive") ? .5f : .1f
         ));
 
         break;

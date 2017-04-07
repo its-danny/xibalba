@@ -84,12 +84,12 @@ public class ItemHelpers {
         );
       }
 
-      if (itemDetails.twoHanded && ComponentMappers.oneArm.has(entity)) {
+      if (itemDetails.twoHanded && WorldManager.entityHelpers.hasDefect(entity, "One arm")) {
         return;
       }
 
       if (Objects.equals(itemDetails.type, "weapon")) {
-        if (!itemDetails.twoHanded || !ComponentMappers.oneArm.has(entity)) {
+        if (!itemDetails.twoHanded || !WorldManager.entityHelpers.hasDefect(entity, "One arm")) {
           if (equipment.slots.get("right hand") == null) {
             hold(entity, item);
 
@@ -231,7 +231,7 @@ public class ItemHelpers {
       }
 
       if (Objects.equals(itemDetails.type, "corpse") || Objects.equals(itemDetails.type, "limb")) {
-        if (ComponentMappers.carnivore.has(entity)) {
+        if (WorldManager.entityHelpers.hasTrait(entity, "Carnivore")) {
           if (MathUtils.random() > 0.5) {
             WorldManager.entityHelpers.raiseHealth(entity, MathUtils.random(5, 20));
           }

@@ -15,9 +15,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.reflect.ClassReflection;
-import com.badlogic.gdx.utils.reflect.Field;
-import com.badlogic.gdx.utils.reflect.ReflectionException;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.components.AttributesComponent;
@@ -32,6 +29,8 @@ import me.dannytatom.xibalba.components.statuses.BleedingComponent;
 import me.dannytatom.xibalba.ui.ActionButton;
 import me.dannytatom.xibalba.utils.ComponentMappers;
 import me.dannytatom.xibalba.utils.YamlToAbility;
+import me.dannytatom.xibalba.utils.YamlToDefect;
+import me.dannytatom.xibalba.utils.YamlToTrait;
 import me.dannytatom.xibalba.world.WorldManager;
 import org.apache.commons.lang3.text.WordUtils;
 
@@ -138,7 +137,7 @@ public class CharacterScreen implements Screen {
     setupActionButtons();
     updateAttributesGroup();
     updateSkillsGroup();
-    updateTraitsGroup();
+    updateTraitsAndDefectsGroup();
     updateAbilitiesGroup();
     updateInventoryGroup();
     updateItemDetailsGroup();
@@ -350,55 +349,33 @@ public class CharacterScreen implements Screen {
     }
   }
 
-  private void updateTraitsGroup() {
+  private void updateTraitsAndDefectsGroup() {
     traitsAndDefectsGroup.clear();
 
     traitsAndDefectsGroup.addActor(new Label("Traits & Defects", Main.skin));
     traitsAndDefectsGroup.addActor(new Label("", Main.skin));
 
-    for (String defectName : Main.defects) {
-      try {
-        Class clazz = ClassReflection.forName(defectName);
-
-        if (WorldManager.player.getComponent(clazz) != null) {
-          Field nameField = ClassReflection.getField(clazz, "name");
-          String name = (String) nameField.get(clazz);
-          Field descriptionField = ClassReflection.getField(clazz, "description");
-          String description = (String) descriptionField.get(clazz);
-
-          traitsAndDefectsGroup.addActor(
-              new Label(
-                  "[RED]" + name + "\n[DARK_GRAY]" + WordUtils.wrap(
-                      description, 50
-                  ), Main.skin
-              )
-          );
-        }
-      } catch (ReflectionException e) {
-        e.printStackTrace();
+    for (YamlToDefect defect : Main.defects) {
+      if (WorldManager.entityHelpers.hasDefect(WorldManager.player, defect.name)) {
+        traitsAndDefectsGroup.addActor(
+            new Label(
+                "[RED]" + defect.name + "\n[DARK_GRAY]" + WordUtils.wrap(
+                    defect.description, 50
+                ), Main.skin
+            )
+        );
       }
     }
 
-    for (String traitName : Main.traits) {
-      try {
-        Class clazz = ClassReflection.forName(traitName);
-
-        if (WorldManager.player.getComponent(clazz) != null) {
-          Field nameField = ClassReflection.getField(clazz, "name");
-          String name = (String) nameField.get(clazz);
-          Field descriptionField = ClassReflection.getField(clazz, "description");
-          String description = (String) descriptionField.get(clazz);
-
-          traitsAndDefectsGroup.addActor(
-              new Label(
-                  "[GREEN]" + name + "\n[DARK_GRAY]" + WordUtils.wrap(
-                      description, 50
-                  ), Main.skin
-              )
-          );
-        }
-      } catch (ReflectionException e) {
-        e.printStackTrace();
+    for (YamlToTrait trait : Main.traits) {
+      if (WorldManager.entityHelpers.hasTrait(WorldManager.player, trait.name)) {
+        traitsAndDefectsGroup.addActor(
+            new Label(
+                "[GREEN]" + trait.name + "\n[DARK_GRAY]" + WordUtils.wrap(
+                    trait.description, 50
+                ), Main.skin
+            )
+        );
       }
     }
   }
@@ -649,13 +626,13 @@ public class CharacterScreen implements Screen {
 
       // Restrictions
 
-      if (ComponentMappers.oneArm.has(player) && details.twoHanded) {
+      if (WorldManager.entityHelpers.hasDefect(player, "One arm") && details.twoHanded) {
         restrictionsGroup.addActor(
             new Label("[RED]You can't hold this due to too few arms.", Main.skin)
         );
       }
 
-      if (ComponentMappers.oneArm.has(player) && Objects.equals(details.location, "left hand")) {
+      if (WorldManager.entityHelpers.hasDefect(player, "One arm") && Objects.equals(details.location, "left hand")) {
         restrictionsGroup.addActor(
             new Label("[RED]You don't have a left hand to hold this in.", Main.skin)
         );
@@ -722,13 +699,13 @@ public class CharacterScreen implements Screen {
         }
       } else {
         if (details.actions.contains("hold", false) && !itemIsEquipped) {
-          if (!ComponentMappers.oneArm.has(player) || !details.twoHanded) {
+          if (!WorldManager.entityHelpers.hasDefect(player, "One arm") || !details.twoHanded) {
             itemActionTable.add(holdButton).pad(0, 0, 5, 5);
           }
         }
 
         if (details.actions.contains("wear", false) && !itemIsEquipped) {
-          if (!ComponentMappers.oneArm.has(player)
+          if (!WorldManager.entityHelpers.hasDefect(player, "One arm")
               || !Objects.equals(details.location, "left hand")) {
             itemActionTable.add(wearButton).pad(0, 0, 5, 5);
           }
@@ -789,7 +766,7 @@ public class CharacterScreen implements Screen {
       String key = WordUtils.capitalize(slot.getKey());
       Entity item = slot.getValue();
 
-      if (!ComponentMappers.oneArm.has(player) || !Objects.equals(slot.getKey(), "left hand")) {
+      if (!WorldManager.entityHelpers.hasDefect(player, "One arm") || !Objects.equals(slot.getKey(), "left hand")) {
         equipmentGroup.addActor(
             new Label(createEquipmentSlotText(index, key, item), Main.skin)
         );

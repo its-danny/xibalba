@@ -7,6 +7,7 @@ import me.dannytatom.xibalba.components.BodyComponent;
 import me.dannytatom.xibalba.components.BrainComponent;
 import me.dannytatom.xibalba.components.CorpseComponent;
 import me.dannytatom.xibalba.components.DecorationComponent;
+import me.dannytatom.xibalba.components.DefectsComponent;
 import me.dannytatom.xibalba.components.EffectsComponent;
 import me.dannytatom.xibalba.components.EnemyComponent;
 import me.dannytatom.xibalba.components.EntranceComponent;
@@ -22,13 +23,12 @@ import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.RainDropComponent;
 import me.dannytatom.xibalba.components.SkillsComponent;
+import me.dannytatom.xibalba.components.TraitsComponent;
 import me.dannytatom.xibalba.components.TrapComponent;
 import me.dannytatom.xibalba.components.VisualComponent;
 import me.dannytatom.xibalba.components.actions.MeleeComponent;
 import me.dannytatom.xibalba.components.actions.MovementComponent;
 import me.dannytatom.xibalba.components.actions.RangeComponent;
-import me.dannytatom.xibalba.components.defects.MyopiaComponent;
-import me.dannytatom.xibalba.components.defects.OneArmComponent;
 import me.dannytatom.xibalba.components.items.AmmunitionComponent;
 import me.dannytatom.xibalba.components.items.WeaponComponent;
 import me.dannytatom.xibalba.components.statuses.BleedingComponent;
@@ -39,10 +39,6 @@ import me.dannytatom.xibalba.components.statuses.PoisonedComponent;
 import me.dannytatom.xibalba.components.statuses.SickComponent;
 import me.dannytatom.xibalba.components.statuses.StuckComponent;
 import me.dannytatom.xibalba.components.statuses.WetComponent;
-import me.dannytatom.xibalba.components.traits.CarnivoreComponent;
-import me.dannytatom.xibalba.components.traits.PerceptiveComponent;
-import me.dannytatom.xibalba.components.traits.QuickComponent;
-import me.dannytatom.xibalba.components.traits.ScoutComponent;
 import me.dannytatom.xibalba.components.traps.SpiderWebComponent;
 
 public final class ComponentMappers {
@@ -157,21 +153,9 @@ public final class ComponentMappers {
   public static final ComponentMapper<SpiderWebComponent> spiderWeb =
       ComponentMapper.getFor(SpiderWebComponent.class);
 
-  public static final ComponentMapper<OneArmComponent> oneArm =
-      ComponentMapper.getFor(OneArmComponent.class);
+  public static final ComponentMapper<DefectsComponent> defects =
+      ComponentMapper.getFor(DefectsComponent.class);
 
-  public static final ComponentMapper<MyopiaComponent> myopia =
-      ComponentMapper.getFor(MyopiaComponent.class);
-
-  public static final ComponentMapper<ScoutComponent> scout =
-      ComponentMapper.getFor(ScoutComponent.class);
-
-  public static final ComponentMapper<PerceptiveComponent> perceptive =
-      ComponentMapper.getFor(PerceptiveComponent.class);
-
-  public static final ComponentMapper<CarnivoreComponent> carnivore =
-      ComponentMapper.getFor(CarnivoreComponent.class);
-
-  public static final ComponentMapper<QuickComponent> quick =
-      ComponentMapper.getFor(QuickComponent.class);
+  public static final ComponentMapper<TraitsComponent> traits =
+      ComponentMapper.getFor(TraitsComponent.class);
 }

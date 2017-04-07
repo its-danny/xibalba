@@ -6,6 +6,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Colors;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -22,6 +23,10 @@ import me.dannytatom.xibalba.utils.CameraShake;
 import me.dannytatom.xibalba.utils.HandheldCamera;
 import me.dannytatom.xibalba.utils.SoundManager;
 import me.dannytatom.xibalba.utils.SpriteAccessor;
+import me.dannytatom.xibalba.utils.YamlToDefect;
+import me.dannytatom.xibalba.utils.YamlToTrait;
+import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.constructor.Constructor;
 
 public class Main extends Game {
   public static final int SPRITE_WIDTH = 10;
@@ -29,8 +34,8 @@ public class Main extends Game {
   public static AssetManager assets;
   public static TextureAtlas spriteAtlas;
   public static TextureAtlas asciiAtlas;
-  public static Array<String> traits;
-  public static Array<String> defects;
+  public static Array<YamlToTrait> traits;
+  public static Array<YamlToDefect> defects;
   public static Skin skin;
   public static Screen playScreen;
   public static TweenManager tweenManager;
@@ -111,16 +116,24 @@ public class Main extends Game {
     skin.getFont("default-font").getData().markupEnabled = true;
 
     // Traits
+    Yaml traitYaml = new Yaml(new Constructor(YamlToTrait.class));
+    FileHandle traitDirectoryHandle = Gdx.files.internal("data/traits");
     traits = new Array<>();
-    traits.add("me.dannytatom.xibalba.components.traits.ScoutComponent");
-    traits.add("me.dannytatom.xibalba.components.traits.PerceptiveComponent");
-    traits.add("me.dannytatom.xibalba.components.traits.CarnivoreComponent");
-    traits.add("me.dannytatom.xibalba.components.traits.QuickComponent");
+
+    for (FileHandle trait : traitDirectoryHandle.list()) {
+      YamlToTrait data = (YamlToTrait) traitYaml.load(trait.reader());
+      traits.add(data);
+    }
 
     // Defects
+    Yaml defectYaml = new Yaml(new Constructor(YamlToDefect.class));
+    FileHandle defectDirectoryHandle = Gdx.files.internal("data/defects");
     defects = new Array<>();
-    defects.add("me.dannytatom.xibalba.components.defects.MyopiaComponent");
-    defects.add("me.dannytatom.xibalba.components.defects.OneArmComponent");
+
+    for (FileHandle defect : defectDirectoryHandle.list()) {
+      YamlToDefect data = (YamlToDefect) defectYaml.load(defect.reader());
+      defects.add(data);
+    }
 
     // Setup text colors
     Colors.put("LIGHT_GRAY", parseColor("c2c2c2"));

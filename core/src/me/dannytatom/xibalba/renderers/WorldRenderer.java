@@ -232,7 +232,7 @@ public class WorldRenderer {
 
         Entity enemy = WorldManager.mapHelpers.getEnemyAt(x, y);
 
-        boolean canHearEnemy = ComponentMappers.perceptive.has(WorldManager.player)
+        boolean canHearEnemy = WorldManager.entityHelpers.hasTrait(WorldManager.player, "Perceptive")
             && enemy != null && WorldManager.entityHelpers.canHear(WorldManager.player, enemy);
 
         if (canHearEnemy) {

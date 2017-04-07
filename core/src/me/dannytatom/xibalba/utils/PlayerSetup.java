@@ -9,19 +9,15 @@ import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.components.AbilitiesComponent;
 import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.BodyComponent;
+import me.dannytatom.xibalba.components.DefectsComponent;
 import me.dannytatom.xibalba.components.EquipmentComponent;
 import me.dannytatom.xibalba.components.GodComponent;
 import me.dannytatom.xibalba.components.InventoryComponent;
 import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.SkillsComponent;
+import me.dannytatom.xibalba.components.TraitsComponent;
 import me.dannytatom.xibalba.components.VisualComponent;
-import me.dannytatom.xibalba.components.defects.MyopiaComponent;
-import me.dannytatom.xibalba.components.defects.OneArmComponent;
-import me.dannytatom.xibalba.components.traits.CarnivoreComponent;
-import me.dannytatom.xibalba.components.traits.PerceptiveComponent;
-import me.dannytatom.xibalba.components.traits.QuickComponent;
-import me.dannytatom.xibalba.components.traits.ScoutComponent;
 import me.dannytatom.xibalba.world.WorldManager;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
@@ -118,8 +114,11 @@ public class PlayerSetup {
     bodyParts.put("right leg", 10);
     player.add(new BodyComponent(bodyParts));
 
-    if (defects.contains(OneArmComponent.name, false)) {
-      player.add(new OneArmComponent());
+    DefectsComponent defectsComponent = new DefectsComponent();
+    player.add(defectsComponent);
+
+    if (this.defects.contains("One arm", false)) {
+      defectsComponent.defects.add("One arm");
 
       BodyComponent body = ComponentMappers.body.get(player);
       body.parts.remove("left arm");
@@ -129,35 +128,38 @@ public class PlayerSetup {
       attributes.health = attributes.maxHealth;
     }
 
-    if (defects.contains(MyopiaComponent.name, false)) {
-      player.add(new MyopiaComponent());
+    if (this.defects.contains("Myopia", false)) {
+      defectsComponent.defects.add("Myopia");
 
       AttributesComponent attributes = ComponentMappers.attributes.get(player);
       attributes.maxVision = 5;
       attributes.vision = 5;
     }
 
-    if (traits.contains(ScoutComponent.name, false)) {
-      player.add(new ScoutComponent());
+    TraitsComponent traitsComponent = new TraitsComponent();
+    player.add(traitsComponent);
+
+    if (traits.contains("Scout", false)) {
+      traitsComponent.traits.add("Scout");
 
       AttributesComponent attributes = ComponentMappers.attributes.get(player);
       attributes.maxVision = 20;
       attributes.vision = 20;
     }
 
-    if (traits.contains(PerceptiveComponent.name, false)) {
-      player.add(new PerceptiveComponent());
+    if (traits.contains("Perceptive", false)) {
+      traitsComponent.traits.add("Perceptive");
 
       AttributesComponent attributes = ComponentMappers.attributes.get(player);
       attributes.hearing = attributes.vision * 2;
     }
 
-    if (traits.contains(CarnivoreComponent.name, false)) {
-      player.add(new CarnivoreComponent());
+    if (traits.contains("Carnivore", false)) {
+      traitsComponent.traits.add("Carnivore");
     }
 
-    if (traits.contains(QuickComponent.name, false)) {
-      player.add(new QuickComponent());
+    if (traits.contains("Quick", false)) {
+      traitsComponent.traits.add("Quick");
 
       AttributesComponent attributes = ComponentMappers.attributes.get(player);
       attributes.speed = attributes.speed + MathUtils.round(attributes.speed * .5f);

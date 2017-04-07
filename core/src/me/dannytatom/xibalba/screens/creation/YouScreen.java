@@ -11,14 +11,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.reflect.ClassReflection;
-import com.badlogic.gdx.utils.reflect.Field;
-import com.badlogic.gdx.utils.reflect.ReflectionException;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.screens.MainMenuScreen;
 import me.dannytatom.xibalba.ui.ActionButton;
 import me.dannytatom.xibalba.utils.PlayerSetup;
+import me.dannytatom.xibalba.utils.YamlToDefect;
+import me.dannytatom.xibalba.utils.YamlToTrait;
 import org.apache.commons.lang3.text.WordUtils;
 
 import java.util.Map;
@@ -369,25 +368,15 @@ public class YouScreen implements Screen {
     defectsGroup.addActor(instructions);
     defectsGroup.addActor(new Label("", Main.skin));
 
-    for (int defectIndex = 0; defectIndex < Main.defects.size; defectIndex++) {
-      String defectName = Main.defects.get(defectIndex);
+    for (int i = 0; i < Main.defects.size; i++) {
+      YamlToDefect defect = Main.defects.get(i);
 
-      try {
-        Class clazz = ClassReflection.forName(defectName);
-        Field name = ClassReflection.getField(clazz, "name");
-        Field description = ClassReflection.getField(clazz, "description");
-        Field reward = ClassReflection.getField(clazz, "reward");
-
-        defectsGroup.addActor(
-            new Label(
-                createDefectText(defectIndex,
-                    (String) name.get(clazz), (String) description.get(clazz), (int) reward.get(clazz)
-                ), Main.skin
-            )
-        );
-      } catch (ReflectionException e) {
-        e.printStackTrace();
-      }
+      defectsGroup.addActor(
+          new Label(
+              createDefectText(i, defect.name, defect.description, defect.reward
+              ), Main.skin
+          )
+      );
     }
   }
 
@@ -401,25 +390,15 @@ public class YouScreen implements Screen {
     traitsGroup.addActor(pointsLeft);
     traitsGroup.addActor(new Label("", Main.skin));
 
-    for (int traitIndex = 0; traitIndex < Main.traits.size; traitIndex++) {
-      String traitName = Main.traits.get(traitIndex);
+    for (int i = 0; i < Main.traits.size; i++) {
+      YamlToTrait trait = Main.traits.get(i);
 
-      try {
-        Class clazz = ClassReflection.forName(traitName);
-        Field name = ClassReflection.getField(clazz, "name");
-        Field description = ClassReflection.getField(clazz, "description");
-        Field cost = ClassReflection.getField(clazz, "cost");
-
-        traitsGroup.addActor(
-            new Label(
-                createTraitText(traitIndex,
-                    (String) name.get(clazz), (String) description.get(clazz), (int) cost.get(clazz)
-                ), Main.skin
-            )
-        );
-      } catch (ReflectionException e) {
-        e.printStackTrace();
-      }
+      traitsGroup.addActor(
+          new Label(
+              createTraitText(i, trait.name, trait.description, trait.cost
+              ), Main.skin
+          )
+      );
     }
   }
 
@@ -611,70 +590,38 @@ public class YouScreen implements Screen {
   }
 
   private void addDefect() {
-    try {
-      Class clazz = ClassReflection.forName(Main.defects.get(itemSelected));
-      Field nameField = ClassReflection.getField(clazz, "name");
-      String name = (String) nameField.get(clazz);
-      Field rewardField = ClassReflection.getField(clazz, "reward");
-      int reward = (int) rewardField.get(clazz);
+    YamlToDefect defect = Main.defects.get(itemSelected);
 
-      if (!playerSetup.defects.contains(name, false)) {
-        playerSetup.defects.add(name);
-        traitPoints += reward;
-      }
-    } catch (ReflectionException e) {
-      e.printStackTrace();
+    if (!playerSetup.defects.contains(defect.name, false)) {
+      playerSetup.defects.add(defect.name);
+      traitPoints += defect.reward;
     }
   }
 
   private void removeDefect() {
-    try {
-      Class clazz = ClassReflection.forName(Main.defects.get(itemSelected));
-      Field nameField = ClassReflection.getField(clazz, "name");
-      String name = (String) nameField.get(clazz);
-      Field rewardField = ClassReflection.getField(clazz, "reward");
-      int reward = (int) rewardField.get(clazz);
+    YamlToDefect defect = Main.defects.get(itemSelected);
 
-      if (playerSetup.defects.contains(name, false)) {
-        playerSetup.defects.removeValue(name, false);
-        traitPoints -= reward;
-      }
-    } catch (ReflectionException e) {
-      e.printStackTrace();
+    if (playerSetup.defects.contains(defect.name, false)) {
+      playerSetup.defects.removeValue(defect.name, false);
+      traitPoints -= defect.reward;
     }
   }
 
   private void addTrait() {
-    try {
-      Class clazz = ClassReflection.forName(Main.traits.get(itemSelected));
-      Field nameField = ClassReflection.getField(clazz, "name");
-      String name = (String) nameField.get(clazz);
-      Field costField = ClassReflection.getField(clazz, "cost");
-      int cost = (int) costField.get(clazz);
+    YamlToTrait trait = Main.traits.get(itemSelected);
 
-      if (!playerSetup.traits.contains(name, false) && traitPoints >= cost) {
-        playerSetup.traits.add(name);
-        traitPoints -= cost;
-      }
-    } catch (ReflectionException e) {
-      e.printStackTrace();
+    if (!playerSetup.traits.contains(trait.name, false) && traitPoints >= trait.cost) {
+      playerSetup.traits.add(trait.name);
+      traitPoints -= trait.cost;
     }
   }
 
   private void removeTrait() {
-    try {
-      Class clazz = ClassReflection.forName(Main.traits.get(itemSelected));
-      Field nameField = ClassReflection.getField(clazz, "name");
-      String name = (String) nameField.get(clazz);
-      Field costField = ClassReflection.getField(clazz, "cost");
-      int cost = (int) costField.get(clazz);
+    YamlToTrait trait = Main.traits.get(itemSelected);
 
-      if (playerSetup.traits.contains(name, false)) {
-        playerSetup.traits.removeValue(name, false);
-        traitPoints += cost;
-      }
-    } catch (ReflectionException e) {
-      e.printStackTrace();
+    if (playerSetup.traits.contains(trait.name, false)) {
+      playerSetup.traits.removeValue(trait.name, false);
+      traitPoints += trait.cost;
     }
   }
 

@@ -45,6 +45,14 @@ public class EntityHelpers {
         || (ComponentMappers.stuck.has(entity));
   }
 
+  public boolean hasTrait(Entity entity, String trait) {
+    return ComponentMappers.traits.get(entity).traits.contains(trait, false);
+  }
+
+  public boolean hasDefect(Entity entity, String defect) {
+    return ComponentMappers.defects.get(entity).defects.contains(defect, false);
+  }
+
   /**
    * Checks if an entity is hidden or not.
    *
