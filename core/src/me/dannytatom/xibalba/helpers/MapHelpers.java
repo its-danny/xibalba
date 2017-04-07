@@ -21,6 +21,7 @@ import org.xguzm.pathfinding.grid.NavigationGrid;
 import org.xguzm.pathfinding.grid.finders.AStarGridFinder;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class MapHelpers {
   public MapHelpers() {
@@ -509,7 +510,13 @@ public class MapHelpers {
    * @param position Cell to make wet
    */
   public void makeFloorWet(Vector2 position) {
-    getCell(position.x, position.y).sprite.setColor(
+    MapCell cell = getCell(position.x, position.y);
+
+    if (Objects.equals(cell.description, "bridge")) {
+      return;
+    }
+
+    cell.sprite.setColor(
         Colors.get(WorldManager.world.getCurrentMap().type + "FloorWet")
     );
   }

@@ -5,12 +5,12 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 
 public class MapCell {
-  public final String description;
-  private final Type type;
+  public String description;
+  public Type type;
   public Sprite sprite;
   public Color color;
   public Tween tween;
-  public boolean hidden = true;
+  public boolean hidden = false;
   public boolean forgotten = false;
 
   /**

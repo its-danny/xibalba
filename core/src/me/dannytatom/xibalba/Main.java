@@ -168,6 +168,7 @@ public class Main extends Game {
 
     // Decoration colors
     Colors.put("stone", Colors.get("LIGHT_GRAY"));
+    Colors.put("bridge", parseColor("969482"));
 
     // Background colors
     Colors.put("screenBackground", parseColor("293033"));

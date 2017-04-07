@@ -1,6 +1,7 @@
 package me.dannytatom.xibalba.world;
 
 import aurelienribon.tweenengine.Tween;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Colors;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -84,8 +85,9 @@ public class Map {
       }
     }
 
-    if (MathUtils.random() > .5f) {
+    if (true) {
       createWater();
+      createBridge();
     }
   }
 
@@ -118,6 +120,7 @@ public class Map {
 
     if (MathUtils.random() > .75f) {
       createWater();
+      createBridge();
     }
   }
 
@@ -180,6 +183,54 @@ public class Map {
         }
       }
     }
+  }
+
+  // Find the largest section of water with land on both sides
+  // Connect it with a bridge
+  private void createBridge() {
+    Sprite bridge = Main.asciiAtlas.createSprite("0302");
+    Vector2 start = null;
+    int length = 0;
+
+    for (int x = 0; x < map.length; x++) {
+      for (int y = 0; y < map[x].length; y++) {
+        MapCell cell = map[x][y];
+
+        // Found water tile, go up until no more water.
+        // Store start position and the length.
+        if (cell.isWater()) {
+          int count = 0;
+
+          while (map[x][y + count].isWater()) {
+            count++;
+          }
+
+          if (count > length) {
+            start = new Vector2(x, y);
+            length = count;
+          }
+        }
+      }
+    }
+
+    if (start != null && length > 0) {
+      for (int y = 0; y < length; y++) {
+        makeCellBridge(map[(int) start.x][(int) start.y + y], bridge);
+      }
+    }
+  }
+
+  private void makeCellBridge(MapCell cell, Sprite bridge) {
+    cell.sprite.setRegion(
+        bridge.getRegionX(), bridge.getRegionY(),
+        bridge.getRegionWidth(), bridge.getRegionHeight()
+    );
+
+    cell.sprite.setColor(Colors.get("bridge"));
+    cell.type = MapCell.Type.FLOOR;
+    cell.description = "bridge";
+
+    cell.tween.kill();
   }
 
   public MapCell[][] getCellMap() {
