@@ -11,6 +11,7 @@ import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.VisualComponent;
 import me.dannytatom.xibalba.components.statuses.PoisonedComponent;
 import me.dannytatom.xibalba.utils.ComponentMappers;
+import me.dannytatom.xibalba.world.Map;
 import me.dannytatom.xibalba.world.MapCell;
 import me.dannytatom.xibalba.world.ShadowCaster;
 import me.dannytatom.xibalba.world.WorldManager;
@@ -106,9 +107,22 @@ public class EntityHelpers {
         fovMap, (int) position.pos.x, (int) position.pos.y, attributes.hearing
     );
 
-    attributes.visionMap = caster.calculateFov(
-        fovMap, (int) position.pos.x, (int) position.pos.y, attributes.vision
-    );
+    if (!Main.debug.fieldOfViewEnabled && ComponentMappers.player.has(entity)) {
+      Map map = WorldManager.world.getCurrentMap();
+      float[][] visionMap = new float[map.width][map.height];
+
+      for (int x = 0; x < map.width; x++) {
+        for (int y = 0; y < map.height; y++) {
+          visionMap[x][y] = 1;
+        }
+      }
+
+      attributes.visionMap = visionMap;
+    } else {
+      attributes.visionMap = caster.calculateFov(
+          fovMap, (int) position.pos.x, (int) position.pos.y, attributes.vision
+      );
+    }
   }
 
   /**

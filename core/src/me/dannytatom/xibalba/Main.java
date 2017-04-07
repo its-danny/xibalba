@@ -31,6 +31,7 @@ import org.yaml.snakeyaml.constructor.Constructor;
 public class Main extends Game {
   public static final int SPRITE_WIDTH = 10;
   public static final int SPRITE_HEIGHT = 10;
+  public static Debug debug;
   public static AssetManager assets;
   public static TextureAtlas spriteAtlas;
   public static TextureAtlas asciiAtlas;
@@ -98,6 +99,9 @@ public class Main extends Game {
    * Setup & load the main menu.
    */
   public void create() {
+    // Debug shit
+    debug = new Debug();
+
     // Load custom font
     assets = new AssetManager();
     FreeTypeFontGenerator generator =

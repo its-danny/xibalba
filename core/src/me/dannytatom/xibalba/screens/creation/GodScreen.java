@@ -62,7 +62,7 @@ public class GodScreen implements Screen {
 
     HorizontalGroup titleGroup = new HorizontalGroup();
     titleGroup.space(10);
-    titleTable.add(titleGroup).pad(0, 0, 10, 0).width(Gdx.graphics.getWidth()).top().left();
+    titleTable.add(titleGroup).pad(0, 0, 10, 0).width(Gdx.graphics.getWidth());
 
     ActionButton backButton = new ActionButton("Q", "Back");
     backButton.setKeys(Input.Keys.Q);
@@ -78,13 +78,13 @@ public class GodScreen implements Screen {
     );
     titleGroup.addActor(instructions);
 
-    godsGroup = new VerticalGroup().left();
-    abilityGroup = new VerticalGroup().left();
+    godsGroup = new VerticalGroup().top().left().columnLeft();
+    abilityGroup = new VerticalGroup().top().left().columnLeft();
 
     float width = Gdx.graphics.getWidth() / 2;
     Table mainTable = new Table();
-    mainTable.add(godsGroup).pad(0, 0, 10, 0).width(width).top().left();
-    mainTable.add(abilityGroup).pad(0, 0, 10, 0).width(width).top().left();
+    mainTable.add(godsGroup).pad(0, 0, 10, 0).width(width);
+    mainTable.add(abilityGroup).pad(0, 0, 10, 0).width(width);
 
     ActionButton continueButton = new ActionButton("ENTER", "Enter Your Name");
     continueButton.setKeys(Input.Keys.ENTER);

@@ -76,10 +76,9 @@ public class HudRenderer {
     topTable.setFillParent(true);
     stage.addActor(topTable);
 
-
-    playerInfo = new VerticalGroup().left();
-    enemyInfo = new VerticalGroup().center();
-    debugInfo = new VerticalGroup().right();
+    playerInfo = new VerticalGroup().top().left().columnLeft();
+    enemyInfo = new VerticalGroup().top().center().columnCenter();
+    debugInfo = new VerticalGroup().top().right().columnRight();
 
     int width = Gdx.graphics.getWidth() / 3 - 20;
 
@@ -88,15 +87,15 @@ public class HudRenderer {
     topTable.add(debugInfo).pad(10, 10, 10, 10).width(width).top();
 
     bottomTable = new Table();
-    bottomTable.bottom();
+    bottomTable.bottom().left();
     bottomTable.setFillParent(true);
     stage.addActor(bottomTable);
 
-    actionLog = new VerticalGroup().left();
-    focusedTable = new Table().center();
-    buttonsAndAreaDetails = new VerticalGroup().right();
+    actionLog = new VerticalGroup().top().left().columnLeft();
+    focusedTable = new Table().top().center();
+    buttonsAndAreaDetails = new VerticalGroup().top().right().columnRight();
 
-    areaDetails = new VerticalGroup().left().pad(0, 0, 5, 0);
+    areaDetails = new VerticalGroup().top().right().columnRight().pad(0, 0, 5, 0);
     buttonsAndAreaDetails.addActor(areaDetails);
 
     abilityButtons = new Table().right().pad(0, 0, 5, 0);
@@ -192,9 +191,9 @@ public class HudRenderer {
       }
     };
 
-    deathDialog.button("[DARK_GRAY][[CYAN] ENTER [DARK_GRAY]][WHITE] Return to Main Menu", true);
+    deathDialog.button("[DARK_GRAY][[[CYAN] ENTER [DARK_GRAY]][WHITE] Return to Main Menu", true);
     deathDialog.key(Input.Keys.ENTER, true);
-    deathDialog.button("[DARK_GRAY][[CYAN] Q [DARK_GRAY]][WHITE] Quit", false);
+    deathDialog.button("[DARK_GRAY][[[CYAN] Q [DARK_GRAY]][WHITE] Quit", false);
     deathDialog.key(Input.Keys.Q, false);
     deathDialog.pad(10);
   }
@@ -448,17 +447,17 @@ public class HudRenderer {
     String healthTextColor = attributes.health < attributes.maxHealth / 2 ? "[RED]" : "[WHITE]";
     String healthText = healthTextColor + attributes.health
         + "[LIGHT_GRAY]/" + attributes.maxHealth;
-    String healthBar = "[LIGHT_GRAY]HP [";
+    StringBuilder healthBar = new StringBuilder("[LIGHT_GRAY]HP [[");
 
     for (int i = 0; i < MathUtils.floor(attributes.maxHealth / 10); i++) {
       if (attributes.health < (i * 10)) {
-        healthBar += "[DARK_GRAY]x";
+        healthBar.append("[DARK_GRAY]x");
       } else {
-        healthBar += "[WHITE]x";
+        healthBar.append("[WHITE]x");
       }
     }
 
-    healthBar += "[LIGHT_GRAY]]";
+    healthBar.append("[LIGHT_GRAY]]");
 
     return healthBar + " " + healthText;
   }
@@ -477,17 +476,17 @@ public class HudRenderer {
     }
 
     String divineFavorText = divineFavorColor + attributes.divineFavor + "[LIGHT_GRAY]/100";
-    String divineFavorBar = "[LIGHT_GRAY]DF [";
+    StringBuilder divineFavorBar = new StringBuilder("[LIGHT_GRAY]DF [[");
 
     for (int i = 0; i < MathUtils.floor(100 / 10); i++) {
       if (attributes.divineFavor < (i * 10)) {
-        divineFavorBar += "[DARK_GRAY]x";
+        divineFavorBar.append("[DARK_GRAY]x");
       } else {
-        divineFavorBar += "[WHITE]x";
+        divineFavorBar.append("[WHITE]x");
       }
     }
 
-    divineFavorBar += "[LIGHT_GRAY]]";
+    divineFavorBar.append("[LIGHT_GRAY]]");
 
     return divineFavorBar + " " + divineFavorText;
   }
@@ -498,17 +497,17 @@ public class HudRenderer {
     String oxygenTextColor = attributes.oxygen < attributes.maxOxygen / 2 ? "[RED]" : "[CYAN]";
     String oxygenText = oxygenTextColor + attributes.oxygen
         + "[LIGHT_GRAY]/" + attributes.maxOxygen;
-    String oxygenBar = "[LIGHT_GRAY]OX [";
+    StringBuilder oxygenBar = new StringBuilder("[LIGHT_GRAY]OX [[");
 
     for (int i = 0; i < MathUtils.floor(attributes.maxOxygen / 4); i++) {
       if (attributes.oxygen < (i * 4)) {
-        oxygenBar += "[DARK_GRAY]x";
+        oxygenBar.append("[DARK_GRAY]x");
       } else {
-        oxygenBar += "[CYAN]x";
+        oxygenBar.append("[CYAN]x");
       }
     }
 
-    oxygenBar += "[LIGHT_GRAY]]";
+    oxygenBar.append("[LIGHT_GRAY]]");
 
     return oxygenBar + " " + oxygenText;
   }

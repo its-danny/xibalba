@@ -9,6 +9,9 @@ import com.badlogic.gdx.graphics.Colors;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.strongjoshua.console.Console;
+import com.strongjoshua.console.GUIConsole;
+import me.dannytatom.xibalba.ConsoleCommandExecutor;
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.PlayerInput;
 import me.dannytatom.xibalba.components.AttributesComponent;
@@ -20,6 +23,7 @@ import me.dannytatom.xibalba.world.WorldManager;
 public class PlayScreen implements Screen {
   private final WorldRenderer worldRenderer;
   private final HudRenderer hudRenderer;
+  private final Console console;
   private final PlayerInput playerInput;
   private final InputMultiplexer multiplexer;
 
@@ -47,10 +51,15 @@ public class PlayScreen implements Screen {
     worldRenderer = new WorldRenderer(worldCamera, batch);
     hudRenderer = new HudRenderer(main, batch);
 
+    // Debug console
+    console = new GUIConsole(Main.skin, false);
+    console.setCommandExecutor(new ConsoleCommandExecutor());
+    console.setSizePercent(100, 50);
+
     // Setup input
     multiplexer = new InputMultiplexer();
-    multiplexer.addProcessor(hudRenderer.stage);
     playerInput = new PlayerInput(worldCamera);
+    multiplexer.addProcessor(hudRenderer.stage);
     multiplexer.addProcessor(playerInput);
 
     // Player attributes
@@ -149,6 +158,8 @@ public class PlayScreen implements Screen {
     if (playerAttributes.health <= 0) {
       WorldManager.state = WorldManager.State.DEAD;
     }
+
+    console.draw();
   }
 
   @Override
@@ -160,6 +171,7 @@ public class PlayScreen implements Screen {
   @Override
   public void show() {
     Gdx.input.setInputProcessor(multiplexer);
+    console.resetInputProcessing();
   }
 
   @Override

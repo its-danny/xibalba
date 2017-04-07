@@ -10,7 +10,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
-import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.screens.MainMenuScreen;
@@ -55,9 +54,9 @@ public class YouScreen implements Screen {
 
     Table titleTable = new Table();
 
-    HorizontalGroup titleGroup = new HorizontalGroup().align(Align.center | Align.left);
+    HorizontalGroup titleGroup = new HorizontalGroup();
     titleGroup.space(10);
-    titleTable.add(titleGroup).pad(0, 0, 10, 0).width(Gdx.graphics.getWidth()).top().left();
+    titleTable.add(titleGroup).pad(0, 0, 10, 0).width(Gdx.graphics.getWidth());
 
     ActionButton backButton = new ActionButton("Q", "Back");
     backButton.setKeys(Input.Keys.Q);
@@ -74,18 +73,18 @@ public class YouScreen implements Screen {
     );
     titleGroup.addActor(instructions);
 
-    attributesGroup = new VerticalGroup().align(Align.top | Align.left);
-    skillsGroup = new VerticalGroup().align(Align.top | Align.left);
-    defectsGroup = new VerticalGroup().align(Align.top | Align.left);
-    traitsGroup = new VerticalGroup().align(Align.top | Align.left);
+    attributesGroup = new VerticalGroup().top().left().columnLeft();
+    skillsGroup = new VerticalGroup().top().left().columnLeft();
+    defectsGroup = new VerticalGroup().top().left().columnLeft();
+    traitsGroup = new VerticalGroup().top().left().columnLeft();
 
     float width = Gdx.graphics.getWidth() / 2;
     Table mainTable = new Table();
-    mainTable.add(attributesGroup).pad(0, 0, 10, 0).width(width).top().left();
-    mainTable.add(skillsGroup).pad(0, 0, 10, 0).width(width).top().left();
+    mainTable.add(attributesGroup).pad(0, 0, 10, 0).width(width);
+    mainTable.add(skillsGroup).pad(0, 0, 10, 0).width(width);
     mainTable.row();
-    mainTable.add(defectsGroup).pad(0, 0, 10, 0).width(width).top().left();
-    mainTable.add(traitsGroup).pad(0, 0, 10, 0).width(width).top().left();
+    mainTable.add(defectsGroup).pad(0, 0, 10, 0).width(width);
+    mainTable.add(traitsGroup).pad(0, 0, 10, 0).width(width);
 
     ActionButton continueButton = new ActionButton("ENTER", "Select Your God");
     continueButton.setKeys(Input.Keys.ENTER);

@@ -17,7 +17,7 @@ allprojects {
 
     ext {
         appName = 'xibalba'
-        gdxVersion = '1.9.3'
+        gdxVersion = '1.9.6'
     }
 
     repositories {
@@ -41,6 +41,7 @@ project(":core") {
         compile "org.apache.commons:commons-lang3:3.4"
         compile "com.github.xaguzman:pathfinding:0.2.6"
         compile "com.esotericsoftware:kryo:4.0.0"
+        compile "com.strongjoshua:libgdx-inGameConsole:0.5.3"
 
         compile fileTree(dir: "../libs", include: "*.jar")
 

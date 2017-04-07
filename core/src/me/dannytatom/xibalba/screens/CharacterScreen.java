@@ -96,9 +96,9 @@ public class CharacterScreen implements Screen {
 
     Table titleTable = new Table();
 
-    HorizontalGroup titleGroup = new HorizontalGroup().align(Align.center | Align.left);
+    HorizontalGroup titleGroup = new HorizontalGroup();
     titleGroup.space(10);
-    titleTable.add(titleGroup).pad(10).width(Gdx.graphics.getWidth() - 20).top().left();
+    titleTable.add(titleGroup).pad(10).width(Gdx.graphics.getWidth() - 20);
 
     ActionButton closeButton = new ActionButton("ESC", null);
     closeButton.setKeys(Input.Keys.ESCAPE);
@@ -108,14 +108,14 @@ public class CharacterScreen implements Screen {
     Label title = new Label(attributes.name, Main.skin);
     titleGroup.addActor(title);
 
-    attributesGroup = new VerticalGroup().align(Align.top | Align.left);
-    skillsGroup = new VerticalGroup().align(Align.top | Align.left);
-    traitsAndDefectsGroup = new VerticalGroup().align(Align.top | Align.left);
-    abilitiesGroup = new VerticalGroup().align(Align.top | Align.left);
-    inventoryGroup = new VerticalGroup().align(Align.top | Align.left);
-    itemDetailsGroup = new VerticalGroup().align(Align.top | Align.left);
-    equipmentGroup = new VerticalGroup().align(Align.top | Align.left);
-    itemActionTable = new Table().align(Align.top | Align.left);
+    attributesGroup = new VerticalGroup().top().left().columnLeft();
+    skillsGroup = new VerticalGroup().top().left().columnLeft();
+    traitsAndDefectsGroup = new VerticalGroup().top().left().columnLeft();
+    abilitiesGroup = new VerticalGroup().top().left().columnLeft();
+    inventoryGroup = new VerticalGroup().top().left().columnLeft();
+    itemDetailsGroup = new VerticalGroup().top().left().columnLeft();
+    equipmentGroup = new VerticalGroup().top().left().columnLeft();
+    itemActionTable = new Table();
 
     Table topTable = new Table();
     topTable.add(attributesGroup).pad(10).width(Gdx.graphics.getWidth() / 6 - 20).top().left();
@@ -482,8 +482,8 @@ public class CharacterScreen implements Screen {
 
       // Stats & restrictions
 
-      VerticalGroup statsGroup = new VerticalGroup().align(Align.top | Align.left);
-      VerticalGroup restrictionsGroup = new VerticalGroup().align(Align.top | Align.left);
+      VerticalGroup statsGroup = new VerticalGroup().top().left().columnLeft();
+      VerticalGroup restrictionsGroup = new VerticalGroup().top().left().columnLeft();
 
       itemDetailsGroup.addActor(statsGroup);
       itemDetailsGroup.addActor(restrictionsGroup);
