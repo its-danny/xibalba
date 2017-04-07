@@ -85,7 +85,7 @@ public class Map {
       }
     }
 
-    if (true) {
+    if (MathUtils.random() > .5f) {
       createWater();
       createBridge();
     }

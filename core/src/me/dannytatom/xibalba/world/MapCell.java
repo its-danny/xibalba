@@ -10,7 +10,7 @@ public class MapCell {
   public Sprite sprite;
   public Color color;
   public Tween tween;
-  public boolean hidden = false;
+  public boolean hidden = true;
   public boolean forgotten = false;
 
   /**
