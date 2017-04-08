@@ -116,16 +116,19 @@ public class CharacterScreen implements Screen {
     equipmentGroup = new VerticalGroup().top().left().columnLeft();
     itemActionTable = new Table();
 
+    int topTableSectionSmallWidth = Gdx.graphics.getWidth() / 6 - 20;
+    int topTableSectionLargeWidth = Gdx.graphics.getWidth() / 6 * 2 - 20;
     Table topTable = new Table();
-    topTable.add(attributesGroup).pad(10).width(Gdx.graphics.getWidth() / 6 - 20).top().left();
-    topTable.add(skillsGroup).pad(10).width(Gdx.graphics.getWidth() / 6 - 20).top().left();
-    topTable.add(traitsAndDefectsGroup).pad(10).width(Gdx.graphics.getWidth() / 6 * 2 - 20).top().left();
-    topTable.add(abilitiesGroup).pad(10).width(Gdx.graphics.getWidth() / 6 * 2 - 20).top().left();
+    topTable.add(attributesGroup).pad(10).width(topTableSectionSmallWidth).top().left();
+    topTable.add(skillsGroup).pad(10).width(topTableSectionSmallWidth).top().left();
+    topTable.add(traitsAndDefectsGroup).pad(10).width(topTableSectionLargeWidth).top().left();
+    topTable.add(abilitiesGroup).pad(10).width(topTableSectionLargeWidth).top().left();
 
+    int bottomTableSectionWidth = Gdx.graphics.getWidth() / 3 - 20;
     Table bottomTable = new Table();
-    bottomTable.add(inventoryGroup).pad(10).width(Gdx.graphics.getWidth() / 3 - 20).top().left();
-    bottomTable.add(itemDetailsGroup).pad(10).width(Gdx.graphics.getWidth() / 3 - 20).top().left();
-    bottomTable.add(equipmentGroup).pad(10).width(Gdx.graphics.getWidth() / 3 - 20).top().left();
+    bottomTable.add(inventoryGroup).pad(10).width(bottomTableSectionWidth).top().left();
+    bottomTable.add(itemDetailsGroup).pad(10).width(bottomTableSectionWidth).top().left();
+    bottomTable.add(equipmentGroup).pad(10).width(bottomTableSectionWidth).top().left();
 
     table.add(titleTable);
     table.row();
@@ -631,7 +634,8 @@ public class CharacterScreen implements Screen {
         );
       }
 
-      if (WorldManager.entityHelpers.hasDefect(player, "One arm") && Objects.equals(details.location, "left hand")) {
+      if (WorldManager.entityHelpers.hasDefect(player, "One arm")
+          && Objects.equals(details.location, "left hand")) {
         restrictionsGroup.addActor(
             new Label("[RED]You don't have a left hand to hold this in.", Main.skin)
         );
@@ -765,7 +769,8 @@ public class CharacterScreen implements Screen {
       String key = WordUtils.capitalize(slot.getKey());
       Entity item = slot.getValue();
 
-      if (!WorldManager.entityHelpers.hasDefect(player, "One arm") || !Objects.equals(slot.getKey(), "left hand")) {
+      if (!WorldManager.entityHelpers.hasDefect(player, "One arm")
+          || !Objects.equals(slot.getKey(), "left hand")) {
         equipmentGroup.addActor(
             new Label(createEquipmentSlotText(index, key, item), Main.skin)
         );

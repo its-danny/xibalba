@@ -141,10 +141,10 @@ public class EntityHelpers {
     AttributesComponent attributes = ComponentMappers.attributes.get(looker);
     PositionComponent targetPosition = ComponentMappers.position.get(target);
 
-    int x = (int) targetPosition.pos.x;
-    int y = (int) targetPosition.pos.y;
+    int cellX = (int) targetPosition.pos.x;
+    int cellY = (int) targetPosition.pos.y;
 
-    return attributes.visionMap[x][y] > 0;
+    return attributes.visionMap[cellX][cellY] > 0;
   }
 
   /**
@@ -386,6 +386,12 @@ public class EntityHelpers {
     }
   }
 
+  /**
+   * Throw up a little bit.
+   *
+   * @param entity Who's vomiting
+   * @param damage How much damage they take when they vomit
+   */
   public void vomit(Entity entity, int damage) {
     takeDamage(entity, damage);
 

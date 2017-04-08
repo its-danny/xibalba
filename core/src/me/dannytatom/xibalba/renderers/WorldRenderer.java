@@ -232,8 +232,9 @@ public class WorldRenderer {
 
         Entity enemy = WorldManager.mapHelpers.getEnemyAt(x, y);
 
-        boolean canHearEnemy = WorldManager.entityHelpers.hasTrait(WorldManager.player, "Perceptive")
-            && enemy != null && WorldManager.entityHelpers.canHear(WorldManager.player, enemy);
+        boolean canHearEnemy = WorldManager.entityHelpers.hasTrait(
+            WorldManager.player, "Perceptive"
+        ) && enemy != null && WorldManager.entityHelpers.canHear(WorldManager.player, enemy);
 
         if (canHearEnemy) {
           continue;
@@ -302,6 +303,12 @@ public class WorldRenderer {
     }
   }
 
+  /**
+   * Self-explanatory.
+   *
+   * @param width  New width
+   * @param height New height
+   */
   public void resize(int width, int height) {
     viewport.update(width, height, true);
 

@@ -14,8 +14,8 @@ public class ItemComponent implements Component {
   public final String skill;
   public final HashMap<String, Integer> attributes;
   public final Array<String> verbs;
+  public final Array<String> actions;
   public String location;
-  public Array<String> actions;
   public String name;
   public boolean throwing = false;
 

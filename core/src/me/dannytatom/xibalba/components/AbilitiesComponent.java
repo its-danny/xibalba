@@ -5,5 +5,5 @@ import com.badlogic.gdx.utils.Array;
 import me.dannytatom.xibalba.utils.YamlToAbility;
 
 public class AbilitiesComponent implements Component {
-  public Array<YamlToAbility> abilities = new Array<>();
+  public final Array<YamlToAbility> abilities = new Array<>();
 }

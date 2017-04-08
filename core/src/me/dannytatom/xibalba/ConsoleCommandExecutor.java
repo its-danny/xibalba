@@ -6,16 +6,26 @@ import me.dannytatom.xibalba.utils.ComponentMappers;
 import me.dannytatom.xibalba.world.WorldManager;
 
 public class ConsoleCommandExecutor extends CommandExecutor {
-  public void debugUI(Boolean on) {
+  /**
+   * Toggle debug UI.
+   *
+   * @param on Toggle
+   */
+  public void debug(Boolean on) {
     if (on) {
-      Main.debug.debugUIEnabled = true;
+      Main.debug.debugEnabled = true;
       console.log("[GREEN]Debug UI: ON");
     } else {
-      Main.debug.debugUIEnabled = false;
+      Main.debug.debugEnabled = false;
       console.log("[RED]Debug UI: OFF");
     }
   }
 
+  /**
+   * Set player health.
+   *
+   * @param amount Target number
+   */
   public void setHealth(int amount) {
     AttributesComponent attributes = ComponentMappers.attributes.get(WorldManager.player);
     attributes.health = amount;
@@ -23,6 +33,9 @@ public class ConsoleCommandExecutor extends CommandExecutor {
     console.log("[GREEN] Health now at " + attributes.health);
   }
 
+  /**
+   * Set player health to their max health.
+   */
   public void setHealthMax() {
     AttributesComponent attributes = ComponentMappers.attributes.get(WorldManager.player);
     attributes.health = attributes.maxHealth;
@@ -30,6 +43,11 @@ public class ConsoleCommandExecutor extends CommandExecutor {
     console.log("[GREEN] Health now at " + attributes.health);
   }
 
+  /**
+   * Toggle field of view.
+   *
+   * @param on Toggle
+   */
   public void fieldOfView(Boolean on) {
     if (on) {
       Main.debug.fieldOfViewEnabled = true;
@@ -42,6 +60,11 @@ public class ConsoleCommandExecutor extends CommandExecutor {
     WorldManager.entityHelpers.updateSenses(WorldManager.player);
   }
 
+  /**
+   * Toggle weather.
+   *
+   * @param on Toggle
+   */
   public void weather(Boolean on) {
     if (on) {
       Main.debug.weatherEnabled = true;
@@ -52,6 +75,9 @@ public class ConsoleCommandExecutor extends CommandExecutor {
     }
   }
 
+  /**
+   * Teleport to entrance.
+   */
   public void goToEntrance() {
     ComponentMappers.position.get(WorldManager.player).pos.set(
         WorldManager.world.getCurrentMap().entrance
@@ -60,6 +86,9 @@ public class ConsoleCommandExecutor extends CommandExecutor {
     WorldManager.entityHelpers.updateSenses(WorldManager.player);
   }
 
+  /**
+   * Teleport to exit.
+   */
   public void goToExit() {
     ComponentMappers.position.get(WorldManager.player).pos.set(
         WorldManager.world.getCurrentMap().exit

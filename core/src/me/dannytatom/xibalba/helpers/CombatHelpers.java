@@ -131,7 +131,8 @@ public class CombatHelpers {
    * @param item     What item they're hitting them w/
    * @param skill    What skill to use (throw if throwing, archery if bow, etc0
    */
-  public void range(Entity starter, Entity target, String bodyPart, Entity item, String skill, boolean isFocused) {
+  public void range(Entity starter, Entity target, String bodyPart,
+                    Entity item, String skill, boolean isFocused) {
     SkillsComponent starterSkills = ComponentMappers.skills.get(starter);
     int skillLevel = starterSkills.levels.get(skill);
 

@@ -72,11 +72,15 @@ public class Map {
           Sprite floor = Main.asciiAtlas.createSprite(floorTypes.random());
           floor.setColor(Colors.get("forestFloor"));
           floor.setFlip(MathUtils.randomBoolean(), false);
-          map[x][y] = new MapCell(floor, Colors.get("forestFloor"), MapCell.Type.FLOOR, "the forest floor");
+
+          map[x][y] = new MapCell(
+              floor, Colors.get("forestFloor"), MapCell.Type.FLOOR, "the forest floor"
+          );
         } else {
           Sprite wall = Main.asciiAtlas.createSprite("0" + MathUtils.random(5, 6) + "00");
           Color color = Colors.get("forestTree-" + MathUtils.random(1, 3));
           wall.setColor(color);
+
           map[x][y] = new MapCell(wall, color, MapCell.Type.WALL, "a tree");
         }
 

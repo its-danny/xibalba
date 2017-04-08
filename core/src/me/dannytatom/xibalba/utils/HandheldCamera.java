@@ -5,7 +5,7 @@ import com.badlogic.gdx.math.Vector2;
 import me.dannytatom.xibalba.Main;
 
 public class HandheldCamera {
-  private float lerp;
+  private final float lerp;
 
   public HandheldCamera() {
     lerp = 2f;

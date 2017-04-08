@@ -6,8 +6,8 @@ import java.util.TreeMap;
 
 public class CorpseComponent implements Component {
   public final String entity;
-  public TreeMap<String, Integer> parts;
-  public TreeMap<String, String> wearable;
+  public final TreeMap<String, Integer> parts;
+  public final TreeMap<String, String> wearable;
 
   /**
    * A corpse.

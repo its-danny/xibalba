@@ -116,7 +116,7 @@ public class ItemHelpers {
    * @param entity Who's inventory
    * @param item   The item
    */
-  public void removeFromInventory(Entity entity, Entity item) {
+  private void removeFromInventory(Entity entity, Entity item) {
     InventoryComponent inventory = ComponentMappers.inventory.get(entity);
     inventory.items.remove(item);
 

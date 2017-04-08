@@ -48,7 +48,7 @@ public class MapHelpers {
     return cellExists((int) position.x, (int) position.y);
   }
 
-  public MapCell getCell(int mapIndex, int cellX, int cellY) {
+  private MapCell getCell(int mapIndex, int cellX, int cellY) {
     return WorldManager.world.getMap(mapIndex).getCellMap()[cellX][cellY];
   }
 
@@ -131,6 +131,13 @@ public class MapHelpers {
     return cells;
   }
 
+  /**
+   * Create a Field of View map for given map.
+   *
+   * @param mapIndex Which map to use
+   *
+   * @return FoV map
+   */
   public float[][] createFovMapFor(int mapIndex) {
     Map map = WorldManager.world.getMap(mapIndex);
     float[][] resistanceMap = new float[map.width][map.height];

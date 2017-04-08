@@ -10,14 +10,18 @@ import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.utils.ComponentMappers;
 
 public class MapLight {
+  private final int mapIndex;
+  private final ShadowCaster caster;
+  private final Family family;
   public float[][] lightMap;
   public Color[][] colorMap;
-  private int mapIndex;
-  private ShadowCaster caster;
-  private Family family;
   private float counter = 0;
-  private int colorIndex = 0;
 
+  /**
+   * Handles light sources on the map.
+   *
+   * @param mapIndex The map
+   */
   public MapLight(int mapIndex) {
     this.mapIndex = mapIndex;
     this.caster = new ShadowCaster();
@@ -28,6 +32,11 @@ public class MapLight {
     return WorldManager.engine.getEntitiesFor(family).size() > 0;
   }
 
+  /**
+   * Update light sources.
+   *
+   * @param delta Time since last frame
+   */
   public void update(float delta) {
     counter += delta;
 
@@ -62,7 +71,7 @@ public class MapLight {
             fovMap, (int) position.pos.x, (int) position.pos.y, radius
         );
 
-        colorIndex = MathUtils.random(0, light.colors.size() - 1);
+        int colorIndex = MathUtils.random(0, light.colors.size() - 1);
 
         for (int x = 0; x < map.length; x++) {
           for (int y = 0; y < map[x].length; y++) {

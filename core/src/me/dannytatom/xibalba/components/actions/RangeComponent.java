@@ -21,7 +21,8 @@ public class RangeComponent implements Component {
    * @param skill    What skill is associated with that item
    * @param bodyPart Where we're aiming
    */
-  public RangeComponent(Vector2 position, Entity item, String skill, String bodyPart, boolean isFocused) {
+  public RangeComponent(Vector2 position, Entity item,
+                        String skill, String bodyPart, boolean isFocused) {
     this.position = position;
     this.item = item;
     this.skill = skill;

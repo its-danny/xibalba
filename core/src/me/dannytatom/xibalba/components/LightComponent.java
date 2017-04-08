@@ -8,10 +8,15 @@ import me.dannytatom.xibalba.utils.YamlToItem;
 import java.util.ArrayList;
 
 public class LightComponent implements Component {
-  public float radius;
-  public boolean flickers;
-  public ArrayList<Color> colors;
+  public final float radius;
+  public final boolean flickers;
+  public final ArrayList<Color> colors;
 
+  /**
+   * A light source, gives off light color and increases FoV.
+   *
+   * @param data Light data
+   */
   public LightComponent(YamlToItem data) {
     this.radius = data.lightRadius;
     this.flickers = data.lightFlickers;

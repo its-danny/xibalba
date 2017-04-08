@@ -87,6 +87,7 @@ public class Main extends Game {
 
   private static boolean isHexNumber(String string) {
     try {
+      //noinspection ResultOfMethodCallIgnored
       Long.parseLong(string, 16);
 
       return true;

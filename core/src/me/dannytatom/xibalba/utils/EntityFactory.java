@@ -35,7 +35,7 @@ import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 
 public class EntityFactory {
-  private I18NBundle i18n;
+  private final I18NBundle i18n;
 
   public EntityFactory() {
     i18n = Main.assets.get("i18n/xibalba", I18NBundle.class);

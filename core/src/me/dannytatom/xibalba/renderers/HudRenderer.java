@@ -263,7 +263,7 @@ public class HudRenderer {
     String performanceInfo;
     String positionInfo;
 
-    if (Main.debug.debugUIEnabled) {
+    if (Main.debug.debugEnabled) {
       performanceInfo = "[DARK_GRAY]v0.1.0 FPS " + Gdx.graphics.getFramesPerSecond();
       positionInfo = playerPosition.pos.toString()
           + (playerDetails.target != null ? ", " + playerDetails.target.toString() : "");

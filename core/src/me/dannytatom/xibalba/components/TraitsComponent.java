@@ -4,7 +4,7 @@ import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.utils.Array;
 
 public class TraitsComponent implements Component {
-  public Array<String> traits;
+  public final Array<String> traits;
 
   public TraitsComponent() {
     traits = new Array<>();

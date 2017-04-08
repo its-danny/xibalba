@@ -10,6 +10,13 @@ public class MeleeComponent implements Component {
   public final String bodyPart;
   public final boolean isFocused;
 
+  /**
+   * Component for melee combat.
+   *
+   * @param target    Who they're attacking
+   * @param bodyPart  Where on that entity they're attacking
+   * @param isFocused Is it a focused attack?
+   */
   public MeleeComponent(Entity target, String bodyPart, boolean isFocused) {
     this.target = target;
     this.bodyPart = bodyPart;

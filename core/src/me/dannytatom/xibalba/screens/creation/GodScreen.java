@@ -23,7 +23,7 @@ import org.yaml.snakeyaml.constructor.Constructor;
 
 import java.util.ArrayList;
 
-public class GodScreen implements Screen {
+class GodScreen implements Screen {
   private final PlayerSetup playerSetup;
   private final ArrayList<YamlToGod> godList;
 
@@ -184,7 +184,7 @@ public class GodScreen implements Screen {
     });
   }
 
-  public void goToNameScreen(Main main) {
+  private void goToNameScreen(Main main) {
     playerSetup.god = godList.get(godSelected);
     main.setScreen(new NameScreen(main, playerSetup));
   }
