@@ -6,8 +6,14 @@ import me.dannytatom.xibalba.utils.ComponentMappers;
 import me.dannytatom.xibalba.world.WorldManager;
 
 public class ConsoleCommandExecutor extends CommandExecutor {
-  public void log(String message) {
-    console.log(message);
+  public void debugUI(Boolean on) {
+    if (on) {
+      Main.debug.debugUIEnabled = true;
+      console.log("[GREEN]Debug UI: ON");
+    } else {
+      Main.debug.debugUIEnabled = false;
+      console.log("[RED]Debug UI: OFF");
+    }
   }
 
   public void setHealth(int amount) {
@@ -24,8 +30,8 @@ public class ConsoleCommandExecutor extends CommandExecutor {
     console.log("[GREEN] Health now at " + attributes.health);
   }
 
-  public void fieldOfView(Boolean show) {
-    if (show) {
+  public void fieldOfView(Boolean on) {
+    if (on) {
       Main.debug.fieldOfViewEnabled = true;
       console.log("[GREEN]Field of View: ON");
     } else {
@@ -34,5 +40,15 @@ public class ConsoleCommandExecutor extends CommandExecutor {
     }
 
     WorldManager.entityHelpers.updateSenses(WorldManager.player);
+  }
+
+  public void weather(Boolean on) {
+    if (on) {
+      Main.debug.weatherEnabled = true;
+      console.log("[GREEN]Weather: ON");
+    } else {
+      Main.debug.weatherEnabled = false;
+      console.log("[RED]Weather: OFF");
+    }
   }
 }

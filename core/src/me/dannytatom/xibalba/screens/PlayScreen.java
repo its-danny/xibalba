@@ -87,7 +87,7 @@ public class PlayScreen implements Screen {
     WorldManager.world.getCurrentMap().light.update(delta);
 
     // Weather!
-    if (WorldManager.world.getCurrentMap().weather != null) {
+    if (WorldManager.world.getCurrentMap().weather != null && Main.debug.weatherEnabled) {
       WorldManager.world.getCurrentMap().weather.update(delta);
     }
 

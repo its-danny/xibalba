@@ -44,7 +44,7 @@ public class HudRenderer {
 
   private final VerticalGroup playerInfo;
   private final VerticalGroup enemyInfo;
-  private final VerticalGroup debugInfo;
+  private final VerticalGroup gameInfo;
   private final VerticalGroup actionLog;
   private final Table focusedTable;
   private final VerticalGroup buttonsAndAreaDetails;
@@ -78,13 +78,13 @@ public class HudRenderer {
 
     playerInfo = new VerticalGroup().top().left().columnLeft();
     enemyInfo = new VerticalGroup().top().center().columnCenter();
-    debugInfo = new VerticalGroup().top().right().columnRight();
+    gameInfo = new VerticalGroup().top().right().columnRight();
 
     int width = Gdx.graphics.getWidth() / 3 - 20;
 
     topTable.add(playerInfo).pad(10, 10, 10, 10).width(width).top();
     topTable.add(enemyInfo).pad(10, 10, 10, 10).width(width).top();
-    topTable.add(debugInfo).pad(10, 10, 10, 10).width(width).top();
+    topTable.add(gameInfo).pad(10, 10, 10, 10).width(width).top();
 
     bottomTable = new Table();
     bottomTable.bottom().left();
@@ -120,7 +120,7 @@ public class HudRenderer {
   public void render(float delta) {
     updatePlayerInfo();
     updateEnemyInfo();
-    updateDebugInfo();
+    updateGameInfo();
     updateActionLog();
     updateFocused();
     updateAreaDetails();
@@ -255,22 +255,34 @@ public class HudRenderer {
     }
   }
 
-  private void updateDebugInfo() {
-    String performanceInfo = "[DARK_GRAY]v0.1.0 FPS " + Gdx.graphics.getFramesPerSecond();
+  private void updateGameInfo() {
     String playerInfo = "[DARK_GRAY]" + WorldManager.world.getCurrentMap().time.time.toString()
         + ", Depth " + (WorldManager.world.currentMapIndex + 1)
-        + ", Turn " + WorldManager.turnCount
-        + ", " + playerPosition.pos.toString()
-        + ", " + (playerDetails.target != null ? playerDetails.target.toString() : "");
+        + ", Turn " + WorldManager.turnCount;
 
-    if (debugInfo.getChildren().size == 0) {
-      debugInfo.addActor(new Label(performanceInfo, Main.skin));
-      debugInfo.addActor(new Label(playerInfo, Main.skin));
+    String performanceInfo;
+    String positionInfo;
+
+    if (Main.debug.debugUIEnabled) {
+      performanceInfo = "[DARK_GRAY]v0.1.0 FPS " + Gdx.graphics.getFramesPerSecond();
+      positionInfo = playerPosition.pos.toString()
+          + (playerDetails.target != null ? ", " + playerDetails.target.toString() : "");
     } else {
-      Label performanceInfoLabel = (Label) debugInfo.getChildren().get(0);
-      performanceInfoLabel.setText(performanceInfo);
-      Label playerInfoLabel = (Label) debugInfo.getChildren().get(1);
+      performanceInfo = "";
+      positionInfo = "";
+    }
+
+    if (gameInfo.getChildren().size == 0) {
+      gameInfo.addActor(new Label(playerInfo, Main.skin));
+      gameInfo.addActor(new Label(performanceInfo, Main.skin));
+      gameInfo.addActor(new Label(positionInfo, Main.skin));
+    } else {
+      Label playerInfoLabel = (Label) gameInfo.getChildren().get(0);
       playerInfoLabel.setText(playerInfo);
+      Label performanceInfoLabel = (Label) gameInfo.getChildren().get(1);
+      performanceInfoLabel.setText(performanceInfo);
+      Label positionInfoLabel = (Label) gameInfo.getChildren().get(2);
+      positionInfoLabel.setText(positionInfo);
     }
   }
 
