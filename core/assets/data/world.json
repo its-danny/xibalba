@@ -51,10 +51,6 @@
       {
         "name": "healthPlant",
         "spawnRange": "0,1"
-      },
-      {
-        "name": "torch",
-        "spawnRange": "5,10"
       }
     ],
     "traps": [
@@ -96,6 +92,10 @@
       {
         "name": "healthPlant",
         "spawnRange": "1,3"
+      },
+      {
+        "name": "torch",
+        "spawnRange": "5,10"
       }
     ],
     "traps": [
@@ -137,6 +137,10 @@
       {
         "name": "strengthPlant",
         "spawnRange": "1,3"
+      },
+      {
+        "name": "torch",
+        "spawnRange": "5,10"
       }
     ],
     "traps": [

@@ -241,7 +241,7 @@ public class WorldRenderer {
 
         float alpha = playerAttributes.visionMap[x][y];
 
-        if (alpha > 0) {
+        if (map.light.hasLights() && alpha > 0) {
           if (alpha + map.light.lightMap[x][y] > 1) {
             alpha = 0.9f;
           } else {
@@ -263,25 +263,27 @@ public class WorldRenderer {
   private void renderLights() {
     Map map = WorldManager.world.getCurrentMap();
 
-    for (int x = 0; x < map.width - 1; x++) {
-      for (int y = 0; y < map.height - 1; y++) {
-        MapCell cell = WorldManager.mapHelpers.getCell(x, y);
+    if (map.light.hasLights()) {
+      for (int x = 0; x < map.width - 1; x++) {
+        for (int y = 0; y < map.height - 1; y++) {
+          MapCell cell = WorldManager.mapHelpers.getCell(x, y);
 
-        if (cell.hidden || cell.forgotten) {
-          continue;
+          if (cell.hidden || cell.forgotten) {
+            continue;
+          }
+
+          float alpha = map.light.lightMap[x][y];
+
+          if (alpha + map.light.lightMap[x][y] > 1) {
+            alpha = 0.9f;
+          }
+
+          shadow.setColor(map.light.colorMap[x][y]);
+          shadow.setAlpha(alpha / 10);
+          shadow.setPosition(x * Main.SPRITE_WIDTH, y * Main.SPRITE_HEIGHT);
+
+          shadow.draw(batch);
         }
-
-        float alpha = map.light.lightMap[x][y];
-
-        if (alpha + map.light.lightMap[x][y] > 1) {
-          alpha = 0.9f;
-        }
-
-        shadow.setColor(map.light.colorMap[x][y]);
-        shadow.setAlpha(alpha / 10);
-        shadow.setPosition(x * Main.SPRITE_WIDTH, y * Main.SPRITE_HEIGHT);
-
-        shadow.draw(batch);
       }
     }
   }

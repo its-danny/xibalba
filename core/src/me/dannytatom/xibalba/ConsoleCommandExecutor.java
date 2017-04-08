@@ -51,4 +51,20 @@ public class ConsoleCommandExecutor extends CommandExecutor {
       console.log("[RED]Weather: OFF");
     }
   }
+
+  public void goToEntrance() {
+    ComponentMappers.position.get(WorldManager.player).pos.set(
+        WorldManager.world.getCurrentMap().entrance
+    );
+
+    WorldManager.entityHelpers.updateSenses(WorldManager.player);
+  }
+
+  public void goToExit() {
+    ComponentMappers.position.get(WorldManager.player).pos.set(
+        WorldManager.world.getCurrentMap().exit
+    );
+
+    WorldManager.entityHelpers.updateSenses(WorldManager.player);
+  }
 }

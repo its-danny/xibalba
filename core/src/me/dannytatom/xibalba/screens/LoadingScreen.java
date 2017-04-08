@@ -242,9 +242,11 @@ public class LoadingScreen implements Screen {
       }
     }
 
-    // Other things
+    // Lights
+    WorldManager.world.getMap(mapIndex).light = new MapLight(mapIndex);
+
+    // Weather
     if (Objects.equals(level.type, "forest")) {
-      WorldManager.world.getMap(mapIndex).light = new MapLight(mapIndex);
       WorldManager.world.getMap(mapIndex).weather = new MapWeather(mapIndex);
     }
   }

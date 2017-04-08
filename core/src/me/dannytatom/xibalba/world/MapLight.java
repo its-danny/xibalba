@@ -24,6 +24,10 @@ public class MapLight {
     this.family = Family.all(LightComponent.class).get();
   }
 
+  public boolean hasLights() {
+    return WorldManager.engine.getEntitiesFor(family).size() > 0;
+  }
+
   public void update(float delta) {
     counter += delta;
 
