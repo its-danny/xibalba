@@ -1,7 +1,6 @@
 package me.dannytatom.xibalba.world;
 
 import aurelienribon.tweenengine.Tween;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Colors;
 import com.badlogic.gdx.graphics.g2d.Sprite;
