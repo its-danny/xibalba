@@ -68,6 +68,10 @@ public class MapHelpers {
     return isBlocked(WorldManager.world.currentMapIndex, position);
   }
 
+  public boolean isBlocked(int cellX, int cellY) {
+    return isBlocked(WorldManager.world.currentMapIndex, new Vector2(cellX, cellY));
+  }
+
   /**
    * Returns whether or not the given position is blocked.
    *

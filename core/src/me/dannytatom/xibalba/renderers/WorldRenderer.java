@@ -6,6 +6,7 @@ import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Colors;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
@@ -23,6 +24,7 @@ import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.TrapComponent;
 import me.dannytatom.xibalba.components.VisualComponent;
 import me.dannytatom.xibalba.utils.ComponentMappers;
+import me.dannytatom.xibalba.world.Dijkstra;
 import me.dannytatom.xibalba.world.Map;
 import me.dannytatom.xibalba.world.MapCell;
 import me.dannytatom.xibalba.world.WorldManager;
@@ -31,6 +33,7 @@ import org.xguzm.pathfinding.grid.GridCell;
 
 public class WorldRenderer {
   private final SpriteBatch batch;
+  private final BitmapFont font;
   private final Viewport viewport;
   private final OrthographicCamera worldCamera;
 
@@ -60,6 +63,9 @@ public class WorldRenderer {
 
     shadow = Main.asciiAtlas.createSprite("1113");
     question = Main.asciiAtlas.createSprite("1503");
+
+    font = new BitmapFont();
+    font.getData().setScale(.25f);
   }
 
   /**
@@ -116,6 +122,17 @@ public class WorldRenderer {
             if (WorldManager.mapHelpers.getEntitiesAt(new Vector2(x, y)).size() == 0) {
               cell.sprite.draw(batch);
             }
+          }
+        }
+
+        if (Main.debug.dijkstraExplore) {
+          Dijkstra explore = WorldManager.world.getCurrentMap().dijkstra.explore;
+
+          if (explore != null) {
+            font.draw(
+                batch, explore.get(x, y) + "",
+                x * Main.SPRITE_WIDTH, y * Main.SPRITE_HEIGHT + Main.SPRITE_HEIGHT
+            );
           }
         }
       }

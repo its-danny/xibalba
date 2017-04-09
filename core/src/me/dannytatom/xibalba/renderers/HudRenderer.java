@@ -20,6 +20,7 @@ import me.dannytatom.xibalba.components.BodyComponent;
 import me.dannytatom.xibalba.components.BrainComponent;
 import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
+import me.dannytatom.xibalba.components.actions.ExploreComponent;
 import me.dannytatom.xibalba.screens.CharacterScreen;
 import me.dannytatom.xibalba.screens.MainMenuScreen;
 import me.dannytatom.xibalba.screens.PauseScreen;
@@ -171,6 +172,15 @@ public class HudRenderer {
     restButton.setAction(bottomTable, () -> WorldManager.executeTurn = true);
     menuButtons.add(restButton).pad(0, 5, 0, 5);
 
+    ActionButton exploreButton = new ActionButton("X", "Explore");
+    exploreButton.setKeys(Input.Keys.X);
+    exploreButton.setAction(bottomTable, () -> {
+      WorldManager.player.add(new ExploreComponent());
+
+      WorldManager.state = WorldManager.State.MOVING;
+    });
+    menuButtons.add(exploreButton).pad(0, 5, 0, 5);
+
     ActionButton pauseButton = new ActionButton("ESC", "Pause");
     pauseButton.setKeys(Input.Keys.ESCAPE);
     pauseButton.setAction(bottomTable, () -> main.setScreen(new PauseScreen(main)));
@@ -260,22 +270,29 @@ public class HudRenderer {
         + ", Depth " + (WorldManager.world.currentMapIndex + 1)
         + ", Turn " + WorldManager.turnCount;
 
-    String performanceInfo;
-    String positionInfo;
+    String performanceInfo = "";
+    String positionInfo = "";
+    String dijkstraInfo = "";
 
     if (Main.debug.debugEnabled) {
       performanceInfo = "[DARK_GRAY]v0.1.0 FPS " + Gdx.graphics.getFramesPerSecond();
-      positionInfo = playerPosition.pos.toString()
+
+      positionInfo = "[DARK_GRAY]" + playerPosition.pos.toString()
           + (playerDetails.target != null ? ", " + playerDetails.target.toString() : "");
-    } else {
-      performanceInfo = "";
-      positionInfo = "";
+
+      if (playerDetails.target != null && WorldManager.world.getCurrentMap().dijkstra.explore != null) {
+        dijkstraInfo = "[DARK_GRAY]AutoExplore "
+            + WorldManager.world.getCurrentMap().dijkstra.explore.get(
+            (int) playerDetails.target.x, (int) playerDetails.target.y
+        );
+      }
     }
 
     if (gameInfo.getChildren().size == 0) {
       gameInfo.addActor(new Label(playerInfo, Main.skin));
       gameInfo.addActor(new Label(performanceInfo, Main.skin));
       gameInfo.addActor(new Label(positionInfo, Main.skin));
+      gameInfo.addActor(new Label(dijkstraInfo, Main.skin));
     } else {
       Label playerInfoLabel = (Label) gameInfo.getChildren().get(0);
       playerInfoLabel.setText(playerInfo);
@@ -283,6 +300,8 @@ public class HudRenderer {
       performanceInfoLabel.setText(performanceInfo);
       Label positionInfoLabel = (Label) gameInfo.getChildren().get(2);
       positionInfoLabel.setText(positionInfo);
+      Label dijkstraInfoLabel = (Label) gameInfo.getChildren().get(3);
+      dijkstraInfoLabel.setText(dijkstraInfo);
     }
   }
 

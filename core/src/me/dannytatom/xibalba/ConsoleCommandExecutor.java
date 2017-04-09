@@ -96,4 +96,16 @@ public class ConsoleCommandExecutor extends CommandExecutor {
 
     WorldManager.entityHelpers.updateSenses(WorldManager.player);
   }
+
+  public void dijkstraExplore(Boolean on) {
+    if (on) {
+      Main.debug.dijkstraExplore = true;
+      console.log("[GREEN]Dijkstra Explore: ON");
+    } else {
+      Main.debug.dijkstraExplore = false;
+      console.log("[RED]Dijkstra Explore: OFF");
+    }
+
+    WorldManager.world.getCurrentMap().dijkstra.updateExplore();
+  }
 }

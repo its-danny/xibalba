@@ -120,6 +120,7 @@ public class PlayScreen implements Screen {
 
       WorldManager.engine.update(delta);
       WorldManager.world.getCurrentMap().time.update();
+
       WorldManager.executeTurn = false;
     }
 

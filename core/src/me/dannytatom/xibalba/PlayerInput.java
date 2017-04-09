@@ -11,6 +11,7 @@ import me.dannytatom.xibalba.components.ItemComponent;
 import me.dannytatom.xibalba.components.MouseMovementComponent;
 import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
+import me.dannytatom.xibalba.components.actions.ExploreComponent;
 import me.dannytatom.xibalba.components.actions.MovementComponent;
 import me.dannytatom.xibalba.components.actions.RangeComponent;
 import me.dannytatom.xibalba.components.items.WeaponComponent;
@@ -203,6 +204,7 @@ public class PlayerInput implements InputProcessor {
 
         if (WorldManager.state == WorldManager.State.MOVING) {
           WorldManager.player.remove(MouseMovementComponent.class);
+          WorldManager.player.remove(ExploreComponent.class);
           WorldManager.player.remove(MovementComponent.class);
         }
 

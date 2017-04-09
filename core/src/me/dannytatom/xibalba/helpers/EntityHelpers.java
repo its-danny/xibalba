@@ -195,6 +195,23 @@ public class EntityHelpers {
     return canSeePlayer(entity) || canHearPlayer(entity);
   }
 
+  public boolean enemyInSight(Entity entity) {
+    AttributesComponent attributes = ComponentMappers.attributes.get(entity);
+    float[][] vision = attributes.visionMap;
+
+    for (int x = 0; x < vision.length; x++) {
+      for (int y = 0; y < vision[x].length; y++) {
+        Entity enemy = WorldManager.mapHelpers.getEnemyAt(x, y);
+
+        if (enemy != null && canSee(entity, enemy)) {
+          return true;
+        }
+      }
+    }
+
+    return false;
+  }
+
   /**
    * Entity's toughness + armor defense.
    *

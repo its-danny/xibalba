@@ -19,6 +19,7 @@ public class Map {
   public final String type;
   public final MapCell.Type[][] geometry;
   public final MapTime time;
+  public final MapDijkstra dijkstra;
   public Vector2 entrance;
   public Vector2 exit;
   public MapLight light;
@@ -39,6 +40,7 @@ public class Map {
     this.width = this.geometry.length;
     this.height = this.geometry[0].length;
 
+    this.dijkstra = new MapDijkstra();
     this.time = new MapTime();
   }
 

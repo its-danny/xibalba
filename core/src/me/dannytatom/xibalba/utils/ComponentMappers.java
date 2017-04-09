@@ -26,6 +26,7 @@ import me.dannytatom.xibalba.components.SkillsComponent;
 import me.dannytatom.xibalba.components.TraitsComponent;
 import me.dannytatom.xibalba.components.TrapComponent;
 import me.dannytatom.xibalba.components.VisualComponent;
+import me.dannytatom.xibalba.components.actions.ExploreComponent;
 import me.dannytatom.xibalba.components.actions.MeleeComponent;
 import me.dannytatom.xibalba.components.actions.MovementComponent;
 import me.dannytatom.xibalba.components.actions.RangeComponent;
@@ -56,6 +57,9 @@ public final class ComponentMappers {
 
   public static final ComponentMapper<MouseMovementComponent> mouseMovement =
       ComponentMapper.getFor(MouseMovementComponent.class);
+
+  public static final ComponentMapper<ExploreComponent> explore =
+      ComponentMapper.getFor(ExploreComponent.class);
 
   public static final ComponentMapper<VisualComponent> visual =
       ComponentMapper.getFor(VisualComponent.class);
