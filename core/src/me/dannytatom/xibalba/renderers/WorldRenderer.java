@@ -94,6 +94,7 @@ public class WorldRenderer {
     renderShadows();
     renderLights();
     renderHighlights();
+    renderDebug();
 
     batch.end();
   }
@@ -122,17 +123,6 @@ public class WorldRenderer {
             if (WorldManager.mapHelpers.getEntitiesAt(new Vector2(x, y)).size() == 0) {
               cell.sprite.draw(batch);
             }
-          }
-        }
-
-        if (Main.debug.dijkstraExplore) {
-          Dijkstra explore = WorldManager.world.getCurrentMap().dijkstra.explore;
-
-          if (explore != null) {
-            font.draw(
-                batch, explore.get(x, y) + "",
-                x * Main.SPRITE_WIDTH, y * Main.SPRITE_HEIGHT + Main.SPRITE_HEIGHT
-            );
           }
         }
       }
@@ -316,6 +306,46 @@ public class WorldRenderer {
         shadow.setPosition(cell.x * Main.SPRITE_WIDTH, cell.y * Main.SPRITE_HEIGHT);
 
         shadow.draw(batch);
+      }
+    }
+  }
+
+  private void renderDebug() {
+    if (Main.debug.dijkstraExplore || Main.debug.dijkstraPlayerPosition || Main.debug.dijkstraWander) {
+      Map map = WorldManager.world.getCurrentMap();
+      Dijkstra explore = WorldManager.world.getCurrentMap().dijkstra.explore;
+      Dijkstra wander = WorldManager.world.getCurrentMap().dijkstra.wander;
+      Dijkstra playerPosition = WorldManager.world.getCurrentMap().dijkstra.playerPosition;
+
+      for (int x = 0; x < map.width - 1; x++) {
+        for (int y = 0; y < map.height - 1; y++) {
+          if (Main.debug.dijkstraExplore) {
+            if (explore != null) {
+              font.draw(
+                  batch, explore.get(x, y) + "",
+                  x * Main.SPRITE_WIDTH, y * Main.SPRITE_HEIGHT + Main.SPRITE_HEIGHT
+              );
+            }
+          }
+
+          if (Main.debug.dijkstraWander) {
+            if (wander != null) {
+              font.draw(
+                  batch, wander.get(x, y) + "",
+                  x * Main.SPRITE_WIDTH, y * Main.SPRITE_HEIGHT + Main.SPRITE_HEIGHT
+              );
+            }
+          }
+
+          if (Main.debug.dijkstraPlayerPosition) {
+            if (playerPosition != null) {
+              font.draw(
+                  batch, playerPosition.get(x, y) + "",
+                  x * Main.SPRITE_WIDTH, y * Main.SPRITE_HEIGHT + Main.SPRITE_HEIGHT
+              );
+            }
+          }
+        }
       }
     }
   }

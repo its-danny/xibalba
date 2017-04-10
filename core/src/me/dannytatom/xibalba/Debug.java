@@ -6,4 +6,6 @@ public class Debug {
   public boolean weatherEnabled = true;
 
   public boolean dijkstraExplore = false;
+  public boolean dijkstraWander = false;
+  public boolean dijkstraPlayerPosition = false;
 }

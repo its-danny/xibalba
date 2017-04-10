@@ -142,7 +142,7 @@ public class LoadingScreen implements Screen {
           ForestGenerator forestGenerator = new ForestGenerator(mapWidth, mapHeight);
           forestGenerator.generate();
 
-          Map forestMap = new Map("forest", forestGenerator.geometry);
+          Map forestMap = new Map(i, "forest", forestGenerator.geometry);
           forestMap.paint();
 
           WorldManager.world.maps.add(forestMap);
@@ -152,7 +152,7 @@ public class LoadingScreen implements Screen {
           CaveGenerator caveGenerator = new CaveGenerator(mapWidth, mapHeight);
           caveGenerator.generate();
 
-          Map caveMap = new Map("cave", caveGenerator.geometry);
+          Map caveMap = new Map(i, "cave", caveGenerator.geometry);
           caveMap.paint();
 
           WorldManager.world.maps.add(caveMap);

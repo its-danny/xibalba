@@ -1,10 +1,13 @@
 package me.dannytatom.xibalba.helpers;
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.core.Family;
+import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.components.AttributesComponent;
+import me.dannytatom.xibalba.components.EnemyComponent;
 import me.dannytatom.xibalba.components.EquipmentComponent;
 import me.dannytatom.xibalba.components.ItemComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
@@ -77,15 +80,19 @@ public class EntityHelpers {
    * @return Whether or not they are
    */
   public boolean isNearPlayer(Entity entity) {
-    PositionComponent playerPosition = ComponentMappers.position.get(WorldManager.player);
-    PositionComponent entityPosition = ComponentMappers.position.get(entity);
+    return isNear(entity, WorldManager.player);
+  }
 
-    return (entityPosition.pos.x == playerPosition.pos.x - 1
-        || entityPosition.pos.x == playerPosition.pos.x
-        || entityPosition.pos.x == playerPosition.pos.x + 1)
-        && (entityPosition.pos.y == playerPosition.pos.y - 1
-        || entityPosition.pos.y == playerPosition.pos.y
-        || entityPosition.pos.y == playerPosition.pos.y + 1);
+  public boolean isNear(Entity entity, Entity target) {
+    PositionComponent entityPosition = ComponentMappers.position.get(entity);
+    PositionComponent targetPosition = ComponentMappers.position.get(target);
+
+    return (entityPosition.pos.x == targetPosition.pos.x - 1
+        || entityPosition.pos.x == targetPosition.pos.x
+        || entityPosition.pos.x == targetPosition.pos.x + 1)
+        && (entityPosition.pos.y == targetPosition.pos.y - 1
+        || entityPosition.pos.y == targetPosition.pos.y
+        || entityPosition.pos.y == targetPosition.pos.y + 1);
   }
 
   public boolean isPlayerAlive() {
@@ -195,6 +202,10 @@ public class EntityHelpers {
     return canSeePlayer(entity) || canHearPlayer(entity);
   }
 
+  public boolean canSense(Entity entity, Entity target) {
+    return canSee(entity, target) || canHear(entity, target);
+  }
+
   public boolean enemyInSight(Entity entity) {
     AttributesComponent attributes = ComponentMappers.attributes.get(entity);
     float[][] vision = attributes.visionMap;
@@ -210,6 +221,22 @@ public class EntityHelpers {
     }
 
     return false;
+  }
+
+  public boolean anEnemyCanSensePlayer() {
+    boolean canThey = false;
+
+    Family family = Family.all(EnemyComponent.class).get();
+    ImmutableArray<Entity> entities = WorldManager.engine.getEntitiesFor(family);
+
+    for (Entity entity : entities) {
+      if (canSensePlayer(entity)) {
+        canThey = true;
+        break;
+      }
+    }
+
+    return canThey;
   }
 
   /**

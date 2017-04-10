@@ -2,17 +2,40 @@ package me.dannytatom.xibalba.world;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import me.dannytatom.xibalba.utils.ComponentMappers;
 
 public class MapDijkstra {
-  public Dijkstra explore;
+  private Map map;
   public Array<Vector2> exploreGoals;
+  public Dijkstra wander;
+  public Dijkstra explore;
+  public Dijkstra playerPosition;
 
-  public MapDijkstra() {
+  public MapDijkstra(Map map) {
+    this.map = map;
+  }
 
+  public void updateAll() {
+    updateWander();
+    updateExplore();
+    updatePlayerPosition();
+  }
+
+  public void updateWander() {
+    Array<Vector2> goals = new Array<>();
+
+    for (int i = 0; i < 20; i++) {
+      goals.add(WorldManager.mapHelpers.getRandomOpenPosition(map.depth));
+    }
+
+    wander = new Dijkstra(map, goals);
+  }
+
+  public Array<Vector2> findWanderPath(Vector2 start) {
+    return wander.findPath(start);
   }
 
   public void updateExplore() {
-    Map map = WorldManager.world.getCurrentMap();
     exploreGoals = new Array<>();
 
     for (int x = 0; x < map.width; x++) {
@@ -23,10 +46,22 @@ public class MapDijkstra {
       }
     }
 
-    explore = new Dijkstra(map.width, map.height, exploreGoals);
+    explore = new Dijkstra(map, exploreGoals);
   }
 
   public Array<Vector2> findExplorePath(Vector2 start) {
     return explore.findPath(start);
+  }
+
+  public void updatePlayerPosition() {
+    Vector2 position = ComponentMappers.position.get(WorldManager.player).pos;
+    Array<Vector2> goals = new Array<>();
+    goals.add(position);
+
+    playerPosition = new Dijkstra(map, goals);
+  }
+
+  public Array<Vector2> findPlayerPositionPath(Vector2 start) {
+    return playerPosition.findPath(start);
   }
 }

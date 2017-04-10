@@ -48,7 +48,7 @@ public class MapHelpers {
     return cellExists((int) position.x, (int) position.y);
   }
 
-  private MapCell getCell(int mapIndex, int cellX, int cellY) {
+  public MapCell getCell(int mapIndex, int cellX, int cellY) {
     return WorldManager.world.getMap(mapIndex).getCellMap()[cellX][cellY];
   }
 

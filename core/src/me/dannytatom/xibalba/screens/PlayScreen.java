@@ -65,6 +65,9 @@ public class PlayScreen implements Screen {
     // Player attributes
     playerAttributes = ComponentMappers.attributes.get(WorldManager.player);
 
+    // Generate all dijkstra maps
+    WorldManager.world.getCurrentMap().dijkstra.updateAll();
+
     // Change state to playing
     WorldManager.state = WorldManager.State.PLAYING;
   }

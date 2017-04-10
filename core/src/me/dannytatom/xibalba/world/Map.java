@@ -16,6 +16,7 @@ import java.util.Objects;
 public class Map {
   public final int width;
   public final int height;
+  public final int depth;
   public final String type;
   public final MapCell.Type[][] geometry;
   public final MapTime time;
@@ -33,14 +34,15 @@ public class Map {
    *
    * @param geometry The world geometry
    */
-  public Map(String type, MapCell.Type[][] geometry) {
+  public Map(int depth, String type, MapCell.Type[][] geometry) {
+    this.depth = depth;
     this.type = type;
     this.geometry = geometry;
 
     this.width = this.geometry.length;
     this.height = this.geometry[0].length;
 
-    this.dijkstra = new MapDijkstra();
+    this.dijkstra = new MapDijkstra(this);
     this.time = new MapTime();
   }
 

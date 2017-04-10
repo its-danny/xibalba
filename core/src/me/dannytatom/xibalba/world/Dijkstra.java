@@ -3,19 +3,22 @@ package me.dannytatom.xibalba.world;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
-import java.util.Arrays;
-
 public class Dijkstra {
-  private int[][] map;
+  private Map map;
+  private MapCell[][] cellMap;
+  private int[][] graph;
 
-  public Dijkstra(int width, int height, Array<Vector2> goals) {
-    createMap(width, height, goals);
+  public Dijkstra(Map map, Array<Vector2> goals) {
+    this.map = map;
+    this.cellMap = this.map.getCellMap();
+
+    createGraph(goals);
   }
 
-  // To get a Dijkstra map, you start with an integer array representing your map,
+  // To get a Dijkstra graph, you start with an integer array representing your graph,
   // with some set of goal cells set to zero and all the rest set to a very high number.
   //
-  // Iterate through the map's "floor" cells -- skip the impassable wall cells.
+  // Iterate through the graph's "floor" cells -- skip the impassable wall cells.
   // If any floor tile has a value that is at least 2 greater than its lowest-value floor neighbor,
   // set it to be exactly 1 greater than its lowest value neighbor. Repeat until no changes are made.
   //
@@ -23,17 +26,19 @@ public class Dijkstra {
   // will take to get from any given tile to the nearest goal.
   //
   // To find a path, you just walk downhill from starting position to goal position.
-  private void createMap(int width, int height, Array<Vector2> goals) {
-    map = new int[width][height];
+  private void createGraph(Array<Vector2> goals) {
+    graph = new int[map.width][map.height];
 
-    for (int[] row : map) {
-      Arrays.fill(row, 1000);
+    for (int x = 0; x < graph.length; x++) {
+      for (int y = 0; y < graph[x].length; y++) {
+        graph[x][y] = 100;
+      }
     }
 
     for (int i = 0; i < goals.size; i++) {
       Vector2 goal = goals.get(i);
 
-      map[(int) goal.x][(int) goal.y] = 0;
+      graph[(int) goal.x][(int) goal.y] = 0;
     }
 
     boolean dirty = true;
@@ -41,55 +46,69 @@ public class Dijkstra {
     while (dirty) {
       boolean changed = false;
 
-      for (int x = 0; x < map.length; x++) {
-        for (int y = 0; y < map[x].length; y++) {
+      for (int x = 0; x < graph.length; x++) {
+        for (int y = 0; y < graph[x].length; y++) {
           if (canWalk(x, y)) {
-            Array<Integer> neighbours = new Array<>();
+            int bestNeighbour = 100;
 
             // North
             if (canWalk(x, y + 1)) {
-              neighbours.add(map[x][y + 1]);
+              if (graph[x][y + 1] < bestNeighbour) {
+                bestNeighbour = graph[x][y + 1];
+              }
             }
 
             // NorthEast
             if (canWalk(x + 1, y + 1)) {
-              neighbours.add(map[x + 1][y + 1]);
+              if (graph[x + 1][y + 1] < bestNeighbour) {
+                bestNeighbour = graph[x + 1][y + 1];
+              }
             }
 
             // East
             if (canWalk(x + 1, y)) {
-              neighbours.add(map[x + 1][y]);
+              if (graph[x + 1][y] < bestNeighbour) {
+                bestNeighbour = graph[x + 1][y];
+              }
             }
 
             // SouthEast
             if (canWalk(x + 1, y - 1)) {
-              neighbours.add(map[x + 1][y - 1]);
+              if (graph[x + 1][y - 1] < bestNeighbour) {
+                bestNeighbour = graph[x + 1][y - 1];
+              }
             }
 
             // South
             if (canWalk(x, y - 1)) {
-              neighbours.add(map[x][y - 1]);
+              if (graph[x][y - 1] < bestNeighbour) {
+                bestNeighbour = graph[x][y - 1];
+              }
             }
 
             // SouthWest
             if (canWalk(x - 1, y - 1)) {
-              neighbours.add(map[x - 1][y - 1]);
+              if (graph[x - 1][y - 1] < bestNeighbour) {
+                bestNeighbour = graph[x - 1][y - 1];
+              }
             }
 
             // West
             if (canWalk(x - 1, y)) {
-              neighbours.add(map[x - 1][y]);
+              if (graph[x - 1][y] < bestNeighbour) {
+                bestNeighbour = graph[x - 1][y];
+              }
             }
 
             // NorthWest
             if (canWalk(x - 1, y + 1)) {
-              neighbours.add(map[x - 1][y + 1]);
+              if (graph[x - 1][y + 1] < bestNeighbour) {
+                bestNeighbour = graph[x - 1][y + 1];
+              }
             }
 
-            neighbours.sort();
-
-            if (neighbours.size > 0 && map[x][y] > neighbours.first() + 2) {
-              map[x][y] = neighbours.first() + 1;
+            if (graph[x][y] > bestNeighbour + 2) {
+              graph[x][y] = bestNeighbour + 1;
               changed = true;
             }
           }
@@ -100,13 +119,13 @@ public class Dijkstra {
     }
   }
 
-  /**
-   * Go until we find a goal of 0.
-   *
-   * @param start Starting position
-   *
-   * @return The path to take
-   */
+ /**
+  * Go until we find a goal of 0.
+  *
+  * @param start Starting position
+  *
+  * @return The path to take
+  */
   public Array<Vector2> findPath(Vector2 start) {
     Array<Vector2> path = new Array<>();
 
@@ -188,12 +207,12 @@ public class Dijkstra {
   }
 
   public int get(int cellX, int cellY) {
-    return map[cellX][cellY];
+    return graph[cellX][cellY];
   }
 
   private boolean canWalk(int cellX, int cellY) {
-    return WorldManager.mapHelpers.cellExists(cellX, cellY)
-        && (WorldManager.mapHelpers.getCell(cellX, cellY).isFloor()
-        || WorldManager.mapHelpers.getCell(cellX, cellY).isShallowWater());
+    return cellX > 0 && cellX < cellMap.length
+        && cellY > 0 && cellY < cellMap[0].length
+        && cellMap[cellX][cellY].isFloor();
   }
 }

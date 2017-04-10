@@ -31,11 +31,6 @@ public class ExploreSystem extends EntitySystem {
       AttributesComponent attributes = ComponentMappers.attributes.get(entity);
       ExploreComponent explore = ComponentMappers.explore.get(entity);
 
-      // If first time, update explore map
-      if (WorldManager.world.getCurrentMap().dijkstra.explore == null) {
-        WorldManager.world.getCurrentMap().dijkstra.updateExplore();
-      }
-
       // If the player sees an enemy, stop
       if (WorldManager.entityHelpers.enemyInSight(entity)) {
         entity.remove(ExploreComponent.class);
