@@ -21,7 +21,7 @@ public enum Brain implements State<Entity> {
 
     @Override
     public void update(Entity entity) {
-      if (MathUtils.random() > .5f) {
+      if (Brain.shouldWakeUp()) {
         BrainComponent brain = ComponentMappers.brain.get(entity);
 
         brain.stateMachine.changeState(WANDER);
@@ -41,21 +41,23 @@ public enum Brain implements State<Entity> {
     public void update(Entity entity) {
       BrainComponent brain = ComponentMappers.brain.get(entity);
 
-      if (WorldManager.entityHelpers.canSensePlayer(entity)) {
-        if (brain.hostility > brain.fear) {
-          brain.target = WorldManager.player;
-          brain.stateMachine.changeState(TARGET);
-        }
-      } else {
-        if (MathUtils.random() > .75f) {
-          brain.stateMachine.changeState(SLEEP);
-        } else {
-          if (brain.path == null || brain.path.size == 0) {
-            PositionComponent position = ComponentMappers.position.get(entity);
+      if (shouldTarget(entity, WorldManager.player)) {
+        brain.target = WorldManager.player;
+        brain.stateMachine.changeState(TARGET);
 
-            brain.path = WorldManager.world.getCurrentMap().dijkstra.findWanderPath(position.pos);
-          }
-        }
+        return;
+      }
+
+      if (shouldSleep()) {
+        brain.stateMachine.changeState(SLEEP);
+
+        return;
+      }
+
+      if (brain.path == null || brain.path.size == 0) {
+        PositionComponent position = ComponentMappers.position.get(entity);
+
+        brain.path = WorldManager.world.getCurrentMap().dijkstra.findWanderPath(position.pos);
       }
     }
   },
@@ -72,22 +74,28 @@ public enum Brain implements State<Entity> {
     public void update(Entity entity) {
       BrainComponent brain = ComponentMappers.brain.get(entity);
 
-      if (WorldManager.entityHelpers.isNear(entity, brain.target)) {
+      if (Brain.shouldAttack(entity, brain.target)) {
         brain.stateMachine.changeState(ATTACK);
-      } else if (WorldManager.entityHelpers.canSense(entity, brain.target)) {
-        PositionComponent position = ComponentMappers.position.get(entity);
-        PositionComponent playerPosition = ComponentMappers.position.get(WorldManager.player);
 
-        boolean makeNewPath = brain.path == null || brain.path.size == 0
-            || !playerPosition.pos.epsilonEquals(brain.path.get(brain.path.size - 1), 0.00001f);
+        return;
+      }
 
-        if (makeNewPath) {
-          brain.path = WorldManager.world.getCurrentMap().dijkstra.findPlayerPositionPath(
-              position.pos
-          );
-        }
-      } else {
+      if (shouldWander(entity)) {
         brain.stateMachine.changeState(WANDER);
+
+        return;
+      }
+
+      PositionComponent position = ComponentMappers.position.get(entity);
+      PositionComponent playerPosition = ComponentMappers.position.get(WorldManager.player);
+
+      boolean makeNewPath = brain.path == null || brain.path.size == 0
+          || !playerPosition.pos.epsilonEquals(brain.path.get(brain.path.size - 1), 0.00001f);
+
+      if (makeNewPath) {
+        brain.path = WorldManager.world.getCurrentMap().dijkstra.findPlayerPositionPath(
+            position.pos
+        );
       }
     }
   },
@@ -104,15 +112,19 @@ public enum Brain implements State<Entity> {
     public void update(Entity entity) {
       BrainComponent brain = ComponentMappers.brain.get(entity);
 
-      if (WorldManager.entityHelpers.isNearPlayer(entity)) {
-        entity.add(new MeleeComponent(brain.target, "body", false));
-      } else if (WorldManager.entityHelpers.canSense(entity, brain.target)) {
-        if (brain.hostility > brain.fear) {
-          brain.stateMachine.changeState(TARGET);
-        }
-      } else {
-        brain.stateMachine.changeState(WANDER);
+      if (Brain.shouldTarget(entity, brain.target)) {
+        brain.stateMachine.changeState(TARGET);
+
+        return;
       }
+
+      if (Brain.shouldWander(entity)) {
+        brain.stateMachine.changeState(WANDER);
+
+        return;
+      }
+
+      entity.add(new MeleeComponent(brain.target, "body", false));
     }
   };
 
@@ -134,5 +146,34 @@ public enum Brain implements State<Entity> {
   @Override
   public boolean onMessage(Entity entity, Telegram telegram) {
     return false;
+  }
+
+  private static boolean shouldSleep() {
+    return MathUtils.random() > 0.75f;
+  }
+
+  private static boolean shouldWakeUp() {
+    return MathUtils.random() > 0.5f;
+  }
+
+  private static boolean shouldWander(Entity entity) {
+    BrainComponent brain = ComponentMappers.brain.get(entity);
+
+    return !WorldManager.entityHelpers.canSense(entity, brain.target);
+  }
+
+  private static boolean shouldTarget(Entity entity, Entity target) {
+    BrainComponent brain = ComponentMappers.brain.get(entity);
+
+    return WorldManager.entityHelpers.canSense(entity, target)
+        && !brain.stateMachine.isInState(ATTACK)
+        && brain.hostility > brain.fear;
+  }
+
+  private static boolean shouldAttack(Entity entity, Entity target) {
+    BrainComponent brain = ComponentMappers.brain.get(entity);
+
+    return WorldManager.entityHelpers.isNear(entity, target)
+        && brain.hostility > brain.fear;
   }
 }
