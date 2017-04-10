@@ -104,7 +104,7 @@ public class WorldRenderer {
 
     for (int x = 0; x < map.width - 1; x++) {
       for (int y = 0; y < map.height - 1; y++) {
-        MapCell cell = WorldManager.mapHelpers.getCell(x, y);
+        MapCell cell = map.getCellMap()[x][y];
 
         if (playerAttributes.visionMap[x][y] > 0) {
           cell.hidden = false;

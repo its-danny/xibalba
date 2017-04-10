@@ -5,11 +5,11 @@ import com.badlogic.gdx.utils.Array;
 import me.dannytatom.xibalba.utils.ComponentMappers;
 
 public class MapDijkstra {
-  private Map map;
   public Array<Vector2> exploreGoals;
   public Dijkstra wander;
   public Dijkstra explore;
   public Dijkstra playerPosition;
+  private Map map;
 
   public MapDijkstra(Map map) {
     this.map = map;
