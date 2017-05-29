@@ -30,7 +30,6 @@ public class DrowningSystem extends UsesEnergySystem {
 
     if (!WorldManager.mapHelpers.getCell(position.pos.x, position.pos.y).isDeepWater()) {
       AttributesComponent attributes = ComponentMappers.attributes.get(entity);
-      attributes.vision = attributes.maxVision;
       attributes.oxygen = attributes.maxOxygen;
 
       entity.remove(DrowningComponent.class);
@@ -38,10 +37,6 @@ public class DrowningSystem extends UsesEnergySystem {
       WorldManager.entityHelpers.takeDamage(entity, 5);
 
       AttributesComponent attributes = ComponentMappers.attributes.get(entity);
-
-      if (attributes.vision > 1) {
-        attributes.vision -= 1;
-      }
 
       if (WorldManager.entityHelpers.canSee(WorldManager.player, entity)) {
         boolean isPlayer = ComponentMappers.player.has(entity);
