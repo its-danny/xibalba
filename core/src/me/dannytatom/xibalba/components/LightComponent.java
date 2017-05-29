@@ -3,7 +3,7 @@ package me.dannytatom.xibalba.components;
 import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.graphics.Color;
 import me.dannytatom.xibalba.Main;
-import me.dannytatom.xibalba.utils.YamlToItem;
+import me.dannytatom.xibalba.utils.yaml.ItemData;
 
 import java.util.ArrayList;
 
@@ -17,7 +17,7 @@ public class LightComponent implements Component {
    *
    * @param data Light data
    */
-  public LightComponent(YamlToItem data) {
+  public LightComponent(ItemData data) {
     this.radius = data.lightRadius;
     this.flickers = data.lightFlickers;
 

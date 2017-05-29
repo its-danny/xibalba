@@ -1,13 +1,15 @@
 package me.dannytatom.xibalba.world;
 
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import me.dannytatom.xibalba.utils.ComponentMappers;
 
 public class MapDijkstra {
   public Array<Vector2> exploreGoals;
-  public Dijkstra wander;
-  public Dijkstra explore;
+  public Dijkstra[] wanderLand = new Dijkstra[5];
+  public Dijkstra[] wanderWater = new Dijkstra[3];
+  public Dijkstra playerExplore;
   public Dijkstra playerPosition;
   private Map map;
 
@@ -16,26 +18,46 @@ public class MapDijkstra {
   }
 
   public void updateAll() {
-    updateWander();
-    updateExplore();
+    updateWanderLand();
+    updateWanderWater();
+    updatePlayerExplore();
     updatePlayerPosition();
   }
 
-  public void updateWander() {
-    Array<Vector2> goals = new Array<>();
+  public void updateWanderLand() {
+    for (int i = 0; i < wanderLand.length; i++) {
+      Array<Vector2> goal = new Array<>();
+      goal.add(WorldManager.mapHelpers.getRandomOpenPositionOnLand(map.depth));
 
-    for (int i = 0; i < 20; i++) {
-      goals.add(WorldManager.mapHelpers.getRandomOpenPosition(map.depth));
+      MapCell.Type[] walkableTypes = new MapCell.Type[2];
+      walkableTypes[0] = MapCell.Type.FLOOR;
+      walkableTypes[1] = MapCell.Type.SHALLOW_WATER;
+
+      wanderLand[i] = new Dijkstra(map, walkableTypes, goal);
     }
-
-    wander = new Dijkstra(map, goals);
   }
 
-  public Array<Vector2> findWanderPath(Vector2 start) {
-    return wander.findPath(start);
+  public Array<Vector2> findWanderLandPath(Vector2 start) {
+    return wanderLand[MathUtils.random(0, wanderLand.length - 1)].findPath(start);
   }
 
-  public void updateExplore() {
+  public void updateWanderWater() {
+    for (int i = 0; i < wanderWater.length; i++) {
+      Array<Vector2> goal = new Array<>();
+      goal.add(WorldManager.mapHelpers.getRandomOpenPositionInWater(map.depth));
+
+      MapCell.Type[] walkableTypes = new MapCell.Type[2];
+      walkableTypes[1] = MapCell.Type.DEEP_WATER;
+
+      wanderWater[i] = new Dijkstra(map, walkableTypes, goal);
+    }
+  }
+
+  public Array<Vector2> findWanderWaterPath(Vector2 start) {
+    return wanderWater[MathUtils.random(0, wanderWater.length - 1)].findPath(start);
+  }
+
+  public void updatePlayerExplore() {
     exploreGoals = new Array<>();
 
     for (int x = 0; x < map.width; x++) {
@@ -46,11 +68,15 @@ public class MapDijkstra {
       }
     }
 
-    explore = new Dijkstra(map, exploreGoals);
+    MapCell.Type[] walkableTypes = new MapCell.Type[2];
+    walkableTypes[0] = MapCell.Type.FLOOR;
+    walkableTypes[1] = MapCell.Type.SHALLOW_WATER;
+
+    playerExplore = new Dijkstra(map, walkableTypes, exploreGoals);
   }
 
   public Array<Vector2> findExplorePath(Vector2 start) {
-    return explore.findPath(start);
+    return playerExplore.findPath(start);
   }
 
   public void updatePlayerPosition() {
@@ -58,7 +84,11 @@ public class MapDijkstra {
     Array<Vector2> goals = new Array<>();
     goals.add(position);
 
-    playerPosition = new Dijkstra(map, goals);
+    MapCell.Type[] walkableTypes = new MapCell.Type[2];
+    walkableTypes[0] = MapCell.Type.FLOOR;
+    walkableTypes[1] = MapCell.Type.SHALLOW_WATER;
+
+    playerPosition = new Dijkstra(map, walkableTypes, goals);
   }
 
   public Array<Vector2> findPlayerPositionPath(Vector2 start) {

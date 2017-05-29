@@ -18,6 +18,8 @@ import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.SkillsComponent;
 import me.dannytatom.xibalba.components.TraitsComponent;
 import me.dannytatom.xibalba.components.VisualComponent;
+import me.dannytatom.xibalba.utils.yaml.AbilityData;
+import me.dannytatom.xibalba.utils.yaml.GodData;
 import me.dannytatom.xibalba.world.WorldManager;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
@@ -32,7 +34,7 @@ public class PlayerSetup {
   public final SkillsComponent skills;
   public final Array<String> traits;
   public final Array<String> defects;
-  public YamlToGod god;
+  public GodData godData;
 
   public String color;
   public String name;
@@ -95,7 +97,7 @@ public class PlayerSetup {
     player.add(skills);
     player.add(attributes);
 
-    Vector2 position = WorldManager.world.getCurrentMap().entrance;
+    Vector2 position = WorldManager.mapHelpers.getRandomOpenPositionInWater(WorldManager.world.currentMapIndex);
     player.add(new PositionComponent(position));
     player.add(
         new VisualComponent(Main.asciiAtlas.createSprite("0004"), position, Main.parseColor(color))
@@ -166,13 +168,13 @@ public class PlayerSetup {
     }
 
     WorldManager.god = new Entity();
-    WorldManager.god.add(new GodComponent(god.name, god.description));
+    WorldManager.god.add(new GodComponent(godData.name, godData.description));
 
     AbilitiesComponent abilitiesComponent = new AbilitiesComponent();
 
-    Yaml yaml = new Yaml(new Constructor(YamlToAbility.class));
-    god.abilities.forEach((String ability) -> {
-      YamlToAbility details = (YamlToAbility) yaml.load(
+    Yaml yaml = new Yaml(new Constructor(AbilityData.class));
+    godData.abilities.forEach((String ability) -> {
+      AbilityData details = (AbilityData) yaml.load(
           Gdx.files.internal("data/abilities/" + ability + ".yaml").read()
       );
 

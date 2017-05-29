@@ -15,8 +15,8 @@ import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.screens.MainMenuScreen;
 import me.dannytatom.xibalba.ui.ActionButton;
 import me.dannytatom.xibalba.utils.PlayerSetup;
-import me.dannytatom.xibalba.utils.YamlToDefect;
-import me.dannytatom.xibalba.utils.YamlToTrait;
+import me.dannytatom.xibalba.utils.yaml.DefectData;
+import me.dannytatom.xibalba.utils.yaml.TraitData;
 import org.apache.commons.lang3.text.WordUtils;
 
 import java.util.Map;
@@ -86,7 +86,7 @@ public class YouScreen implements Screen {
     mainTable.add(defectsGroup).pad(0, 0, 10, 0).width(width);
     mainTable.add(traitsGroup).pad(0, 0, 10, 0).width(width);
 
-    ActionButton continueButton = new ActionButton("ENTER", "Select Your God");
+    ActionButton continueButton = new ActionButton("ENTER", "Select Your GodData");
     continueButton.setKeys(Input.Keys.ENTER);
     continueButton.setAction(table, () -> main.setScreen(new GodScreen(main, playerSetup)));
 
@@ -368,11 +368,11 @@ public class YouScreen implements Screen {
     defectsGroup.addActor(new Label("", Main.skin));
 
     for (int i = 0; i < Main.defects.size; i++) {
-      YamlToDefect defect = Main.defects.get(i);
+      DefectData defectData = Main.defects.get(i);
 
       defectsGroup.addActor(
           new Label(
-              createDefectText(i, defect.name, defect.description, defect.reward
+              createDefectText(i, defectData.name, defectData.description, defectData.reward
               ), Main.skin
           )
       );
@@ -390,11 +390,11 @@ public class YouScreen implements Screen {
     traitsGroup.addActor(new Label("", Main.skin));
 
     for (int i = 0; i < Main.traits.size; i++) {
-      YamlToTrait trait = Main.traits.get(i);
+      TraitData traitData = Main.traits.get(i);
 
       traitsGroup.addActor(
           new Label(
-              createTraitText(i, trait.name, trait.description, trait.cost
+              createTraitText(i, traitData.name, traitData.description, traitData.cost
               ), Main.skin
           )
       );
@@ -589,38 +589,38 @@ public class YouScreen implements Screen {
   }
 
   private void addDefect() {
-    YamlToDefect defect = Main.defects.get(itemSelected);
+    DefectData defectData = Main.defects.get(itemSelected);
 
-    if (!playerSetup.defects.contains(defect.name, false)) {
-      playerSetup.defects.add(defect.name);
-      traitPoints += defect.reward;
+    if (!playerSetup.defects.contains(defectData.name, false)) {
+      playerSetup.defects.add(defectData.name);
+      traitPoints += defectData.reward;
     }
   }
 
   private void removeDefect() {
-    YamlToDefect defect = Main.defects.get(itemSelected);
+    DefectData defectData = Main.defects.get(itemSelected);
 
-    if (playerSetup.defects.contains(defect.name, false)) {
-      playerSetup.defects.removeValue(defect.name, false);
-      traitPoints -= defect.reward;
+    if (playerSetup.defects.contains(defectData.name, false)) {
+      playerSetup.defects.removeValue(defectData.name, false);
+      traitPoints -= defectData.reward;
     }
   }
 
   private void addTrait() {
-    YamlToTrait trait = Main.traits.get(itemSelected);
+    TraitData traitData = Main.traits.get(itemSelected);
 
-    if (!playerSetup.traits.contains(trait.name, false) && traitPoints >= trait.cost) {
-      playerSetup.traits.add(trait.name);
-      traitPoints -= trait.cost;
+    if (!playerSetup.traits.contains(traitData.name, false) && traitPoints >= traitData.cost) {
+      playerSetup.traits.add(traitData.name);
+      traitPoints -= traitData.cost;
     }
   }
 
   private void removeTrait() {
-    YamlToTrait trait = Main.traits.get(itemSelected);
+    TraitData traitData = Main.traits.get(itemSelected);
 
-    if (playerSetup.traits.contains(trait.name, false)) {
-      playerSetup.traits.removeValue(trait.name, false);
-      traitPoints += trait.cost;
+    if (playerSetup.traits.contains(traitData.name, false)) {
+      playerSetup.traits.removeValue(traitData.name, false);
+      traitPoints += traitData.cost;
     }
   }
 

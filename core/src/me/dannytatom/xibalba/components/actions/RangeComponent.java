@@ -17,7 +17,7 @@ public class RangeComponent implements Component {
    * It's a constructor, idk wtf I'm supposed to comment here.
    *
    * @param position Target position
-   * @param item     Item we're using
+   * @param item     ItemData we're using
    * @param skill    What skill is associated with that item
    * @param bodyPart Where we're aiming
    */

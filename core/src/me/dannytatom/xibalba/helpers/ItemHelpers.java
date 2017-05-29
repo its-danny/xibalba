@@ -264,7 +264,7 @@ public class ItemHelpers {
    * Apply an item to another item.
    *
    * @param entity       Who doing this?
-   * @param applyingItem Item we're applying
+   * @param applyingItem ItemData we're applying
    * @param targetItem   What we're applying it to
    */
   public void apply(Entity entity, Entity applyingItem, Entity targetItem) {

@@ -1,9 +1,9 @@
-package me.dannytatom.xibalba.utils;
+package me.dannytatom.xibalba.utils.yaml;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class YamlToItem {
+public class ItemData {
   public String type;
   public String weaponType;
   public String ammunitionType;

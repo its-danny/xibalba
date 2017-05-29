@@ -26,7 +26,7 @@ import me.dannytatom.xibalba.screens.MainMenuScreen;
 import me.dannytatom.xibalba.screens.PauseScreen;
 import me.dannytatom.xibalba.ui.ActionButton;
 import me.dannytatom.xibalba.utils.ComponentMappers;
-import me.dannytatom.xibalba.utils.YamlToAbility;
+import me.dannytatom.xibalba.utils.yaml.AbilityData;
 import me.dannytatom.xibalba.world.MapCell;
 import me.dannytatom.xibalba.world.WorldManager;
 import org.apache.commons.lang3.text.WordUtils;
@@ -136,10 +136,10 @@ public class HudRenderer {
   }
 
   private void setupAbilitiesButtons() {
-    Array<YamlToAbility> abilities = ComponentMappers.abilities.get(player).abilities;
+    Array<AbilityData> abilities = ComponentMappers.abilities.get(player).abilities;
 
     for (int i = 0; i < abilities.size; i++) {
-      YamlToAbility ability = abilities.get(i);
+      AbilityData abilityData = abilities.get(i);
 
       // If you look at the docs for Input.Keys, number keys are offset by 7
       // (e.g. 0 = 7, 1 = 8, etc)
@@ -147,7 +147,7 @@ public class HudRenderer {
       button.setKeys(i + 8);
       button.setAction(bottomTable, () -> {
         if (WorldManager.state != WorldManager.State.FOCUSED) {
-          WorldManager.abilityHelpers.doAbility(player, ability);
+          WorldManager.abilityHelpers.doAbility(player, abilityData);
         }
       });
 
@@ -279,13 +279,6 @@ public class HudRenderer {
 
       positionInfo = "[DARK_GRAY]" + playerPosition.pos.toString()
           + (playerDetails.target != null ? ", " + playerDetails.target.toString() : "");
-
-      if (playerDetails.target != null && WorldManager.world.getCurrentMap().dijkstra.explore != null) {
-        dijkstraInfo = "[DARK_GRAY]AutoExplore "
-            + WorldManager.world.getCurrentMap().dijkstra.explore.get(
-            (int) playerDetails.target.x, (int) playerDetails.target.y
-        );
-      }
     }
 
     if (gameInfo.getChildren().size == 0) {
@@ -426,17 +419,17 @@ public class HudRenderer {
   }
 
   private void updateAbilitiesButtons() {
-    Array<YamlToAbility> abilities = ComponentMappers.abilities.get(player).abilities;
+    Array<AbilityData> abilities = ComponentMappers.abilities.get(player).abilities;
 
     for (int i = 0; i < abilities.size; i++) {
-      YamlToAbility ability = abilities.get(i);
+      AbilityData abilityData = abilities.get(i);
       ActionButton button = (ActionButton) abilityButtons.getChildren().get(i);
 
-      if (ability.counter != ability.recharge) {
-        button.setLabel(ability.name + " [DARK_GRAY]" + ability.counter + "/" + ability.recharge);
+      if (abilityData.counter != abilityData.recharge) {
+        button.setLabel(abilityData.name + " [DARK_GRAY]" + abilityData.counter + "/" + abilityData.recharge);
         button.setDisabled(true);
       } else {
-        button.setLabel(ability.name);
+        button.setLabel(abilityData.name);
         button.setDisabled(false);
       }
     }

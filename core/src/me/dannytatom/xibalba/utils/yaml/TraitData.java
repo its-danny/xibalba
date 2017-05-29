@@ -1,6 +1,6 @@
-package me.dannytatom.xibalba.utils;
+package me.dannytatom.xibalba.utils.yaml;
 
-public class YamlToTrait {
+public class TraitData {
   public int cost;
   public String name;
   public String description;

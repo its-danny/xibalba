@@ -57,7 +57,11 @@ public enum Brain implements State<Entity> {
       if (brain.path == null || brain.path.size == 0) {
         PositionComponent position = ComponentMappers.position.get(entity);
 
-        brain.path = WorldManager.world.getCurrentMap().dijkstra.findWanderPath(position.pos);
+        if (brain.dnas.contains(BrainComponent.DNA.AQUATIC, false)) {
+          brain.path = WorldManager.world.getCurrentMap().dijkstra.findWanderWaterPath(position.pos);
+        } else {
+          brain.path = WorldManager.world.getCurrentMap().dijkstra.findWanderLandPath(position.pos);
+        }
       }
     }
   },
@@ -128,6 +132,40 @@ public enum Brain implements State<Entity> {
     }
   };
 
+  private static boolean shouldSleep() {
+    return MathUtils.random() > 0.75f;
+  }
+
+  private static boolean shouldWakeUp() {
+    return MathUtils.random() > 0.5f;
+  }
+
+  private static boolean shouldWander(Entity entity) {
+    BrainComponent brain = ComponentMappers.brain.get(entity);
+
+    return !WorldManager.entityHelpers.canSense(entity, brain.target);
+  }
+
+  private static boolean shouldTarget(Entity entity, Entity target) {
+    return false;
+
+//    BrainComponent brain = ComponentMappers.brain.get(entity);
+//
+//    return WorldManager.entityHelpers.canSense(entity, target)
+//        && !WorldManager.entityHelpers.isNear(entity, target)
+//        && !brain.stateMachine.isInState(ATTACK)
+//        && brain.fear < brain.fearThreshold;
+  }
+
+  private static boolean shouldAttack(Entity entity, Entity target) {
+    return false;
+
+//    BrainComponent brain = ComponentMappers.brain.get(entity);
+//
+//    return WorldManager.entityHelpers.isNear(entity, target)
+//        && brain.fear < brain.fearThreshold;
+  }
+
   @Override
   public void enter(Entity entity) {
 
@@ -146,34 +184,5 @@ public enum Brain implements State<Entity> {
   @Override
   public boolean onMessage(Entity entity, Telegram telegram) {
     return false;
-  }
-
-  private static boolean shouldSleep() {
-    return MathUtils.random() > 0.75f;
-  }
-
-  private static boolean shouldWakeUp() {
-    return MathUtils.random() > 0.5f;
-  }
-
-  private static boolean shouldWander(Entity entity) {
-    BrainComponent brain = ComponentMappers.brain.get(entity);
-
-    return !WorldManager.entityHelpers.canSense(entity, brain.target);
-  }
-
-  private static boolean shouldTarget(Entity entity, Entity target) {
-    BrainComponent brain = ComponentMappers.brain.get(entity);
-
-    return WorldManager.entityHelpers.canSense(entity, target)
-        && !brain.stateMachine.isInState(ATTACK)
-        && brain.hostility > brain.fear;
-  }
-
-  private static boolean shouldAttack(Entity entity, Entity target) {
-    BrainComponent brain = ComponentMappers.brain.get(entity);
-
-    return WorldManager.entityHelpers.isNear(entity, target)
-        && brain.hostility > brain.fear;
   }
 }

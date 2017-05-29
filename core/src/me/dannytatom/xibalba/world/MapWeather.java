@@ -62,7 +62,7 @@ public class MapWeather {
       windStartCounter = 0;
       windBlowing = true;
 
-      Vector2 windStart = WorldManager.mapHelpers.getRandomOpenPosition(mapIndex);
+      Vector2 windStart = WorldManager.mapHelpers.getRandomOpenPositionOnLand(mapIndex);
       int windThickness = MathUtils.random(5, 10);
       int windDistance = MathUtils.random(10, 30);
 
@@ -124,7 +124,7 @@ public class MapWeather {
         VisualComponent visual = ComponentMappers.visual.get(drop);
 
         if (stats.life == 1) {
-          Vector2 newPosition = WorldManager.mapHelpers.getRandomOpenPosition();
+          Vector2 newPosition = WorldManager.mapHelpers.getRandomOpenPositionOnLand();
 
           visual.sprite.set(falling);
           WorldManager.entityHelpers.updatePosition(drop, newPosition.x, newPosition.y);

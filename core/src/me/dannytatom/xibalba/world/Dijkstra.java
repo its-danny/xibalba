@@ -2,15 +2,18 @@ package me.dannytatom.xibalba.world;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import org.apache.commons.lang3.ArrayUtils;
 
 public class Dijkstra {
   private Map map;
   private MapCell[][] cellMap;
   private int[][] graph;
+  private MapCell.Type[] walkableTypes;
 
-  public Dijkstra(Map map, Array<Vector2> goals) {
+  public Dijkstra(Map map, MapCell.Type[] walkableTypes, Array<Vector2> goals) {
     this.map = map;
     this.cellMap = this.map.getCellMap();
+    this.walkableTypes = walkableTypes;
 
     createGraph(goals);
   }
@@ -213,6 +216,6 @@ public class Dijkstra {
   private boolean canWalk(int cellX, int cellY) {
     return cellX > 0 && cellX < cellMap.length
         && cellY > 0 && cellY < cellMap[0].length
-        && (cellMap[cellX][cellY].isFloor() || cellMap[cellX][cellY].isShallowWater());
+        && ArrayUtils.contains(walkableTypes, cellMap[cellX][cellY].type);
   }
 }

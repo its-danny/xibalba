@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.components.AttributesComponent;
+import me.dannytatom.xibalba.components.BrainComponent;
 import me.dannytatom.xibalba.components.EnemyComponent;
 import me.dannytatom.xibalba.components.EquipmentComponent;
 import me.dannytatom.xibalba.components.ItemComponent;
@@ -237,6 +238,11 @@ public class EntityHelpers {
     }
 
     return canThey;
+  }
+
+  public boolean isAquatic(Entity entity) {
+    BrainComponent brain = ComponentMappers.brain.get(entity);
+    return brain != null && brain.dnas.contains(BrainComponent.DNA.AQUATIC, false);
   }
 
   /**

@@ -27,9 +27,9 @@ import me.dannytatom.xibalba.components.SkillsComponent;
 import me.dannytatom.xibalba.components.statuses.BleedingComponent;
 import me.dannytatom.xibalba.ui.ActionButton;
 import me.dannytatom.xibalba.utils.ComponentMappers;
-import me.dannytatom.xibalba.utils.YamlToAbility;
-import me.dannytatom.xibalba.utils.YamlToDefect;
-import me.dannytatom.xibalba.utils.YamlToTrait;
+import me.dannytatom.xibalba.utils.yaml.AbilityData;
+import me.dannytatom.xibalba.utils.yaml.DefectData;
+import me.dannytatom.xibalba.utils.yaml.TraitData;
 import me.dannytatom.xibalba.world.WorldManager;
 import org.apache.commons.lang3.text.WordUtils;
 
@@ -357,24 +357,24 @@ public class CharacterScreen implements Screen {
     traitsAndDefectsGroup.addActor(new Label("Traits & Defects", Main.skin));
     traitsAndDefectsGroup.addActor(new Label("", Main.skin));
 
-    for (YamlToDefect defect : Main.defects) {
-      if (WorldManager.entityHelpers.hasDefect(WorldManager.player, defect.name)) {
+    for (DefectData defectData : Main.defects) {
+      if (WorldManager.entityHelpers.hasDefect(WorldManager.player, defectData.name)) {
         traitsAndDefectsGroup.addActor(
             new Label(
-                "[RED]" + defect.name + "\n[DARK_GRAY]" + WordUtils.wrap(
-                    defect.description, 50
+                "[RED]" + defectData.name + "\n[DARK_GRAY]" + WordUtils.wrap(
+                    defectData.description, 50
                 ), Main.skin
             )
         );
       }
     }
 
-    for (YamlToTrait trait : Main.traits) {
-      if (WorldManager.entityHelpers.hasTrait(WorldManager.player, trait.name)) {
+    for (TraitData traitData : Main.traits) {
+      if (WorldManager.entityHelpers.hasTrait(WorldManager.player, traitData.name)) {
         traitsAndDefectsGroup.addActor(
             new Label(
-                "[GREEN]" + trait.name + "\n[DARK_GRAY]" + WordUtils.wrap(
-                    trait.description, 50
+                "[GREEN]" + traitData.name + "\n[DARK_GRAY]" + WordUtils.wrap(
+                    traitData.description, 50
                 ), Main.skin
             )
         );
@@ -390,15 +390,15 @@ public class CharacterScreen implements Screen {
     abilitiesGroup.addActor(new Label(god.name + " Abilities", Main.skin));
     abilitiesGroup.addActor(new Label("", Main.skin));
 
-    Array<YamlToAbility> abilities = ComponentMappers.abilities.get(player).abilities;
+    Array<AbilityData> abilities = ComponentMappers.abilities.get(player).abilities;
 
     for (int i = 0; i < abilities.size; i++) {
-      YamlToAbility ability = abilities.get(i);
+      AbilityData abilityData = abilities.get(i);
 
       abilitiesGroup.addActor(new Label(
-          ability.name + "[LIGHT_GRAY] every "
-              + ability.recharge + " turns\n" + "[DARK_GRAY]"
-              + WordUtils.wrap(ability.description, 70),
+          abilityData.name + "[LIGHT_GRAY] every "
+              + abilityData.recharge + " turns\n" + "[DARK_GRAY]"
+              + WordUtils.wrap(abilityData.description, 70),
           Main.skin
       ));
     }
@@ -507,7 +507,7 @@ public class CharacterScreen implements Screen {
         statsGroup.addActor(new Label("", Main.skin));
       }
 
-      // Item stats
+      // ItemData stats
 
       if (WorldManager.itemHelpers.isIdentified(player, item)) {
         if (details.attributes != null) {
@@ -598,7 +598,7 @@ public class CharacterScreen implements Screen {
           }
         }
 
-        // Item effects
+        // ItemData effects
 
         EffectsComponent selectedItemEffects = ComponentMappers.effects.get(item);
 

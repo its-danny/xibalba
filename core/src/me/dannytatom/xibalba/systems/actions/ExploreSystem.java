@@ -49,7 +49,7 @@ public class ExploreSystem extends EntitySystem {
 
       // Get new path if we're done
       if (explore.path.size == 0) {
-        WorldManager.world.getCurrentMap().dijkstra.updateExplore();
+        WorldManager.world.getCurrentMap().dijkstra.updatePlayerExplore();
 
         explore.path = WorldManager.world.getCurrentMap().dijkstra.findExplorePath(
             ComponentMappers.position.get(WorldManager.player).pos

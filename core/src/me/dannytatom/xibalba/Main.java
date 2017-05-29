@@ -23,8 +23,8 @@ import me.dannytatom.xibalba.utils.CameraShake;
 import me.dannytatom.xibalba.utils.HandheldCamera;
 import me.dannytatom.xibalba.utils.SoundManager;
 import me.dannytatom.xibalba.utils.SpriteAccessor;
-import me.dannytatom.xibalba.utils.YamlToDefect;
-import me.dannytatom.xibalba.utils.YamlToTrait;
+import me.dannytatom.xibalba.utils.yaml.DefectData;
+import me.dannytatom.xibalba.utils.yaml.TraitData;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 
@@ -35,8 +35,8 @@ public class Main extends Game {
   public static AssetManager assets;
   public static TextureAtlas spriteAtlas;
   public static TextureAtlas asciiAtlas;
-  public static Array<YamlToTrait> traits;
-  public static Array<YamlToDefect> defects;
+  public static Array<TraitData> traits;
+  public static Array<DefectData> defects;
   public static Skin skin;
   public static Screen playScreen;
   public static TweenManager tweenManager;
@@ -121,22 +121,22 @@ public class Main extends Game {
     skin.getFont("default-font").getData().markupEnabled = true;
 
     // Traits
-    Yaml traitYaml = new Yaml(new Constructor(YamlToTrait.class));
+    Yaml traitYaml = new Yaml(new Constructor(TraitData.class));
     FileHandle traitDirectoryHandle = Gdx.files.internal("data/traits");
     traits = new Array<>();
 
     for (FileHandle trait : traitDirectoryHandle.list()) {
-      YamlToTrait data = (YamlToTrait) traitYaml.load(trait.reader());
+      TraitData data = (TraitData) traitYaml.load(trait.reader());
       traits.add(data);
     }
 
     // Defects
-    Yaml defectYaml = new Yaml(new Constructor(YamlToDefect.class));
+    Yaml defectYaml = new Yaml(new Constructor(DefectData.class));
     FileHandle defectDirectoryHandle = Gdx.files.internal("data/defects");
     defects = new Array<>();
 
     for (FileHandle defect : defectDirectoryHandle.list()) {
-      YamlToDefect data = (YamlToDefect) defectYaml.load(defect.reader());
+      DefectData data = (DefectData) defectYaml.load(defect.reader());
       defects.add(data);
     }
 

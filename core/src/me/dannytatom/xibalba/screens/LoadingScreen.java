@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.Colors;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -16,6 +17,7 @@ import com.badlogic.gdx.utils.I18NBundle;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import me.dannytatom.xibalba.Main;
+import me.dannytatom.xibalba.components.BrainComponent;
 import me.dannytatom.xibalba.utils.ComponentMappers;
 import me.dannytatom.xibalba.utils.JsonToLevel;
 import me.dannytatom.xibalba.utils.PlayerSetup;
@@ -34,8 +36,8 @@ import java.util.Objects;
 public class LoadingScreen implements Screen {
   private final Main main;
   private final Stage stage;
-  private final Label label;
   private final PlayerSetup playerSetup;
+  private Label thingLoadingLabel;
   private boolean generating = false;
 
   /**
@@ -53,8 +55,8 @@ public class LoadingScreen implements Screen {
     table.setFillParent(true);
     stage.addActor(table);
 
-    label = new Label("HUN-CAME IS PREPARING.", Main.skin);
-    table.add(label);
+    thingLoadingLabel = new Label("", Main.skin);
+    table.add(thingLoadingLabel);
 
     // Start loading & generating shit
     loadAssets();
@@ -70,8 +72,6 @@ public class LoadingScreen implements Screen {
     );
 
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-    label.clear();
 
     if (Main.assets.update()) {
       Main.spriteAtlas = Main.assets.get("sprites/main.atlas");
@@ -93,6 +93,8 @@ public class LoadingScreen implements Screen {
   }
 
   private void loadAssets() {
+    thingLoadingLabel.setText("Loading assets");
+
     Main.assets.load("i18n/xibalba", I18NBundle.class);
 
     Main.assets.load("sprites/main.atlas", TextureAtlas.class);
@@ -119,6 +121,8 @@ public class LoadingScreen implements Screen {
 
     for (int i = 0; i < levels.size(); i++) {
       JsonToLevel level = (JsonToLevel) levels.get(i);
+
+      thingLoadingLabel.setText("Generating " + level.type);
 
       String[] widthRange = level.size.get("width").split(",");
       String[] heightRange = level.size.get("height").split(",");
@@ -167,6 +171,8 @@ public class LoadingScreen implements Screen {
   }
 
   private void spawnShit(JsonToLevel level, int mapIndex, boolean isLast) {
+    thingLoadingLabel.setText("Spawning nasty things");
+
     WorldManager.world.entities.put(mapIndex, new Array<>());
 
     // Spawn an entrance on every level but first
@@ -179,7 +185,7 @@ public class LoadingScreen implements Screen {
           = ComponentMappers.position.get(entrance).pos;
     } else {
       WorldManager.world.getMap(mapIndex).entrance
-          = WorldManager.mapHelpers.getRandomOpenPosition();
+          = WorldManager.mapHelpers.getRandomOpenPositionOnLand();
     }
 
     // Spawn an exit on every level but last
@@ -189,7 +195,7 @@ public class LoadingScreen implements Screen {
       WorldManager.world.entities.get(mapIndex).add(exit);
       WorldManager.world.getMap(mapIndex).exit = ComponentMappers.position.get(exit).pos;
     } else {
-      WorldManager.world.getMap(mapIndex).exit = WorldManager.mapHelpers.getRandomOpenPosition();
+      WorldManager.world.getMap(mapIndex).exit = WorldManager.mapHelpers.getRandomOpenPositionOnLand();
     }
 
     // Spawn player on first
@@ -207,7 +213,7 @@ public class LoadingScreen implements Screen {
       for (int j = 0; j < amount; j++) {
         WorldManager.world.entities.get(mapIndex).add(
             WorldManager.entityFactory.createTrap(trap.get("name"),
-                WorldManager.mapHelpers.getRandomOpenPosition(mapIndex)
+                WorldManager.mapHelpers.getRandomOpenPositionOnLand(mapIndex)
             )
         );
       }
@@ -222,7 +228,7 @@ public class LoadingScreen implements Screen {
       for (int j = 0; j < amount; j++) {
         WorldManager.world.entities.get(mapIndex).add(
             WorldManager.entityFactory.createItem(item.get("name"),
-                WorldManager.mapHelpers.getRandomOpenPosition(mapIndex))
+                WorldManager.mapHelpers.getRandomOpenPositionOnLand(mapIndex))
         );
       }
     }
@@ -234,11 +240,22 @@ public class LoadingScreen implements Screen {
       int amount = MathUtils.random(Integer.parseInt(range[0]), Integer.parseInt(range[1]));
 
       for (int j = 0; j < amount; j++) {
-
-        WorldManager.world.entities.get(mapIndex).add(
-            WorldManager.entityFactory.createEnemy(enemy.get("name"),
-                WorldManager.mapHelpers.getRandomOpenPosition(mapIndex))
+        Entity entity = WorldManager.entityFactory.createEnemy(
+            enemy.get("name"), new Vector2(0, 0)
         );
+
+        BrainComponent brain = ComponentMappers.brain.get(entity);
+        Vector2 position;
+
+        if (brain.dnas.contains(BrainComponent.DNA.AQUATIC, false)
+            && WorldManager.world.getMap(mapIndex).hasWater) {
+          position = WorldManager.mapHelpers.getRandomOpenPositionInWater(mapIndex);
+        } else {
+          position = WorldManager.mapHelpers.getRandomOpenPositionOnLand(mapIndex);
+        }
+
+        ComponentMappers.position.get(entity).pos.set(position);
+        WorldManager.world.entities.get(mapIndex).add(entity);
       }
     }
 

@@ -29,6 +29,8 @@ import me.dannytatom.xibalba.components.items.AmmunitionComponent;
 import me.dannytatom.xibalba.components.items.ArmorComponent;
 import me.dannytatom.xibalba.components.items.WeaponComponent;
 import me.dannytatom.xibalba.components.traps.SpiderWebComponent;
+import me.dannytatom.xibalba.utils.yaml.EnemyData;
+import me.dannytatom.xibalba.utils.yaml.ItemData;
 import me.dannytatom.xibalba.world.Map;
 import me.dannytatom.xibalba.world.WorldManager;
 import org.yaml.snakeyaml.Yaml;
@@ -50,15 +52,15 @@ public class EntityFactory {
    * @return The enemy
    */
   public Entity createEnemy(String name, Vector2 position) {
-    Yaml yaml = new Yaml(new Constructor(YamlToEnemy.class));
-    YamlToEnemy data = (YamlToEnemy) yaml.load(
+    Yaml yaml = new Yaml(new Constructor(EnemyData.class));
+    EnemyData data = (EnemyData) yaml.load(
         Gdx.files.internal("data/enemies/" + name + ".yaml").reader()
     );
 
     Entity entity = new Entity();
 
-    entity.add(new EnemyComponent());
     entity.add(new PositionComponent(position));
+    entity.add(new EnemyComponent());
     entity.add(new SkillsComponent());
     entity.add(new BodyComponent(data.bodyParts, data.wearableBodyParts));
 
@@ -79,7 +81,16 @@ public class EntityFactory {
         data.attributes.get("agility")
     ));
 
-    entity.add(new BrainComponent(entity));
+    BrainComponent brain = new BrainComponent(entity);
+    entity.add(brain);
+
+    if (data.brain != null) {
+      brain.fearThreshold = data.brain.fearThreshold;
+
+      if (data.brain.dna.contains("aquatic")) {
+        brain.dnas.add(BrainComponent.DNA.AQUATIC);
+      }
+    }
 
     if (data.effects != null) {
       entity.add(new EffectsComponent(data));
@@ -97,8 +108,8 @@ public class EntityFactory {
    * @return The item
    */
   public Entity createItem(String name, Vector2 position) {
-    Yaml yaml = new Yaml(new Constructor(YamlToItem.class));
-    YamlToItem data = (YamlToItem) yaml.load(
+    Yaml yaml = new Yaml(new Constructor(ItemData.class));
+    ItemData data = (ItemData) yaml.load(
         Gdx.files.internal("data/items/" + name + ".yaml").reader()
     );
 

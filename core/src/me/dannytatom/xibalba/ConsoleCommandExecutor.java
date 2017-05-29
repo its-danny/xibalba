@@ -96,34 +96,4 @@ public class ConsoleCommandExecutor extends CommandExecutor {
 
     WorldManager.entityHelpers.updateSenses(WorldManager.player);
   }
-
-  public void dijkstraExplore(Boolean on) {
-    if (on) {
-      Main.debug.dijkstraExplore = true;
-      console.log("[GREEN]Dijkstra Explore: ON");
-    } else {
-      Main.debug.dijkstraExplore = false;
-      console.log("[RED]Dijkstra Explore: OFF");
-    }
-  }
-
-  public void dijkstraWander(Boolean on) {
-    if (on) {
-      Main.debug.dijkstraWander = true;
-      console.log("[GREEN]Dijkstra Wander: ON");
-    } else {
-      Main.debug.dijkstraWander = false;
-      console.log("[RED]Dijkstra Wander: OFF");
-    }
-  }
-
-  public void dijkstraPlayerPosition(Boolean on) {
-    if (on) {
-      Main.debug.dijkstraPlayerPosition = true;
-      console.log("[GREEN]Dijkstra Player Position: ON");
-    } else {
-      Main.debug.dijkstraPlayerPosition = false;
-      console.log("[RED]Dijkstra Player Position: OFF");
-    }
-  }
 }

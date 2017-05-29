@@ -15,8 +15,8 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.ui.ActionButton;
 import me.dannytatom.xibalba.utils.PlayerSetup;
-import me.dannytatom.xibalba.utils.YamlToAbility;
-import me.dannytatom.xibalba.utils.YamlToGod;
+import me.dannytatom.xibalba.utils.yaml.AbilityData;
+import me.dannytatom.xibalba.utils.yaml.GodData;
 import org.apache.commons.lang3.text.WordUtils;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
@@ -25,7 +25,7 @@ import java.util.ArrayList;
 
 class GodScreen implements Screen {
   private final PlayerSetup playerSetup;
-  private final ArrayList<YamlToGod> godList;
+  private final ArrayList<GodData> godDataList;
 
   private final Stage stage;
   private final VerticalGroup godsGroup;
@@ -33,7 +33,7 @@ class GodScreen implements Screen {
   private int godSelected = 0;
 
   /**
-   * Character Creation: God Screen.
+   * Character Creation: GodData Screen.
    *
    * @param main        Instance of main class
    * @param playerSetup Instance of PlayerSetup (used to store creation info)
@@ -49,13 +49,13 @@ class GodScreen implements Screen {
     table.pad(10);
     stage.addActor(table);
 
-    Yaml yaml = new Yaml(new Constructor(YamlToGod.class));
+    Yaml yaml = new Yaml(new Constructor(GodData.class));
     FileHandle directoryHandle = Gdx.files.internal("data/gods");
-    godList = new ArrayList<>();
+    godDataList = new ArrayList<>();
 
     for (FileHandle god : directoryHandle.list()) {
-      YamlToGod data = (YamlToGod) yaml.load(god.reader());
-      godList.add(data);
+      GodData data = (GodData) yaml.load(god.reader());
+      godDataList.add(data);
     }
 
     Table titleTable = new Table();
@@ -69,7 +69,7 @@ class GodScreen implements Screen {
     backButton.setAction(table, () -> main.setScreen(new YouScreen(main)));
     titleGroup.addActor(backButton);
 
-    Label title = new Label("Your God", Main.skin);
+    Label title = new Label("Your GodData", Main.skin);
     titleGroup.addActor(title);
 
     Label instructions = new Label(
@@ -129,7 +129,7 @@ class GodScreen implements Screen {
     }
 
     if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
-      if (godSelected < godList.size() - 1) {
+      if (godSelected < godDataList.size() - 1) {
         godSelected += 1;
       }
 
@@ -147,15 +147,15 @@ class GodScreen implements Screen {
     godsGroup.addActor(new Label("Gods", Main.skin));
     godsGroup.addActor(new Label("", Main.skin));
 
-    for (int i = 0; i < godList.size(); i++) {
-      YamlToGod god = godList.get(i);
+    for (int i = 0; i < godDataList.size(); i++) {
+      GodData godData = godDataList.get(i);
 
       String string;
 
       if (i == godSelected) {
-        string = "[DARK_GRAY]> [WHITE]" + god.name + "\n[DARK_GRAY]" + god.description;
+        string = "[DARK_GRAY]> [WHITE]" + godData.name + "\n[DARK_GRAY]" + godData.description;
       } else {
-        string = "[LIGHT_GRAY]" + god.name + "\n[DARK_GRAY]" + god.description;
+        string = "[LIGHT_GRAY]" + godData.name + "\n[DARK_GRAY]" + godData.description;
       }
 
       godsGroup.addActor(new Label(string, Main.skin));
@@ -168,11 +168,11 @@ class GodScreen implements Screen {
     abilityGroup.addActor(new Label("Abilities", Main.skin));
     abilityGroup.addActor(new Label("", Main.skin));
 
-    YamlToGod god = godList.get(godSelected);
+    GodData godData = godDataList.get(godSelected);
 
-    Yaml yaml = new Yaml(new Constructor(YamlToAbility.class));
-    god.abilities.forEach((String ability) -> {
-      YamlToAbility details = (YamlToAbility) yaml.load(
+    Yaml yaml = new Yaml(new Constructor(AbilityData.class));
+    godData.abilities.forEach((String ability) -> {
+      AbilityData details = (AbilityData) yaml.load(
           Gdx.files.internal("data/abilities/" + ability + ".yaml").read()
       );
 
@@ -185,7 +185,7 @@ class GodScreen implements Screen {
   }
 
   private void goToNameScreen(Main main) {
-    playerSetup.god = godList.get(godSelected);
+    playerSetup.godData = godDataList.get(godSelected);
     main.setScreen(new NameScreen(main, playerSetup));
   }
 

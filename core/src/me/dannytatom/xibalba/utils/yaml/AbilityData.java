@@ -1,6 +1,6 @@
-package me.dannytatom.xibalba.utils;
+package me.dannytatom.xibalba.utils.yaml;
 
-public class YamlToAbility {
+public class AbilityData {
   public String name;
   public String description;
   public int recharge;

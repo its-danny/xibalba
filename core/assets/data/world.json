@@ -25,6 +25,10 @@
       {
         "name": "poisonDartFrog",
         "spawnRange": "3,5"
+      },
+      {
+        "name": "piranha",
+        "spawnRange": "3,5"
       }
     ],
     "items": [

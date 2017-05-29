@@ -1,0 +1,25 @@
+---
+visual:
+  character: "0014"
+  color: A59E84
+
+attributes:
+  speed: 120
+  vision: 5
+  hearing: 0
+  toughness: 4
+  strength: 4
+  agility: 10
+
+brain:
+  fearThreshold: 0.8
+  dna:
+    - aquatic
+
+bodyParts:
+  body: 8
+
+wearableBodyParts:
+
+effects:
+  onHit: bleed:75,5,3

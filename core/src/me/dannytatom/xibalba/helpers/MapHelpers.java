@@ -456,16 +456,23 @@ public class MapHelpers {
    *
    * @return Random open cell
    */
-  public Vector2 getRandomOpenPosition(int index) {
+  public Vector2 getRandomOpenPositionOnLand(int index) {
     Map map = WorldManager.world.getMap(index);
-    int cellX;
-    int cellY;
+    MapCell[][] cellMap = map.getCellMap();
 
-    do {
+    int cellX = 0;
+    int cellY = 0;
+
+    boolean searching = true;
+
+    while (searching) {
       cellX = MathUtils.random(0, map.width - 1);
       cellY = MathUtils.random(0, map.height - 1);
+
+      if (cellMap[cellX][cellY].isFloor()) {
+        searching = false;
+      }
     }
-    while (isBlocked(index, new Vector2(cellX, cellY)));
 
     return new Vector2(cellX, cellY);
   }
@@ -475,8 +482,33 @@ public class MapHelpers {
    *
    * @return Random open cell
    */
-  public Vector2 getRandomOpenPosition() {
-    return getRandomOpenPosition(WorldManager.world.currentMapIndex);
+  public Vector2 getRandomOpenPositionOnLand() {
+    return getRandomOpenPositionOnLand(WorldManager.world.currentMapIndex);
+  }
+
+  public Vector2 getRandomOpenPositionInWater(int index) {
+    Map map = WorldManager.world.getMap(index);
+    MapCell[][] cellMap = map.getCellMap();
+
+    int cellX = 0;
+    int cellY = 0;
+
+    boolean searching = true;
+
+    while (searching) {
+      cellX = MathUtils.random(0, map.width - 1);
+      cellY = MathUtils.random(0, map.height - 1);
+
+      if (cellMap[cellX][cellY].isDeepWater()) {
+        searching = false;
+      }
+    }
+
+    return new Vector2(cellX, cellY);
+  }
+
+  public Vector2 getRandomOpenPositionInWater() {
+    return getRandomOpenPositionInWater(WorldManager.world.currentMapIndex);
   }
 
   /**

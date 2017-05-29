@@ -5,7 +5,7 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.utils.Array;
 import me.dannytatom.xibalba.components.AbilitiesComponent;
 import me.dannytatom.xibalba.utils.ComponentMappers;
-import me.dannytatom.xibalba.utils.YamlToAbility;
+import me.dannytatom.xibalba.utils.yaml.AbilityData;
 
 public class AbilitiesSystem extends UsesEnergySystem {
   public AbilitiesSystem() {
@@ -14,13 +14,13 @@ public class AbilitiesSystem extends UsesEnergySystem {
 
   @Override
   protected void processEntity(Entity entity, float deltaTime) {
-    Array<YamlToAbility> abilities = ComponentMappers.abilities.get(entity).abilities;
+    Array<AbilityData> abilities = ComponentMappers.abilities.get(entity).abilities;
 
     for (int i = 0; i < abilities.size; i++) {
-      YamlToAbility ability = abilities.get(i);
+      AbilityData abilityData = abilities.get(i);
 
-      if (ability.counter < ability.recharge) {
-        ability.counter += 1;
+      if (abilityData.counter < abilityData.recharge) {
+        abilityData.counter += 1;
       }
     }
   }

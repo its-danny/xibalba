@@ -1,7 +1,7 @@
 package me.dannytatom.xibalba.helpers;
 
 import com.badlogic.ashley.core.Entity;
-import me.dannytatom.xibalba.utils.YamlToAbility;
+import me.dannytatom.xibalba.utils.yaml.AbilityData;
 import me.dannytatom.xibalba.world.WorldManager;
 
 public class AbilityHelpers {
@@ -10,14 +10,14 @@ public class AbilityHelpers {
   }
 
   /**
-   * Do an ability.
+   * Do an abilityData.
    *
-   * @param entity  The entity who wants to do something.
-   * @param ability The ability they want to do
+   * @param entity      The entity who wants to do something.
+   * @param abilityData The abilityData they want to do
    */
-  public void doAbility(Entity entity, YamlToAbility ability) {
-    if (ability.counter == ability.recharge) {
-      String[] split = ability.effect.split(":");
+  public void doAbility(Entity entity, AbilityData abilityData) {
+    if (abilityData.counter == abilityData.recharge) {
+      String[] split = abilityData.effect.split(":");
       String name = split[0];
       String[] params = split[1].split(",");
 
@@ -28,7 +28,7 @@ public class AbilityHelpers {
         default:
       }
 
-      ability.counter = 0;
+      abilityData.counter = 0;
     }
   }
 }

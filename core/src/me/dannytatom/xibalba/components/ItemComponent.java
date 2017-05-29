@@ -2,7 +2,7 @@ package me.dannytatom.xibalba.components;
 
 import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.utils.Array;
-import me.dannytatom.xibalba.utils.YamlToItem;
+import me.dannytatom.xibalba.utils.yaml.ItemData;
 
 import java.util.HashMap;
 
@@ -22,9 +22,9 @@ public class ItemComponent implements Component {
   /**
    * Initialize item component from yaml data.
    *
-   * @param data YamlToItem instance containing data from relevant yaml file
+   * @param data ItemData instance containing data from relevant yaml file
    */
-  public ItemComponent(String name, String description, YamlToItem data) {
+  public ItemComponent(String name, String description, ItemData data) {
     this.name = name;
     this.description = description;
     this.type = data.type;
