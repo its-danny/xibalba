@@ -217,19 +217,49 @@ public class CombatHelpers {
         baseDamage = MathUtils.random(1, starterAttributes.strength);
 
         if (item != null) {
-          baseDamage += ComponentMappers.item.get(item).attributes.get("hitDamage");
+          baseDamage += MathUtils.random(
+              1, ComponentMappers.item.get(item).attributes.get("hitDamage")
+          );
+
+          if (WorldManager.itemHelpers.hasMaterial(item)) {
+            if (WorldManager.itemHelpers.getMaterial(item) == WeaponComponent.Material.OBSIDIAN) {
+              baseDamage += MathUtils.random(
+                  1, ComponentMappers.item.get(item).attributes.get("hitDamage")
+              );
+            }
+          }
         }
 
         break;
       case RANGE:
         if (item != null) {
-          baseDamage += ComponentMappers.item.get(item).attributes.get("shotDamage");
+          baseDamage += MathUtils.random(
+              1, ComponentMappers.item.get(item).attributes.get("shotDamage")
+          );
+
+          if (WorldManager.itemHelpers.hasMaterial(item)) {
+            if (WorldManager.itemHelpers.getMaterial(item) == WeaponComponent.Material.OBSIDIAN) {
+              baseDamage += MathUtils.random(
+                  1, ComponentMappers.item.get(item).attributes.get("shotDamage")
+              );
+            }
+          }
         }
 
         break;
       case THROW:
         if (item != null) {
-          baseDamage += ComponentMappers.item.get(item).attributes.get("throwDamage");
+          baseDamage += MathUtils.random(
+              1, ComponentMappers.item.get(item).attributes.get("throwDamage")
+          );
+
+          if (WorldManager.itemHelpers.hasMaterial(item)) {
+            if (WorldManager.itemHelpers.getMaterial(item) == WeaponComponent.Material.OBSIDIAN) {
+              baseDamage += MathUtils.random(
+                  1, ComponentMappers.item.get(item).attributes.get("throwDamage")
+              );
+            }
+          }
         }
 
         break;

@@ -144,6 +144,13 @@ public class EntityFactory {
       entity.add(new EffectsComponent(data));
     }
 
+    if (ComponentMappers.weapon.has(entity)) {
+      WeaponComponent weapon = ComponentMappers.weapon.get(entity);
+      WeaponComponent.Material[] materials = WeaponComponent.Material.values();
+
+      weapon.material = materials[MathUtils.random(0, materials.length - 1)];
+    }
+
     entity.add(new VisualComponent(
         Main.asciiAtlas.createSprite(data.visual.get("character")),
         position, Main.parseColor(data.visual.get("color"))

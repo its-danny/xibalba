@@ -12,6 +12,7 @@ import me.dannytatom.xibalba.components.LimbComponent;
 import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.items.AmmunitionComponent;
+import me.dannytatom.xibalba.components.items.WeaponComponent;
 import me.dannytatom.xibalba.components.statuses.EncumberedComponent;
 import me.dannytatom.xibalba.components.statuses.SickComponent;
 import me.dannytatom.xibalba.utils.ComponentMappers;
@@ -59,6 +60,26 @@ public class ItemHelpers {
     return player == null
         || !(Objects.equals(details.type, "consumable")
         && !player.identifiedItems.contains(details.name, false));
+  }
+
+  public boolean hasMaterial(Entity item) {
+    if (ComponentMappers.weapon.has(item)) {
+      WeaponComponent weapon = ComponentMappers.weapon.get(item);
+
+      return weapon.material != null;
+    } else {
+      return false;
+    }
+  }
+
+  public WeaponComponent.Material getMaterial(Entity item) {
+    if (ComponentMappers.weapon.has(item)) {
+      WeaponComponent weapon = ComponentMappers.weapon.get(item);
+
+      return weapon.material;
+    } else {
+      return null;
+    }
   }
 
   /**

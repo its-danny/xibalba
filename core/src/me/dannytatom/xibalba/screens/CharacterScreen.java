@@ -469,6 +469,14 @@ public class CharacterScreen implements Screen {
           itemDetailsGroup.addActor(new Label(WordUtils.wrap(description, 50), Main.skin));
         }
 
+        if (WorldManager.itemHelpers.hasMaterial(item)) {
+          itemDetailsGroup.addActor(new Label("", Main.skin));
+
+          itemDetailsGroup.addActor(
+              new Label("[LIGHT_GRAY]" + WorldManager.itemHelpers.getMaterial(item).name(), Main.skin)
+          );
+        }
+
         if (details.twoHanded) {
           itemDetailsGroup.addActor(new Label("", Main.skin));
           itemDetailsGroup.addActor(new Label("[LIGHT_GRAY]Two handed", Main.skin));
