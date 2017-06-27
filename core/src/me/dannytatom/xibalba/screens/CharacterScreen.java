@@ -469,11 +469,19 @@ public class CharacterScreen implements Screen {
           itemDetailsGroup.addActor(new Label(WordUtils.wrap(description, 50), Main.skin));
         }
 
-        if (WorldManager.itemHelpers.hasMaterial(item)) {
-          itemDetailsGroup.addActor(new Label("", Main.skin));
+        itemDetailsGroup.addActor(new Label("", Main.skin));
 
+        itemDetailsGroup.addActor(
+            new Label(
+                "[DARK_GRAY]Quality: [LIGHT_GRAY]" + ComponentMappers.item.get(item).quality.name(), Main.skin
+            )
+        );
+
+        if (WorldManager.itemHelpers.hasMaterial(item)) {
           itemDetailsGroup.addActor(
-              new Label("[LIGHT_GRAY]" + WorldManager.itemHelpers.getMaterial(item).name(), Main.skin)
+              new Label(
+                  "[DARK_GRAY]Material: [LIGHT_GRAY]" + WorldManager.itemHelpers.getMaterial(item).name(), Main.skin
+              )
           );
         }
 

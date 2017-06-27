@@ -116,10 +116,14 @@ public class EntityFactory {
     Entity entity = new Entity();
 
     entity.add(new PositionComponent(position));
+
+    ItemComponent.Quality[] qualities = ItemComponent.Quality.values();
+
     entity.add(
         new ItemComponent(
             i18n.get("entities.items." + name + ".name"),
             i18n.get("entities.items." + name + ".description"),
+            qualities[MathUtils.random(0, qualities.length - 1)],
             data
         )
     );

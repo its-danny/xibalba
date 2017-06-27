@@ -74,7 +74,6 @@ public class LoadingScreen implements Screen {
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
     if (Main.assets.update()) {
-      Main.spriteAtlas = Main.assets.get("sprites/main.atlas");
       Main.asciiAtlas = Main.assets.get("sprites/qbicfeet_10x10.atlas");
 
       Main.soundManager = new SoundManager();
@@ -97,7 +96,6 @@ public class LoadingScreen implements Screen {
 
     Main.assets.load("i18n/xibalba", I18NBundle.class);
 
-    Main.assets.load("sprites/main.atlas", TextureAtlas.class);
     Main.assets.load("sprites/qbicfeet_10x10.atlas", TextureAtlas.class);
 
     Main.assets.load("sounds/Stab_Punch_Hack_12.wav", Sound.class);

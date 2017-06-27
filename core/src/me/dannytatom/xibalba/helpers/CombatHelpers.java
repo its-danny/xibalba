@@ -284,6 +284,18 @@ public class CombatHelpers {
 
     int totalDamage = baseDamage + critDamage + headShotDamage;
 
+    // Modify based on weapon quality
+
+    if (item != null) {
+      totalDamage += ComponentMappers.item.get(item).quality.getModifier();
+    }
+
+    // Make sure it ain't negative
+
+    if (totalDamage < 0) {
+      totalDamage = 0;
+    }
+
     // Log some shit
 
     WorldManager.log.add(

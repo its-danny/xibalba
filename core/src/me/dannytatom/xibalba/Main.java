@@ -33,7 +33,6 @@ public class Main extends Game {
   public static final int SPRITE_HEIGHT = 10;
   public static Debug debug;
   public static AssetManager assets;
-  public static TextureAtlas spriteAtlas;
   public static TextureAtlas asciiAtlas;
   public static Array<TraitData> traits;
   public static Array<DefectData> defects;

@@ -28,7 +28,6 @@ public class ExploreSystem extends EntitySystem {
 
   public void update(float deltaTime) {
     for (Entity entity : entities) {
-      AttributesComponent attributes = ComponentMappers.attributes.get(entity);
       ExploreComponent explore = ComponentMappers.explore.get(entity);
 
       // If the player sees an enemy, stop
@@ -55,6 +54,8 @@ public class ExploreSystem extends EntitySystem {
             ComponentMappers.position.get(WorldManager.player).pos
         );
       }
+
+      AttributesComponent attributes = ComponentMappers.attributes.get(entity);
 
       // Walk it out!
       if (attributes.energy >= MovementComponent.COST) {
