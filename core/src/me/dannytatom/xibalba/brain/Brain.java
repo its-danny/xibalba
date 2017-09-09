@@ -128,10 +128,11 @@ public enum Brain implements State<Entity> {
         return;
       }
 
-      // Attack unless charmed
-      if (!ComponentMappers.charmed.has(entity)) {
-        entity.add(new MeleeComponent(brain.target, "body", false));
+      if (ComponentMappers.charmed.has(entity)) {
+        return;
       }
+
+      entity.add(new MeleeComponent(brain.target, "body", false));
     }
   };
 
@@ -146,27 +147,31 @@ public enum Brain implements State<Entity> {
   private static boolean shouldWander(Entity entity) {
     BrainComponent brain = ComponentMappers.brain.get(entity);
 
-    return !WorldManager.entityHelpers.canSense(entity, brain.target);
+    return !WorldManager.entityHelpers.canSense(entity, brain.target)
+        || WorldManager.state == WorldManager.State.DEAD
+        || brain.fear > brain.fearThreshold;
   }
 
   private static boolean shouldTarget(Entity entity, Entity target) {
-    return false;
+    BrainComponent brain = ComponentMappers.brain.get(entity);
 
-//    BrainComponent brain = ComponentMappers.brain.get(entity);
-//
-//    return WorldManager.entityHelpers.canSense(entity, target)
-//        && !WorldManager.entityHelpers.isNear(entity, target)
-//        && !brain.stateMachine.isInState(ATTACK)
-//        && brain.fear < brain.fearThreshold;
+    return WorldManager.entityHelpers.canSense(entity, target)
+        && !WorldManager.entityHelpers.isNear(entity, target)
+        && brain.fear <= brain.fearThreshold
+        && (MathUtils.random() > brain.aggressive
+        || ComponentMappers.god.get(WorldManager.god).wrath.contains("Animals more aggressive"))
+        && WorldManager.state != WorldManager.State.DEAD;
   }
 
   private static boolean shouldAttack(Entity entity, Entity target) {
-    return false;
+    BrainComponent brain = ComponentMappers.brain.get(entity);
 
-//    BrainComponent brain = ComponentMappers.brain.get(entity);
-//
-//    return WorldManager.entityHelpers.isNear(entity, target)
-//        && brain.fear < brain.fearThreshold;
+    return WorldManager.entityHelpers.canSense(entity, target)
+        && WorldManager.entityHelpers.isNear(entity, target)
+        && brain.fear <= brain.fearThreshold
+        && (MathUtils.random() > brain.aggressive
+        || ComponentMappers.god.get(WorldManager.god).wrath.contains("Animals more aggressive"))
+        && WorldManager.state != WorldManager.State.DEAD;
   }
 
   @Override

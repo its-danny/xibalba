@@ -19,6 +19,12 @@ public class BrainSystem extends UsesEnergySystem {
 
     brain.stateMachine.update();
 
+    if (brain.fear > 0) {
+      brain.fear -= 0.01;
+    } else if (brain.fear < 0) {
+      brain.fear = 0;
+    }
+
     if (brain.path != null && brain.path.size > 0) {
       AttributesComponent attributes = ComponentMappers.attributes.get(entity);
 

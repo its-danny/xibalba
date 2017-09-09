@@ -2,12 +2,15 @@ package me.dannytatom.xibalba.helpers;
 
 import aurelienribon.tweenengine.Tween;
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.BodyComponent;
+import me.dannytatom.xibalba.components.BrainComponent;
 import me.dannytatom.xibalba.components.EffectsComponent;
+import me.dannytatom.xibalba.components.GodComponent;
 import me.dannytatom.xibalba.components.ItemComponent;
 import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.SkillsComponent;
@@ -292,9 +295,20 @@ public class CombatHelpers {
 
     // Modify based on abilities
 
-    if (ComponentMappers.abilities.get(starter).abilities.get("Bonus against Animals") != null
+    if (ComponentMappers.abilities.has(starter)
+        && ComponentMappers.abilities.get(starter).abilities.get("Bonus against Animals") != null
         && ComponentMappers.attributes.get(target).type == AttributesComponent.Type.ANIMAL) {
       totalDamage += MathUtils.random(1, 4);
+    }
+
+    // Modify based on wrath
+
+    GodComponent god = ComponentMappers.god.get(WorldManager.god);
+
+    if (god.wrath.contains("Animals do more damage")) {
+      if (ComponentMappers.attributes.get(starter).type == AttributesComponent.Type.ANIMAL) {
+        totalDamage += MathUtils.random(1, 8);
+      }
     }
 
     // Make sure it ain't negative
@@ -323,7 +337,9 @@ public class CombatHelpers {
 
       // Update attacksToKill counter
 
-      ComponentMappers.enemy.get(target).attacksToKill += 1;
+      if (ComponentMappers.enemy.has(target)) {
+        ComponentMappers.enemy.get(target).attacksToKill += 1;
+      }
 
       // Shake camera if the player was hit
 
@@ -368,6 +384,14 @@ public class CombatHelpers {
         ComponentMappers.player.get(starter).totalDamageDone += totalDamage;
       }
 
+      // Add fear to enemy
+
+      BrainComponent brain = ComponentMappers.brain.get(target);
+
+      if (brain != null) {
+        brain.fear += (totalDamage / 100f);
+      }
+
       // Apply status effects
 
       boolean addEffect = false;
@@ -394,7 +418,7 @@ public class CombatHelpers {
 
       AttributesComponent starterAttributes = ComponentMappers.attributes.get(starter);
 
-      // 25% chance to raise agility if focused
+      // Chance to raise agility if focused
       if (isFocused && MathUtils.random() > .75) {
         if (starterAttributes.agility < 12) {
           starterAttributes.agility

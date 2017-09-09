@@ -88,8 +88,10 @@ public class EntityFactory {
     if (data.brain != null) {
       brain.fearThreshold = data.brain.fearThreshold;
 
-      if (data.brain.dna.contains("aquatic")) {
-        brain.dnas.add(BrainComponent.DNA.AQUATIC);
+      if (data.brain.dna != null) {
+        if (data.brain.dna.contains("aquatic")) {
+          brain.dnas.add(BrainComponent.DNA.AQUATIC);
+        }
       }
     }
 

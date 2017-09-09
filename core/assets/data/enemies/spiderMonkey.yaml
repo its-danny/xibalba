@@ -13,6 +13,10 @@ attributes:
   strength: 6
   agility: 6
 
+brain:
+  fearThreshold: 0.5
+  dna:
+
 bodyParts:
   head: 8
   body: 6

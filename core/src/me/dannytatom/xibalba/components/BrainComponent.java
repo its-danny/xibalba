@@ -16,6 +16,7 @@ public class BrainComponent implements Component {
   public Array<String> avoids;
   public Array<String> afraidOf;
 
+  public float aggressive;
   public float fear;
   public float fearThreshold;
 
@@ -30,7 +31,8 @@ public class BrainComponent implements Component {
     avoids = new Array<>();
     afraidOf = new Array<>();
 
-    fear = 0;
+    aggressive = 0.5f;
+    fear = 0f;
     fearThreshold = 0.5f;
   }
 

@@ -45,7 +45,7 @@ public class AbilityHelpers {
               && abilityData.targetType != ComponentMappers.attributes.get(target).type) {
             WorldManager.log.add("effects.failed", abilityData.name);
 
-            return;
+
           }
 
           if (MathUtils.random((attributes.divineFavor / 100), 1) == 1) {
