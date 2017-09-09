@@ -17,7 +17,6 @@ import me.dannytatom.xibalba.systems.BrainSystem;
 import me.dannytatom.xibalba.systems.DeathSystem;
 import me.dannytatom.xibalba.systems.MouseMovementSystem;
 import me.dannytatom.xibalba.systems.TileEffectSystem;
-import me.dannytatom.xibalba.systems.TimeSystem;
 import me.dannytatom.xibalba.systems.actions.ExploreSystem;
 import me.dannytatom.xibalba.systems.actions.MeleeSystem;
 import me.dannytatom.xibalba.systems.actions.MovementSystem;
@@ -73,7 +72,6 @@ public class WorldManager {
     // Setup engine (systems are run in order added)
     engine.addSystem(new AttributesSystem());
     engine.addSystem(new AbilitiesSystem());
-    engine.addSystem(new TimeSystem());
     engine.addSystem(new MouseMovementSystem());
     engine.addSystem(new ExploreSystem());
     engine.addSystem(new BrainSystem());

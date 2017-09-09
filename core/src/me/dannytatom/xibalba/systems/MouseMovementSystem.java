@@ -38,7 +38,7 @@ public class MouseMovementSystem extends EntitySystem {
   /**
    * Get next step in moving path, add a movement component with that position, remove step.
    *
-   * @param deltaTime MapTime between now and previous frame
+   * @param deltaTime Time between now and previous frame
    */
   public void update(float deltaTime) {
     for (Entity entity : entities) {

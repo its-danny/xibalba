@@ -3,10 +3,8 @@ package me.dannytatom.xibalba.world;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Colors;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.components.PositionComponent;
@@ -21,10 +19,6 @@ public class MapWeather {
   private final Sprite splash;
   private final Sprite fading;
   private float animCounter = 0;
-  private float windStartCounter = 10;
-  private boolean windBlowing = false;
-  private Vector2[][] windPath;
-  private int windPathIndex;
 
   /**
    * Rainfall in the forest.
@@ -56,67 +50,10 @@ public class MapWeather {
    * @param delta Time since last frame
    */
   public void update(float delta) {
-    windStartCounter += delta;
-
-    if (windStartCounter >= 10 && !windBlowing) {
-      windStartCounter = 0;
-      windBlowing = true;
-
-      Vector2 windStart = WorldManager.mapHelpers.getRandomOpenPositionOnLand(mapIndex);
-      int windThickness = MathUtils.random(5, 10);
-      int windDistance = MathUtils.random(10, 30);
-
-      windPathIndex = 0;
-      windPath = new Vector2[windDistance][windThickness];
-
-      for (int x = 0; x < windDistance; x++) {
-        for (int y = 0; y < windThickness; y++) {
-          windPath[x][y] = new Vector2(windStart.x - x, windStart.y + y);
-        }
-      }
-    }
-
     animCounter += delta;
 
     if (animCounter >= .10f) {
       animCounter = 0;
-
-      if (windPathIndex > 0) {
-        Vector2[] path = windPath[windPathIndex - 1];
-
-        for (Vector2 position : path) {
-          if (WorldManager.mapHelpers.cellExists(position)) {
-            MapCell cell = WorldManager.mapHelpers.getCell(mapIndex, position);
-
-            if (cell.isFloor()) {
-              cell.sprite.setColor(cell.color);
-            }
-          }
-        }
-      }
-
-      if (windBlowing) {
-        Vector2[] path = windPath[windPathIndex];
-
-        for (Vector2 position : path) {
-          if (WorldManager.mapHelpers.cellExists(position)) {
-            MapCell cell = WorldManager.mapHelpers.getCell(mapIndex, position);
-
-            if (cell.isFloor()) {
-              Color color = cell.sprite.getColor().cpy().lerp(Color.WHITE, .75f);
-
-              cell.sprite.setColor(color);
-              cell.sprite.setFlip(false, false);
-            }
-          }
-        }
-
-        if (windPathIndex == windPath.length - 1) {
-          windBlowing = false;
-        } else {
-          windPathIndex++;
-        }
-      }
 
       for (Entity drop : rainDrops) {
         RainDropComponent stats = ComponentMappers.rainDrop.get(drop);

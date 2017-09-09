@@ -14,7 +14,7 @@ public class HandheldCamera {
   /**
    * Called each frame to handle the shaking.
    *
-   * @param delta    MapTime since last frame
+   * @param delta    Time since last frame
    * @param camera   Camera to move
    * @param position Position to move towards
    */

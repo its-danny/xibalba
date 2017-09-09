@@ -266,10 +266,6 @@ public class HudRenderer {
   }
 
   private void updateGameInfo() {
-    String playerInfo = "[DARK_GRAY]" + WorldManager.world.getCurrentMap().time.time.toString()
-        + ", Depth " + (WorldManager.world.currentMapIndex + 1)
-        + ", Turn " + WorldManager.turnCount;
-
     String performanceInfo = "";
     String positionInfo = "";
     String dijkstraInfo = "";
@@ -282,18 +278,15 @@ public class HudRenderer {
     }
 
     if (gameInfo.getChildren().size == 0) {
-      gameInfo.addActor(new Label(playerInfo, Main.skin));
       gameInfo.addActor(new Label(performanceInfo, Main.skin));
       gameInfo.addActor(new Label(positionInfo, Main.skin));
       gameInfo.addActor(new Label(dijkstraInfo, Main.skin));
     } else {
-      Label playerInfoLabel = (Label) gameInfo.getChildren().get(0);
-      playerInfoLabel.setText(playerInfo);
-      Label performanceInfoLabel = (Label) gameInfo.getChildren().get(1);
+      Label performanceInfoLabel = (Label) gameInfo.getChildren().get(0);
       performanceInfoLabel.setText(performanceInfo);
-      Label positionInfoLabel = (Label) gameInfo.getChildren().get(2);
+      Label positionInfoLabel = (Label) gameInfo.getChildren().get(1);
       positionInfoLabel.setText(positionInfo);
-      Label dijkstraInfoLabel = (Label) gameInfo.getChildren().get(3);
+      Label dijkstraInfoLabel = (Label) gameInfo.getChildren().get(2);
       dijkstraInfoLabel.setText(dijkstraInfo);
     }
   }

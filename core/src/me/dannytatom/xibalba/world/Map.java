@@ -19,7 +19,6 @@ public class Map {
   public final int depth;
   public final String type;
   public final MapCell.Type[][] geometry;
-  public final MapTime time;
   public final MapDijkstra dijkstra;
   public boolean hasWater = false;
   public Vector2 entrance;
@@ -44,7 +43,6 @@ public class Map {
     this.height = this.geometry[0].length;
 
     this.dijkstra = new MapDijkstra(this);
-    this.time = new MapTime();
   }
 
   /**

@@ -255,7 +255,7 @@ public class WorldRenderer {
           }
         }
 
-        alpha = alpha <= map.time.shadow ? map.time.shadow : alpha;
+        alpha = alpha <= .15f ? .15f : alpha;
 
         shadow.setColor(Colors.get(WorldManager.world.getCurrentMap().type + "Background"));
         shadow.setAlpha(-alpha);

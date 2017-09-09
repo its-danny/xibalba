@@ -20,7 +20,7 @@ public class MovementSystem extends UsesEnergySystem {
    * If the entities have a move action in queue, and can move where they're wanting to, move 'em.
    *
    * @param entity    The entity to process
-   * @param deltaTime MapTime since last frame
+   * @param deltaTime Time since last frame
    */
   public void processEntity(Entity entity, float deltaTime) {
     PositionComponent position = ComponentMappers.position.get(entity);
