@@ -11,6 +11,8 @@ import me.dannytatom.xibalba.systems.UsesEnergySystem;
 import me.dannytatom.xibalba.utils.ComponentMappers;
 import me.dannytatom.xibalba.world.WorldManager;
 
+import java.util.ArrayList;
+
 public class MovementSystem extends UsesEnergySystem {
   public MovementSystem() {
     super(Family.all(MovementComponent.class).get());
@@ -49,7 +51,11 @@ public class MovementSystem extends UsesEnergySystem {
         }
 
         if (ComponentMappers.item.has(thing)) {
-          WorldManager.itemHelpers.addToInventory(WorldManager.player, thing, true);
+          ArrayList<Entity> items = WorldManager.mapHelpers.getEntitiesAt(movement.pos);
+
+          for (Entity item : items) {
+            WorldManager.itemHelpers.addToInventory(WorldManager.player, item, true);
+          }
 
           move(entity, movement);
 
