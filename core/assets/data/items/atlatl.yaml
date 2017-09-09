@@ -8,7 +8,7 @@ visual:
   color: E6EDD0
 
 twoHanded: true
-skill: piercing
+skill: bashing
 location: right hand
 ammunition: spear
 
