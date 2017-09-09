@@ -83,87 +83,87 @@ public class PlayScreen implements Screen {
 
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-    autoTimer += delta;
-    keyHoldTimer += delta;
-
-    // Light
-    WorldManager.world.getCurrentMap().light.update(delta);
-
-    // Weather!
-    if (WorldManager.world.getCurrentMap().weather != null && Main.debug.weatherEnabled) {
-      WorldManager.world.getCurrentMap().weather.update(delta);
-    }
-
-    // Keep moving if a key is held down
-    if (playerInput.keyHeld != -1) {
-      keyHoldTimerDelay += delta;
-
-      if (keyHoldTimerDelay >= .5f) {
-        if (keyHoldTimer >= .10f) {
-          keyHoldTimer = 0;
-          playerInput.keyDown(playerInput.keyHeld);
-        }
-      }
-    } else {
-      keyHoldTimerDelay = 0;
-    }
-
-    // In some cases, we want the game to take turns on it's own
-    if ((WorldManager.state == WorldManager.State.MOVING
-        || WorldManager.state == WorldManager.State.DEAD
-        || WorldManager.entityHelpers.shouldSkipTurn(WorldManager.player))
-        && autoTimer >= .10f) {
-      autoTimer = 0;
-      WorldManager.executeTurn = true;
-    }
-
-    // Update engine if it's time to execute a turn
-    if (WorldManager.executeTurn) {
-      WorldManager.turnCount += 1;
-
-      WorldManager.engine.update(delta);
-      WorldManager.world.getCurrentMap().time.update();
-
-      WorldManager.executeTurn = false;
-    }
-
-    // Start tweens
-    if (WorldManager.tweens.size > 0) {
-      WorldManager.state = WorldManager.State.WAITING;
-      Timeline timeline = Timeline.createParallel();
-
-      for (int i = 0; i < WorldManager.tweens.size; i++) {
-        timeline.push(WorldManager.tweens.get(i));
-        WorldManager.tweens.removeIndex(i);
-      }
-
-      timeline.setCallback(
-          (type, source) -> {
-            if (type == TweenCallback.COMPLETE) {
-              WorldManager.state = WorldManager.State.PLAYING;
-            }
-          }
-      ).start(Main.tweenManager);
-    }
-
     // Check if going up or down levels
     if (WorldManager.state == WorldManager.State.GOING_DOWN) {
       WorldManager.world.goDown();
     } else if (WorldManager.state == WorldManager.State.GOING_UP) {
       WorldManager.world.goUp();
     } else {
+      autoTimer += delta;
+      keyHoldTimer += delta;
+
+      // Light
+      WorldManager.world.getCurrentMap().light.update(delta);
+
+      // Weather!
+      if (WorldManager.world.getCurrentMap().weather != null && Main.debug.weatherEnabled) {
+        WorldManager.world.getCurrentMap().weather.update(delta);
+      }
+
+      // Keep moving if a key is held down
+      if (playerInput.keyHeld != -1) {
+        keyHoldTimerDelay += delta;
+
+        if (keyHoldTimerDelay >= .5f) {
+          if (keyHoldTimer >= .10f) {
+            keyHoldTimer = 0;
+            playerInput.keyDown(playerInput.keyHeld);
+          }
+        }
+      } else {
+        keyHoldTimerDelay = 0;
+      }
+
+      // In some cases, we want the game to take turns on it's own
+      if ((WorldManager.state == WorldManager.State.MOVING
+          || WorldManager.state == WorldManager.State.DEAD
+          || WorldManager.entityHelpers.shouldSkipTurn(WorldManager.player))
+          && autoTimer >= .10f) {
+        autoTimer = 0;
+        WorldManager.executeTurn = true;
+      }
+
+      // Update engine if it's time to execute a turn
+      if (WorldManager.executeTurn) {
+        WorldManager.turnCount += 1;
+
+        WorldManager.engine.update(delta);
+        WorldManager.world.getCurrentMap().time.update();
+
+        WorldManager.executeTurn = false;
+      }
+
+      // Start tweens
+      if (WorldManager.tweens.size > 0) {
+        WorldManager.state = WorldManager.State.WAITING;
+        Timeline timeline = Timeline.createParallel();
+
+        for (int i = 0; i < WorldManager.tweens.size; i++) {
+          timeline.push(WorldManager.tweens.get(i));
+          WorldManager.tweens.removeIndex(i);
+        }
+
+        timeline.setCallback(
+            (type, source) -> {
+              if (type == TweenCallback.COMPLETE) {
+                WorldManager.state = WorldManager.State.PLAYING;
+              }
+            }
+        ).start(Main.tweenManager);
+      }
+
       Main.tweenManager.update(delta);
+
+      // Check player health for DEATH
+      if (playerAttributes.health <= 0) {
+        WorldManager.state = WorldManager.State.DEAD;
+      }
 
       worldRenderer.render(delta);
       hudRenderer.render(delta);
-    }
 
-    // Check player health for DEATH
-    if (playerAttributes.health <= 0) {
-      WorldManager.state = WorldManager.State.DEAD;
+      console.draw();
     }
-
-    console.draw();
   }
 
   @Override

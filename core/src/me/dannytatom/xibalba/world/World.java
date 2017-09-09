@@ -1,12 +1,12 @@
 package me.dannytatom.xibalba.world;
 
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.components.MouseMovementComponent;
 import me.dannytatom.xibalba.components.PlayerComponent;
+import me.dannytatom.xibalba.screens.DepthScreen;
 import me.dannytatom.xibalba.screens.PlayScreen;
 import me.dannytatom.xibalba.utils.ComponentMappers;
 
@@ -65,7 +65,7 @@ public class World {
 
   private void changeDepth(int change) {
     Main.playScreen.dispose();
-    main.setScreen(null);
+    main.setScreen(new DepthScreen());
 
     entities.get(currentMapIndex).removeValue(WorldManager.player, true);
     entities.get(currentMapIndex + change).add(WorldManager.player);
