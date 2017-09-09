@@ -42,19 +42,25 @@ public class MapDijkstra {
   }
 
   public void updateWanderWater() {
-    for (int i = 0; i < wanderWater.length; i++) {
-      Array<Vector2> goal = new Array<>();
-      goal.add(WorldManager.mapHelpers.getRandomOpenPositionInWater(map.depth));
+    if (map.hasWater) {
+      for (int i = 0; i < wanderWater.length; i++) {
+        Array<Vector2> goal = new Array<>();
+        goal.add(WorldManager.mapHelpers.getRandomOpenPositionInWater(map.depth));
 
-      MapCell.Type[] walkableTypes = new MapCell.Type[2];
-      walkableTypes[1] = MapCell.Type.DEEP_WATER;
+        MapCell.Type[] walkableTypes = new MapCell.Type[2];
+        walkableTypes[1] = MapCell.Type.DEEP_WATER;
 
-      wanderWater[i] = new Dijkstra(map, walkableTypes, goal);
+        wanderWater[i] = new Dijkstra(map, walkableTypes, goal);
+      }
     }
   }
 
   public Array<Vector2> findWanderWaterPath(Vector2 start) {
-    return wanderWater[MathUtils.random(0, wanderWater.length - 1)].findPath(start);
+    if (map.hasWater) {
+      return wanderWater[MathUtils.random(0, wanderWater.length - 1)].findPath(start);
+    } else {
+      return null;
+    }
   }
 
   public void updatePlayerExplore() {
