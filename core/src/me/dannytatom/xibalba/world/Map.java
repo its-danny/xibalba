@@ -235,7 +235,7 @@ public class Map {
 
     cell.sprite.setColor(Colors.get("bridge"));
     cell.type = MapCell.Type.FLOOR;
-    cell.description = "bridge";
+    cell.description = "a bridge";
 
     cell.tween.kill();
   }
