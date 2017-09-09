@@ -1,5 +1,6 @@
 ---
 type: weapon
+ammunitionType: spear
 weaponType: melee
 weight: 3
 
@@ -13,6 +14,7 @@ location: right hand
 attributes:
   hitDamage: 6
   throwDamage: 8
+  shotDamage: 12
 
 effects:
   onConsume: dealDamage:24

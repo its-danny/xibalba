@@ -55,6 +55,14 @@
       {
         "name": "healthPlant",
         "spawnRange": "0,1"
+      },
+      {
+        "name": "atlatl",
+        "spawnRange": "10,20"
+      },
+      {
+        "name": "spear",
+        "spawnRange": "20,50"
       }
     ],
     "traps": [

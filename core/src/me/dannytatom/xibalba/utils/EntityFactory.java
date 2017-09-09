@@ -129,9 +129,6 @@ public class EntityFactory {
     );
 
     switch (data.type) {
-      case "ammunition":
-        entity.add(new AmmunitionComponent(data));
-        break;
       case "armor":
         entity.add(new ArmorComponent(data));
         break;
@@ -142,6 +139,10 @@ public class EntityFactory {
         entity.add(new LightComponent(data));
         break;
       default:
+    }
+
+    if (data.ammunitionType != null) {
+      entity.add(new AmmunitionComponent(data));
     }
 
     if (data.effects != null) {

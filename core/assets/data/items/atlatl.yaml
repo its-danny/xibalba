@@ -1,0 +1,29 @@
+---
+type: weapon
+weaponType: range
+weight: 3
+
+visual:
+  character: "1205"
+  color: E6EDD0
+
+twoHanded: true
+skill: piercing
+location: right hand
+ammunition: spear
+
+attributes:
+  throwDamage: 6
+  hitDamage: 6
+
+effects:
+  onConsume: dealDamage:16
+
+actions:
+  - consume
+  - throw
+  - hold
+  - applyTo
+
+verbs:
+  - hit
