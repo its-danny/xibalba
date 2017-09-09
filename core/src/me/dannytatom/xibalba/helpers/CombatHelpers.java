@@ -321,6 +321,10 @@ public class CombatHelpers {
     if (damage > defense) {
       AttributesComponent targetAttributes = ComponentMappers.attributes.get(target);
 
+      // Update attacksToKill counter
+
+      ComponentMappers.enemy.get(target).attacksToKill += 1;
+
       // Shake camera if the player was hit
 
       if (ComponentMappers.player.has(target)) {
@@ -485,6 +489,16 @@ public class CombatHelpers {
 
           playerDetails.lastHitEntity = null;
           playerDetails.totalKills += 1;
+
+          if (ComponentMappers.god.get(WorldManager.god).hates.contains("Unworthy prey")
+              && ComponentMappers.enemy.get(target).attacksToKill <= 100) {
+            ComponentMappers.attributes.get(starter).divineFavor -= MathUtils.random(50, 100);
+
+            WorldManager.log.add(
+                "attributes.divineFavor.decreased",
+                ComponentMappers.god.get(WorldManager.god).name
+            );
+          }
 
           WorldManager.log.add("combat.playerKilledEnemy", targetAttributes.name);
         } else {

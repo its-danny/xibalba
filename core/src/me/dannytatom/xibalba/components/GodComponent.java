@@ -9,11 +9,18 @@ public class GodComponent implements Component {
   public final String description;
   public ArrayList<String> hates;
   public ArrayList<String> likes;
+  public ArrayList<String> wrath;
+  public boolean hasWrath = false;
 
-  public GodComponent(String name, String description, ArrayList<String> hates, ArrayList<String> likes) {
+  public GodComponent(
+      String name, String description,
+      ArrayList<String> hates, ArrayList<String> likes,
+      ArrayList<String> wrath
+  ) {
     this.name = name;
     this.description = description;
     this.hates = hates;
     this.likes = likes;
+    this.wrath = wrath;
   }
 }

@@ -270,7 +270,12 @@ public class ItemHelpers {
           }
         }
 
-        if (ComponentMappers.god.get(WorldManager.god).likes.contains("Eating things you kill")) {
+        AttributesComponent.Type type = ComponentMappers.corpse.has(item)
+            ? ComponentMappers.corpse.get(item).type
+            : ComponentMappers.limb.get(item).type;
+
+        if (ComponentMappers.god.get(WorldManager.god).likes.contains("Eating animals you kill")
+            && type == AttributesComponent.Type.ANIMAL) {
           AttributesComponent attributes = ComponentMappers.attributes.get(entity);
 
           int amount = MathUtils.random(1, 5);

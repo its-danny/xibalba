@@ -180,7 +180,8 @@ public class EntityFactory {
     ComponentMappers.item.get(entity).name = name + " corpse";
 
     BodyComponent body = ComponentMappers.body.get(enemy);
-    entity.add(new CorpseComponent(name, body.parts, body.wearable));
+    AttributesComponent.Type type = ComponentMappers.attributes.get(enemy).type;
+    entity.add(new CorpseComponent(name, type, body.parts, body.wearable));
 
     return entity;
   }
@@ -219,7 +220,7 @@ public class EntityFactory {
     item.name = ComponentMappers.corpse.get(corpse).entity
         + " " + part.replace("left ", "").replace("right ", "");
 
-    entity.add(new LimbComponent());
+    entity.add(new LimbComponent(ComponentMappers.corpse.get(corpse).type));
 
     CorpseComponent body = ComponentMappers.corpse.get(corpse);
 
