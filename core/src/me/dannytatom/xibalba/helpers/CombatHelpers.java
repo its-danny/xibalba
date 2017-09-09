@@ -491,8 +491,8 @@ public class CombatHelpers {
           playerDetails.totalKills += 1;
 
           if (ComponentMappers.god.get(WorldManager.god).hates.contains("Unworthy prey")
-              && ComponentMappers.enemy.get(target).attacksToKill <= 100) {
-            ComponentMappers.attributes.get(starter).divineFavor -= MathUtils.random(50, 100);
+              && ComponentMappers.enemy.get(target).attacksToKill <= 10) {
+            ComponentMappers.attributes.get(starter).divineFavor -= MathUtils.random(1, 10);
 
             WorldManager.log.add(
                 "attributes.divineFavor.decreased",
