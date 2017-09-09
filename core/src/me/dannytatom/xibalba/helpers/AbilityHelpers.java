@@ -41,6 +41,13 @@ public class AbilityHelpers {
             return;
           }
 
+          if (abilityData.targetRequired
+              && abilityData.targetType != ComponentMappers.attributes.get(target).type) {
+            WorldManager.log.add("effects.failed", abilityData.name);
+
+            return;
+          }
+
           if (MathUtils.random((attributes.divineFavor / 100), 1) == 1) {
             WorldManager.entityHelpers.charm(entity, target, Integer.parseInt(params[0]));
           } else {

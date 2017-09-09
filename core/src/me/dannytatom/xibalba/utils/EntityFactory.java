@@ -73,6 +73,7 @@ public class EntityFactory {
     entity.add(new AttributesComponent(
         i18n.get("entities.enemies." + name + ".name"),
         i18n.get("entities.enemies." + name + ".description"),
+        data.type,
         data.attributes.get("speed"),
         data.attributes.get("vision"),
         data.attributes.get("hearing"),

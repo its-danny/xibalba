@@ -61,7 +61,10 @@ public class PlayerSetup {
     color = "FFFFFF";
     generateName();
 
-    attributes = new AttributesComponent(name, "It's you", 100, 10, 5, 4, 4, 4);
+    attributes = new AttributesComponent(
+        name, "It's you", AttributesComponent.Type.HUMAN,
+        100, 10, 5, 4, 4, 4
+    );
     skills = new SkillsComponent();
     traits = new Array<>();
     defects = new Array<>();

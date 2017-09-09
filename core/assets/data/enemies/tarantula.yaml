@@ -1,4 +1,6 @@
 ---
+type: ANIMAL
+
 visual:
   character: "1002"
   color: EC950E

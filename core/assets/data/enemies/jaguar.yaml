@@ -1,4 +1,6 @@
 ---
+type: ANIMAL
+
 visual:
   character: "1006"
   color: D0852B
