@@ -269,6 +269,21 @@ public class ItemHelpers {
             entity.add(new SickComponent(MathUtils.random(5, 20)));
           }
         }
+
+        if (ComponentMappers.god.get(WorldManager.god).likes.contains("Eating things you kill")) {
+          AttributesComponent attributes = ComponentMappers.attributes.get(entity);
+
+          int amount = MathUtils.random(1, 5);
+
+          if (attributes.divineFavor <= (attributes.divineFavor + amount)) {
+            attributes.divineFavor += amount;
+
+            WorldManager.log.add(
+                "attributes.divineFavor.increased",
+                ComponentMappers.god.get(WorldManager.god).name
+            );
+          }
+        }
       }
 
       PlayerComponent player = ComponentMappers.player.get(entity);

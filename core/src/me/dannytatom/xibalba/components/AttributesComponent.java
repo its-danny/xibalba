@@ -52,7 +52,7 @@ public class AttributesComponent implements Component {
     this.hearing = hearing;
     this.health = maxHealth;
     this.oxygen = maxOxygen;
-    this.divineFavor = 100;
+    this.divineFavor = 50;
   }
 
   public enum Type {
