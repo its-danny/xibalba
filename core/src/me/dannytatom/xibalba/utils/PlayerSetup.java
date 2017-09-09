@@ -97,8 +97,12 @@ public class PlayerSetup {
     player.add(skills);
     player.add(attributes);
 
-    Vector2 position = WorldManager.mapHelpers.getRandomOpenPositionInWater(WorldManager.world.currentMapIndex);
+    Vector2 position = WorldManager.mapHelpers.getRandomOpenPositionOnLand(
+        WorldManager.world.currentMapIndex
+    );
+
     player.add(new PositionComponent(position));
+
     player.add(
         new VisualComponent(Main.asciiAtlas.createSprite("0004"), position, Main.parseColor(color))
     );
