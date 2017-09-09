@@ -1,0 +1,7 @@
+---
+name: Charm Animal
+type: ACTIVE
+targetRequired: true
+description: Charm an animal to not attack you for 5 turns
+recharge: 10
+effect: charmEnemy:5

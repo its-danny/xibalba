@@ -172,7 +172,7 @@ public class PlayerSetup {
     }
 
     WorldManager.god = new Entity();
-    WorldManager.god.add(new GodComponent(godData.name, godData.description));
+    WorldManager.god.add(new GodComponent(godData.name, godData.description, godData.hates, godData.likes));
 
     AbilitiesComponent abilitiesComponent = new AbilitiesComponent();
 

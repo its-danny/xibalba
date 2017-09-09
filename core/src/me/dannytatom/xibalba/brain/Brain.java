@@ -128,7 +128,10 @@ public enum Brain implements State<Entity> {
         return;
       }
 
-      entity.add(new MeleeComponent(brain.target, "body", false));
+      // Attack unless charmed
+      if (!ComponentMappers.charmed.has(entity)) {
+        entity.add(new MeleeComponent(brain.target, "body", false));
+      }
     }
   };
 

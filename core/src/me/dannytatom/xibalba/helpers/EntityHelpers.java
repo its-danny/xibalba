@@ -13,6 +13,7 @@ import me.dannytatom.xibalba.components.EquipmentComponent;
 import me.dannytatom.xibalba.components.ItemComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.VisualComponent;
+import me.dannytatom.xibalba.components.statuses.CharmedComponent;
 import me.dannytatom.xibalba.components.statuses.PoisonedComponent;
 import me.dannytatom.xibalba.utils.ComponentMappers;
 import me.dannytatom.xibalba.world.Map;
@@ -433,6 +434,18 @@ public class EntityHelpers {
 
         WorldManager.log.add("effects.poisoned.started", attributes.name, "is");
       }
+    }
+  }
+
+  public void charm(Entity starter, Entity target, int turns) {
+    target.add(new CharmedComponent(turns));
+
+    AttributesComponent targetAttributes = ComponentMappers.attributes.get(target);
+
+    if (ComponentMappers.player.has(starter)) {
+      WorldManager.log.add("effects.charmed.started", "You", targetAttributes.name);
+    } else {
+      WorldManager.log.add("effects.charmed.started", targetAttributes.name, "you");
     }
   }
 

@@ -178,8 +178,7 @@ class GodScreen implements Screen {
 
       abilityGroup.addActor(
           new Label(
-              createAbilityText(details.name, details.description, details.recharge
-              ), Main.skin)
+              createAbilityText(details), Main.skin)
       );
     });
   }
@@ -189,10 +188,14 @@ class GodScreen implements Screen {
     main.setScreen(new NameScreen(main, playerSetup));
   }
 
-  private String createAbilityText(String name, String description, int recharge) {
-    String desc = WordUtils.wrap(description, 70);
+  private String createAbilityText(AbilityData abilityData) {
+    String desc = WordUtils.wrap(abilityData.description, 70);
 
-    return name + "[LIGHT_GRAY] every " + recharge + " turns\n" + "[DARK_GRAY]" + desc;
+    if (abilityData.type == AbilityData.Type.PASSIVE) {
+      return abilityData.name + "[LIGHT_GRAY] Passive\n[DARK_GRAY]" + desc;
+    } else {
+      return abilityData.name + "[LIGHT_GRAY] Usable every " + abilityData.recharge + " turns\n" + "[DARK_GRAY]" + desc;
+    }
   }
 
   @Override

@@ -33,6 +33,7 @@ import me.dannytatom.xibalba.components.actions.RangeComponent;
 import me.dannytatom.xibalba.components.items.AmmunitionComponent;
 import me.dannytatom.xibalba.components.items.WeaponComponent;
 import me.dannytatom.xibalba.components.statuses.BleedingComponent;
+import me.dannytatom.xibalba.components.statuses.CharmedComponent;
 import me.dannytatom.xibalba.components.statuses.CrippledComponent;
 import me.dannytatom.xibalba.components.statuses.DrowningComponent;
 import me.dannytatom.xibalba.components.statuses.EncumberedComponent;
@@ -78,6 +79,9 @@ public final class ComponentMappers {
 
   public static final ComponentMapper<EncumberedComponent> encumbered =
       ComponentMapper.getFor(EncumberedComponent.class);
+
+  public static final ComponentMapper<CharmedComponent> charmed =
+      ComponentMapper.getFor(CharmedComponent.class);
 
   public static final ComponentMapper<CrippledComponent> crippled =
       ComponentMapper.getFor(CrippledComponent.class);

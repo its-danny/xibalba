@@ -141,6 +141,10 @@ public class HudRenderer {
     for (int i = 0; i < abilities.size; i++) {
       AbilityData abilityData = abilities.get(i);
 
+      if (abilityData.type == AbilityData.Type.PASSIVE) {
+        continue;
+      }
+
       // If you look at the docs for Input.Keys, number keys are offset by 7
       // (e.g. 0 = 7, 1 = 8, etc)
       ActionButton button = new ActionButton(i + 1, null);
@@ -416,6 +420,11 @@ public class HudRenderer {
 
     for (int i = 0; i < abilities.size; i++) {
       AbilityData abilityData = abilities.get(i);
+
+      if (abilityData.type == AbilityData.Type.PASSIVE) {
+        continue;
+      }
+
       ActionButton button = (ActionButton) abilityButtons.getChildren().get(i);
 
       if (abilityData.counter != abilityData.recharge) {

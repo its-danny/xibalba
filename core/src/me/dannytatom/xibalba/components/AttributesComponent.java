@@ -5,7 +5,7 @@ import com.badlogic.ashley.core.Component;
 public class AttributesComponent implements Component {
   public final String description;
   public final String name;
-  public final int divineFavor;
+  public int divineFavor;
   public int speed;
   public int maxOxygen;
   public int maxVision;

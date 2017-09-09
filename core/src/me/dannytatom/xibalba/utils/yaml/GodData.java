@@ -6,4 +6,6 @@ public class GodData {
   public String name;
   public String description;
   public ArrayList<String> abilities;
+  public ArrayList<String> hates;
+  public ArrayList<String> likes;
 }

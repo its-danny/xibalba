@@ -1,5 +1,0 @@
----
-name: Heal self
-description: Heal yourself.
-recharge: 3
-effect: healSelf:20

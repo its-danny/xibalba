@@ -1,0 +1,13 @@
+---
+name: Ah Tabai
+description: God of the hunt
+
+likes:
+  - Eating animals you kill
+
+hates:
+  - Not eating animals you kill
+
+abilities:
+  - charmAnimal
+  - bonusAgainstAnimals
