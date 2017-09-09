@@ -390,18 +390,16 @@ public class CharacterScreen implements Screen {
     abilitiesGroup.addActor(new Label(god.name + " Abilities", Main.skin));
     abilitiesGroup.addActor(new Label("", Main.skin));
 
-    Array<AbilityData> abilities = ComponentMappers.abilities.get(player).abilities;
+    HashMap<String, AbilityData> abilities = ComponentMappers.abilities.get(player).abilities;
 
-    for (int i = 0; i < abilities.size; i++) {
-      AbilityData abilityData = abilities.get(i);
-
+    abilities.forEach((name, ability) -> {
       abilitiesGroup.addActor(new Label(
-          abilityData.name + "[LIGHT_GRAY] every "
-              + abilityData.recharge + " turns\n" + "[DARK_GRAY]"
-              + WordUtils.wrap(abilityData.description, 70),
+          ability.name + "[LIGHT_GRAY] every "
+              + ability.recharge + " turns\n" + "[DARK_GRAY]"
+              + WordUtils.wrap(ability.description, 70),
           Main.skin
       ));
-    }
+    });
   }
 
   private void updateInventoryGroup() {

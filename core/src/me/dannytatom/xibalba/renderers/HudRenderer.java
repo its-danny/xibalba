@@ -31,6 +31,8 @@ import me.dannytatom.xibalba.world.MapCell;
 import me.dannytatom.xibalba.world.WorldManager;
 import org.apache.commons.lang3.text.WordUtils;
 
+import java.util.HashMap;
+
 public class HudRenderer {
   public final Stage stage;
   private final Main main;
@@ -136,11 +138,10 @@ public class HudRenderer {
   }
 
   private void setupAbilitiesButtons() {
-    Array<AbilityData> abilities = ComponentMappers.abilities.get(player).abilities;
+    HashMap<String, AbilityData> abilities = ComponentMappers.abilities.get(player).abilities;
 
-    for (int i = 0; i < abilities.size; i++) {
-      AbilityData abilityData = abilities.get(i);
-
+    int i = 0;
+    for (AbilityData abilityData : abilities.values()) {
       if (abilityData.type == AbilityData.Type.PASSIVE) {
         continue;
       }
@@ -155,11 +156,13 @@ public class HudRenderer {
         }
       });
 
-      if (i == abilities.size - 1) {
+      if (i == abilities.size() - 1) {
         abilityButtons.add(button).pad(0, 5, 0, 0);
       } else {
         abilityButtons.add(button).pad(0, 5, 0, 5);
       }
+
+      i++;
     }
 
     buttonsAndAreaDetails.addActor(abilityButtons);
@@ -416,11 +419,10 @@ public class HudRenderer {
   }
 
   private void updateAbilitiesButtons() {
-    Array<AbilityData> abilities = ComponentMappers.abilities.get(player).abilities;
+    HashMap<String, AbilityData> abilities = ComponentMappers.abilities.get(player).abilities;
 
-    for (int i = 0; i < abilities.size; i++) {
-      AbilityData abilityData = abilities.get(i);
-
+    int i = 0;
+    for (AbilityData abilityData : abilities.values()) {
       if (abilityData.type == AbilityData.Type.PASSIVE) {
         continue;
       }
@@ -434,6 +436,8 @@ public class HudRenderer {
         button.setLabel(abilityData.name);
         button.setDisabled(false);
       }
+
+      i++;
     }
   }
 

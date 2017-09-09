@@ -186,7 +186,7 @@ public class PlayerSetup {
       );
 
       details.counter = details.recharge;
-      abilitiesComponent.abilities.add(details);
+      abilitiesComponent.abilities.put(ability, details);
     });
 
     player.add(abilitiesComponent);

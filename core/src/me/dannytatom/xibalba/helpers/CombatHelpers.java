@@ -290,6 +290,13 @@ public class CombatHelpers {
       totalDamage += ComponentMappers.item.get(item).quality.getModifier();
     }
 
+    // Modify based on abilities
+
+    if (ComponentMappers.abilities.get(starter).abilities.get("Bonus against Animals") != null
+        && ComponentMappers.attributes.get(target).type == AttributesComponent.Type.ANIMAL) {
+      totalDamage += MathUtils.random(1, 4);
+    }
+
     // Make sure it ain't negative
 
     if (totalDamage < 0) {
