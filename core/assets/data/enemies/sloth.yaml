@@ -14,6 +14,7 @@ attributes:
   agility: 4
 
 brain:
+  aggression: 0.3
   fearThreshold: 0.3
   dna:
     - TERRESTRIAL
