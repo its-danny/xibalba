@@ -2,7 +2,6 @@ package me.dannytatom.xibalba.helpers;
 
 import aurelienribon.tweenengine.Tween;
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import me.dannytatom.xibalba.Main;
@@ -317,14 +316,6 @@ public class CombatHelpers {
       totalDamage = 0;
     }
 
-    // Log some shit
-
-    WorldManager.log.add(
-        "combat.hit", getName(starter),
-        (item == null ? "hit" : ComponentMappers.item.get(item).verbs.random()),
-        getName(target), totalDamage, bodyPart
-    );
-
     return totalDamage;
   }
 
@@ -504,6 +495,14 @@ public class CombatHelpers {
           }
         }
       }
+
+      // Log some shit
+
+      WorldManager.log.add(
+          "combat.hit", getName(starter),
+          (item == null ? "hit" : ComponentMappers.item.get(item).verbs.random()),
+          getName(target), totalDamage, bodyPart
+      );
 
       // Kill it?
 
