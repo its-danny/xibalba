@@ -16,6 +16,10 @@ attributes:
 brain:
   fearThreshold: 0.8
   dna:
+    - TERRESTRIAL
+    - SWIMMER
+    - STEALTHY
+    - SOLO
 
 bodyParts:
   body: 6

@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Colors;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.I18NBundle;
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.components.AttributesComponent;
@@ -85,15 +86,13 @@ public class EntityFactory {
     BrainComponent brain = new BrainComponent(entity);
     entity.add(brain);
 
-    if (data.brain != null) {
-      brain.fearThreshold = data.brain.fearThreshold;
+    brain.aggression = data.brain.aggression;
+    brain.fearThreshold = data.brain.fearThreshold;
 
-      if (data.brain.dna != null) {
-        if (data.brain.dna.contains("aquatic")) {
-          brain.dnas.add(BrainComponent.DNA.AQUATIC);
-        }
-      }
-    }
+    brain.dna = new Array<>();
+    data.brain.dna.forEach((str) -> {
+      brain.dna.add(BrainComponent.DNA.valueOf(str));
+    });
 
     if (data.effects != null) {
       entity.add(new EffectsComponent(data));

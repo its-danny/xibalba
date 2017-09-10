@@ -243,7 +243,7 @@ public class EntityHelpers {
 
   public boolean isAquatic(Entity entity) {
     BrainComponent brain = ComponentMappers.brain.get(entity);
-    return brain != null && brain.dnas.contains(BrainComponent.DNA.AQUATIC, false);
+    return brain != null && brain.dna.contains(BrainComponent.DNA.AQUATIC, false);
   }
 
   /**

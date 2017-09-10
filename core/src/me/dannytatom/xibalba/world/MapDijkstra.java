@@ -9,8 +9,9 @@ public class MapDijkstra {
   public Array<Vector2> exploreGoals;
   public Dijkstra[] wanderLand = new Dijkstra[5];
   public Dijkstra[] wanderWater = new Dijkstra[3];
+  public Dijkstra targetPlayerLand;
+  public Dijkstra targetPlayerWater;
   public Dijkstra playerExplore;
-  public Dijkstra playerPosition;
   private Map map;
 
   public MapDijkstra(Map map) {
@@ -20,8 +21,9 @@ public class MapDijkstra {
   public void updateAll() {
     updateWanderLand();
     updateWanderWater();
+    updateTargetPlayerLand();
+    updateTargetPlayerWater();
     updatePlayerExplore();
-    updatePlayerPosition();
   }
 
   public void updateWanderLand() {
@@ -63,6 +65,42 @@ public class MapDijkstra {
     }
   }
 
+  public Array<Vector2> findExplorePath(Vector2 start) {
+    return playerExplore.findPath(start);
+  }
+
+  public void updateTargetPlayerLand() {
+    Vector2 position = ComponentMappers.position.get(WorldManager.player).pos;
+    Array<Vector2> goals = new Array<>();
+    goals.add(position);
+
+    MapCell.Type[] walkableTypes = new MapCell.Type[2];
+    walkableTypes[0] = MapCell.Type.FLOOR;
+    walkableTypes[1] = MapCell.Type.SHALLOW_WATER;
+
+    targetPlayerLand = new Dijkstra(map, walkableTypes, goals);
+  }
+
+  public Array<Vector2> findTargetPlayerLandPath(Vector2 start) {
+    return targetPlayerLand.findPath(start);
+  }
+
+  public void updateTargetPlayerWater() {
+    Vector2 position = ComponentMappers.position.get(WorldManager.player).pos;
+    Array<Vector2> goals = new Array<>();
+    goals.add(position);
+
+    MapCell.Type[] walkableTypes = new MapCell.Type[2];
+    walkableTypes[0] = MapCell.Type.DEEP_WATER;
+    walkableTypes[1] = MapCell.Type.SHALLOW_WATER;
+
+    targetPlayerWater = new Dijkstra(map, walkableTypes, goals);
+  }
+
+  public Array<Vector2> findTargetPlayerWaterPath(Vector2 start) {
+    return targetPlayerWater.findPath(start);
+  }
+
   public void updatePlayerExplore() {
     exploreGoals = new Array<>();
 
@@ -79,25 +117,5 @@ public class MapDijkstra {
     walkableTypes[1] = MapCell.Type.SHALLOW_WATER;
 
     playerExplore = new Dijkstra(map, walkableTypes, exploreGoals);
-  }
-
-  public Array<Vector2> findExplorePath(Vector2 start) {
-    return playerExplore.findPath(start);
-  }
-
-  public void updatePlayerPosition() {
-    Vector2 position = ComponentMappers.position.get(WorldManager.player).pos;
-    Array<Vector2> goals = new Array<>();
-    goals.add(position);
-
-    MapCell.Type[] walkableTypes = new MapCell.Type[2];
-    walkableTypes[0] = MapCell.Type.FLOOR;
-    walkableTypes[1] = MapCell.Type.SHALLOW_WATER;
-
-    playerPosition = new Dijkstra(map, walkableTypes, goals);
-  }
-
-  public Array<Vector2> findPlayerPositionPath(Vector2 start) {
-    return playerPosition.findPath(start);
   }
 }

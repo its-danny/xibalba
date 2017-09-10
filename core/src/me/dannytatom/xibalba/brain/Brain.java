@@ -57,9 +57,9 @@ public enum Brain implements State<Entity> {
       if (brain.path == null || brain.path.size == 0) {
         PositionComponent position = ComponentMappers.position.get(entity);
 
-        if (brain.dnas.contains(BrainComponent.DNA.AQUATIC, false)) {
+        if (brain.dna.contains(BrainComponent.DNA.AQUATIC, false)) {
           brain.path = WorldManager.world.getCurrentMap().dijkstra.findWanderWaterPath(position.pos);
-        } else {
+        } else if (brain.dna.contains(BrainComponent.DNA.TERRESTRIAL, false)) {
           brain.path = WorldManager.world.getCurrentMap().dijkstra.findWanderLandPath(position.pos);
         }
       }
@@ -97,9 +97,15 @@ public enum Brain implements State<Entity> {
           || !playerPosition.pos.epsilonEquals(brain.path.get(brain.path.size - 1), 0.00001f);
 
       if (makeNewPath) {
-        brain.path = WorldManager.world.getCurrentMap().dijkstra.findPlayerPositionPath(
-            position.pos
-        );
+        if (brain.dna.contains(BrainComponent.DNA.AQUATIC, false)) {
+          brain.path = WorldManager.world.getCurrentMap().dijkstra.findTargetPlayerWaterPath(
+              position.pos
+          );
+        } else if (brain.dna.contains(BrainComponent.DNA.TERRESTRIAL, false)) {
+          brain.path = WorldManager.world.getCurrentMap().dijkstra.findTargetPlayerLandPath(
+              position.pos
+          );
+        }
       }
     }
   },
@@ -158,8 +164,8 @@ public enum Brain implements State<Entity> {
     return WorldManager.entityHelpers.canSense(entity, target)
         && !WorldManager.entityHelpers.isNear(entity, target)
         && brain.fear <= brain.fearThreshold
-        && (MathUtils.random() > brain.aggressive
-        || ComponentMappers.god.get(WorldManager.god).wrath.contains("Animals more aggressive"))
+        && (MathUtils.random() > brain.aggression
+        || ComponentMappers.god.get(WorldManager.god).wrath.contains("Animals more aggression"))
         && WorldManager.state != WorldManager.State.DEAD;
   }
 
@@ -169,8 +175,8 @@ public enum Brain implements State<Entity> {
     return WorldManager.entityHelpers.canSense(entity, target)
         && WorldManager.entityHelpers.isNear(entity, target)
         && brain.fear <= brain.fearThreshold
-        && (MathUtils.random() > brain.aggressive
-        || ComponentMappers.god.get(WorldManager.god).wrath.contains("Animals more aggressive"))
+        && (MathUtils.random() > brain.aggression
+        || ComponentMappers.god.get(WorldManager.god).wrath.contains("Animals more aggression"))
         && WorldManager.state != WorldManager.State.DEAD;
   }
 

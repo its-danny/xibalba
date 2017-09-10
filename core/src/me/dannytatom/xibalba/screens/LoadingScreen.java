@@ -245,7 +245,7 @@ public class LoadingScreen implements Screen {
         BrainComponent brain = ComponentMappers.brain.get(entity);
         Vector2 position;
 
-        if (brain.dnas.contains(BrainComponent.DNA.AQUATIC, false)) {
+        if (brain.dna.contains(BrainComponent.DNA.AQUATIC, false)) {
           if (WorldManager.world.getMap(mapIndex).hasWater) {
             position = WorldManager.mapHelpers.getRandomOpenPositionInWater(mapIndex);
           } else {

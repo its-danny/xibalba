@@ -83,7 +83,7 @@ public class MovementSystem extends UsesEnergySystem {
     WorldManager.entityHelpers.updateSenses(entity);
 
     if (ComponentMappers.player.has(entity)) {
-      WorldManager.world.getCurrentMap().dijkstra.updatePlayerPosition();
+      WorldManager.world.getCurrentMap().dijkstra.updateTargetPlayerLand();
 
       PlayerComponent playerDetails = ComponentMappers.player.get(WorldManager.player);
 

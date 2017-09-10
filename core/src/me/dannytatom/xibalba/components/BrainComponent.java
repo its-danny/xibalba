@@ -11,12 +11,12 @@ import me.dannytatom.xibalba.brain.Brain;
 public class BrainComponent implements Component {
   public final StateMachine<Entity, Brain> stateMachine;
 
-  public Array<DNA> dnas;
+  public Array<DNA> dna;
   public Array<String> hates;
   public Array<String> avoids;
   public Array<String> afraidOf;
 
-  public float aggressive;
+  public float aggression;
   public float fear;
   public float fearThreshold;
 
@@ -26,12 +26,12 @@ public class BrainComponent implements Component {
   public BrainComponent(Entity entity) {
     stateMachine = new DefaultStateMachine<>(entity, Brain.SLEEP);
 
-    dnas = new Array<>();
+    dna = new Array<>();
     hates = new Array<>();
     avoids = new Array<>();
     afraidOf = new Array<>();
 
-    aggressive = 0.5f;
+    aggression = 0.5f;
     fear = 0f;
     fearThreshold = 0.5f;
   }
@@ -40,10 +40,10 @@ public class BrainComponent implements Component {
     TERRESTRIAL,
     AQUATIC,
     SWIMMER,
-    FLYING,
+    FLYER,
 
     STEALTHY,
-    PACKS,
+    PACK,
     SOLO
   }
 }

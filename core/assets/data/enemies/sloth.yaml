@@ -16,6 +16,7 @@ attributes:
 brain:
   fearThreshold: 0.3
   dna:
+    - TERRESTRIAL
 
 bodyParts:
   head: 8

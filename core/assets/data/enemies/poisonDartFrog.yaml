@@ -16,6 +16,8 @@ attributes:
 brain:
   fearThreshold: 0.2
   dna:
+    - TERRESTRIAL
+    - SWIMMER
 
 bodyParts:
   head: 8
