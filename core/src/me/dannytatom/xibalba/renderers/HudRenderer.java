@@ -499,13 +499,13 @@ public class HudRenderer {
 
     if (attributes.divineFavor <= 0) {
       divineFavorColor = "[RED]";
-    } else if (attributes.divineFavor / 100 <= 0.5f) {
+    } else if (attributes.divineFavor / 100 <= 0.5) {
       divineFavorColor = "[YELLOW]";
     } else {
       divineFavorColor = "[WHITE]";
     }
 
-    String divineFavorText = divineFavorColor + attributes.divineFavor + "[LIGHT_GRAY]/100";
+    String divineFavorText = divineFavorColor + Math.round(attributes.divineFavor) + "[LIGHT_GRAY]/100";
     StringBuilder divineFavorBar = new StringBuilder("[LIGHT_GRAY]DF [[");
 
     for (int i = 0; i < MathUtils.floor(100 / 10); i++) {

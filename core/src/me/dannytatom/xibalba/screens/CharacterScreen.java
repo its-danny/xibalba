@@ -253,7 +253,7 @@ public class CharacterScreen implements Screen {
 
     attributesGroup.addActor(
         new Label(
-            "[LIGHT_GRAY]DF " + divineFavorColor + attributes.divineFavor
+            "[LIGHT_GRAY]DF " + divineFavorColor + Math.round(attributes.divineFavor)
                 + "[LIGHT_GRAY]/100", Main.skin
         )
     );

@@ -6,7 +6,7 @@ public class AttributesComponent implements Component {
   public final String description;
   public final String name;
   public final Type type;
-  public int divineFavor;
+  public float divineFavor;
   public int speed;
   public int maxOxygen;
   public int maxVision;
