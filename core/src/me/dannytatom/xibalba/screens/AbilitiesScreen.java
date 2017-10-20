@@ -79,14 +79,14 @@ public class AbilitiesScreen implements Screen {
     int i = 0;
     for (AbilityData abilityData : abilities.values()) {
       if (abilityData.type == AbilityData.Type.PASSIVE) {
-        abilitiesGroup.addActor(new Label(abilityData.name + " [LIGHT_GRAY]PASSIVE", Main.skin));
+        abilitiesGroup.addActor(new Label(abilityData.name + " [LIGHT_GRAY]Passive", Main.skin));
       } else {
         // If you look at the docs for Input.Keys, number keys are offset by 7
         // (e.g. 0 = 7, 1 = 8, etc)
 
         ActionButton button = new ActionButton(
             i + 1,
-            abilityData.name + " [LIGHT_GRAY] Every " + abilityData.recharge + " turns"
+            abilityData.name + " [LIGHT_GRAY]Usable every " + abilityData.recharge + " turns"
         );
 
         button.setKeys(i + 8);
