@@ -34,10 +34,8 @@ public class EntityHelpers {
   }
 
   /**
-   * Should this entity skip it's turn?
-   * </p>
-   * They should skip a turn if they're crippled and the turn turnCounter isn't 0
-   * or if they're stuck.
+   * Should this entity skip it's turn? </p> They should skip a turn if they're crippled and the
+   * turn turnCounter isn't 0 or if they're stuck.
    *
    * @param entity The entity to check
    *
@@ -302,8 +300,8 @@ public class EntityHelpers {
   }
 
   /**
-   * Update sprite position (called after turn is over, after all tweens etc),
-   * and update the sprite color based on cell they're in.
+   * Update sprite position (called after turn is over, after all tweens etc), and update the sprite
+   * color based on cell they're in.
    *
    * @param entity The entity
    * @param cellX  x position

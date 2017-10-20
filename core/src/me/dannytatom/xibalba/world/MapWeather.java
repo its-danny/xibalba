@@ -21,9 +21,7 @@ public class MapWeather {
   private float animCounter = 0;
 
   /**
-   * Rainfall in the forest.
-   * </p>
-   * Generate 250 rain drops in random positions on the map.
+   * Rainfall in the forest. </p> Generate 250 rain drops in random positions on the map.
    *
    * @param mapIndex The map we're working on
    */

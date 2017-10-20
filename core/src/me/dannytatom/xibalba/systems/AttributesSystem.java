@@ -16,7 +16,7 @@ public class AttributesSystem extends UsesEnergySystem {
   protected void processEntity(Entity entity, float deltaTime) {
     AttributesComponent attributes = ComponentMappers.attributes.get(entity);
     attributes.energy += attributes.speed;
-    
+
     if (ComponentMappers.player.has(entity)) {
       GodComponent god = ComponentMappers.god.get(WorldManager.god);
 

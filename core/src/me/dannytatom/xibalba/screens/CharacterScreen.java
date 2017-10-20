@@ -20,14 +20,12 @@ import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.CorpseComponent;
 import me.dannytatom.xibalba.components.EffectsComponent;
 import me.dannytatom.xibalba.components.EquipmentComponent;
-import me.dannytatom.xibalba.components.GodComponent;
 import me.dannytatom.xibalba.components.InventoryComponent;
 import me.dannytatom.xibalba.components.ItemComponent;
 import me.dannytatom.xibalba.components.SkillsComponent;
 import me.dannytatom.xibalba.components.statuses.BleedingComponent;
 import me.dannytatom.xibalba.ui.ActionButton;
 import me.dannytatom.xibalba.utils.ComponentMappers;
-import me.dannytatom.xibalba.utils.yaml.AbilityData;
 import me.dannytatom.xibalba.utils.yaml.DefectData;
 import me.dannytatom.xibalba.utils.yaml.TraitData;
 import me.dannytatom.xibalba.world.WorldManager;
@@ -48,8 +46,8 @@ public class CharacterScreen implements Screen {
   private final Table table;
   private final VerticalGroup attributesGroup;
   private final VerticalGroup skillsGroup;
-  private final VerticalGroup traitsAndDefectsGroup;
-  private final VerticalGroup abilitiesGroup;
+  private final VerticalGroup traitsGroup;
+  private final VerticalGroup defectsGroup;
   private final VerticalGroup inventoryGroup;
   private final VerticalGroup itemDetailsGroup;
   private final VerticalGroup equipmentGroup;
@@ -99,8 +97,8 @@ public class CharacterScreen implements Screen {
     titleGroup.space(10);
     titleTable.add(titleGroup).pad(10).width(Gdx.graphics.getWidth() - 20);
 
-    ActionButton closeButton = new ActionButton("ESC", null);
-    closeButton.setKeys(Input.Keys.ESCAPE);
+    ActionButton closeButton = new ActionButton("Q", null);
+    closeButton.setKeys(Input.Keys.Q);
     closeButton.setAction(table, () -> main.setScreen(Main.playScreen));
     titleGroup.addActor(closeButton);
 
@@ -109,8 +107,8 @@ public class CharacterScreen implements Screen {
 
     attributesGroup = new VerticalGroup().top().left().columnLeft();
     skillsGroup = new VerticalGroup().top().left().columnLeft();
-    traitsAndDefectsGroup = new VerticalGroup().top().left().columnLeft();
-    abilitiesGroup = new VerticalGroup().top().left().columnLeft();
+    traitsGroup = new VerticalGroup().top().left().columnLeft();
+    defectsGroup = new VerticalGroup().top().left().columnLeft();
     inventoryGroup = new VerticalGroup().top().left().columnLeft();
     itemDetailsGroup = new VerticalGroup().top().left().columnLeft();
     equipmentGroup = new VerticalGroup().top().left().columnLeft();
@@ -121,8 +119,8 @@ public class CharacterScreen implements Screen {
     Table topTable = new Table();
     topTable.add(attributesGroup).pad(10).width(topTableSectionSmallWidth).top().left();
     topTable.add(skillsGroup).pad(10).width(topTableSectionSmallWidth).top().left();
-    topTable.add(traitsAndDefectsGroup).pad(10).width(topTableSectionLargeWidth).top().left();
-    topTable.add(abilitiesGroup).pad(10).width(topTableSectionLargeWidth).top().left();
+    topTable.add(traitsGroup).pad(10).width(topTableSectionLargeWidth).top().left();
+    topTable.add(defectsGroup).pad(10).width(topTableSectionLargeWidth).top().left();
 
     int bottomTableSectionWidth = Gdx.graphics.getWidth() / 3 - 20;
     Table bottomTable = new Table();
@@ -139,8 +137,8 @@ public class CharacterScreen implements Screen {
     setupActionButtons();
     updateAttributesGroup();
     updateSkillsGroup();
-    updateTraitsAndDefectsGroup();
-    updateAbilitiesGroup();
+    updateTraitsGroup();
+    updateDefectsGroup();
     updateInventoryGroup();
     updateItemDetailsGroup();
     updateEquipmentGroup();
@@ -351,27 +349,15 @@ public class CharacterScreen implements Screen {
     }
   }
 
-  private void updateTraitsAndDefectsGroup() {
-    traitsAndDefectsGroup.clear();
+  private void updateTraitsGroup() {
+    traitsGroup.clear();
 
-    traitsAndDefectsGroup.addActor(new Label("Traits & Defects", Main.skin));
-    traitsAndDefectsGroup.addActor(new Label("", Main.skin));
-
-    for (DefectData defectData : Main.defects) {
-      if (WorldManager.entityHelpers.hasDefect(WorldManager.player, defectData.name)) {
-        traitsAndDefectsGroup.addActor(
-            new Label(
-                "[RED]" + defectData.name + "\n[DARK_GRAY]" + WordUtils.wrap(
-                    defectData.description, 50
-                ), Main.skin
-            )
-        );
-      }
-    }
+    traitsGroup.addActor(new Label("Traits", Main.skin));
+    traitsGroup.addActor(new Label("", Main.skin));
 
     for (TraitData traitData : Main.traits) {
       if (WorldManager.entityHelpers.hasTrait(WorldManager.player, traitData.name)) {
-        traitsAndDefectsGroup.addActor(
+        traitsGroup.addActor(
             new Label(
                 "[GREEN]" + traitData.name + "\n[DARK_GRAY]" + WordUtils.wrap(
                     traitData.description, 50
@@ -382,24 +368,23 @@ public class CharacterScreen implements Screen {
     }
   }
 
-  private void updateAbilitiesGroup() {
-    abilitiesGroup.clear();
+  private void updateDefectsGroup() {
+    defectsGroup.clear();
 
-    GodComponent god = ComponentMappers.god.get(WorldManager.god);
+    defectsGroup.addActor(new Label("Defects", Main.skin));
+    defectsGroup.addActor(new Label("", Main.skin));
 
-    abilitiesGroup.addActor(new Label(god.name + " Abilities", Main.skin));
-    abilitiesGroup.addActor(new Label("", Main.skin));
-
-    HashMap<String, AbilityData> abilities = ComponentMappers.abilities.get(player).abilities;
-
-    abilities.forEach((name, ability) -> {
-      abilitiesGroup.addActor(new Label(
-          ability.name + "[LIGHT_GRAY] every "
-              + ability.recharge + " turns\n" + "[DARK_GRAY]"
-              + WordUtils.wrap(ability.description, 70),
-          Main.skin
-      ));
-    });
+    for (DefectData defectData : Main.defects) {
+      if (WorldManager.entityHelpers.hasDefect(WorldManager.player, defectData.name)) {
+        defectsGroup.addActor(
+            new Label(
+                "[RED]" + defectData.name + "\n[DARK_GRAY]" + WordUtils.wrap(
+                    defectData.description, 50
+                ), Main.skin
+            )
+        );
+      }
+    }
   }
 
   private void updateInventoryGroup() {

@@ -12,8 +12,8 @@ public class ShadowCaster {
   /**
    * http://www.roguebasin.com/index.php?title=Improved_Shadowcasting_in_Java
    *
-   * <p>Calculates the Field Of View for the provided world from the given x, y coordinates.
-   * Returns a lightmap for a result where the values represent a percentage of fully lit.
+   * <p>Calculates the Field Of View for the provided world from the given x, y coordinates. Returns
+   * a lightmap for a result where the values represent a percentage of fully lit.
    *
    * <p>A value equal to or below 0 means that cell is not in the field of view, whereas a value
    * equal to or above 1 means that cell is in the field of view.

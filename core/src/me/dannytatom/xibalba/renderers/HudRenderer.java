@@ -21,17 +21,15 @@ import me.dannytatom.xibalba.components.BrainComponent;
 import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.actions.ExploreComponent;
+import me.dannytatom.xibalba.screens.AbilitiesScreen;
 import me.dannytatom.xibalba.screens.CharacterScreen;
 import me.dannytatom.xibalba.screens.MainMenuScreen;
 import me.dannytatom.xibalba.screens.PauseScreen;
 import me.dannytatom.xibalba.ui.ActionButton;
 import me.dannytatom.xibalba.utils.ComponentMappers;
-import me.dannytatom.xibalba.utils.yaml.AbilityData;
 import me.dannytatom.xibalba.world.MapCell;
 import me.dannytatom.xibalba.world.WorldManager;
 import org.apache.commons.lang3.text.WordUtils;
-
-import java.util.HashMap;
 
 public class HudRenderer {
   public final Stage stage;
@@ -52,7 +50,6 @@ public class HudRenderer {
   private final Table focusedTable;
   private final VerticalGroup buttonsAndAreaDetails;
   private final VerticalGroup areaDetails;
-  private final Table abilityButtons;
   private final Table menuButtons;
   private Dialog deathDialog;
   private boolean deathDialogShowing = false;
@@ -101,8 +98,6 @@ public class HudRenderer {
     areaDetails = new VerticalGroup().top().right().columnRight().pad(0, 0, 5, 0);
     buttonsAndAreaDetails.addActor(areaDetails);
 
-    abilityButtons = new Table().right().pad(0, 0, 5, 0);
-    setupAbilitiesButtons();
     menuButtons = new Table().right();
     setupMenuButtons();
 
@@ -127,7 +122,6 @@ public class HudRenderer {
     updateActionLog();
     updateFocused();
     updateAreaDetails();
-    updateAbilitiesButtons();
 
     if (WorldManager.state == WorldManager.State.DEAD && !deathDialogShowing) {
       showDeathDialog();
@@ -137,47 +131,16 @@ public class HudRenderer {
     stage.draw();
   }
 
-  private void setupAbilitiesButtons() {
-    HashMap<String, AbilityData> abilities = ComponentMappers.abilities.get(player).abilities;
-
-    int i = 0;
-    for (AbilityData abilityData : abilities.values()) {
-      if (abilityData.type == AbilityData.Type.PASSIVE) {
-        continue;
-      }
-
-      // If you look at the docs for Input.Keys, number keys are offset by 7
-      // (e.g. 0 = 7, 1 = 8, etc)
-      ActionButton button = new ActionButton(i + 1, null);
-      button.setKeys(i + 8);
-      button.setAction(bottomTable, () -> {
-        if (WorldManager.state != WorldManager.State.FOCUSED) {
-          WorldManager.abilityHelpers.doAbility(player, abilityData);
-        }
-      });
-
-      if (i == abilities.size() - 1) {
-        abilityButtons.add(button).pad(0, 5, 0, 0);
-      } else {
-        abilityButtons.add(button).pad(0, 5, 0, 5);
-      }
-
-      i++;
-    }
-
-    buttonsAndAreaDetails.addActor(abilityButtons);
-  }
-
   private void setupMenuButtons() {
     ActionButton characterButton = new ActionButton("C", playerAttributes.name);
     characterButton.setKeys(Input.Keys.C);
     characterButton.setAction(bottomTable, () -> main.setScreen(new CharacterScreen(main)));
     menuButtons.add(characterButton).pad(0, 5, 0, 5);
 
-    ActionButton restButton = new ActionButton("Z", "Rest");
-    restButton.setKeys(Input.Keys.Z);
-    restButton.setAction(bottomTable, () -> WorldManager.executeTurn = true);
-    menuButtons.add(restButton).pad(0, 5, 0, 5);
+    ActionButton abilitiesButton = new ActionButton("A", "Abilities");
+    abilitiesButton.setKeys(Input.Keys.A);
+    abilitiesButton.setAction(bottomTable, () -> main.setScreen(new AbilitiesScreen(main)));
+    menuButtons.add(abilitiesButton).pad(0, 5, 0, 5);
 
     ActionButton exploreButton = new ActionButton("X", "Explore");
     exploreButton.setKeys(Input.Keys.X);
@@ -187,6 +150,11 @@ public class HudRenderer {
       WorldManager.state = WorldManager.State.MOVING;
     });
     menuButtons.add(exploreButton).pad(0, 5, 0, 5);
+
+    ActionButton restButton = new ActionButton("Z", "Rest");
+    restButton.setKeys(Input.Keys.Z);
+    restButton.setAction(bottomTable, () -> WorldManager.executeTurn = true);
+    menuButtons.add(restButton).pad(0, 5, 0, 5);
 
     ActionButton pauseButton = new ActionButton("ESC", "Pause");
     pauseButton.setKeys(Input.Keys.ESCAPE);
@@ -415,29 +383,6 @@ public class HudRenderer {
         Label entityDescriptionLabel = (Label) areaDetails.getChildren().get(1);
         entityDescriptionLabel.setText(entityDescription);
       }
-    }
-  }
-
-  private void updateAbilitiesButtons() {
-    HashMap<String, AbilityData> abilities = ComponentMappers.abilities.get(player).abilities;
-
-    int i = 0;
-    for (AbilityData abilityData : abilities.values()) {
-      if (abilityData.type == AbilityData.Type.PASSIVE) {
-        continue;
-      }
-
-      ActionButton button = (ActionButton) abilityButtons.getChildren().get(i);
-
-      if (abilityData.counter != abilityData.recharge) {
-        button.setLabel(abilityData.name + " [DARK_GRAY]" + abilityData.counter + "/" + abilityData.recharge);
-        button.setDisabled(true);
-      } else {
-        button.setLabel(abilityData.name);
-        button.setDisabled(false);
-      }
-
-      i++;
     }
   }
 

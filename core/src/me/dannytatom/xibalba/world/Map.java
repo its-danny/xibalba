@@ -46,8 +46,7 @@ public class Map {
   }
 
   /**
-   * Turn geometry into a MapCell[][] of real tiles
-   * based on map type.
+   * Turn geometry into a MapCell[][] of real tiles based on map type.
    */
   public void paint() {
     switch (type) {

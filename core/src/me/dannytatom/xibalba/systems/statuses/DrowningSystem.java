@@ -11,10 +11,8 @@ import me.dannytatom.xibalba.world.WorldManager;
 
 public class DrowningSystem extends UsesEnergySystem {
   /**
-   * Handles drowning.
-   * </p>
-   * Take 5 damage for every turn you're in deep water. Once you leave deep water
-   * we remove the DrowningComponent as you're no longer drowning.
+   * Handles drowning. </p> Take 5 damage for every turn you're in deep water. Once you leave deep
+   * water we remove the DrowningComponent as you're no longer drowning.
    */
   public DrowningSystem() {
     super(

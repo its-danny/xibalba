@@ -17,8 +17,7 @@ public class InputHelpers {
   }
 
   /**
-   * Decide where to place cursor when the player has switched
-   * to targeting.
+   * Decide where to place cursor when the player has switched to targeting.
    */
   public void startTargeting() {
     WorldManager.state = WorldManager.State.TARGETING;

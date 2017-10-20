@@ -40,8 +40,7 @@ public class PlayerSetup {
   public String name;
 
   /**
-   * Setup player defaults.
-   * This is used during character creation.
+   * Setup player defaults. This is used during character creation.
    */
   public PlayerSetup() {
     rnMap.put(1000, "M");
@@ -81,10 +80,8 @@ public class PlayerSetup {
   }
 
   /**
-   * Create the player.
-   * </p>
-   * This is called when character creation is done and
-   * we want to create the actual entity.
+   * Create the player. </p> This is called when character creation is done and we want to create
+   * the actual entity.
    *
    * @return The player entity
    */
