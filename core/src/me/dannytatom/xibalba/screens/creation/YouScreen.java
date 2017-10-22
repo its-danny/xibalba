@@ -264,6 +264,7 @@ public class YouScreen implements Screen {
           break;
         case TRAITS:
           addTrait();
+          updateDefectsGroup();
           updateTraitsGroup();
           break;
         default:
@@ -287,6 +288,7 @@ public class YouScreen implements Screen {
           break;
         case TRAITS:
           removeTrait();
+          updateDefectsGroup();
           updateTraitsGroup();
           break;
         default:
@@ -371,10 +373,7 @@ public class YouScreen implements Screen {
       DefectData defectData = Main.defects.get(i);
 
       defectsGroup.addActor(
-          new Label(
-              createDefectText(i, defectData.name, defectData.description, defectData.reward
-              ), Main.skin
-          )
+          new Label(createDefectText(i, defectData), Main.skin)
       );
     }
   }
@@ -393,10 +392,7 @@ public class YouScreen implements Screen {
       TraitData traitData = Main.traits.get(i);
 
       traitsGroup.addActor(
-          new Label(
-              createTraitText(i, traitData.name, traitData.description, traitData.cost
-              ), Main.skin
-          )
+          new Label(createTraitText(i, traitData), Main.skin)
       );
     }
   }
@@ -442,27 +438,59 @@ public class YouScreen implements Screen {
     }
   }
 
-  private String createDefectText(int index, String name, String description, int reward) {
-    String selected = playerSetup.defects.contains(name, false) ? "[WHITE]x " : "";
-    String type = reward == 1 ? "Minor" : "Major";
-    String desc = WordUtils.wrap(description, 70);
+  private String createDefectText(int index, DefectData defectData) {
+    String selected = playerSetup.defects.contains(defectData.name, false) ? "[WHITE]x " : "";
+    String type = defectData.reward == 1 ? "Minor" : "Major";
+    String desc = WordUtils.wrap(defectData.description, 70);
 
-    if (sectionSelected == Section.DEFECTS && index == itemSelected) {
-      return selected + "[DARK_GRAY]> [WHITE]" + type + " [WHITE]" + name + "\n[DARK_GRAY]" + desc;
+    boolean hasConflictingTrait = false;
+
+    for (int i = 0; i < playerSetup.traits.size; i++) {
+      String trait = playerSetup.traits.get(i);
+
+      if (defectData.cantHave != null && defectData.cantHave.contains(trait)) {
+        hasConflictingTrait = true;
+      }
+    }
+
+    if (hasConflictingTrait) {
+      if (sectionSelected == Section.TRAITS && index == itemSelected) {
+        return selected + "[DARK_GRAY]> " + type + " " + defectData.name + "\n" + desc;
+      } else {
+        return selected + "[DARK_GRAY]" + type + " " + defectData.name + "\n" + desc;
+      }
+    } else if (sectionSelected == Section.DEFECTS && index == itemSelected) {
+      return selected + "[DARK_GRAY]> [WHITE]" + type + " [WHITE]" + defectData.name + "\n[DARK_GRAY]" + desc;
     } else {
-      return selected + "[WHITE]" + type + " [LIGHT_GRAY]" + name + "\n[DARK_GRAY]" + desc;
+      return selected + "[WHITE]" + type + " [LIGHT_GRAY]" + defectData.name + "\n[DARK_GRAY]" + desc;
     }
   }
 
-  private String createTraitText(int index, String name, String description, int cost) {
-    String selected = playerSetup.traits.contains(name, false) ? "[WHITE]x " : "";
-    String type = cost == 1 ? "Minor" : "Major";
-    String desc = WordUtils.wrap(description, 70);
+  private String createTraitText(int index, TraitData traitData) {
+    String selected = playerSetup.traits.contains(traitData.name, false) ? "[WHITE]x " : "";
+    String type = traitData.cost == 1 ? "Minor" : "Major";
+    String desc = WordUtils.wrap(traitData.description, 70);
 
-    if (sectionSelected == Section.TRAITS && index == itemSelected) {
-      return selected + "[DARK_GRAY]> [WHITE]" + type + " [WHITE]" + name + "\n[DARK_GRAY]" + desc;
+    boolean hasConflictingDefect = false;
+
+    for (int i = 0; i < playerSetup.defects.size; i++) {
+      String defect = playerSetup.defects.get(i);
+
+      if (traitData.cantHave != null && traitData.cantHave.contains(defect)) {
+        hasConflictingDefect = true;
+      }
+    }
+
+    if (hasConflictingDefect) {
+      if (sectionSelected == Section.TRAITS && index == itemSelected) {
+        return selected + "[DARK_GRAY]> " + type + " " + traitData.name + "\n" + desc;
+      } else {
+        return selected + "[DARK_GRAY]" + type + " " + traitData.name + "\n" + desc;
+      }
+    } else if (sectionSelected == Section.TRAITS && index == itemSelected) {
+      return selected + "[DARK_GRAY]> [WHITE]" + type + " [WHITE]" + traitData.name + "\n[DARK_GRAY]" + desc;
     } else {
-      return selected + "[WHITE]" + type + " [LIGHT_GRAY]" + name + "\n[DARK_GRAY]" + desc;
+      return selected + "[WHITE]" + type + " [LIGHT_GRAY]" + traitData.name + "\n[DARK_GRAY]" + desc;
     }
   }
 
@@ -591,7 +619,17 @@ public class YouScreen implements Screen {
   private void addDefect() {
     DefectData defectData = Main.defects.get(itemSelected);
 
-    if (!playerSetup.defects.contains(defectData.name, false)) {
+    boolean hasConflictingTrait = false;
+
+    for (int i = 0; i < playerSetup.traits.size; i++) {
+      String trait = playerSetup.traits.get(i);
+
+      if (defectData.cantHave != null && defectData.cantHave.contains(trait)) {
+        hasConflictingTrait = true;
+      }
+    }
+
+    if (!playerSetup.defects.contains(defectData.name, false) && !hasConflictingTrait) {
       playerSetup.defects.add(defectData.name);
       traitPoints += defectData.reward;
     }
@@ -609,7 +647,17 @@ public class YouScreen implements Screen {
   private void addTrait() {
     TraitData traitData = Main.traits.get(itemSelected);
 
-    if (!playerSetup.traits.contains(traitData.name, false) && traitPoints >= traitData.cost) {
+    boolean hasConflictingDefect = false;
+
+    for (int i = 0; i < playerSetup.defects.size; i++) {
+      String defect = playerSetup.defects.get(i);
+
+      if (traitData.cantHave != null && traitData.cantHave.contains(defect)) {
+        hasConflictingDefect = true;
+      }
+    }
+
+    if (!playerSetup.traits.contains(traitData.name, false) && traitPoints >= traitData.cost && !hasConflictingDefect) {
       playerSetup.traits.add(traitData.name);
       traitPoints -= traitData.cost;
     }
