@@ -14,6 +14,30 @@ Stats and skills advance through usage, no allotting points.
 
 Get the game on [itch.io](https://ohokcool.itch.io/xibalba).
 
+## Building
+
+### If you have Intellij
+
+- Clone this repo
+- Install the Gradle plugin if it's not already installed
+- Import Xibalba
+- Gradle -> Refresh all Gradle projects
+- Add a new configuration
+    - **Name:** Desktop
+    - **Main class:** me.dannytatom.xibalba.desktop.DesktopLauncher
+    - **Working directory:** ~/path/to/xibalba/core/assets
+    - **Use classpath of module:** desktop_main 
+
+### Gradle command line
+
+```zsh
+# Run
+./gradlew desktop:run
+
+# Build
+./gradlew desktop:dist
+```
+
 ## Contributing
 
 There's a lot of features and bugs on the issue tracker, so have at it. If you have ideas just open a ticket with the label `idea` and I'll check it out. The wiki also has a lot of information about overall concepts and such to build features off of.
