@@ -10,4 +10,12 @@ Stats and skills advance through usage, no allotting points.
 
 ---
 
-Buy the game on [itch.io](https://ohokcool.itch.io/xibalba).
+**Xibalba is currently in development, a playable alpha will hopefully be available soon.**
+
+Get the game on [itch.io](https://ohokcool.itch.io/xibalba).
+
+## Contributing
+
+There's a lot of features and bugs on the issue tracker, so have at it. If you have ideas just open a ticket with the label `idea` and I'll check it out. The wiki also has a lot of information about overall concepts and such to build features off of.
+
+Also Xibalba was my first attempt at Java, so it's probably quite a mess.
