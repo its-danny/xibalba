@@ -68,7 +68,5 @@ hs_err_pid*
 
 # Xibalba specific
 
-!libs/*.jar
-
 core/assets/save
 release
