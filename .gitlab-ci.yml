@@ -1,4 +1,0 @@
-image: niaquinto/gradle
-
-test:
-  script: ./gradlew test
