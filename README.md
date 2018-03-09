@@ -31,6 +31,8 @@ Get the game on [itch.io](https://ohokcool.itch.io/xibalba).
 ### Gradle command line
 
 ```zsh
+cd ~/path/to/xibalba/
+
 # Run
 ./gradlew desktop:run
 
