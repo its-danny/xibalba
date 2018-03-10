@@ -106,6 +106,10 @@ public class AbilitiesScreen implements Screen {
           "[DARK_GRAY]" + WordUtils.wrap(abilityData.description, 140), Main.skin
       ));
 
+      abilitiesGroup.addActor(new Label(
+          "[DARK_GRAY]" + (abilityData.recharge - abilityData.counter) + " turns left", Main.skin
+      ));
+
       abilitiesGroup.addActor(new Label("", Main.skin));
     }
   }

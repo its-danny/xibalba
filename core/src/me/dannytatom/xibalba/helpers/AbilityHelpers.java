@@ -42,25 +42,23 @@ public class AbilityHelpers {
           }
 
           if (abilityData.targetRequired
-              && abilityData.targetType != ComponentMappers.attributes.get(target).type) {
+                  && abilityData.targetType != ComponentMappers.attributes.get(target).type) {
             WorldManager.log.add("effects.failed", abilityData.name);
 
-
+            return;
           }
 
-          if (MathUtils.random((attributes.divineFavor / 100), 1) == 1) {
-            WorldManager.entityHelpers.charm(entity, target, Integer.parseInt(params[0]));
-          } else {
-            if (ComponentMappers.player.has(entity)) {
-              WorldManager.log.add("effects.failed", abilityData.name);
-            }
-          }
+          WorldManager.entityHelpers.charm(entity, target, Integer.parseInt(params[0]));
+
+          abilityData.counter = 0;
 
           break;
         default:
       }
 
-      abilityData.counter = 0;
+      WorldManager.executeTurn = true;
+    } else {
+      WorldManager.log.add("effects.failed", abilityData.name);
     }
   }
 }
