@@ -17,10 +17,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.components.*;
 import me.dannytatom.xibalba.components.actions.ExploreComponent;
-import me.dannytatom.xibalba.screens.AbilitiesScreen;
-import me.dannytatom.xibalba.screens.CharacterScreen;
-import me.dannytatom.xibalba.screens.MainMenuScreen;
-import me.dannytatom.xibalba.screens.PauseScreen;
+import me.dannytatom.xibalba.screens.*;
 import me.dannytatom.xibalba.ui.ActionButton;
 import me.dannytatom.xibalba.utils.ComponentMappers;
 import me.dannytatom.xibalba.world.MapCell;
@@ -151,6 +148,11 @@ public class HudRenderer {
     restButton.setKeys(Input.Keys.Z);
     restButton.setAction(bottomTable, () -> WorldManager.executeTurn = true);
     menuButtons.add(restButton).pad(0, 5, 0, 5);
+
+    ActionButton helpButton = new ActionButton("H", "Help");
+    helpButton.setKeys(Input.Keys.H);
+    helpButton.setAction(bottomTable, () -> main.setScreen(new HelpScreen(main)));
+    menuButtons.add(helpButton).pad(0, 5, 0, 5);
 
     ActionButton pauseButton = new ActionButton("ESC", "Pause");
     pauseButton.setKeys(Input.Keys.ESCAPE);

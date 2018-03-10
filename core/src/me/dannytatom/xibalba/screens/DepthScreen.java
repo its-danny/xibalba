@@ -7,21 +7,21 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.world.WorldManager;
 
 public class DepthScreen implements Screen {
   private final Stage stage;
-  private Label label;
 
   public DepthScreen() {
-    stage = new Stage();
+    stage = new Stage(new FitViewport(960, 540));
 
     Table table = new Table();
     table.setFillParent(true);
     stage.addActor(table);
 
-    label = new Label("Going " + (WorldManager.state == WorldManager.State.GOING_DOWN ? "Down" : "Up"), Main.skin);
+    Label label = new Label("Going " + (WorldManager.state == WorldManager.State.GOING_DOWN ? "Down" : "Up"), Main.skin);
     table.add(label);
   }
 
@@ -47,7 +47,7 @@ public class DepthScreen implements Screen {
 
   @Override
   public void resize(int width, int height) {
-
+    stage.getViewport().update(width, height, true);
   }
 
   @Override

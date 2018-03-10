@@ -161,7 +161,7 @@ public class PlayerInput implements InputProcessor {
           }
         }
         break;
-      // Target
+      // Throw
       case Keys.T: {
         if (WorldManager.state == WorldManager.State.PLAYING) {
           Entity primaryWeapon
