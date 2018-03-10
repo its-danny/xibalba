@@ -87,8 +87,8 @@ public class World {
           entity.remove(MouseMovementComponent.class);
 
           Vector2 position = change > 0
-              ? WorldManager.world.getCurrentMap().entrance
-              : WorldManager.world.getCurrentMap().exit;
+            ? WorldManager.world.getCurrentMap().entrance
+            : WorldManager.world.getCurrentMap().exit;
 
           WorldManager.entityHelpers.updatePosition(entity, position.x, position.y);
           WorldManager.entityHelpers.updateSprite(entity, position.x, position.y);

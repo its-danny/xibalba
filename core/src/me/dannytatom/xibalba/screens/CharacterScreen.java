@@ -16,13 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import me.dannytatom.xibalba.Main;
-import me.dannytatom.xibalba.components.AttributesComponent;
-import me.dannytatom.xibalba.components.CorpseComponent;
-import me.dannytatom.xibalba.components.EffectsComponent;
-import me.dannytatom.xibalba.components.EquipmentComponent;
-import me.dannytatom.xibalba.components.InventoryComponent;
-import me.dannytatom.xibalba.components.ItemComponent;
-import me.dannytatom.xibalba.components.SkillsComponent;
+import me.dannytatom.xibalba.components.*;
 import me.dannytatom.xibalba.components.statuses.BleedingComponent;
 import me.dannytatom.xibalba.ui.ActionButton;
 import me.dannytatom.xibalba.utils.ComponentMappers;
@@ -155,10 +149,10 @@ public class CharacterScreen implements Screen {
   @Override
   public void render(float delta) {
     Gdx.gl.glClearColor(
-        Colors.get("screenBackground").r,
-        Colors.get("screenBackground").g,
-        Colors.get("screenBackground").b,
-        Colors.get("screenBackground").a
+      Colors.get("screenBackground").r,
+      Colors.get("screenBackground").g,
+      Colors.get("screenBackground").b,
+      Colors.get("screenBackground").a
     );
 
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -171,7 +165,7 @@ public class CharacterScreen implements Screen {
         case INVENTORY:
           if (itemSelected > 0) {
             ItemComponent nextItem
-                = ComponentMappers.item.get(inventory.items.get(itemSelected - 1));
+              = ComponentMappers.item.get(inventory.items.get(itemSelected - 1));
 
             if (stackedItems.get(nextItem.name) == null) {
               itemSelected -= 1;
@@ -232,10 +226,10 @@ public class CharacterScreen implements Screen {
     }
 
     attributesGroup.addActor(
-        new Label(
-            "[LIGHT_GRAY]HP " + healthColor + attributes.health
-                + "[LIGHT_GRAY]/" + attributes.maxHealth, Main.skin
-        )
+      new Label(
+        "[LIGHT_GRAY]HP " + healthColor + attributes.health
+          + "[LIGHT_GRAY]/" + attributes.maxHealth, Main.skin
+      )
     );
 
     // Divine Favor
@@ -250,10 +244,10 @@ public class CharacterScreen implements Screen {
     }
 
     attributesGroup.addActor(
-        new Label(
-            "[LIGHT_GRAY]DF " + divineFavorColor + Math.round(attributes.divineFavor)
-                + "[LIGHT_GRAY]/100", Main.skin
-        )
+      new Label(
+        "[LIGHT_GRAY]DF " + divineFavorColor + Math.round(attributes.divineFavor)
+          + "[LIGHT_GRAY]/100", Main.skin
+      )
     );
 
     // Toughness & defense
@@ -261,12 +255,12 @@ public class CharacterScreen implements Screen {
     int defense = WorldManager.entityHelpers.getArmorDefense(player);
 
     attributesGroup.addActor(
-        new Label(
-            "[LIGHT_GRAY]TUF " + "[YELLOW]" + toughness + "[DARK_GRAY]d "
-                + "[LIGHT_GRAY]DEF " + "[YELLOW]" + toughness + "[DARK_GRAY]d "
-                + (defense > 0 ? "[LIGHT_GRAY]+ " + "[GREEN]" + defense + "[DARK_GRAY] " : ""),
-            Main.skin
-        )
+      new Label(
+        "[LIGHT_GRAY]TUF " + "[YELLOW]" + toughness + "[DARK_GRAY]d "
+          + "[LIGHT_GRAY]DEF " + "[YELLOW]" + toughness + "[DARK_GRAY]d "
+          + (defense > 0 ? "[LIGHT_GRAY]+ " + "[GREEN]" + defense + "[DARK_GRAY] " : ""),
+        Main.skin
+      )
     );
 
     // Strength & damage
@@ -280,21 +274,21 @@ public class CharacterScreen implements Screen {
     }
 
     attributesGroup.addActor(
-        new Label(
-            "[LIGHT_GRAY]STR " + "[CYAN]" + strength + "[DARK_GRAY]d "
-                + "[LIGHT_GRAY]DMG " + "[CYAN]" + strength + "[DARK_GRAY]d "
-                + (damage > 0 ? "[LIGHT_GRAY]+ " + "[RED]" + damage + "[DARK_GRAY]d" : ""),
-            Main.skin
-        )
+      new Label(
+        "[LIGHT_GRAY]STR " + "[CYAN]" + strength + "[DARK_GRAY]d "
+          + "[LIGHT_GRAY]DMG " + "[CYAN]" + strength + "[DARK_GRAY]d "
+          + (damage > 0 ? "[LIGHT_GRAY]+ " + "[RED]" + damage + "[DARK_GRAY]d" : ""),
+        Main.skin
+      )
     );
 
     // Encumbrance
     attributesGroup.addActor(
-        new Label(
-            "[LIGHT_GRAY]Carrying [WHITE]" + WorldManager.itemHelpers.getTotalWeight(player)
-                + "[DARK_GRAY]/" + attributes.strength * 5 + "lb",
-            Main.skin
-        )
+      new Label(
+        "[LIGHT_GRAY]Carrying [WHITE]" + WorldManager.itemHelpers.getTotalWeight(player)
+          + "[DARK_GRAY]/" + attributes.strength * 5 + "lb",
+        Main.skin
+      )
     );
 
     // Statuses
@@ -325,7 +319,7 @@ public class CharacterScreen implements Screen {
     }
 
     attributesGroup.addActor(
-        new Label(statuses.toString("[LIGHT_GRAY],[] "), Main.skin)
+      new Label(statuses.toString("[LIGHT_GRAY],[] "), Main.skin)
     );
   }
 
@@ -343,7 +337,7 @@ public class CharacterScreen implements Screen {
         String name = WordUtils.capitalize(skill);
 
         skillsGroup.addActor(new Label(
-            "[LIGHT_GRAY]" + name + " [WHITE]" + level + "[DARK_GRAY]d", Main.skin
+          "[LIGHT_GRAY]" + name + " [WHITE]" + level + "[DARK_GRAY]d", Main.skin
         ));
       }
     }
@@ -358,11 +352,11 @@ public class CharacterScreen implements Screen {
     for (TraitData traitData : Main.traits) {
       if (WorldManager.entityHelpers.hasTrait(WorldManager.player, traitData.name)) {
         traitsGroup.addActor(
-            new Label(
-                "[GREEN]" + traitData.name + "\n[DARK_GRAY]" + WordUtils.wrap(
-                    traitData.description, 50
-                ), Main.skin
-            )
+          new Label(
+            "[GREEN]" + traitData.name + "\n[DARK_GRAY]" + WordUtils.wrap(
+              traitData.description, 50
+            ), Main.skin
+          )
         );
       }
     }
@@ -377,11 +371,11 @@ public class CharacterScreen implements Screen {
     for (DefectData defectData : Main.defects) {
       if (WorldManager.entityHelpers.hasDefect(WorldManager.player, defectData.name)) {
         defectsGroup.addActor(
-            new Label(
-                "[RED]" + defectData.name + "\n[DARK_GRAY]" + WordUtils.wrap(
-                    defectData.description, 50
-                ), Main.skin
-            )
+          new Label(
+            "[RED]" + defectData.name + "\n[DARK_GRAY]" + WordUtils.wrap(
+              defectData.description, 50
+            ), Main.skin
+          )
         );
       }
     }
@@ -407,8 +401,8 @@ public class CharacterScreen implements Screen {
       ItemComponent details = ComponentMappers.item.get(item);
 
       if (Objects.equals(details.type, "ammunition")
-          || Objects.equals(details.type, "consumable")
-          || Objects.equals(details.type, "bandage")) {
+        || Objects.equals(details.type, "consumable")
+        || Objects.equals(details.type, "bandage")) {
         if (stackedItems.containsKey(details.name)) {
           stackedItems.put(details.name, stackedItems.get(details.name) + 1);
         } else {
@@ -423,7 +417,7 @@ public class CharacterScreen implements Screen {
 
       if (stackedItems.containsKey(details.name)) {
         inventoryGroup.addActor(
-            new Label(createInventoryItemText(i, item, stackedItems.get(details.name)), Main.skin)
+          new Label(createInventoryItemText(i, item, stackedItems.get(details.name)), Main.skin)
         );
 
         i = i + stackedItems.get(details.name) - 1;
@@ -455,16 +449,16 @@ public class CharacterScreen implements Screen {
         itemDetailsGroup.addActor(new Label("", Main.skin));
 
         itemDetailsGroup.addActor(
-            new Label(
-                "[DARK_GRAY]Quality: [LIGHT_GRAY]" + ComponentMappers.item.get(item).quality.name(), Main.skin
-            )
+          new Label(
+            "[DARK_GRAY]Quality: [LIGHT_GRAY]" + ComponentMappers.item.get(item).quality.name(), Main.skin
+          )
         );
 
         if (WorldManager.itemHelpers.hasMaterial(item)) {
           itemDetailsGroup.addActor(
-              new Label(
-                  "[DARK_GRAY]Material: [LIGHT_GRAY]" + WorldManager.itemHelpers.getMaterial(item).name(), Main.skin
-              )
+            new Label(
+              "[DARK_GRAY]Material: [LIGHT_GRAY]" + WorldManager.itemHelpers.getMaterial(item).name(), Main.skin
+            )
           );
         }
 
@@ -496,11 +490,11 @@ public class CharacterScreen implements Screen {
 
       if (itemIsEquipped) {
         statsGroup.addActor(
-            new Label(
-                "[YELLOW]* [LIGHT_GRAY]Using in "
-                    + WorldManager.itemHelpers.getLocation(player, item),
-                Main.skin
-            )
+          new Label(
+            "[YELLOW]* [LIGHT_GRAY]Using in "
+              + WorldManager.itemHelpers.getLocation(player, item),
+            Main.skin
+          )
         );
 
         statsGroup.addActor(new Label("", Main.skin));
@@ -534,7 +528,7 @@ public class CharacterScreen implements Screen {
 
           if (details.attributes.get("hitDamage") != null) {
             String string = "[LIGHT_GRAY]HIT DMG " + "[RED]"
-                + details.attributes.get("hitDamage") + "[DARK_GRAY]d";
+              + details.attributes.get("hitDamage") + "[DARK_GRAY]d";
 
             if (!itemIsEquipped && details.location != null) {
               Entity itemInSlot = equipment.slots.get(details.location);
@@ -544,7 +538,7 @@ public class CharacterScreen implements Screen {
 
                 if (itemInSlotDetails.attributes.get("hitDamage") != null) {
                   string += "[DARK_GRAY] -> [RED]"
-                      + itemInSlotDetails.attributes.get("hitDamage") + "[DARK_GRAY]d";
+                    + itemInSlotDetails.attributes.get("hitDamage") + "[DARK_GRAY]d";
                 }
               }
             }
@@ -556,7 +550,7 @@ public class CharacterScreen implements Screen {
 
           if (details.attributes.get("throwDamage") != null) {
             String string = "[LIGHT_GRAY]THR DMG "
-                + "[RED]" + details.attributes.get("throwDamage") + "[DARK_GRAY]d";
+              + "[RED]" + details.attributes.get("throwDamage") + "[DARK_GRAY]d";
 
             if (!itemIsEquipped && details.location != null) {
               Entity itemInSlot = equipment.slots.get(details.location);
@@ -566,7 +560,7 @@ public class CharacterScreen implements Screen {
 
                 if (itemInSlotDetails.attributes.get("throwDamage") != null) {
                   string += "[DARK_GRAY] -> [RED]"
-                      + itemInSlotDetails.attributes.get("throwDamage") + "[DARK_GRAY]d";
+                    + itemInSlotDetails.attributes.get("throwDamage") + "[DARK_GRAY]d";
                 }
               }
             }
@@ -578,7 +572,7 @@ public class CharacterScreen implements Screen {
 
           if (details.attributes.get("shotDamage") != null) {
             String string = "[LIGHT_GRAY]SHOT DMG " + "[RED]"
-                + details.attributes.get("shotDamage") + "[DARK_GRAY]d";
+              + details.attributes.get("shotDamage") + "[DARK_GRAY]d";
 
             if (!itemIsEquipped && details.location != null) {
               Entity itemInSlot = equipment.slots.get(details.location);
@@ -588,7 +582,7 @@ public class CharacterScreen implements Screen {
 
                 if (itemInSlotDetails.attributes.get("shotDamage") != null) {
                   string += "[DARK_GRAY] -> [RED]"
-                      + itemInSlotDetails.attributes.get("shotDamage") + "[DARK_GRAY]d";
+                    + itemInSlotDetails.attributes.get("shotDamage") + "[DARK_GRAY]d";
                 }
               }
             }
@@ -608,15 +602,15 @@ public class CharacterScreen implements Screen {
             String[] split = action.split(":");
 
             String prettyEvent = WordUtils.capitalize(
-                String.join(" ", (CharSequence[]) event.split("(?<=[a-z])(?=[A-Z])"))
+              String.join(" ", (CharSequence[]) event.split("(?<=[a-z])(?=[A-Z])"))
             );
 
             String prettyEffect = WordUtils.capitalize(
-                String.join(" ", (CharSequence[]) split[0].split("(?<=[a-z])(?=[A-Z])"))
+              String.join(" ", (CharSequence[]) split[0].split("(?<=[a-z])(?=[A-Z])"))
             );
 
             String string = "[DARK_GRAY]" + prettyEvent
-                + " [LIGHT_GRAY]" + prettyEffect + " [CYAN]" + split[1];
+              + " [LIGHT_GRAY]" + prettyEffect + " [CYAN]" + split[1];
 
             statsGroup.addActor(new Label(string, Main.skin));
           }
@@ -629,14 +623,14 @@ public class CharacterScreen implements Screen {
 
       if (WorldManager.entityHelpers.hasDefect(player, "One arm") && details.twoHanded) {
         restrictionsGroup.addActor(
-            new Label("[RED]You can't hold this due to too few arms.", Main.skin)
+          new Label("[RED]You can't hold this due to too few arms.", Main.skin)
         );
       }
 
       if (WorldManager.entityHelpers.hasDefect(player, "One arm")
-          && Objects.equals(details.location, "left hand")) {
+        && Objects.equals(details.location, "left hand")) {
         restrictionsGroup.addActor(
-            new Label("[RED]You don't have a left hand to hold this in.", Main.skin)
+          new Label("[RED]You don't have a left hand to hold this in.", Main.skin)
         );
       }
 
@@ -675,11 +669,11 @@ public class CharacterScreen implements Screen {
               body.parts.remove(part);
 
               WorldManager.log.add(
-                  "inventory.dismembered", part, ComponentMappers.corpse.get(corpse).entity
+                "inventory.dismembered", part, ComponentMappers.corpse.get(corpse).entity
               );
 
               if (body.parts.size() == 0
-                  || (body.parts.size() == 1 && body.parts.containsKey("body"))) {
+                || (body.parts.size() == 1 && body.parts.containsKey("body"))) {
                 ComponentMappers.item.get(corpse).actions.removeValue("dismember", false);
               }
 
@@ -708,7 +702,7 @@ public class CharacterScreen implements Screen {
 
         if (details.actions.contains("wear", false) && !itemIsEquipped) {
           if (!WorldManager.entityHelpers.hasDefect(player, "One arm")
-              || !Objects.equals(details.location, "left hand")) {
+            || !Objects.equals(details.location, "left hand")) {
             itemActionTable.add(wearButton).pad(0, 0, 5, 5);
           }
         }
@@ -769,9 +763,9 @@ public class CharacterScreen implements Screen {
       Entity item = slot.getValue();
 
       if (!WorldManager.entityHelpers.hasDefect(player, "One arm")
-          || !Objects.equals(slot.getKey(), "left hand")) {
+        || !Objects.equals(slot.getKey(), "left hand")) {
         equipmentGroup.addActor(
-            new Label(createEquipmentSlotText(index, key, item), Main.skin)
+          new Label(createEquipmentSlotText(index, key, item), Main.skin)
         );
       }
 
@@ -795,8 +789,8 @@ public class CharacterScreen implements Screen {
 
   private String createEquipmentSlotText(int index, String slot, Entity item) {
     String itemName = item == null
-        ? " [DARK_GRAY]Nothing"
-        : " [WHITE]" + WorldManager.itemHelpers.getName(player, item);
+      ? " [DARK_GRAY]Nothing"
+      : " [WHITE]" + WorldManager.itemHelpers.getName(player, item);
 
     if (sectionSelected == Section.EQUIPMENT && index == itemSelected) {
       return "[DARK_GRAY]> [WHITE]" + slot + itemName;
@@ -881,7 +875,7 @@ public class CharacterScreen implements Screen {
 
         for (int i = 0; i < amount; i++) {
           Entity skin = WorldManager.entityFactory.createSkin(
-              inventory.items.get(itemSelected), position
+            inventory.items.get(itemSelected), position
           );
 
           WorldManager.world.addEntity(skin);
@@ -942,7 +936,7 @@ public class CharacterScreen implements Screen {
     confirmApplyButton.setAction(table, () -> {
       if (itemActionTable.getChildren().contains(confirmApplyButton, true)) {
         WorldManager.itemHelpers.apply(
-            player, applyingItem, inventory.items.get(itemSelected)
+          player, applyingItem, inventory.items.get(itemSelected)
         );
 
         itemSelected = 0;

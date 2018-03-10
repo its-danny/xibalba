@@ -126,7 +126,6 @@ public class Dijkstra {
    * Go until we find a goal of 0.
    *
    * @param start Starting position
-   *
    * @return The path to take
    */
   public Array<Vector2> findPath(Vector2 start) {
@@ -215,7 +214,7 @@ public class Dijkstra {
 
   private boolean canWalk(int cellX, int cellY) {
     return cellX > 0 && cellX < cellMap.length
-        && cellY > 0 && cellY < cellMap[0].length
-        && ArrayUtils.contains(walkableTypes, cellMap[cellX][cellY].type);
+      && cellY > 0 && cellY < cellMap[0].length
+      && ArrayUtils.contains(walkableTypes, cellMap[cellX][cellY].type);
   }
 }

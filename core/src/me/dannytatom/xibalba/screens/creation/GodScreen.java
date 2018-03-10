@@ -73,8 +73,8 @@ class GodScreen implements Screen {
     titleGroup.addActor(title);
 
     Label instructions = new Label(
-        "[LIGHT_GRAY]Up & down to navigate gods, enter to select.",
-        Main.skin
+      "[LIGHT_GRAY]Up & down to navigate gods, enter to select.",
+      Main.skin
     );
     titleGroup.addActor(instructions);
 
@@ -111,10 +111,10 @@ class GodScreen implements Screen {
   @Override
   public void render(float delta) {
     Gdx.gl.glClearColor(
-        Colors.get("screenBackground").r,
-        Colors.get("screenBackground").g,
-        Colors.get("screenBackground").b,
-        Colors.get("screenBackground").a
+      Colors.get("screenBackground").r,
+      Colors.get("screenBackground").g,
+      Colors.get("screenBackground").b,
+      Colors.get("screenBackground").a
     );
 
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -173,12 +173,12 @@ class GodScreen implements Screen {
     Yaml yaml = new Yaml(new Constructor(AbilityData.class));
     godData.abilities.forEach((String ability) -> {
       AbilityData details = (AbilityData) yaml.load(
-          Gdx.files.internal("data/abilities/" + ability + ".yaml").read()
+        Gdx.files.internal("data/abilities/" + ability + ".yaml").read()
       );
 
       abilityGroup.addActor(
-          new Label(
-              createAbilityText(details), Main.skin)
+        new Label(
+          createAbilityText(details), Main.skin)
       );
     });
   }

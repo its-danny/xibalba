@@ -47,7 +47,6 @@ public class Main extends Game {
    * From mouse position to tile position.
    *
    * @param camera Main world camera
-   *
    * @return A vector2 of the hovered tile position
    */
   public static Vector2 mousePositionToWorld(OrthographicCamera camera) {
@@ -55,8 +54,8 @@ public class Main extends Game {
     camera.unproject(position);
 
     return new Vector2(
-        Math.round(position.x) / Main.SPRITE_WIDTH,
-        Math.round(position.y) / Main.SPRITE_HEIGHT
+      Math.round(position.x) / Main.SPRITE_WIDTH,
+      Math.round(position.y) / Main.SPRITE_HEIGHT
     );
   }
 
@@ -64,7 +63,6 @@ public class Main extends Game {
    * Hex to RGBA.
    *
    * @param hex The color to parse
-   *
    * @return A new Color object
    */
   public static Color parseColor(String hex) {
@@ -105,9 +103,9 @@ public class Main extends Game {
     // Load custom font
     assets = new AssetManager();
     FreeTypeFontGenerator generator =
-        new FreeTypeFontGenerator(Gdx.files.internal("ui/Aller_Rg.ttf"));
+      new FreeTypeFontGenerator(Gdx.files.internal("ui/Aller_Rg.ttf"));
     FreeTypeFontGenerator.FreeTypeFontParameter parameter =
-        new FreeTypeFontGenerator.FreeTypeFontParameter();
+      new FreeTypeFontGenerator.FreeTypeFontParameter();
     parameter.size = 12;
     BitmapFont font = generator.generateFont(parameter);
     generator.dispose();

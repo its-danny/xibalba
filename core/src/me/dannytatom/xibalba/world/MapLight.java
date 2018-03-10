@@ -68,7 +68,7 @@ public class MapLight {
         }
 
         float[][] map = caster.calculateFov(
-            fovMap, (int) position.pos.x, (int) position.pos.y, radius
+          fovMap, (int) position.pos.x, (int) position.pos.y, radius
         );
 
         int colorIndex = MathUtils.random(0, light.colors.size() - 1);

@@ -31,7 +31,7 @@ public class MouseMovementSystem extends EntitySystem {
    */
   public void addedToEngine(Engine engine) {
     entities = engine.getEntitiesFor(
-        Family.all(PlayerComponent.class, MouseMovementComponent.class).get()
+      Family.all(PlayerComponent.class, MouseMovementComponent.class).get()
     );
   }
 

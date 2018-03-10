@@ -65,10 +65,10 @@ public class LoadingScreen implements Screen {
   @Override
   public void render(float delta) {
     Gdx.gl.glClearColor(
-        Colors.get("screenBackground").r,
-        Colors.get("screenBackground").g,
-        Colors.get("screenBackground").b,
-        Colors.get("screenBackground").a
+      Colors.get("screenBackground").r,
+      Colors.get("screenBackground").g,
+      Colors.get("screenBackground").b,
+      Colors.get("screenBackground").a
     );
 
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -112,7 +112,7 @@ public class LoadingScreen implements Screen {
 
   private void generateWorld() {
     ArrayList levels = (new Json()).fromJson(
-        ArrayList.class, JsonToLevel.class, Gdx.files.internal("data/world.json")
+      ArrayList.class, JsonToLevel.class, Gdx.files.internal("data/world.json")
     );
 
     generating = true;
@@ -126,17 +126,17 @@ public class LoadingScreen implements Screen {
       String[] heightRange = level.size.get("height").split(",");
 
       int mapWidth = MathUtils.random(
-          Integer.parseInt(widthRange[0]), Integer.parseInt(widthRange[1])
+        Integer.parseInt(widthRange[0]), Integer.parseInt(widthRange[1])
       );
 
       int mapHeight = MathUtils.random(
-          Integer.parseInt(heightRange[0]), Integer.parseInt(heightRange[1])
+        Integer.parseInt(heightRange[0]), Integer.parseInt(heightRange[1])
       );
 
       Gdx.app.log(
-          "World Generation",
-          "Starting " + level.type + " generation for level " + (i + 1)
-              + ", size " + mapWidth + "x" + mapHeight
+        "World Generation",
+        "Starting " + level.type + " generation for level " + (i + 1)
+          + ", size " + mapWidth + "x" + mapHeight
       );
 
       switch (level.type) {
@@ -180,10 +180,10 @@ public class LoadingScreen implements Screen {
       WorldManager.world.entities.get(mapIndex).add(entrance);
 
       WorldManager.world.getMap(mapIndex).entrance
-          = ComponentMappers.position.get(entrance).pos;
+        = ComponentMappers.position.get(entrance).pos;
     } else {
       WorldManager.world.getMap(mapIndex).entrance
-          = WorldManager.mapHelpers.getRandomOpenPositionOnLand();
+        = WorldManager.mapHelpers.getRandomOpenPositionOnLand();
     }
 
     // Spawn an exit on every level but last
@@ -210,9 +210,9 @@ public class LoadingScreen implements Screen {
 
       for (int j = 0; j < amount; j++) {
         WorldManager.world.entities.get(mapIndex).add(
-            WorldManager.entityFactory.createTrap(trap.get("name"),
-                WorldManager.mapHelpers.getRandomOpenPositionOnLand(mapIndex)
-            )
+          WorldManager.entityFactory.createTrap(trap.get("name"),
+            WorldManager.mapHelpers.getRandomOpenPositionOnLand(mapIndex)
+          )
         );
       }
     }
@@ -225,8 +225,8 @@ public class LoadingScreen implements Screen {
 
       for (int j = 0; j < amount; j++) {
         WorldManager.world.entities.get(mapIndex).add(
-            WorldManager.entityFactory.createItem(item.get("name"),
-                WorldManager.mapHelpers.getRandomOpenPositionOnLand(mapIndex))
+          WorldManager.entityFactory.createItem(item.get("name"),
+            WorldManager.mapHelpers.getRandomOpenPositionOnLand(mapIndex))
         );
       }
     }
@@ -239,7 +239,7 @@ public class LoadingScreen implements Screen {
 
       for (int j = 0; j < amount; j++) {
         Entity entity = WorldManager.entityFactory.createEnemy(
-            enemy.get("name"), new Vector2(0, 0)
+          enemy.get("name"), new Vector2(0, 0)
         );
 
         BrainComponent brain = ComponentMappers.brain.get(entity);

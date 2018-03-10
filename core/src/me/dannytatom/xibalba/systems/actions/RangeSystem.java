@@ -32,7 +32,7 @@ public class RangeSystem extends UsesEnergySystem {
 
       if (target != null) {
         WorldManager.combatHelpers.range(
-            entity, target, range.bodyPart, range.item, range.skill, range.isFocused
+          entity, target, range.bodyPart, range.item, range.skill, range.isFocused
         );
       }
 
@@ -62,17 +62,17 @@ public class RangeSystem extends UsesEnergySystem {
     VisualComponent itemVisual = ComponentMappers.visual.get(item);
 
     WorldManager.tweens.add(Tween.to(itemVisual.sprite, SpriteAccessor.XY, .1f).target(
-        position.x * Main.SPRITE_WIDTH, position.y * Main.SPRITE_HEIGHT
+      position.x * Main.SPRITE_WIDTH, position.y * Main.SPRITE_HEIGHT
     ).setCallback(
-        (type, source) -> {
-          if (type == TweenCallback.COMPLETE) {
-            if (destroy) {
-              WorldManager.itemHelpers.destroy(entity, item);
-            } else {
-              WorldManager.itemHelpers.drop(entity, item, position);
-            }
+      (type, source) -> {
+        if (type == TweenCallback.COMPLETE) {
+          if (destroy) {
+            WorldManager.itemHelpers.destroy(entity, item);
+          } else {
+            WorldManager.itemHelpers.drop(entity, item, position);
           }
         }
+      }
     ));
   }
 }

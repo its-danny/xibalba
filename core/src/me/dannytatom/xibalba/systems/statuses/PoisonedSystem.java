@@ -27,7 +27,7 @@ public class PoisonedSystem extends UsesEnergySystem {
         AttributesComponent attributes = ComponentMappers.attributes.get(entity);
 
         WorldManager.log.add(
-            "effects.poisoned.tookDamage", (isPlayer ? "You" : attributes.name), poisoned.damage
+          "effects.poisoned.tookDamage", (isPlayer ? "You" : attributes.name), poisoned.damage
         );
 
         if (attributes.health <= 0) {

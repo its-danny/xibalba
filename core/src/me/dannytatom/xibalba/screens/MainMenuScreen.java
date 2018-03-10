@@ -55,10 +55,10 @@ public class MainMenuScreen implements Screen {
   @Override
   public void render(float delta) {
     Gdx.gl.glClearColor(
-        Colors.get("screenBackground").r,
-        Colors.get("screenBackground").g,
-        Colors.get("screenBackground").b,
-        Colors.get("screenBackground").a
+      Colors.get("screenBackground").r,
+      Colors.get("screenBackground").g,
+      Colors.get("screenBackground").b,
+      Colors.get("screenBackground").a
     );
 
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);

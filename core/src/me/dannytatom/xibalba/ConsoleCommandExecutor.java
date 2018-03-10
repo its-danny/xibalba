@@ -80,7 +80,7 @@ public class ConsoleCommandExecutor extends CommandExecutor {
    */
   public void goToEntrance() {
     ComponentMappers.position.get(WorldManager.player).pos.set(
-        WorldManager.world.getCurrentMap().entrance
+      WorldManager.world.getCurrentMap().entrance
     );
 
     WorldManager.entityHelpers.updateSenses(WorldManager.player);
@@ -91,7 +91,7 @@ public class ConsoleCommandExecutor extends CommandExecutor {
    */
   public void goToExit() {
     ComponentMappers.position.get(WorldManager.player).pos.set(
-        WorldManager.world.getCurrentMap().exit
+      WorldManager.world.getCurrentMap().exit
     );
 
     WorldManager.entityHelpers.updateSenses(WorldManager.player);

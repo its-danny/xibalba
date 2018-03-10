@@ -6,18 +6,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import me.dannytatom.xibalba.Main;
-import me.dannytatom.xibalba.components.AbilitiesComponent;
-import me.dannytatom.xibalba.components.AttributesComponent;
-import me.dannytatom.xibalba.components.BodyComponent;
-import me.dannytatom.xibalba.components.DefectsComponent;
-import me.dannytatom.xibalba.components.EquipmentComponent;
-import me.dannytatom.xibalba.components.GodComponent;
-import me.dannytatom.xibalba.components.InventoryComponent;
-import me.dannytatom.xibalba.components.PlayerComponent;
-import me.dannytatom.xibalba.components.PositionComponent;
-import me.dannytatom.xibalba.components.SkillsComponent;
-import me.dannytatom.xibalba.components.TraitsComponent;
-import me.dannytatom.xibalba.components.VisualComponent;
+import me.dannytatom.xibalba.components.*;
 import me.dannytatom.xibalba.utils.yaml.AbilityData;
 import me.dannytatom.xibalba.utils.yaml.GodData;
 import me.dannytatom.xibalba.world.WorldManager;
@@ -61,8 +50,8 @@ public class PlayerSetup {
     generateName();
 
     attributes = new AttributesComponent(
-        name, "It's you", AttributesComponent.Type.HUMAN,
-        100, 10, 5, 4, 4, 4
+      name, "It's you", AttributesComponent.Type.HUMAN,
+      100, 10, 5, 4, 4, 4
     );
     skills = new SkillsComponent();
     traits = new Array<>();
@@ -98,13 +87,13 @@ public class PlayerSetup {
     player.add(attributes);
 
     Vector2 position = WorldManager.mapHelpers.getRandomOpenPositionOnLand(
-        WorldManager.world.currentMapIndex
+      WorldManager.world.currentMapIndex
     );
 
     player.add(new PositionComponent(position));
 
     player.add(
-        new VisualComponent(Main.asciiAtlas.createSprite("0004"), position, Main.parseColor(color))
+      new VisualComponent(Main.asciiAtlas.createSprite("0004"), position, Main.parseColor(color))
     );
 
     player.add(new PlayerComponent());
@@ -173,11 +162,11 @@ public class PlayerSetup {
 
     WorldManager.god = new Entity();
     WorldManager.god.add(
-        new GodComponent(
-            godData.name, godData.description,
-            godData.hates, godData.likes,
-            godData.wrath
-        )
+      new GodComponent(
+        godData.name, godData.description,
+        godData.hates, godData.likes,
+        godData.wrath
+      )
     );
 
     AbilitiesComponent abilitiesComponent = new AbilitiesComponent();
@@ -185,7 +174,7 @@ public class PlayerSetup {
     Yaml yaml = new Yaml(new Constructor(AbilityData.class));
     godData.abilities.forEach((String ability) -> {
       AbilityData details = (AbilityData) yaml.load(
-          Gdx.files.internal("data/abilities/" + ability + ".yaml").read()
+        Gdx.files.internal("data/abilities/" + ability + ".yaml").read()
       );
 
       details.counter = details.recharge;

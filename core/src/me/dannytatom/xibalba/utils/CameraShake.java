@@ -58,8 +58,8 @@ public class CameraShake {
       currentTime = 0;
 
       camera.position.set(
-          position.x * Main.SPRITE_WIDTH,
-          position.y * Main.SPRITE_HEIGHT, 0
+        position.x * Main.SPRITE_WIDTH,
+        position.y * Main.SPRITE_HEIGHT, 0
       );
     }
   }

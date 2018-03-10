@@ -29,7 +29,7 @@ public class SickSystem extends UsesEnergySystem {
           AttributesComponent attributes = ComponentMappers.attributes.get(entity);
 
           WorldManager.log.add(
-              "effects.sick.tookDamage", (isPlayer ? "You" : attributes.name), sick.damage
+            "effects.sick.tookDamage", (isPlayer ? "You" : attributes.name), sick.damage
           );
 
           if (attributes.health <= 0) {

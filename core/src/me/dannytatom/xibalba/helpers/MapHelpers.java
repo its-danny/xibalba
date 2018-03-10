@@ -6,12 +6,7 @@ import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.graphics.Colors;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import me.dannytatom.xibalba.components.AttributesComponent;
-import me.dannytatom.xibalba.components.DecorationComponent;
-import me.dannytatom.xibalba.components.EnemyComponent;
-import me.dannytatom.xibalba.components.PlayerComponent;
-import me.dannytatom.xibalba.components.PositionComponent;
-import me.dannytatom.xibalba.components.TrapComponent;
+import me.dannytatom.xibalba.components.*;
 import me.dannytatom.xibalba.utils.ComponentMappers;
 import me.dannytatom.xibalba.world.Map;
 import me.dannytatom.xibalba.world.MapCell;
@@ -33,15 +28,14 @@ public class MapHelpers {
    *
    * @param cellX x of the position we're checking
    * @param cellY y of the position we're checking
-   *
    * @return If it does indeed exist
    */
   public boolean cellExists(int cellX, int cellY) {
     MapCell[][] map = WorldManager.world.getCurrentMap().getCellMap();
 
     return cellX > 0 && cellX < map.length
-        && cellY > 0 && cellY < map[0].length
-        && getCell(cellX, cellY) != null;
+      && cellY > 0 && cellY < map[0].length
+      && getCell(cellX, cellY) != null;
   }
 
   public boolean cellExists(Vector2 position) {
@@ -76,18 +70,17 @@ public class MapHelpers {
    * Returns whether or not the given position is blocked.
    *
    * @param position Position to check
-   *
    * @return Is it blocked?
    */
   public boolean isBlocked(int mapIndex, Vector2 position) {
     MapCell[][] map = WorldManager.world.getMap(mapIndex).getCellMap();
 
     boolean blocked = map[(int) position.x][(int) position.y].isWall()
-        || map[(int) position.x][(int) position.y].isNothing();
+      || map[(int) position.x][(int) position.y].isNothing();
 
     if (!blocked) {
       ImmutableArray<Entity> entities =
-          WorldManager.engine.getEntitiesFor(Family.all(PositionComponent.class).get());
+        WorldManager.engine.getEntitiesFor(Family.all(PositionComponent.class).get());
 
       for (Entity entity : entities) {
         PositionComponent ep = ComponentMappers.position.get(entity);
@@ -139,7 +132,6 @@ public class MapHelpers {
    * Create a Field of View map for given map.
    *
    * @param mapIndex Which map to use
-   *
    * @return FoV map
    */
   public float[][] createFovMapFor(int mapIndex) {
@@ -179,9 +171,9 @@ public class MapHelpers {
     for (int x = 0; x < map.width; x++) {
       for (int y = 0; y < map.height; y++) {
         boolean canTarget = cellExists(new Vector2(x, y))
-            && !getCell(x, y).isWall()
-            && !getCell(x, y).isNothing()
-            && !getCell(x, y).hidden;
+          && !getCell(x, y).isWall()
+          && !getCell(x, y).isNothing()
+          && !getCell(x, y).hidden;
 
         cells[x][y] = new GridCell(x, y, canTarget);
       }
@@ -201,8 +193,8 @@ public class MapHelpers {
     }
 
     playerDetails.path = finder.findPath(
-        (int) start.x, (int) start.y,
-        (int) playerDetails.target.x, (int) playerDetails.target.y, grid
+      (int) start.x, (int) start.y,
+      (int) playerDetails.target.x, (int) playerDetails.target.y, grid
     );
 
     AttributesComponent playerAttributes = ComponentMappers.attributes.get(WorldManager.player);
@@ -213,8 +205,8 @@ public class MapHelpers {
 
       if (playerDetails.target != null) {
         playerDetails.path = finder.findPath(
-            (int) start.x, (int) start.y,
-            (int) playerDetails.target.x, (int) playerDetails.target.y, grid
+          (int) start.x, (int) start.y,
+          (int) playerDetails.target.x, (int) playerDetails.target.y, grid
         );
       }
     }
@@ -238,8 +230,8 @@ public class MapHelpers {
 
         if (careAboutWalls) {
           canTarget = cellExists(new Vector2(x, y))
-              && !getCell(x, y).hidden
-              && !getCell(x, y).isWall();
+            && !getCell(x, y).hidden
+            && !getCell(x, y).isWall();
         } else {
           canTarget = cellExists(new Vector2(x, y)) && !getCell(x, y).hidden;
         }
@@ -262,8 +254,8 @@ public class MapHelpers {
     }
 
     playerDetails.path = finder.findPath(
-        (int) start.x, (int) start.y,
-        (int) playerDetails.target.x, (int) playerDetails.target.y, grid
+      (int) start.x, (int) start.y,
+      (int) playerDetails.target.x, (int) playerDetails.target.y, grid
     );
 
     if (playerDetails.path == null) {
@@ -271,8 +263,8 @@ public class MapHelpers {
 
       if (playerDetails.target != null) {
         playerDetails.path = finder.findPath(
-            (int) start.x, (int) start.y,
-            (int) playerDetails.target.x, (int) playerDetails.target.y, grid
+          (int) start.x, (int) start.y,
+          (int) playerDetails.target.x, (int) playerDetails.target.y, grid
         );
       }
     }
@@ -287,14 +279,13 @@ public class MapHelpers {
    *
    * @param cellX x
    * @param cellY y
-   *
    * @return Either the entity or null if none were found
    */
   public Entity getEntityAt(float cellX, float cellY) {
     ImmutableArray<Entity> entities =
-        WorldManager.engine.getEntitiesFor(
-            Family.all(PositionComponent.class).exclude(DecorationComponent.class).get()
-        );
+      WorldManager.engine.getEntitiesFor(
+        Family.all(PositionComponent.class).exclude(DecorationComponent.class).get()
+      );
 
     for (Entity entity : entities) {
       PositionComponent entityPosition = ComponentMappers.position.get(entity);
@@ -311,14 +302,13 @@ public class MapHelpers {
    * Get all entities at a given position.
    *
    * @param position Where we're searching
-   *
    * @return ArrayList of entities
    */
   public ArrayList<Entity> getEntitiesAt(Vector2 position) {
     ArrayList<Entity> list = new ArrayList<>();
 
     ImmutableArray<Entity> entities =
-        WorldManager.engine.getEntitiesFor(Family.all(PositionComponent.class).get());
+      WorldManager.engine.getEntitiesFor(Family.all(PositionComponent.class).get());
 
     for (Entity entity : entities) {
       PositionComponent entityPosition = ComponentMappers.position.get(entity);
@@ -335,7 +325,6 @@ public class MapHelpers {
    * Get enemy from a location.
    *
    * @param position Where the enemy is
-   *
    * @return The enemy
    */
   public Entity getEnemyAt(Vector2 position) {
@@ -347,12 +336,11 @@ public class MapHelpers {
    *
    * @param cellX x
    * @param cellY y
-   *
    * @return Either an enemy or null if none were found
    */
   public Entity getEnemyAt(int cellX, int cellY) {
     ImmutableArray<Entity> entities =
-        WorldManager.engine.getEntitiesFor(Family.all(EnemyComponent.class).get());
+      WorldManager.engine.getEntitiesFor(Family.all(EnemyComponent.class).get());
 
     for (Entity entity : entities) {
       PositionComponent entityPosition = ComponentMappers.position.get(entity);
@@ -394,8 +382,8 @@ public class MapHelpers {
       PositionComponent enemy2Position = ComponentMappers.position.get(enemy2);
 
       return enemy1Position.pos.x > enemy2Position.pos.x
-          && enemy1Position.pos.y > enemy2Position.pos.y
-          ? -1 : 1;
+        && enemy1Position.pos.y > enemy2Position.pos.y
+        ? -1 : 1;
     });
 
     return enemies;
@@ -405,14 +393,13 @@ public class MapHelpers {
    * Get trap at given position.
    *
    * @param position The position to check
-   *
    * @return The trap if one is found, null if not
    */
   public Entity getTrapAt(Vector2 position) {
     ImmutableArray<Entity> entities =
-        WorldManager.engine.getEntitiesFor(
-            Family.all(TrapComponent.class).get()
-        );
+      WorldManager.engine.getEntitiesFor(
+        Family.all(TrapComponent.class).get()
+      );
 
     for (Entity entity : entities) {
       PositionComponent entityPosition = ComponentMappers.position.get(entity);
@@ -429,7 +416,6 @@ public class MapHelpers {
    * Get a random space within 1 cel radius of the entity.
    *
    * @param target Area to check
-   *
    * @return Vector2 position if one is found, null otherwise
    */
   public Vector2 getRandomOpenSpaceNearEntity(Entity target) {
@@ -440,9 +426,9 @@ public class MapHelpers {
     int cellY = MathUtils.random(-1, 1);
 
     if (!isBlocked(
-        WorldManager.world.currentMapIndex,
-        new Vector2(targetPosition.x + cellX, targetPosition.y + cellY))
-        ) {
+      WorldManager.world.currentMapIndex,
+      new Vector2(targetPosition.x + cellX, targetPosition.y + cellY))
+      ) {
       position = new Vector2(targetPosition.x + cellX, targetPosition.y + cellY);
     } else {
       position = null;
@@ -517,7 +503,6 @@ public class MapHelpers {
    * @param mapIndex Which world to check
    * @param cellX    X position of cell we're checking around
    * @param cellY    Y position of cell we're checking around
-   *
    * @return Amount of wall neighbours around it
    */
   public int getWallNeighbours(int mapIndex, int cellX, int cellY) {
@@ -560,7 +545,7 @@ public class MapHelpers {
     }
 
     cell.sprite.setColor(
-        Colors.get(WorldManager.world.getCurrentMap().type + "FloorWet")
+      Colors.get(WorldManager.world.getCurrentMap().type + "FloorWet")
     );
   }
 

@@ -6,11 +6,7 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
-import me.dannytatom.xibalba.components.AttributesComponent;
-import me.dannytatom.xibalba.components.ItemComponent;
-import me.dannytatom.xibalba.components.MouseMovementComponent;
-import me.dannytatom.xibalba.components.PlayerComponent;
-import me.dannytatom.xibalba.components.PositionComponent;
+import me.dannytatom.xibalba.components.*;
 import me.dannytatom.xibalba.components.actions.ExploreComponent;
 import me.dannytatom.xibalba.components.actions.MovementComponent;
 import me.dannytatom.xibalba.components.actions.RangeComponent;
@@ -152,7 +148,7 @@ public class PlayerInput implements InputProcessor {
 
             if (Objects.equals(weaponDetails.type, "range")) {
               if (WorldManager.itemHelpers.hasAmmunitionOfType(WorldManager.player,
-                  weaponDetails.ammunitionType)) {
+                weaponDetails.ammunitionType)) {
                 WorldManager.inputHelpers.startTargeting();
               } else {
                 WorldManager.log.add("inventory.noAmmunitionAvailable");
@@ -169,7 +165,7 @@ public class PlayerInput implements InputProcessor {
       case Keys.T: {
         if (WorldManager.state == WorldManager.State.PLAYING) {
           Entity primaryWeapon
-              = WorldManager.itemHelpers.getRightHand(WorldManager.player);
+            = WorldManager.itemHelpers.getRightHand(WorldManager.player);
 
           if (primaryWeapon != null) {
             ItemComponent itemDetails = ComponentMappers.item.get(primaryWeapon);
@@ -189,7 +185,7 @@ public class PlayerInput implements InputProcessor {
       case Keys.D: {
         if (WorldManager.state == WorldManager.State.PLAYING) {
           Entity primaryWeapon
-              = WorldManager.itemHelpers.getRightHand(WorldManager.player);
+            = WorldManager.itemHelpers.getRightHand(WorldManager.player);
 
           if (primaryWeapon != null) {
             WorldManager.itemHelpers.drop(WorldManager.player, primaryWeapon);
@@ -282,7 +278,7 @@ public class PlayerInput implements InputProcessor {
       } else {
         if (ComponentMappers.mouseMovement.get(WorldManager.player) == null) {
           if (WorldManager.mapHelpers.cellExists(mousePosition)
-              && !WorldManager.mapHelpers.getCell(mousePosition.x, mousePosition.y).hidden) {
+            && !WorldManager.mapHelpers.getCell(mousePosition.x, mousePosition.y).hidden) {
             WorldManager.player.add(new MouseMovementComponent());
 
             WorldManager.state = WorldManager.State.MOVING;
@@ -316,7 +312,7 @@ public class PlayerInput implements InputProcessor {
     Vector2 relativeToPlayer = mousePosition.cpy().sub(playerPosition.pos);
 
     if (playerDetails.target != null
-        && playerDetails.target.epsilonEquals(mousePosition, 0.00001f)) {
+      && playerDetails.target.epsilonEquals(mousePosition, 0.00001f)) {
       return false;
     }
 
@@ -396,7 +392,7 @@ public class PlayerInput implements InputProcessor {
 
   private void handleLooking(Vector2 pos, boolean careAboutWalls) {
     WorldManager.mapHelpers.createLookingPath(
-        ComponentMappers.position.get(WorldManager.player).pos, pos, careAboutWalls
+      ComponentMappers.position.get(WorldManager.player).pos, pos, careAboutWalls
     );
   }
 

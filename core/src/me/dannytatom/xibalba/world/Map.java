@@ -76,7 +76,7 @@ public class Map {
           floor.setFlip(MathUtils.randomBoolean(), false);
 
           map[x][y] = new MapCell(
-              floor, Colors.get("forestFloor"), MapCell.Type.FLOOR, "the forest floor"
+            floor, Colors.get("forestFloor"), MapCell.Type.FLOOR, "the forest floor"
           );
         } else {
           Sprite wall = Main.asciiAtlas.createSprite("0" + MathUtils.random(5, 6) + "00");
@@ -162,27 +162,27 @@ public class Map {
             waterType = MapCell.Type.SHALLOW_WATER;
 
             lightColor = Colors.get(
-                Objects.equals(type, "forest") ? "waterShallowLightBlue" : "waterShallowLightGreen"
+              Objects.equals(type, "forest") ? "waterShallowLightBlue" : "waterShallowLightGreen"
             );
 
             darkColor = Colors.get(
-                Objects.equals(type, "forest") ? "waterShallowDarkBlue" : "waterShallowDarkGreen"
+              Objects.equals(type, "forest") ? "waterShallowDarkBlue" : "waterShallowDarkGreen"
             );
           } else {
             waterType = MapCell.Type.DEEP_WATER;
 
             lightColor = Colors.get(
-                Objects.equals(type, "forest") ? "waterDeepLightBlue" : "waterDeepLightGreen"
+              Objects.equals(type, "forest") ? "waterDeepLightBlue" : "waterDeepLightGreen"
             );
 
             darkColor = Colors.get(
-                Objects.equals(type, "forest") ? "waterDeepDarkBlue" : "waterDeepDarkGreen"
+              Objects.equals(type, "forest") ? "waterDeepDarkBlue" : "waterDeepDarkGreen"
             );
           }
 
           water.setColor(lightColor);
           Tween tween = Tween.to(water, SpriteAccessor.COLOR, .5f).target(
-              darkColor.r, darkColor.g, darkColor.b
+            darkColor.r, darkColor.g, darkColor.b
           ).repeatYoyo(Tween.INFINITY, MathUtils.random());
 
           map[x][y] = new MapCell(water, lightColor, waterType, "water", tween);
@@ -228,8 +228,8 @@ public class Map {
 
   private void makeCellBridge(MapCell cell, Sprite bridge) {
     cell.sprite.setRegion(
-        bridge.getRegionX(), bridge.getRegionY(),
-        bridge.getRegionWidth(), bridge.getRegionHeight()
+      bridge.getRegionX(), bridge.getRegionY(),
+      bridge.getRegionWidth(), bridge.getRegionHeight()
     );
 
     cell.sprite.setColor(Colors.get("bridge"));
@@ -266,7 +266,7 @@ public class Map {
 
   private void flood(int cellX, int cellY) {
     if (geometry[cellX][cellY] == MapCell.Type.FLOOR
-        && flooded[cellX][cellY] == MapCell.Type.WALL) {
+      && flooded[cellX][cellY] == MapCell.Type.WALL) {
       flooded[cellX][cellY] = MapCell.Type.FLOOR;
       floodedCount += 1;
     } else {

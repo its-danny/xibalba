@@ -13,16 +13,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import me.dannytatom.xibalba.Main;
-import me.dannytatom.xibalba.components.AttributesComponent;
-import me.dannytatom.xibalba.components.DecorationComponent;
-import me.dannytatom.xibalba.components.EnemyComponent;
-import me.dannytatom.xibalba.components.EntranceComponent;
-import me.dannytatom.xibalba.components.ExitComponent;
-import me.dannytatom.xibalba.components.ItemComponent;
-import me.dannytatom.xibalba.components.PlayerComponent;
-import me.dannytatom.xibalba.components.PositionComponent;
-import me.dannytatom.xibalba.components.TrapComponent;
-import me.dannytatom.xibalba.components.VisualComponent;
+import me.dannytatom.xibalba.components.*;
 import me.dannytatom.xibalba.utils.ComponentMappers;
 import me.dannytatom.xibalba.world.Map;
 import me.dannytatom.xibalba.world.MapCell;
@@ -129,9 +120,9 @@ public class WorldRenderer {
 
   private void renderStairs() {
     ImmutableArray<Entity> entrances =
-        WorldManager.engine.getEntitiesFor(Family.all(EntranceComponent.class).get());
+      WorldManager.engine.getEntitiesFor(Family.all(EntranceComponent.class).get());
     ImmutableArray<Entity> exits =
-        WorldManager.engine.getEntitiesFor(Family.all(ExitComponent.class).get());
+      WorldManager.engine.getEntitiesFor(Family.all(ExitComponent.class).get());
 
     Object[] entities = ArrayUtils.addAll(entrances.toArray(), exits.toArray());
 
@@ -146,7 +137,7 @@ public class WorldRenderer {
 
   private void renderDecorations() {
     ImmutableArray<Entity> entities =
-        WorldManager.engine.getEntitiesFor(Family.all(DecorationComponent.class).get());
+      WorldManager.engine.getEntitiesFor(Family.all(DecorationComponent.class).get());
 
     for (Entity entity : entities) {
       if (WorldManager.entityHelpers.isVisible(entity)) {
@@ -157,7 +148,7 @@ public class WorldRenderer {
 
   private void renderTraps() {
     ImmutableArray<Entity> entities =
-        WorldManager.engine.getEntitiesFor(Family.all(TrapComponent.class).get());
+      WorldManager.engine.getEntitiesFor(Family.all(TrapComponent.class).get());
 
     for (Entity entity : entities) {
       if (ComponentMappers.visual.has(entity) && WorldManager.entityHelpers.isVisible(entity)) {
@@ -168,9 +159,9 @@ public class WorldRenderer {
 
   private void renderItems() {
     ImmutableArray<Entity> entities =
-        WorldManager.engine.getEntitiesFor(
-            Family.all(ItemComponent.class, PositionComponent.class, VisualComponent.class).get()
-        );
+      WorldManager.engine.getEntitiesFor(
+        Family.all(ItemComponent.class, PositionComponent.class, VisualComponent.class).get()
+      );
 
     for (Entity entity : entities) {
       PositionComponent position = ComponentMappers.position.get(entity);
@@ -187,7 +178,7 @@ public class WorldRenderer {
 
   private void renderEnemies() {
     ImmutableArray<Entity> entities =
-        WorldManager.engine.getEntitiesFor(Family.all(EnemyComponent.class).get());
+      WorldManager.engine.getEntitiesFor(Family.all(EnemyComponent.class).get());
 
     for (Entity entity : entities) {
       PositionComponent position = ComponentMappers.position.get(entity);
@@ -200,7 +191,7 @@ public class WorldRenderer {
         ComponentMappers.visual.get(entity).sprite.draw(batch);
       } else if (WorldManager.entityHelpers.canHear(WorldManager.player, entity)) {
         question.setPosition(
-            position.pos.x * Main.SPRITE_WIDTH, position.pos.y * Main.SPRITE_HEIGHT
+          position.pos.x * Main.SPRITE_WIDTH, position.pos.y * Main.SPRITE_HEIGHT
         );
 
         question.draw(batch);
@@ -210,7 +201,7 @@ public class WorldRenderer {
 
   private void renderPlayer() {
     ImmutableArray<Entity> entities =
-        WorldManager.engine.getEntitiesFor(Family.all(PlayerComponent.class).get());
+      WorldManager.engine.getEntitiesFor(Family.all(PlayerComponent.class).get());
 
     if (entities.size() > 0) {
       Entity player = entities.first();
@@ -238,7 +229,7 @@ public class WorldRenderer {
         Entity enemy = WorldManager.mapHelpers.getEnemyAt(x, y);
 
         boolean canHearEnemy = WorldManager.entityHelpers.hasTrait(
-            WorldManager.player, "Perceptive"
+          WorldManager.player, "Perceptive"
         ) && enemy != null && WorldManager.entityHelpers.canHear(WorldManager.player, enemy);
 
         if (canHearEnemy) {
@@ -318,9 +309,9 @@ public class WorldRenderer {
     viewport.update(width, height, true);
 
     worldCamera.position.set(
-        playerPosition.pos.x * Main.SPRITE_WIDTH,
-        playerPosition.pos.y * Main.SPRITE_HEIGHT,
-        0
+      playerPosition.pos.x * Main.SPRITE_WIDTH,
+      playerPosition.pos.y * Main.SPRITE_HEIGHT,
+      0
     );
   }
 }

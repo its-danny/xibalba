@@ -16,9 +16,9 @@ public class DrowningSystem extends UsesEnergySystem {
    */
   public DrowningSystem() {
     super(
-        Family.all(
-            DrowningComponent.class, AttributesComponent.class, PositionComponent.class
-        ).get()
+      Family.all(
+        DrowningComponent.class, AttributesComponent.class, PositionComponent.class
+      ).get()
     );
   }
 
@@ -40,7 +40,7 @@ public class DrowningSystem extends UsesEnergySystem {
         boolean isPlayer = ComponentMappers.player.has(entity);
 
         WorldManager.log.add(
-            "effects.drowning.tookDamage", (isPlayer ? "You" : attributes.name), 5
+          "effects.drowning.tookDamage", (isPlayer ? "You" : attributes.name), 5
         );
 
         if (attributes.health <= 0) {

@@ -9,23 +9,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.I18NBundle;
 import me.dannytatom.xibalba.Main;
-import me.dannytatom.xibalba.components.AttributesComponent;
-import me.dannytatom.xibalba.components.BodyComponent;
-import me.dannytatom.xibalba.components.BrainComponent;
-import me.dannytatom.xibalba.components.CorpseComponent;
-import me.dannytatom.xibalba.components.DecorationComponent;
-import me.dannytatom.xibalba.components.EffectsComponent;
-import me.dannytatom.xibalba.components.EnemyComponent;
-import me.dannytatom.xibalba.components.EntranceComponent;
-import me.dannytatom.xibalba.components.ExitComponent;
-import me.dannytatom.xibalba.components.ItemComponent;
-import me.dannytatom.xibalba.components.LightComponent;
-import me.dannytatom.xibalba.components.LimbComponent;
-import me.dannytatom.xibalba.components.PositionComponent;
-import me.dannytatom.xibalba.components.RainDropComponent;
-import me.dannytatom.xibalba.components.SkillsComponent;
-import me.dannytatom.xibalba.components.TrapComponent;
-import me.dannytatom.xibalba.components.VisualComponent;
+import me.dannytatom.xibalba.components.*;
 import me.dannytatom.xibalba.components.items.AmmunitionComponent;
 import me.dannytatom.xibalba.components.items.ArmorComponent;
 import me.dannytatom.xibalba.components.items.WeaponComponent;
@@ -49,13 +33,12 @@ public class EntityFactory {
    *
    * @param name     Name of enemy to create
    * @param position Vector2 of their position
-   *
    * @return The enemy
    */
   public Entity createEnemy(String name, Vector2 position) {
     Yaml yaml = new Yaml(new Constructor(EnemyData.class));
     EnemyData data = (EnemyData) yaml.load(
-        Gdx.files.internal("data/enemies/" + name + ".yaml").reader()
+      Gdx.files.internal("data/enemies/" + name + ".yaml").reader()
     );
 
     Entity entity = new Entity();
@@ -66,21 +49,21 @@ public class EntityFactory {
     entity.add(new BodyComponent(data.bodyParts, data.wearableBodyParts));
 
     entity.add(new VisualComponent(
-            Main.asciiAtlas.createSprite(
-                data.visual.get("character")), position, Main.parseColor(data.visual.get("color"))
-        )
+        Main.asciiAtlas.createSprite(
+          data.visual.get("character")), position, Main.parseColor(data.visual.get("color"))
+      )
     );
 
     entity.add(new AttributesComponent(
-        i18n.get("entities.enemies." + name + ".name"),
-        i18n.get("entities.enemies." + name + ".description"),
-        data.type,
-        data.attributes.get("speed"),
-        data.attributes.get("vision"),
-        data.attributes.get("hearing"),
-        data.attributes.get("toughness"),
-        data.attributes.get("strength"),
-        data.attributes.get("agility")
+      i18n.get("entities.enemies." + name + ".name"),
+      i18n.get("entities.enemies." + name + ".description"),
+      data.type,
+      data.attributes.get("speed"),
+      data.attributes.get("vision"),
+      data.attributes.get("hearing"),
+      data.attributes.get("toughness"),
+      data.attributes.get("strength"),
+      data.attributes.get("agility")
     ));
 
     BrainComponent brain = new BrainComponent(entity);
@@ -106,13 +89,12 @@ public class EntityFactory {
    *
    * @param name     Mame of item to create
    * @param position Vector2 of their position
-   *
    * @return The item
    */
   public Entity createItem(String name, Vector2 position) {
     Yaml yaml = new Yaml(new Constructor(ItemData.class));
     ItemData data = (ItemData) yaml.load(
-        Gdx.files.internal("data/items/" + name + ".yaml").reader()
+      Gdx.files.internal("data/items/" + name + ".yaml").reader()
     );
 
     Entity entity = new Entity();
@@ -122,12 +104,12 @@ public class EntityFactory {
     ItemComponent.Quality[] qualities = ItemComponent.Quality.values();
 
     entity.add(
-        new ItemComponent(
-            i18n.get("entities.items." + name + ".name"),
-            i18n.get("entities.items." + name + ".description"),
-            qualities[MathUtils.random(0, qualities.length - 1)],
-            data
-        )
+      new ItemComponent(
+        i18n.get("entities.items." + name + ".name"),
+        i18n.get("entities.items." + name + ".description"),
+        qualities[MathUtils.random(0, qualities.length - 1)],
+        data
+      )
     );
 
     switch (data.type) {
@@ -159,8 +141,8 @@ public class EntityFactory {
     }
 
     entity.add(new VisualComponent(
-        Main.asciiAtlas.createSprite(data.visual.get("character")),
-        position, Main.parseColor(data.visual.get("color"))
+      Main.asciiAtlas.createSprite(data.visual.get("character")),
+      position, Main.parseColor(data.visual.get("color"))
     ));
 
     return entity;
@@ -171,7 +153,6 @@ public class EntityFactory {
    *
    * @param enemy    The enemy who's corpse we're creating
    * @param position Where to place it
-   *
    * @return The corpse
    */
   public Entity createCorpse(Entity enemy, Vector2 position) {
@@ -192,14 +173,13 @@ public class EntityFactory {
    *
    * @param corpse   The corpse we're skinning
    * @param position Where to place the skin
-   *
    * @return The skin
    */
   public Entity createSkin(Entity corpse, Vector2 position) {
     Entity entity = createItem("skin", position);
 
     ComponentMappers.item.get(entity).name
-        = ComponentMappers.corpse.get(corpse).entity + " skin";
+      = ComponentMappers.corpse.get(corpse).entity + " skin";
 
     return entity;
   }
@@ -210,7 +190,6 @@ public class EntityFactory {
    * @param corpse   The corpse we're dismembering
    * @param part     What part of the body we're dismembering
    * @param position Where to place the limb
-   *
    * @return The skin
    */
   public Entity createLimb(Entity corpse, String part, Vector2 position) {
@@ -219,7 +198,7 @@ public class EntityFactory {
     ItemComponent item = ComponentMappers.item.get(entity);
 
     item.name = ComponentMappers.corpse.get(corpse).entity
-        + " " + part.replace("left ", "").replace("right ", "");
+      + " " + part.replace("left ", "").replace("right ", "");
 
     entity.add(new LimbComponent(ComponentMappers.corpse.get(corpse).type));
 
@@ -243,7 +222,6 @@ public class EntityFactory {
    *
    * @param name     Name of the trap we're creating
    * @param position Where to place it
-   *
    * @return The trap
    */
   public Entity createTrap(String name, Vector2 position) {
@@ -257,8 +235,8 @@ public class EntityFactory {
         entity.add(new SpiderWebComponent());
 
         entity.add(new VisualComponent(
-            Main.asciiAtlas.createSprite("0302"), position, Color.WHITE,
-            WorldManager.entityHelpers.hasTrait(WorldManager.player, "Perceptive") ? .5f : .1f
+          Main.asciiAtlas.createSprite("0302"), position, Color.WHITE,
+          WorldManager.entityHelpers.hasTrait(WorldManager.player, "Perceptive") ? .5f : .1f
         ));
 
         break;
@@ -272,7 +250,6 @@ public class EntityFactory {
    * Create entrance entity.
    *
    * @param mapIndex Map to place it on
-   *
    * @return The entrance entity
    */
   public Entity createEntrance(int mapIndex) {
@@ -286,7 +263,7 @@ public class EntityFactory {
       cellY = MathUtils.random(0, map.height - 1);
     }
     while (WorldManager.mapHelpers.isBlocked(mapIndex, new Vector2(cellX, cellY))
-        && WorldManager.mapHelpers.getWallNeighbours(mapIndex, cellX, cellY) >= 4);
+      && WorldManager.mapHelpers.getWallNeighbours(mapIndex, cellX, cellY) >= 4);
 
     Vector2 position = new Vector2(cellX, cellY);
     Entity entity = new Entity();
@@ -294,7 +271,7 @@ public class EntityFactory {
     entity.add(new PositionComponent(position));
 
     entity.add(new VisualComponent(
-        Main.asciiAtlas.createSprite("1203"), position
+      Main.asciiAtlas.createSprite("1203"), position
     ));
 
     return entity;
@@ -304,7 +281,6 @@ public class EntityFactory {
    * Create exit entity.
    *
    * @param mapIndex Map to place it on
-   *
    * @return The exit entity
    */
   public Entity createExit(int mapIndex) {
@@ -318,7 +294,7 @@ public class EntityFactory {
       cellY = MathUtils.random(0, map.height - 1);
     }
     while (WorldManager.mapHelpers.isBlocked(mapIndex, new Vector2(cellX, cellY))
-        && WorldManager.mapHelpers.getWallNeighbours(mapIndex, cellX, cellY) >= 4);
+      && WorldManager.mapHelpers.getWallNeighbours(mapIndex, cellX, cellY) >= 4);
 
     Vector2 position = new Vector2(cellX, cellY);
     Entity entity = new Entity();
@@ -326,7 +302,7 @@ public class EntityFactory {
     entity.add(new PositionComponent(position));
 
     entity.add(new VisualComponent(
-        Main.asciiAtlas.createSprite("1403"), position
+      Main.asciiAtlas.createSprite("1403"), position
     ));
 
     return entity;
@@ -345,7 +321,7 @@ public class EntityFactory {
     entity.add(new RainDropComponent());
     entity.add(new PositionComponent(position));
     entity.add(new VisualComponent(
-        Main.asciiAtlas.createSprite("1502"), position, Colors.get("CYAN")
+      Main.asciiAtlas.createSprite("1502"), position, Colors.get("CYAN")
     ));
 
     return entity;

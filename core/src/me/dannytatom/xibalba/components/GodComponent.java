@@ -13,9 +13,9 @@ public class GodComponent implements Component {
   public boolean hasWrath = false;
 
   public GodComponent(
-      String name, String description,
-      ArrayList<String> hates, ArrayList<String> likes,
-      ArrayList<String> wrath
+    String name, String description,
+    ArrayList<String> hates, ArrayList<String> likes,
+    ArrayList<String> wrath
   ) {
     this.name = name;
     this.description = description;

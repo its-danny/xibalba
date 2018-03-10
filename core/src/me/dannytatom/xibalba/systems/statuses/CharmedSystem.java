@@ -24,9 +24,9 @@ public class CharmedSystem extends UsesEnergySystem {
       AttributesComponent attributes = ComponentMappers.attributes.get(entity);
 
       WorldManager.log.add(
-          "effects.charmed.stopped",
-          (isPlayer ? "You" : attributes.name),
-          (isPlayer ? "are" : "is")
+        "effects.charmed.stopped",
+        (isPlayer ? "You" : attributes.name),
+        (isPlayer ? "are" : "is")
       );
     } else {
       charmed.counter += 1;

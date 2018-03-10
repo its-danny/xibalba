@@ -67,9 +67,9 @@ public class YouScreen implements Screen {
     titleGroup.addActor(title);
 
     Label instructions = new Label(
-        "[LIGHT_GRAY]Up & down to navigate a list, left & right to switch lists."
-            + " x to add a point or trait/defect, z to remove.",
-        Main.skin
+      "[LIGHT_GRAY]Up & down to navigate a list, left & right to switch lists."
+        + " x to add a point or trait/defect, z to remove.",
+      Main.skin
     );
     titleGroup.addActor(instructions);
 
@@ -113,10 +113,10 @@ public class YouScreen implements Screen {
   @Override
   public void render(float delta) {
     Gdx.gl.glClearColor(
-        Colors.get("screenBackground").r,
-        Colors.get("screenBackground").g,
-        Colors.get("screenBackground").b,
-        Colors.get("screenBackground").a
+      Colors.get("screenBackground").r,
+      Colors.get("screenBackground").g,
+      Colors.get("screenBackground").b,
+      Colors.get("screenBackground").a
     );
 
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -312,15 +312,15 @@ public class YouScreen implements Screen {
     attributesGroup.addActor(new Label("", Main.skin));
 
     attributesGroup.addActor(
-        new Label(createAttributeText(0, "Agility", playerSetup.attributes.agility), Main.skin)
+      new Label(createAttributeText(0, "Agility", playerSetup.attributes.agility), Main.skin)
     );
 
     attributesGroup.addActor(
-        new Label(createAttributeText(1, "Strength", playerSetup.attributes.strength), Main.skin)
+      new Label(createAttributeText(1, "Strength", playerSetup.attributes.strength), Main.skin)
     );
 
     attributesGroup.addActor(
-        new Label(createAttributeText(2, "Toughness", playerSetup.attributes.toughness), Main.skin)
+      new Label(createAttributeText(2, "Toughness", playerSetup.attributes.toughness), Main.skin)
     );
   }
 
@@ -331,10 +331,10 @@ public class YouScreen implements Screen {
     skillsGroup.addActor(new Label("", Main.skin));
 
     Label instructions = new Label(
-        WordUtils.wrap(
-            "[DARK_GRAY]1 point is 1 die upgrade up to the related "
-                + "attribute level, above that is 2 points", 70
-        ), Main.skin
+      WordUtils.wrap(
+        "[DARK_GRAY]1 point is 1 die upgrade up to the related "
+          + "attribute level, above that is 2 points", 70
+      ), Main.skin
     );
 
     skillsGroup.addActor(instructions);
@@ -361,9 +361,9 @@ public class YouScreen implements Screen {
     defectsGroup.addActor(new Label("", Main.skin));
 
     Label instructions = new Label(
-        WordUtils.wrap(
-            "[DARK_GRAY]Taking a major defect gives you 2 points, taking a minor gives you 1", 70
-        ), Main.skin
+      WordUtils.wrap(
+        "[DARK_GRAY]Taking a major defect gives you 2 points, taking a minor gives you 1", 70
+      ), Main.skin
     );
 
     defectsGroup.addActor(instructions);
@@ -373,7 +373,7 @@ public class YouScreen implements Screen {
       DefectData defectData = Main.defects.get(i);
 
       defectsGroup.addActor(
-          new Label(createDefectText(i, defectData), Main.skin)
+        new Label(createDefectText(i, defectData), Main.skin)
       );
     }
   }
@@ -392,7 +392,7 @@ public class YouScreen implements Screen {
       TraitData traitData = Main.traits.get(i);
 
       traitsGroup.addActor(
-          new Label(createTraitText(i, traitData), Main.skin)
+        new Label(createTraitText(i, traitData), Main.skin)
       );
     }
   }
@@ -403,7 +403,7 @@ public class YouScreen implements Screen {
     switch (name) {
       case "Agility":
         details = "\n[DARK_GRAY]Accuracy: d[LIGHT_GRAY]" + level
-            + "[DARK_GRAY], Dodge: d[LIGHT_GRAY]" + level;
+          + "[DARK_GRAY], Dodge: d[LIGHT_GRAY]" + level;
 
         break;
       case "Strength":
@@ -412,8 +412,8 @@ public class YouScreen implements Screen {
         break;
       case "Toughness":
         details = "\n[DARK_GRAY]Max Health: [LIGHT_GRAY]" + level * 10
-            + "[DARK_GRAY], Max Oxygen: [LIGHT_GRAY]" + level * 4
-            + "[DARK_GRAY], Defense: d[LIGHT_GRAY]" + level;
+          + "[DARK_GRAY], Max Oxygen: [LIGHT_GRAY]" + level * 4
+          + "[DARK_GRAY], Defense: d[LIGHT_GRAY]" + level;
 
         break;
       default:

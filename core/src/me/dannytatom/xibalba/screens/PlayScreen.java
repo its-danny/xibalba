@@ -75,10 +75,10 @@ public class PlayScreen implements Screen {
   @Override
   public void render(float delta) {
     Gdx.gl.glClearColor(
-        Colors.get(WorldManager.world.getCurrentMap().type + "Background").r,
-        Colors.get(WorldManager.world.getCurrentMap().type + "Background").g,
-        Colors.get(WorldManager.world.getCurrentMap().type + "Background").b,
-        Colors.get(WorldManager.world.getCurrentMap().type + "Background").a
+      Colors.get(WorldManager.world.getCurrentMap().type + "Background").r,
+      Colors.get(WorldManager.world.getCurrentMap().type + "Background").g,
+      Colors.get(WorldManager.world.getCurrentMap().type + "Background").b,
+      Colors.get(WorldManager.world.getCurrentMap().type + "Background").a
     );
 
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -116,9 +116,9 @@ public class PlayScreen implements Screen {
 
       // In some cases, we want the game to take turns on it's own
       if ((WorldManager.state == WorldManager.State.MOVING
-          || WorldManager.state == WorldManager.State.DEAD
-          || WorldManager.entityHelpers.shouldSkipTurn(WorldManager.player))
-          && autoTimer >= .10f) {
+        || WorldManager.state == WorldManager.State.DEAD
+        || WorldManager.entityHelpers.shouldSkipTurn(WorldManager.player))
+        && autoTimer >= .10f) {
         autoTimer = 0;
         WorldManager.executeTurn = true;
       }
@@ -143,11 +143,11 @@ public class PlayScreen implements Screen {
         }
 
         timeline.setCallback(
-            (type, source) -> {
-              if (type == TweenCallback.COMPLETE) {
-                WorldManager.state = WorldManager.State.PLAYING;
-              }
+          (type, source) -> {
+            if (type == TweenCallback.COMPLETE) {
+              WorldManager.state = WorldManager.State.PLAYING;
             }
+          }
         ).start(Main.tweenManager);
       }
 

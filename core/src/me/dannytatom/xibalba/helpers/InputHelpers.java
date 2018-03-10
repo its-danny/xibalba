@@ -29,7 +29,7 @@ public class InputHelpers {
 
     if (playerDetails.lastHitEntity != null) {
       PositionComponent lastHitEntityPosition
-          = ComponentMappers.position.get(playerDetails.lastHitEntity);
+        = ComponentMappers.position.get(playerDetails.lastHitEntity);
       handleTargeting(lastHitEntityPosition.pos.cpy().sub(playerPosition.pos));
     } else if (enemiesAround.size() > 0) {
       PositionComponent closestPosition = ComponentMappers.position.get(enemiesAround.get(0));

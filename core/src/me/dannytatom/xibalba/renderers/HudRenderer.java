@@ -15,11 +15,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import me.dannytatom.xibalba.Main;
-import me.dannytatom.xibalba.components.AttributesComponent;
-import me.dannytatom.xibalba.components.BodyComponent;
-import me.dannytatom.xibalba.components.BrainComponent;
-import me.dannytatom.xibalba.components.PlayerComponent;
-import me.dannytatom.xibalba.components.PositionComponent;
+import me.dannytatom.xibalba.components.*;
 import me.dannytatom.xibalba.components.actions.ExploreComponent;
 import me.dannytatom.xibalba.screens.AbilitiesScreen;
 import me.dannytatom.xibalba.screens.CharacterScreen;
@@ -219,7 +215,7 @@ public class HudRenderer {
       enemyInfo.clear();
     } else {
       AttributesComponent enemyAttributes
-          = ComponentMappers.attributes.get(playerDetails.lastHitEntity);
+        = ComponentMappers.attributes.get(playerDetails.lastHitEntity);
       String name = enemyAttributes.name;
 
       if (enemyInfo.getChildren().size == 0) {
@@ -249,7 +245,7 @@ public class HudRenderer {
       performanceInfo = "[DARK_GRAY]v0.1.0 FPS " + Gdx.graphics.getFramesPerSecond();
 
       positionInfo = "[DARK_GRAY]" + playerPosition.pos.toString()
-          + (playerDetails.target != null ? ", " + playerDetails.target.toString() : "");
+        + (playerDetails.target != null ? ", " + playerDetails.target.toString() : "");
     }
 
     if (gameInfo.getChildren().size == 0) {
@@ -335,7 +331,7 @@ public class HudRenderer {
       }
 
       MapCell cell
-          = WorldManager.mapHelpers.getCell(playerDetails.target.x, playerDetails.target.y);
+        = WorldManager.mapHelpers.getCell(playerDetails.target.x, playerDetails.target.y);
       String cellDescription;
 
       if (cell.forgotten) {
@@ -345,7 +341,7 @@ public class HudRenderer {
       }
 
       Entity entity
-          = WorldManager.mapHelpers.getEntityAt(playerDetails.target.x, playerDetails.target.y);
+        = WorldManager.mapHelpers.getEntityAt(playerDetails.target.x, playerDetails.target.y);
 
       if (!WorldManager.entityHelpers.canSee(WorldManager.player, entity)) {
         entity = null;
@@ -373,7 +369,7 @@ public class HudRenderer {
 
           BrainComponent brain = ComponentMappers.brain.get(entity);
           entityName = "[RED]" + enemyAttributes.name
-              + " [DARK_GRAY]" + brain.stateMachine.getCurrentState().name();
+            + " [DARK_GRAY]" + brain.stateMachine.getCurrentState().name();
 
           entityDescription = WordUtils.wrap(enemyAttributes.description, 50);
         }
@@ -395,16 +391,16 @@ public class HudRenderer {
     table.add(new Label(depth, Main.skin)).left().row();
 
     String hits = "[LIGHT_GRAY]You hit enemies[] " + playerDetails.totalHits
-        + "[LIGHT_GRAY] times and missed[] " + playerDetails.totalMisses;
+      + "[LIGHT_GRAY] times and missed[] " + playerDetails.totalMisses;
     table.add(new Label(hits, Main.skin)).left().row();
 
     String damage = "[LIGHT_GRAY]You did[] " + playerDetails.totalDamageDone
-        + "[LIGHT_GRAY] damage, took[] " + playerDetails.totalDamageReceived
-        + "[LIGHT_GRAY], and healed[] " + playerDetails.totalDamageHealed;
+      + "[LIGHT_GRAY] damage, took[] " + playerDetails.totalDamageReceived
+      + "[LIGHT_GRAY], and healed[] " + playerDetails.totalDamageHealed;
     table.add(new Label(damage, Main.skin)).left().row();
 
     String kills = "[LIGHT_GRAY]You killed[] "
-        + playerDetails.totalKills + "[LIGHT_GRAY] enemies";
+      + playerDetails.totalKills + "[LIGHT_GRAY] enemies";
     table.add(new Label(kills, Main.skin)).left().row();
 
     deathDialog.getButtonTable().pad(5, 0, 0, 0);
@@ -412,7 +408,7 @@ public class HudRenderer {
     deathDialog.show(stage);
 
     deathDialog.setPosition(
-        deathDialog.getX(), deathDialog.getY() + (deathDialog.getY() / 2)
+      deathDialog.getX(), deathDialog.getY() + (deathDialog.getY() / 2)
     );
   }
 
@@ -421,7 +417,7 @@ public class HudRenderer {
 
     String healthTextColor = attributes.health < attributes.maxHealth / 2 ? "[RED]" : "[WHITE]";
     String healthText = healthTextColor + attributes.health
-        + "[LIGHT_GRAY]/" + attributes.maxHealth;
+      + "[LIGHT_GRAY]/" + attributes.maxHealth;
     StringBuilder healthBar = new StringBuilder("[LIGHT_GRAY]HP [[");
 
     for (int i = 0; i < MathUtils.floor(attributes.maxHealth / 10); i++) {
@@ -471,7 +467,7 @@ public class HudRenderer {
 
     String oxygenTextColor = attributes.oxygen < attributes.maxOxygen / 2 ? "[RED]" : "[CYAN]";
     String oxygenText = oxygenTextColor + attributes.oxygen
-        + "[LIGHT_GRAY]/" + attributes.maxOxygen;
+      + "[LIGHT_GRAY]/" + attributes.maxOxygen;
     StringBuilder oxygenBar = new StringBuilder("[LIGHT_GRAY]OX [[");
 
     for (int i = 0; i < MathUtils.floor(attributes.maxOxygen / 4); i++) {

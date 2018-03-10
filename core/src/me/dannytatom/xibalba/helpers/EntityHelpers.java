@@ -6,13 +6,7 @@ import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
 import me.dannytatom.xibalba.Main;
-import me.dannytatom.xibalba.components.AttributesComponent;
-import me.dannytatom.xibalba.components.BrainComponent;
-import me.dannytatom.xibalba.components.EnemyComponent;
-import me.dannytatom.xibalba.components.EquipmentComponent;
-import me.dannytatom.xibalba.components.ItemComponent;
-import me.dannytatom.xibalba.components.PositionComponent;
-import me.dannytatom.xibalba.components.VisualComponent;
+import me.dannytatom.xibalba.components.*;
 import me.dannytatom.xibalba.components.statuses.CharmedComponent;
 import me.dannytatom.xibalba.components.statuses.PoisonedComponent;
 import me.dannytatom.xibalba.utils.ComponentMappers;
@@ -38,15 +32,14 @@ public class EntityHelpers {
    * turn turnCounter isn't 0 or if they're stuck.
    *
    * @param entity The entity to check
-   *
    * @return If they should
    */
   public boolean shouldSkipTurn(Entity entity) {
     return (ComponentMappers.encumbered.has(entity)
-        && ComponentMappers.encumbered.get(entity).turnCounter != 0)
-        || (ComponentMappers.crippled.has(entity)
-        && ComponentMappers.crippled.get(entity).turnCounter != 0)
-        || (ComponentMappers.stuck.has(entity));
+      && ComponentMappers.encumbered.get(entity).turnCounter != 0)
+      || (ComponentMappers.crippled.has(entity)
+      && ComponentMappers.crippled.get(entity).turnCounter != 0)
+      || (ComponentMappers.stuck.has(entity));
   }
 
   public boolean hasTrait(Entity entity, String trait) {
@@ -61,22 +54,20 @@ public class EntityHelpers {
    * Checks if an entity is hidden or not.
    *
    * @param entity Entity to check
-   *
    * @return Whether or not it's visible
    */
   public boolean isVisible(Entity entity) {
     PositionComponent entityPosition = ComponentMappers.position.get(entity);
 
     return entityPosition != null
-        && !WorldManager.mapHelpers.getCell(entityPosition.pos.x, entityPosition.pos.y).hidden
-        && !WorldManager.mapHelpers.getCell(entityPosition.pos.x, entityPosition.pos.y).forgotten;
+      && !WorldManager.mapHelpers.getCell(entityPosition.pos.x, entityPosition.pos.y).hidden
+      && !WorldManager.mapHelpers.getCell(entityPosition.pos.x, entityPosition.pos.y).forgotten;
   }
 
   /**
    * Find if an entity is near the player.
    *
    * @param entity The entity to check
-   *
    * @return Whether or not they are
    */
   public boolean isNearPlayer(Entity entity) {
@@ -88,11 +79,11 @@ public class EntityHelpers {
     PositionComponent targetPosition = ComponentMappers.position.get(target);
 
     return (entityPosition.pos.x == targetPosition.pos.x - 1
-        || entityPosition.pos.x == targetPosition.pos.x
-        || entityPosition.pos.x == targetPosition.pos.x + 1)
-        && (entityPosition.pos.y == targetPosition.pos.y - 1
-        || entityPosition.pos.y == targetPosition.pos.y
-        || entityPosition.pos.y == targetPosition.pos.y + 1);
+      || entityPosition.pos.x == targetPosition.pos.x
+      || entityPosition.pos.x == targetPosition.pos.x + 1)
+      && (entityPosition.pos.y == targetPosition.pos.y - 1
+      || entityPosition.pos.y == targetPosition.pos.y
+      || entityPosition.pos.y == targetPosition.pos.y + 1);
   }
 
   public boolean isPlayerAlive() {
@@ -111,7 +102,7 @@ public class EntityHelpers {
     float[][] fovMap = WorldManager.mapHelpers.createFovMap();
 
     attributes.hearingMap = caster.calculateFov(
-        fovMap, (int) position.pos.x, (int) position.pos.y, attributes.hearing
+      fovMap, (int) position.pos.x, (int) position.pos.y, attributes.hearing
     );
 
     if (!Main.debug.fieldOfViewEnabled && ComponentMappers.player.has(entity)) {
@@ -127,7 +118,7 @@ public class EntityHelpers {
       attributes.visionMap = visionMap;
     } else {
       attributes.visionMap = caster.calculateFov(
-          fovMap, (int) position.pos.x, (int) position.pos.y, attributes.vision
+        fovMap, (int) position.pos.x, (int) position.pos.y, attributes.vision
       );
     }
   }
@@ -137,7 +128,6 @@ public class EntityHelpers {
    *
    * @param looker Who looking
    * @param target Who they looking for
-   *
    * @return Yes/no
    */
   public boolean canSee(Entity looker, Entity target) {
@@ -158,7 +148,6 @@ public class EntityHelpers {
    * Small convenience method to check if an entity can see the player.
    *
    * @param entity Who looking
-   *
    * @return Yes/no
    */
   private boolean canSeePlayer(Entity entity) {
@@ -170,7 +159,6 @@ public class EntityHelpers {
    *
    * @param listener Who listening
    * @param target   Who they listening for
-   *
    * @return Yes/no
    */
   public boolean canHear(Entity listener, Entity target) {
@@ -184,7 +172,6 @@ public class EntityHelpers {
    * Small convenience method to check if an entity can hear the player.
    *
    * @param entity Who listening
-   *
    * @return Yes/no
    */
   private boolean canHearPlayer(Entity entity) {
@@ -195,7 +182,6 @@ public class EntityHelpers {
    * Can the entity see or hear the player.
    *
    * @param entity Who tryna find the player
-   *
    * @return Yes/no
    */
   public boolean canSensePlayer(Entity entity) {
@@ -248,7 +234,6 @@ public class EntityHelpers {
    * Entity's toughness + armor defense.
    *
    * @param entity Who we're getting defense of
-   *
    * @return Their combined defense
    */
   int getCombinedDefense(Entity entity) {
@@ -261,7 +246,6 @@ public class EntityHelpers {
    * Just armor defense.
    *
    * @param entity Who we're getting defense of
-   *
    * @return Their armor defense
    */
   public int getArmorDefense(Entity entity) {
@@ -351,7 +335,7 @@ public class EntityHelpers {
         break;
       case "poison":
         poison(entity, Integer.parseInt(params[0]),
-            Integer.parseInt(params[1]), Integer.parseInt(params[2]));
+          Integer.parseInt(params[1]), Integer.parseInt(params[2]));
         break;
       default:
     }

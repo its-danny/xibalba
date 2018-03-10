@@ -1,7 +1,6 @@
 package me.dannytatom.xibalba.helpers;
 
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.gdx.math.MathUtils;
 import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.utils.ComponentMappers;
 import me.dannytatom.xibalba.utils.yaml.AbilityData;
@@ -42,7 +41,7 @@ public class AbilityHelpers {
           }
 
           if (abilityData.targetRequired
-                  && abilityData.targetType != ComponentMappers.attributes.get(target).type) {
+            && abilityData.targetType != ComponentMappers.attributes.get(target).type) {
             WorldManager.log.add("effects.failed", abilityData.name);
 
             return;

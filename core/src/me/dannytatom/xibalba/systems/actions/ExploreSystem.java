@@ -22,7 +22,7 @@ public class ExploreSystem extends EntitySystem {
 
   public void addedToEngine(Engine engine) {
     entities = engine.getEntitiesFor(
-        Family.all(PlayerComponent.class, ExploreComponent.class).get()
+      Family.all(PlayerComponent.class, ExploreComponent.class).get()
     );
   }
 
@@ -51,7 +51,7 @@ public class ExploreSystem extends EntitySystem {
         WorldManager.world.getCurrentMap().dijkstra.updatePlayerExplore();
 
         explore.path = WorldManager.world.getCurrentMap().dijkstra.findExplorePath(
-            ComponentMappers.position.get(WorldManager.player).pos
+          ComponentMappers.position.get(WorldManager.player).pos
         );
       }
 

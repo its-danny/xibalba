@@ -3,14 +3,7 @@ package me.dannytatom.xibalba.helpers;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import me.dannytatom.xibalba.components.AttributesComponent;
-import me.dannytatom.xibalba.components.EffectsComponent;
-import me.dannytatom.xibalba.components.EquipmentComponent;
-import me.dannytatom.xibalba.components.InventoryComponent;
-import me.dannytatom.xibalba.components.ItemComponent;
-import me.dannytatom.xibalba.components.LimbComponent;
-import me.dannytatom.xibalba.components.PlayerComponent;
-import me.dannytatom.xibalba.components.PositionComponent;
+import me.dannytatom.xibalba.components.*;
 import me.dannytatom.xibalba.components.items.AmmunitionComponent;
 import me.dannytatom.xibalba.components.items.WeaponComponent;
 import me.dannytatom.xibalba.components.statuses.EncumberedComponent;
@@ -32,7 +25,6 @@ public class ItemHelpers {
    *
    * @param entity The entity looking
    * @param item   The item itself
-   *
    * @return The item name if identified, ??? otherwise
    */
   public String getName(Entity entity, Entity item) {
@@ -50,7 +42,6 @@ public class ItemHelpers {
    *
    * @param entity The entity looking
    * @param item   The item itself
-   *
    * @return If it is indeed identified
    */
   public boolean isIdentified(Entity entity, Entity item) {
@@ -58,8 +49,8 @@ public class ItemHelpers {
     ItemComponent details = ComponentMappers.item.get(item);
 
     return player == null
-        || !(Objects.equals(details.type, "consumable")
-        && !player.identifiedItems.contains(details.name, false));
+      || !(Objects.equals(details.type, "consumable")
+      && !player.identifiedItems.contains(details.name, false));
   }
 
   public boolean hasMaterial(Entity item) {
@@ -101,7 +92,7 @@ public class ItemHelpers {
 
       if (log) {
         WorldManager.log.add(
-            "inventory.pickedUp", WorldManager.itemHelpers.getName(entity, item)
+          "inventory.pickedUp", WorldManager.itemHelpers.getName(entity, item)
         );
       }
 
@@ -115,7 +106,7 @@ public class ItemHelpers {
             hold(entity, item);
 
             WorldManager.log.add(
-                "inventory.holding", WorldManager.itemHelpers.getName(entity, item)
+              "inventory.holding", WorldManager.itemHelpers.getName(entity, item)
             );
           }
         }
@@ -144,7 +135,7 @@ public class ItemHelpers {
     AttributesComponent attributes = ComponentMappers.attributes.get(entity);
 
     if (getTotalWeight(entity) <= attributes.strength * 5
-        && ComponentMappers.encumbered.has(entity)) {
+      && ComponentMappers.encumbered.has(entity)) {
       entity.remove(EncumberedComponent.class);
 
       if (ComponentMappers.player.has(entity)) {
@@ -207,7 +198,7 @@ public class ItemHelpers {
           switch (arr[0]) {
             case "raiseSpeed":
               ComponentMappers.attributes.get(WorldManager.player).speed
-                  += Integer.parseInt(arr[1]);
+                += Integer.parseInt(arr[1]);
               break;
             default:
           }
@@ -271,11 +262,11 @@ public class ItemHelpers {
         }
 
         AttributesComponent.Type type = ComponentMappers.corpse.has(item)
-            ? ComponentMappers.corpse.get(item).type
-            : ComponentMappers.limb.get(item).type;
+          ? ComponentMappers.corpse.get(item).type
+          : ComponentMappers.limb.get(item).type;
 
         if (ComponentMappers.god.get(WorldManager.god).likes.contains("Eating animals you kill")
-            && type == AttributesComponent.Type.ANIMAL) {
+          && type == AttributesComponent.Type.ANIMAL) {
           AttributesComponent attributes = ComponentMappers.attributes.get(entity);
 
           int amount = MathUtils.random(1, 5);
@@ -284,8 +275,8 @@ public class ItemHelpers {
             attributes.divineFavor += amount;
 
             WorldManager.log.add(
-                "attributes.divineFavor.increased",
-                ComponentMappers.god.get(WorldManager.god).name
+              "attributes.divineFavor.increased",
+              ComponentMappers.god.get(WorldManager.god).name
             );
           }
         }
@@ -354,7 +345,7 @@ public class ItemHelpers {
           switch (arr[0]) {
             case "raiseSpeed":
               ComponentMappers.attributes.get(WorldManager.player).speed
-                  -= Integer.parseInt(arr[1]);
+                -= Integer.parseInt(arr[1]);
               break;
             default:
           }
@@ -418,7 +409,6 @@ public class ItemHelpers {
    *
    * @param entity The entity whose equipment we're checking
    * @param item   The item we want to check
-   *
    * @return Whether or not it's equipped
    */
   public boolean isEquipped(Entity entity, Entity item) {
@@ -452,7 +442,6 @@ public class ItemHelpers {
    * Iterate through inventory, return whatever item has the `throwing` flag set to true.
    *
    * @param entity Entity whose throwing actions
-   *
    * @return The item being thrown
    */
   public Entity getThrowing(Entity entity) {
@@ -473,7 +462,6 @@ public class ItemHelpers {
    * Get the slot location of an item.
    *
    * @param item The item we want to check
-   *
    * @return Location of item
    */
   public String getLocation(Entity entity, Entity item) {
@@ -493,7 +481,6 @@ public class ItemHelpers {
    *
    * @param entity Who needs to know
    * @param type   Type of ammunition they're looking for
-   *
    * @return Whether or not they got it
    */
   public boolean hasAmmunitionOfType(Entity entity, String type) {
@@ -515,7 +502,6 @@ public class ItemHelpers {
    *
    * @param entity Entity whose inventory we're looking at
    * @param type   Type of ammunition we're looking for
-   *
    * @return Some (or, well, 1) ammunition
    */
   public Entity getAmmunitionOfType(Entity entity, String type) {
