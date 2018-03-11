@@ -81,7 +81,7 @@ public class ItemHelpers {
    */
   public void addToInventory(Entity entity, Entity item, boolean log) {
     InventoryComponent inventory = ComponentMappers.inventory.get(entity);
-    AttributesComponent attributes = ComponentMappers.attributes.get(WorldManager.player);
+    AttributesComponent attributes = ComponentMappers.attributes.get(entity);
 
     if (inventory != null) {
       item.remove(PositionComponent.class);
@@ -105,10 +105,24 @@ public class ItemHelpers {
           if (equipment.slots.get("right hand") == null) {
             hold(entity, item);
 
-            WorldManager.log.add(
-              "inventory.holding", WorldManager.itemHelpers.getName(entity, item)
-            );
+            if (log) {
+              WorldManager.log.add(
+                "inventory.holding", WorldManager.itemHelpers.getName(entity, item)
+              );
+            }
           }
+        }
+      }
+
+      if (Objects.equals(itemDetails.type, "armor")) {
+        if (equipment.slots.get(itemDetails.location) == null) {
+          wear(entity, item);
+        }
+
+        if (log) {
+          WorldManager.log.add(
+            "inventory.wearing", WorldManager.itemHelpers.getName(entity, item)
+          );
         }
       }
 
@@ -197,7 +211,7 @@ public class ItemHelpers {
 
           switch (arr[0]) {
             case "raiseSpeed":
-              ComponentMappers.attributes.get(WorldManager.player).speed
+              ComponentMappers.attributes.get(entity).speed
                 += Integer.parseInt(arr[1]);
               break;
             default:
@@ -344,7 +358,7 @@ public class ItemHelpers {
 
           switch (arr[0]) {
             case "raiseSpeed":
-              ComponentMappers.attributes.get(WorldManager.player).speed
+              ComponentMappers.attributes.get(entity).speed
                 -= Integer.parseInt(arr[1]);
               break;
             default:

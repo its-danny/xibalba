@@ -9,6 +9,7 @@ import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.components.*;
 import me.dannytatom.xibalba.utils.yaml.AbilityData;
 import me.dannytatom.xibalba.utils.yaml.GodData;
+import me.dannytatom.xibalba.world.World;
 import me.dannytatom.xibalba.world.WorldManager;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
@@ -97,8 +98,6 @@ public class PlayerSetup {
     );
 
     player.add(new PlayerComponent());
-    player.add(new InventoryComponent());
-    player.add(new EquipmentComponent());
 
     TreeMap<String, Integer> bodyParts = new TreeMap<>();
     bodyParts.put("head", 10);
@@ -182,6 +181,14 @@ public class PlayerSetup {
     });
 
     player.add(abilitiesComponent);
+
+    player.add(new InventoryComponent());
+    player.add(new EquipmentComponent());
+
+    Entity shield = WorldManager.entityFactory.createItem("shield", new Vector2(0, 0));
+    WorldManager.itemHelpers.addToInventory(player, shield, false);
+    Entity chippedFlint = WorldManager.entityFactory.createItem("chippedFlint", new Vector2(0, 0));
+    WorldManager.itemHelpers.addToInventory(player, chippedFlint, false);
 
     return player;
   }
