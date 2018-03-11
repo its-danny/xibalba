@@ -33,6 +33,9 @@ Get the game on [itch.io](https://ohokcool.itch.io/xibalba).
 ```zsh
 cd ~/path/to/xibalba/
 
+# If gradle wrapper isn't setup yet
+gradle wrapper
+
 # Run
 ./gradlew desktop:run
 
