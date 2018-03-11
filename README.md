@@ -12,7 +12,7 @@ Stats and skills advance through usage, no allotting points.
 
 **Xibalba is currently in development, a playable alpha will hopefully be available soon.**
 
-Get the game on [itch.io](https://ohokcool.itch.io/xibalba).
+Get the game on [itch.io](https://locvst.itch.io/xibalba).
 
 ## Building
 
