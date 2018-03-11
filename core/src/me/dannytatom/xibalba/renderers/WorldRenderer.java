@@ -91,8 +91,8 @@ public class WorldRenderer {
   private void renderCells() {
     Map map = WorldManager.world.getCurrentMap();
 
-    for (int x = 0; x < map.width - 1; x++) {
-      for (int y = 0; y < map.height - 1; y++) {
+    for (int x = 0; x < map.width; x++) {
+      for (int y = 0; y < map.height; y++) {
         MapCell cell = map.getCellMap()[x][y];
 
         if (playerAttributes.visionMap[x][y] > 0) {
@@ -218,8 +218,8 @@ public class WorldRenderer {
   private void renderShadows() {
     Map map = WorldManager.world.getCurrentMap();
 
-    for (int x = 0; x < map.width - 1; x++) {
-      for (int y = 0; y < map.height - 1; y++) {
+    for (int x = 0; x < map.width; x++) {
+      for (int y = 0; y < map.height; y++) {
         MapCell cell = WorldManager.mapHelpers.getCell(x, y);
 
         if (cell.hidden) {
@@ -261,8 +261,8 @@ public class WorldRenderer {
     Map map = WorldManager.world.getCurrentMap();
 
     if (map.light.hasLights()) {
-      for (int x = 0; x < map.width - 1; x++) {
-        for (int y = 0; y < map.height - 1; y++) {
+      for (int x = 0; x < map.width; x++) {
+        for (int y = 0; y < map.height; y++) {
           MapCell cell = WorldManager.mapHelpers.getCell(x, y);
 
           if (cell.hidden || cell.forgotten) {

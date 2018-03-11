@@ -68,6 +68,9 @@ public class PlayScreen implements Screen {
     // Generate all dijkstra maps
     WorldManager.world.getCurrentMap().dijkstra.updateAll();
 
+    // Generate light map
+    WorldManager.world.getCurrentMap().light.update(0);
+
     // Change state to playing
     WorldManager.state = WorldManager.State.PLAYING;
   }
