@@ -9,7 +9,6 @@ import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.components.*;
 import me.dannytatom.xibalba.utils.yaml.AbilityData;
 import me.dannytatom.xibalba.utils.yaml.GodData;
-import me.dannytatom.xibalba.world.World;
 import me.dannytatom.xibalba.world.WorldManager;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;

@@ -13,7 +13,7 @@ allprojects {
     apply plugin: "eclipse"
     apply plugin: "idea"
 
-    version = 'alpha-101116'
+    version = 'alpha-2018'
 
     ext {
         appName = 'xibalba'
