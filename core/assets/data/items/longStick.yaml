@@ -1,0 +1,18 @@
+---
+type: component
+weight: 0.25
+
+visual:
+  character: "0502"
+  color: BD977D
+
+attributes:
+  hitDamage: 2
+  throwDamage: 2
+
+actions:
+  - throw
+  - hold
+
+verbs:
+  - hit

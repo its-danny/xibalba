@@ -25,4 +25,7 @@ public class ItemData {
   public HashMap<String, String> effects;
   public ArrayList<String> verbs;
   public HashMap<String, Integer> light;
+
+  public boolean craftable;
+  public ArrayList<String> requiredComponents;
 }

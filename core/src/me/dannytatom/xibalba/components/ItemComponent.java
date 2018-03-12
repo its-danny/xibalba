@@ -1,9 +1,13 @@
 package me.dannytatom.xibalba.components;
 
 import com.badlogic.ashley.core.Component;
+import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import me.dannytatom.xibalba.utils.yaml.ItemData;
+import me.dannytatom.xibalba.world.WorldManager;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class ItemComponent implements Component {
@@ -18,6 +22,8 @@ public class ItemComponent implements Component {
   public String location;
   public String name;
   public Quality quality;
+  public boolean craftable;
+  public ArrayList<RequiredComponent> requiredComponents;
   public boolean throwing = false;
 
   /**
@@ -38,6 +44,20 @@ public class ItemComponent implements Component {
     this.attributes = data.attributes;
     this.actions = data.actions == null ? null : new Array<>(data.actions.toArray(new String[0]));
     this.verbs = data.verbs == null ? null : new Array<>(data.verbs.toArray(new String[0]));
+
+    this.craftable = data.craftable;
+    this.requiredComponents = new ArrayList<>();
+
+    if (data.requiredComponents != null) {
+      for (String component : data.requiredComponents) {
+        String[] split = component.split(":");
+        String key = split[0];
+        int amount = Integer.parseInt(split[1]);
+
+        Entity entity = WorldManager.entityFactory.createItem(key, new Vector2(0, 0));
+        this.requiredComponents.add(new RequiredComponent(entity, amount));
+      }
+    }
   }
 
   public enum Quality {
@@ -51,6 +71,16 @@ public class ItemComponent implements Component {
 
     public int getModifier() {
       return modifier;
+    }
+  }
+
+  public class RequiredComponent {
+    public Entity item;
+    public int amount;
+
+    public RequiredComponent(Entity item, int amount) {
+      this.item = item;
+      this.amount = amount;
     }
   }
 }

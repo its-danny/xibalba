@@ -39,6 +39,14 @@
       {
         "name": "healthPlant",
         "spawnRange": "0,1"
+      },
+      {
+        "name": "shortStick",
+        "spawnRange": "1,5"
+      },
+      {
+        "name": "longStick",
+        "spawnRange": "1,3"
       }
     ],
     "traps": [

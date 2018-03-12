@@ -27,3 +27,8 @@ actions:
 
 verbs:
   - hit
+
+craftable: true
+
+requiredComponents:
+  - longStick:1

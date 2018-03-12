@@ -73,6 +73,33 @@ public class ItemHelpers {
     }
   }
 
+  public boolean hasComponentsForItem(Entity entity, Entity item) {
+    ItemComponent itemDetails = ComponentMappers.item.get(item);
+    InventoryComponent inventory = ComponentMappers.inventory.get(entity);
+
+    if (inventory != null) {
+      for (ItemComponent.RequiredComponent requiredComponent : itemDetails.requiredComponents) {
+        ItemComponent requiredComponentDetails = ComponentMappers.item.get(requiredComponent.item);
+
+        int count = 0;
+
+        for (Entity inventoryItem : inventory.items) {
+          ItemComponent inventoryItemDetails = ComponentMappers.item.get(inventoryItem);
+
+          if (requiredComponentDetails.name.equals(inventoryItemDetails.name)) {
+            count += 1;
+          }
+        }
+
+        if (count < requiredComponent.amount) {
+          return false;
+        }
+      }
+    }
+
+    return true;
+  }
+
   /**
    * Add an item to an entity's inventory.
    *
@@ -154,6 +181,24 @@ public class ItemHelpers {
 
       if (ComponentMappers.player.has(entity)) {
         WorldManager.log.add("effects.encumbered.stopped");
+      }
+    }
+  }
+
+  public void removeComponentsFromInventory(Entity entity, String name, int amount) {
+    InventoryComponent inventory = ComponentMappers.inventory.get(entity);
+    int count = 0;
+
+    for (Entity item : inventory.items) {
+      ItemComponent itemDetails = ComponentMappers.item.get(item);
+
+      if (itemDetails.name.equals(name) && count < amount) {
+        removeFromInventory(WorldManager.player, item);
+        count += 1;
+
+        if (count == amount) {
+          break;
+        }
       }
     }
   }

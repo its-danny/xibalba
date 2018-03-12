@@ -135,6 +135,11 @@ public class HudRenderer {
     abilitiesButton.setAction(bottomTable, () -> main.setScreen(new AbilitiesScreen(main)));
     menuButtons.add(abilitiesButton).pad(0, 5, 0, 5);
 
+    ActionButton craftButton = new ActionButton("F", "Craft");
+    craftButton.setKeys(Input.Keys.F);
+    craftButton.setAction(bottomTable, () -> main.setScreen(new CraftScreen(main)));
+    menuButtons.add(craftButton).pad(0, 5, 0, 5);
+
     ActionButton exploreButton = new ActionButton("X", "Explore");
     exploreButton.setKeys(Input.Keys.X);
     exploreButton.setAction(bottomTable, () -> {
