@@ -23,6 +23,7 @@ public class ItemComponent implements Component {
   public String name;
   public Quality quality;
   public boolean craftable;
+  public ArrayList<Integer> craftedRange;
   public ArrayList<RequiredComponent> requiredComponents;
   public boolean throwing = false;
 
@@ -46,6 +47,7 @@ public class ItemComponent implements Component {
     this.verbs = data.verbs == null ? null : new Array<>(data.verbs.toArray(new String[0]));
 
     this.craftable = data.craftable;
+    this.craftedRange = data.craftedRange;
     this.requiredComponents = new ArrayList<>();
 
     if (data.requiredComponents != null) {

@@ -249,7 +249,7 @@ public class HudRenderer {
     String dijkstraInfo = "";
 
     if (Main.debug.debugEnabled) {
-      performanceInfo = "[DARK_GRAY]v0.1.0 FPS " + Gdx.graphics.getFramesPerSecond();
+      performanceInfo = "[DARK_GRAY]v0.1.0, FPS: " + Gdx.graphics.getFramesPerSecond() + ", Turn: " + WorldManager.turnCount;
 
       positionInfo = "[DARK_GRAY]" + playerPosition.pos.toString()
         + (playerDetails.target != null ? ", " + playerDetails.target.toString() : "");

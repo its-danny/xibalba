@@ -7,6 +7,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Colors;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
@@ -19,7 +20,6 @@ import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.components.ItemComponent;
 import me.dannytatom.xibalba.ui.ActionButton;
 import me.dannytatom.xibalba.utils.ComponentMappers;
-import me.dannytatom.xibalba.utils.yaml.AbilityData;
 import me.dannytatom.xibalba.utils.yaml.ItemData;
 import me.dannytatom.xibalba.world.WorldManager;
 import org.apache.commons.lang3.text.WordUtils;
@@ -110,13 +110,29 @@ public class CraftScreen implements Screen {
         ActionButton button = new ActionButton(i + 1, itemDetails.name);
         button.setKeys(i + 8);
         button.setAction(table, () -> {
-          WorldManager.itemHelpers.addToInventory(WorldManager.player, item, true);
+          int amountToSpawn;
+
+          if (itemDetails.craftedRange.size() > 1) {
+            amountToSpawn = MathUtils.random(itemDetails.craftedRange.get(0), itemDetails.craftedRange.get(1));
+          } else {
+            amountToSpawn = itemDetails.craftedRange.get(0);
+          }
+
+          for (int j = 0; j < amountToSpawn; j++) {
+            itemDetails.quality = WorldManager.itemHelpers.qualityFromComponents(WorldManager.player, item);
+            WorldManager.itemHelpers.addToInventory(WorldManager.player, item, false);
+            WorldManager.log.add("inventory.crafted", WorldManager.itemHelpers.getName(WorldManager.player, item));
+          }
 
           for (ItemComponent.RequiredComponent requiredComponent : itemDetails.requiredComponents) {
             ItemComponent requiredComponentDetails = ComponentMappers.item.get(requiredComponent.item);
             WorldManager.itemHelpers.removeComponentsFromInventory(
               WorldManager.player, requiredComponentDetails.name, requiredComponent.amount
             );
+
+            WorldManager.executeTurn = true;
+
+            setupRecipes();
           }
         });
 
@@ -134,7 +150,7 @@ public class CraftScreen implements Screen {
       ArrayList<String> materialList = new ArrayList<>();
       for (ItemComponent.RequiredComponent requiredComponent : itemDetails.requiredComponents) {
         ItemComponent requiredComponentDetails = ComponentMappers.item.get(requiredComponent.item);
-        materialList.add(requiredComponentDetails.name + " " + requiredComponent.amount);
+        materialList.add(requiredComponent.amount + " " + requiredComponentDetails.name);
       }
 
       recipeGroup.addActor(new Label(

@@ -29,6 +29,9 @@ verbs:
   - hit
 
 craftable: true
+craftedRange:
+  - 1
+  - 1
 
 requiredComponents:
   - longStick:1

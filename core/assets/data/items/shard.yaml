@@ -3,8 +3,8 @@ type: component
 weight: 0.25
 
 visual:
-  character: "0502"
-  color: BD977D
+  character: "0702"
+  color: DDDDDD
 
 attributes:
   hitDamage: 2
@@ -20,7 +20,7 @@ verbs:
 craftable: true
 craftedRange:
   - 2
-  - 3
+  - 5
 
 requiredComponents:
-  - longStick:1
+  - stone:1

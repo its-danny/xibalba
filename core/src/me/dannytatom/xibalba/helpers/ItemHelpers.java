@@ -12,6 +12,7 @@ import me.dannytatom.xibalba.utils.ComponentMappers;
 import me.dannytatom.xibalba.world.WorldManager;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Objects;
 
@@ -100,6 +101,46 @@ public class ItemHelpers {
     return true;
   }
 
+  public ItemComponent.Quality qualityFromComponents(Entity entity, Entity item) {
+    ItemComponent itemDetails = ComponentMappers.item.get(item);
+    InventoryComponent inventory = ComponentMappers.inventory.get(entity);
+    ArrayList<ItemComponent.Quality> qualities = new ArrayList<>();
+
+    if (inventory != null) {
+      for (ItemComponent.RequiredComponent requiredComponent : itemDetails.requiredComponents) {
+        ItemComponent requiredComponentDetails = ComponentMappers.item.get(requiredComponent.item);
+        int count = 0;
+
+        for (Entity inventoryItem : inventory.items) {
+          ItemComponent inventoryItemDetails = ComponentMappers.item.get(inventoryItem);
+
+          if (requiredComponentDetails.name.equals(inventoryItemDetails.name)) {
+            qualities.add(inventoryItemDetails.quality);
+            count++;
+          }
+
+          if (count == requiredComponent.amount) {
+            break;
+          }
+        }
+      }
+    }
+
+    int max = 0;
+    ItemComponent.Quality highest = null;
+
+    for (ItemComponent.Quality quality : qualities) {
+      int frequency = Collections.frequency(qualities, quality);
+
+      if (max < frequency) {
+        max = frequency;
+        highest = quality;
+      }
+    }
+
+    return highest;
+  }
+
   /**
    * Add an item to an entity's inventory.
    *
@@ -185,15 +226,32 @@ public class ItemHelpers {
     }
   }
 
+  private void removeMultipleFromInventory(Entity entity, ArrayList<Entity> items) {
+    InventoryComponent inventory = ComponentMappers.inventory.get(entity);
+    inventory.items.removeAll(items);
+
+    AttributesComponent attributes = ComponentMappers.attributes.get(entity);
+
+    if (getTotalWeight(entity) <= attributes.strength * 5
+      && ComponentMappers.encumbered.has(entity)) {
+      entity.remove(EncumberedComponent.class);
+
+      if (ComponentMappers.player.has(entity)) {
+        WorldManager.log.add("effects.encumbered.stopped");
+      }
+    }
+  }
+
   public void removeComponentsFromInventory(Entity entity, String name, int amount) {
     InventoryComponent inventory = ComponentMappers.inventory.get(entity);
     int count = 0;
 
+    ArrayList<Entity> toRemove = new ArrayList<>();
     for (Entity item : inventory.items) {
       ItemComponent itemDetails = ComponentMappers.item.get(item);
 
       if (itemDetails.name.equals(name) && count < amount) {
-        removeFromInventory(WorldManager.player, item);
+        toRemove.add(item);
         count += 1;
 
         if (count == amount) {
@@ -201,6 +259,8 @@ public class ItemHelpers {
         }
       }
     }
+
+    removeMultipleFromInventory(entity, toRemove);
   }
 
   /**

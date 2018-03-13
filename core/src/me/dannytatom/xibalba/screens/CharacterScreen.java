@@ -57,6 +57,7 @@ public class CharacterScreen implements Screen {
   private ActionButton applyButton;
   private ActionButton confirmApplyButton;
   private ActionButton bandageButton;
+  private ActionButton craftButton;
   private ActionButton removeButton;
   private ActionButton dropButton;
   private Entity applyingItem = null;
@@ -500,7 +501,7 @@ public class CharacterScreen implements Screen {
         statsGroup.addActor(new Label("", Main.skin));
       }
 
-      // ItemData stats
+      // Item stats
 
       if (WorldManager.itemHelpers.isIdentified(player, item)) {
         if (details.attributes != null) {
@@ -591,7 +592,7 @@ public class CharacterScreen implements Screen {
           }
         }
 
-        // ItemData effects
+        // Item effects
 
         EffectsComponent selectedItemEffects = ComponentMappers.effects.get(item);
 
@@ -725,6 +726,10 @@ public class CharacterScreen implements Screen {
 
         if (details.actions.contains("bandage", false) && ComponentMappers.bleeding.has(player)) {
           itemActionTable.add(bandageButton).pad(0, 0, 5, 5);
+        }
+
+        if (details.type.equals("component")) {
+          itemActionTable.add(craftButton).pad(0, 0, 5, 5);
         }
 
         if (itemActionTable.getChildren().size > 0) {
@@ -918,6 +923,10 @@ public class CharacterScreen implements Screen {
         updateItemDetailsGroup();
       }
     });
+
+    craftButton = new ActionButton("F", "Craft");
+    craftButton.setKeys(Input.Keys.F);
+    craftButton.setAction(table, () -> main.setScreen(new CraftScreen(main)));
 
     applyButton = new ActionButton("A", "Apply");
     applyButton.setKeys(Input.Keys.A);

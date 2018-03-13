@@ -27,3 +27,12 @@ verbs:
   - cut
   - slashed
   - rekt
+
+craftable: true
+craftedRange:
+  - 1
+  - 1
+
+requiredComponents:
+  - shortStick:1
+  - shard:6

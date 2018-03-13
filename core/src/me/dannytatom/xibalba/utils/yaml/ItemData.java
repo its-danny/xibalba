@@ -27,5 +27,6 @@ public class ItemData {
   public HashMap<String, Integer> light;
 
   public boolean craftable;
+  public ArrayList<Integer> craftedRange;
   public ArrayList<String> requiredComponents;
 }

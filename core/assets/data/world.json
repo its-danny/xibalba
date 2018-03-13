@@ -46,7 +46,11 @@
       },
       {
         "name": "longStick",
-        "spawnRange": "1,3"
+        "spawnRange": "10,30"
+      },
+      {
+        "name": "stone",
+        "spawnRange": "5,10"
       }
     ],
     "traps": [

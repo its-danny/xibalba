@@ -30,3 +30,12 @@ verbs:
   - impaled
   - gutted
   - pierced
+
+craftable: true
+craftedRange:
+  - 1
+  - 1
+
+requiredComponents:
+  - longStick:1
+  - shard:1
