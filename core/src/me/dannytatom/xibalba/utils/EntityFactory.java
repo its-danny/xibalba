@@ -101,13 +101,10 @@ public class EntityFactory {
 
     entity.add(new PositionComponent(position));
 
-    ItemComponent.Quality[] qualities = ItemComponent.Quality.values();
-
     entity.add(
       new ItemComponent(
         i18n.get("entities.items." + name + ".name"),
         i18n.get("entities.items." + name + ".description"),
-        qualities[MathUtils.random(0, qualities.length - 1)],
         data
       )
     );
@@ -131,13 +128,6 @@ public class EntityFactory {
 
     if (data.effects != null) {
       entity.add(new EffectsComponent(data));
-    }
-
-    if (ComponentMappers.weapon.has(entity)) {
-      WeaponComponent weapon = ComponentMappers.weapon.get(entity);
-      WeaponComponent.Material[] materials = WeaponComponent.Material.values();
-
-      weapon.material = materials[MathUtils.random(0, materials.length - 1)];
     }
 
     entity.add(new VisualComponent(

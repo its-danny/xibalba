@@ -5,7 +5,6 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import me.dannytatom.xibalba.components.*;
 import me.dannytatom.xibalba.components.items.AmmunitionComponent;
-import me.dannytatom.xibalba.components.items.WeaponComponent;
 import me.dannytatom.xibalba.components.statuses.EncumberedComponent;
 import me.dannytatom.xibalba.components.statuses.SickComponent;
 import me.dannytatom.xibalba.utils.ComponentMappers;
@@ -54,21 +53,21 @@ public class ItemHelpers {
       && !player.identifiedItems.contains(details.name, false));
   }
 
-  public boolean hasMaterial(Entity item) {
-    if (ComponentMappers.weapon.has(item)) {
-      WeaponComponent weapon = ComponentMappers.weapon.get(item);
+  public boolean hasStoneMaterial(Entity item) {
+    if (ComponentMappers.item.has(item)) {
+      ItemComponent details = ComponentMappers.item.get(item);
 
-      return weapon.material != null;
+      return details.stoneMaterial != null;
     } else {
       return false;
     }
   }
 
-  public WeaponComponent.Material getMaterial(Entity item) {
-    if (ComponentMappers.weapon.has(item)) {
-      WeaponComponent weapon = ComponentMappers.weapon.get(item);
+  public ItemComponent.StoneMaterial getStoneMaterial(Entity item) {
+    if (ComponentMappers.item.has(item)) {
+      ItemComponent details = ComponentMappers.item.get(item);
 
-      return weapon.material;
+      return details.stoneMaterial;
     } else {
       return null;
     }
@@ -135,6 +134,46 @@ public class ItemHelpers {
       if (max < frequency) {
         max = frequency;
         highest = quality;
+      }
+    }
+
+    return highest;
+  }
+
+  public ItemComponent.StoneMaterial materialFromComponents(Entity entity, Entity item) {
+    ItemComponent itemDetails = ComponentMappers.item.get(item);
+    InventoryComponent inventory = ComponentMappers.inventory.get(entity);
+    ArrayList<ItemComponent.StoneMaterial> stoneMaterials = new ArrayList<>();
+
+    if (inventory != null) {
+      for (ItemComponent.RequiredComponent requiredComponent : itemDetails.requiredComponents) {
+        ItemComponent requiredComponentDetails = ComponentMappers.item.get(requiredComponent.item);
+        int count = 0;
+
+        for (Entity inventoryItem : inventory.items) {
+          ItemComponent inventoryItemDetails = ComponentMappers.item.get(inventoryItem);
+
+          if (requiredComponentDetails.name.equals(inventoryItemDetails.name)) {
+            stoneMaterials.add(inventoryItemDetails.stoneMaterial);
+            count++;
+          }
+
+          if (count == requiredComponent.amount) {
+            break;
+          }
+        }
+      }
+    }
+
+    int max = 0;
+    ItemComponent.StoneMaterial highest = null;
+
+    for (ItemComponent.StoneMaterial stoneMaterial : stoneMaterials) {
+      int frequency = Collections.frequency(stoneMaterials, stoneMaterial);
+
+      if (max < frequency) {
+        max = frequency;
+        highest = stoneMaterial;
       }
     }
 

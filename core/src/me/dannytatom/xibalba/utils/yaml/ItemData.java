@@ -8,6 +8,7 @@ public class ItemData {
   public String weaponType;
   public String ammunitionType;
   public String armorType;
+  public boolean hasStoneMaterial;
   public float lightRadius;
   public float weight;
   public HashMap<String, String> visual;

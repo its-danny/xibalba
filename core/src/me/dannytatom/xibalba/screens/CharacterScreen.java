@@ -455,10 +455,10 @@ public class CharacterScreen implements Screen {
           )
         );
 
-        if (WorldManager.itemHelpers.hasMaterial(item)) {
+        if (WorldManager.itemHelpers.hasStoneMaterial(item)) {
           itemDetailsGroup.addActor(
             new Label(
-              "[DARK_GRAY]Material: [LIGHT_GRAY]" + WorldManager.itemHelpers.getMaterial(item).name(), Main.skin
+              "[DARK_GRAY]Materials: [LIGHT_GRAY]" + WorldManager.itemHelpers.getStoneMaterial(item).name(), Main.skin
             )
           );
         }

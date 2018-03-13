@@ -214,14 +214,6 @@ public class CombatHelpers {
           baseDamage += MathUtils.random(
             1, ComponentMappers.item.get(item).attributes.get("hitDamage")
           );
-
-          if (WorldManager.itemHelpers.hasMaterial(item)) {
-            if (WorldManager.itemHelpers.getMaterial(item) == WeaponComponent.Material.OBSIDIAN) {
-              baseDamage += MathUtils.random(
-                1, ComponentMappers.item.get(item).attributes.get("hitDamage")
-              );
-            }
-          }
         }
 
         break;
@@ -230,14 +222,6 @@ public class CombatHelpers {
           baseDamage += MathUtils.random(
             1, ComponentMappers.item.get(item).attributes.get("shotDamage")
           );
-
-          if (WorldManager.itemHelpers.hasMaterial(item)) {
-            if (WorldManager.itemHelpers.getMaterial(item) == WeaponComponent.Material.OBSIDIAN) {
-              baseDamage += MathUtils.random(
-                1, ComponentMappers.item.get(item).attributes.get("shotDamage")
-              );
-            }
-          }
         }
 
         break;
@@ -246,14 +230,6 @@ public class CombatHelpers {
           baseDamage += MathUtils.random(
             1, ComponentMappers.item.get(item).attributes.get("throwDamage")
           );
-
-          if (WorldManager.itemHelpers.hasMaterial(item)) {
-            if (WorldManager.itemHelpers.getMaterial(item) == WeaponComponent.Material.OBSIDIAN) {
-              baseDamage += MathUtils.random(
-                1, ComponentMappers.item.get(item).attributes.get("throwDamage")
-              );
-            }
-          }
         }
 
         break;
@@ -281,7 +257,13 @@ public class CombatHelpers {
     // Modify based on weapon quality
 
     if (item != null) {
-      totalDamage += ComponentMappers.item.get(item).quality.getModifier();
+      ItemComponent itemDetails = ComponentMappers.item.get(item);
+
+      totalDamage += itemDetails.quality.getModifier();
+
+      if (itemDetails.stoneMaterial != null) {
+        totalDamage += itemDetails.stoneMaterial.getModifier();
+      }
     }
 
     // Modify based on abilities

@@ -1,6 +1,7 @@
 ---
 type: component
 weight: 0.25
+hasStoneMaterial: true
 
 visual:
   character: "0700"

@@ -120,6 +120,8 @@ public class CraftScreen implements Screen {
 
           for (int j = 0; j < amountToSpawn; j++) {
             itemDetails.quality = WorldManager.itemHelpers.qualityFromComponents(WorldManager.player, item);
+            itemDetails.stoneMaterial = WorldManager.itemHelpers.materialFromComponents(WorldManager.player, item);
+
             WorldManager.itemHelpers.addToInventory(WorldManager.player, item, false);
             WorldManager.log.add("inventory.crafted", WorldManager.itemHelpers.getName(WorldManager.player, item));
           }
