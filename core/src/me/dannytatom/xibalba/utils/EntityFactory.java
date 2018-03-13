@@ -89,18 +89,18 @@ public class EntityFactory {
   /**
    * Create an item.
    *
-   * @param name     Mame of item to create
+   * @param key      Key of item to create
    * @param position Vector2 of their position
    * @return The item
    */
-  public Entity createItem(String name, Vector2 position) {
+  public Entity createItem(String key, Vector2 position) {
     Constructor constructor = new Constructor(ItemData.class);
     TypeDescription itemDescription = new TypeDescription(ItemData.class);
     itemDescription.putListPropertyType("requiredComponent", ItemRequiredComponentData.class);
     constructor.addTypeDescription(itemDescription);
     Yaml yaml = new Yaml(constructor);
     ItemData data = (ItemData) yaml.load(
-      Gdx.files.internal("data/items/" + name + ".yaml").reader()
+      Gdx.files.internal("data/items/" + key + ".yaml").reader()
     );
 
     Entity entity = new Entity();
@@ -109,8 +109,9 @@ public class EntityFactory {
 
     entity.add(
       new ItemComponent(
-        i18n.get("entities.items." + name + ".name"),
-        i18n.get("entities.items." + name + ".description"),
+        key,
+        i18n.get("entities.items." + key + ".name"),
+        i18n.get("entities.items." + key + ".description"),
         data
       )
     );

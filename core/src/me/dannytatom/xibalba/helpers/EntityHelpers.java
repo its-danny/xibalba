@@ -254,11 +254,14 @@ public class EntityHelpers {
     int defense = 0;
 
     if (equipment != null) {
-      for (Entity item : equipment.slots.values()) {
+      for (java.util.Map.Entry<String, Entity> entry : equipment.slots.entrySet()) {
+        String slot = entry.getKey();
+        Entity item = entry.getValue();
+
         if (item != null) {
           ItemComponent itemDetails = ComponentMappers.item.get(item);
 
-          if (Objects.equals(itemDetails.type, "armor")) {
+          if (Objects.equals(itemDetails.type, "armor") && itemDetails.location.equals(slot)) {
             defense += itemDetails.attributes.get("defense");
           }
         }

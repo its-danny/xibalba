@@ -14,7 +14,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
-import com.badlogic.gdx.utils.I18NBundle;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.components.ItemComponent;
@@ -38,13 +37,11 @@ public class CraftScreen implements Screen {
   private final Table table;
   private final HashMap<String, ItemData> recipes;
   private final VerticalGroup recipeGroup;
-  private final I18NBundle i18n;
 
   public CraftScreen(Main main) {
     this.main = main;
 
     stage = new Stage(new FitViewport(960, 540));
-    i18n = Main.assets.get("i18n/xibalba", I18NBundle.class);
 
     Constructor constructor = new Constructor(ItemData.class);
     TypeDescription itemDescription = new TypeDescription(ItemData.class);
@@ -135,7 +132,7 @@ public class CraftScreen implements Screen {
           for (ItemComponent.RequiredComponent requiredComponent : itemDetails.requiredComponents) {
             ItemComponent requiredComponentDetails = ComponentMappers.item.get(requiredComponent.item);
             WorldManager.itemHelpers.removeComponentsFromInventory(
-              WorldManager.player, requiredComponentDetails.name, requiredComponent.amount
+              WorldManager.player, requiredComponentDetails.key, requiredComponent.amount
             );
 
             WorldManager.executeTurn = true;
@@ -146,26 +143,24 @@ public class CraftScreen implements Screen {
 
         recipeGroup.addActor(button);
 
+        recipeGroup.addActor(new Label(
+          "[DARK_GRAY]" + WordUtils.wrap(itemDetails.description, 140), Main.skin
+        ));
+
+        ArrayList<String> materialList = new ArrayList<>();
+        for (ItemComponent.RequiredComponent requiredComponent : itemDetails.requiredComponents) {
+          ItemComponent requiredComponentDetails = ComponentMappers.item.get(requiredComponent.item);
+          materialList.add(requiredComponent.amount + " " + requiredComponentDetails.name);
+        }
+
+        recipeGroup.addActor(new Label(
+          "[DARK_GRAY]Requires: []" + String.join(", ", materialList), Main.skin
+        ));
+
+        recipeGroup.addActor(new Label("", Main.skin));
+
         i++;
-      } else {
-        recipeGroup.addActor(new Label(itemDetails.name, Main.skin));
       }
-
-      recipeGroup.addActor(new Label(
-        "[DARK_GRAY]" + WordUtils.wrap(itemDetails.description, 140), Main.skin
-      ));
-
-      ArrayList<String> materialList = new ArrayList<>();
-      for (ItemComponent.RequiredComponent requiredComponent : itemDetails.requiredComponents) {
-        ItemComponent requiredComponentDetails = ComponentMappers.item.get(requiredComponent.item);
-        materialList.add(requiredComponent.amount + " " + requiredComponentDetails.name);
-      }
-
-      recipeGroup.addActor(new Label(
-        "[DARK_GRAY]Requires: []" + String.join(", ", materialList), Main.skin
-      ));
-
-      recipeGroup.addActor(new Label("", Main.skin));
     }
   }
 

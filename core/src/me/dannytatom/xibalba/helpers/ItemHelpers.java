@@ -86,7 +86,7 @@ public class ItemHelpers {
         for (Entity inventoryItem : inventory.items) {
           ItemComponent inventoryItemDetails = ComponentMappers.item.get(inventoryItem);
 
-          if (requiredComponentDetails.name.equals(inventoryItemDetails.name)) {
+          if (requiredComponentDetails.key.equals(inventoryItemDetails.key)) {
             count += 1;
           }
         }
@@ -113,7 +113,7 @@ public class ItemHelpers {
         for (Entity inventoryItem : inventory.items) {
           ItemComponent inventoryItemDetails = ComponentMappers.item.get(inventoryItem);
 
-          if (requiredComponentDetails.name.equals(inventoryItemDetails.name)) {
+          if (requiredComponentDetails.key.equals(inventoryItemDetails.key)) {
             qualities.add(inventoryItemDetails.quality);
             count++;
           }
@@ -281,7 +281,7 @@ public class ItemHelpers {
     }
   }
 
-  public void removeComponentsFromInventory(Entity entity, String name, int amount) {
+  public void removeComponentsFromInventory(Entity entity, String key, int amount) {
     InventoryComponent inventory = ComponentMappers.inventory.get(entity);
     int count = 0;
 
@@ -289,7 +289,7 @@ public class ItemHelpers {
     for (Entity item : inventory.items) {
       ItemComponent itemDetails = ComponentMappers.item.get(item);
 
-      if (itemDetails.name.equals(name) && count < amount) {
+      if (itemDetails.key.equals(key) && count < amount) {
         toRemove.add(item);
         count += 1;
 

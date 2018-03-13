@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class ItemComponent implements Component {
+  public final String key;
   public final String type;
   public final String description;
   public final float weight;
@@ -35,7 +36,8 @@ public class ItemComponent implements Component {
    *
    * @param data ItemData instance containing data from relevant yaml file
    */
-  public ItemComponent(String name, String description, ItemData data) {
+  public ItemComponent(String key, String name, String description, ItemData data) {
+    this.key = key;
     this.name = name;
     this.description = description;
     this.type = data.type;

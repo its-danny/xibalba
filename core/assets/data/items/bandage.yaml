@@ -1,5 +1,5 @@
 ---
-type: component
+type: bandage
 weight: 0.25
 
 visual:
@@ -13,6 +13,16 @@ attributes:
 actions:
   - throw
   - hold
+  - bandage
 
 verbs:
   - hit
+
+craftable: true
+craftedRange:
+  - 1
+  - 2
+
+requiredComponents:
+  - key: skin
+    amount: 1

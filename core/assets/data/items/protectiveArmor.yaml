@@ -1,0 +1,31 @@
+---
+type: armor
+weight: 5
+
+visual:
+  character: "0905"
+  color: BD977D
+
+location: body
+
+attributes:
+  hitDamage: 2
+  throwDamage: 2
+  defense: 20
+
+actions:
+  - throw
+  - wear
+  - hold
+
+verbs:
+  - hit
+
+craftable: true
+craftedRange:
+  - 1
+  - 1
+
+requiredComponents:
+  - key: skin
+    amount: 5

@@ -913,7 +913,6 @@ public class CharacterScreen implements Screen {
       if (itemActionTable.getChildren().contains(bandageButton, true)) {
         player.remove(BleedingComponent.class);
         WorldManager.itemHelpers.destroy(player, inventory.items.get(itemSelected));
-
         WorldManager.log.add("inventory.bandaged");
 
         itemSelected = 0;

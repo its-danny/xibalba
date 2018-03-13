@@ -1,11 +1,10 @@
 ---
 type: armor
-armorType: shield
 weight: 5
 
 visual:
   character: "1305"
-  color: BD977D
+  color: FFFFFF
 
 skill: bashing
 location: left hand
@@ -13,7 +12,7 @@ location: left hand
 attributes:
   hitDamage: 6
   throwDamage: 6
-  defense: 20
+  defense: 10
 
 effects:
   onConsume: dealDamage:24
