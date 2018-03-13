@@ -15,6 +15,7 @@ import me.dannytatom.xibalba.ConsoleCommandExecutor;
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.PlayerInput;
 import me.dannytatom.xibalba.components.AttributesComponent;
+import me.dannytatom.xibalba.components.GodComponent;
 import me.dannytatom.xibalba.renderers.HudRenderer;
 import me.dannytatom.xibalba.renderers.WorldRenderer;
 import me.dannytatom.xibalba.utils.ComponentMappers;
@@ -29,6 +30,7 @@ public class PlayScreen implements Screen {
 
   private final SpriteBatch batch;
   private final AttributesComponent playerAttributes;
+  private final GodComponent god;
   private float autoTimer;
   private float keyHoldTimerDelay;
   private float keyHoldTimer;
@@ -62,8 +64,9 @@ public class PlayScreen implements Screen {
     multiplexer.addProcessor(hudRenderer.stage);
     multiplexer.addProcessor(playerInput);
 
-    // Player attributes
+    // Player attributes & their god
     playerAttributes = ComponentMappers.attributes.get(WorldManager.player);
+    god = ComponentMappers.god.get(WorldManager.god);
 
     // Generate all dijkstra maps
     WorldManager.world.getCurrentMap().dijkstra.updateAll();
@@ -77,12 +80,16 @@ public class PlayScreen implements Screen {
 
   @Override
   public void render(float delta) {
-    Gdx.gl.glClearColor(
-      Colors.get(WorldManager.world.getCurrentMap().type + "Background").r,
-      Colors.get(WorldManager.world.getCurrentMap().type + "Background").g,
-      Colors.get(WorldManager.world.getCurrentMap().type + "Background").b,
-      Colors.get(WorldManager.world.getCurrentMap().type + "Background").a
-    );
+    if (god.hasWrath) {
+      Gdx.gl.glClearColor(0, 0, 0, 0);
+    } else {
+      Gdx.gl.glClearColor(
+        Colors.get(WorldManager.world.getCurrentMap().type + "Background").r,
+        Colors.get(WorldManager.world.getCurrentMap().type + "Background").g,
+        Colors.get(WorldManager.world.getCurrentMap().type + "Background").b,
+        Colors.get(WorldManager.world.getCurrentMap().type + "Background").a
+      );
+    }
 
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 

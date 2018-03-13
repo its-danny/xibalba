@@ -10,6 +10,7 @@ public class MapCell {
   public final Tween tween;
   public String description;
   public Type type;
+  public Covered covered;
   public boolean hidden = true;
   public boolean forgotten = false;
 
@@ -24,6 +25,7 @@ public class MapCell {
     this.sprite = sprite;
     this.color = color;
     this.type = type;
+    this.covered = Covered.NOTHING;
     this.description = description;
     this.tween = tween;
   }
@@ -56,7 +58,15 @@ public class MapCell {
     return type == Type.DEEP_WATER;
   }
 
+  public boolean hasBlood() {
+    return covered == Covered.BLOOD;
+  }
+
   public enum Type {
     NOTHING, FLOOR, WALL, SHALLOW_WATER, DEEP_WATER
+  }
+
+  public enum Covered {
+    NOTHING, WATER, BLOOD, VOMIT
   }
 }

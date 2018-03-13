@@ -544,16 +544,19 @@ public class MapHelpers {
       return;
     }
 
-    cell.sprite.setColor(
-      Colors.get(WorldManager.world.getCurrentMap().type + "FloorWet")
-    );
+    cell.covered = MapCell.Covered.WATER;
+    cell.sprite.setColor(Colors.get(WorldManager.world.getCurrentMap().type + "FloorWet"));
   }
 
   public void makeFloorBloody(Vector2 position) {
-    getCell(position.x, position.y).sprite.setColor(Colors.get("RED"));
+    MapCell cell = getCell(position.x, position.y);
+    cell.covered = MapCell.Covered.BLOOD;
+    cell.sprite.setColor(Colors.get("RED"));
   }
 
   public void makeFloorVomit(Vector2 position) {
-    getCell(position.x, position.y).sprite.setColor(Colors.get("YELLOW"));
+    MapCell cell = getCell(position.x, position.y);
+    cell.covered = MapCell.Covered.VOMIT;
+    cell.sprite.setColor(Colors.get("YELLOW"));
   }
 }

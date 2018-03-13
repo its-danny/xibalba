@@ -33,6 +33,7 @@ public class HudRenderer {
   private final PlayerComponent playerDetails;
   private final AttributesComponent playerAttributes;
   private final PositionComponent playerPosition;
+  private final GodComponent god;
 
   private final Table bottomTable;
 
@@ -63,6 +64,7 @@ public class HudRenderer {
     playerDetails = ComponentMappers.player.get(player);
     playerAttributes = ComponentMappers.attributes.get(player);
     playerPosition = ComponentMappers.position.get(player);
+    god = ComponentMappers.god.get(WorldManager.god);
 
     Table topTable = new Table();
     topTable.top().left();
@@ -519,6 +521,10 @@ public class HudRenderer {
 
     if (ComponentMappers.stuck.has(entity)) {
       statuses.add("[DARK_GRAY]STUCK[]");
+    }
+
+    if (god.hasWrath) {
+      statuses.add("[RED]WRATH[]");
     }
 
     return statuses.toString("[LIGHT_GRAY],[] ");

@@ -15,6 +15,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.components.*;
 import me.dannytatom.xibalba.utils.ComponentMappers;
+import me.dannytatom.xibalba.utils.GrayscaleShader;
 import me.dannytatom.xibalba.world.Map;
 import me.dannytatom.xibalba.world.MapCell;
 import me.dannytatom.xibalba.world.WorldManager;
@@ -30,6 +31,7 @@ public class WorldRenderer {
   private final PlayerComponent playerDetails;
   private final AttributesComponent playerAttributes;
   private final PositionComponent playerPosition;
+  private final GodComponent god;
 
   // These get reused a ton
   private final Sprite shadow;
@@ -50,6 +52,7 @@ public class WorldRenderer {
     playerDetails = ComponentMappers.player.get(WorldManager.player);
     playerAttributes = ComponentMappers.attributes.get(WorldManager.player);
     playerPosition = ComponentMappers.position.get(WorldManager.player);
+    god = ComponentMappers.god.get(WorldManager.god);
 
     shadow = Main.asciiAtlas.createSprite("1113");
     question = Main.asciiAtlas.createSprite("1503");
@@ -70,6 +73,14 @@ public class WorldRenderer {
     }
 
     worldCamera.update();
+
+    if (god.hasWrath) {
+      batch.setShader(GrayscaleShader.shader);
+    } else {
+      if (batch.getShader() == GrayscaleShader.shader) {
+        batch.setShader(null);
+      }
+    }
 
     batch.setProjectionMatrix(worldCamera.combined);
     batch.begin();
@@ -95,6 +106,12 @@ public class WorldRenderer {
       for (int y = 0; y < map.height; y++) {
         MapCell cell = map.getCellMap()[x][y];
 
+        if (cell.hasBlood()) {
+          if (god.hasWrath) {
+            batch.setShader(null);
+          }
+        }
+
         if (playerAttributes.visionMap[x][y] > 0) {
           cell.hidden = false;
 
@@ -107,12 +124,18 @@ public class WorldRenderer {
           cell.forgotten = playerAttributes.visionMap[x][y] <= 0;
 
           if (cell.forgotten) {
-            cell.sprite.draw(batch);
+            if (!god.hasWrath) {
+              cell.sprite.draw(batch);
+            }
           } else {
             if (WorldManager.mapHelpers.getEntitiesAt(new Vector2(x, y)).size() == 0) {
               cell.sprite.draw(batch);
             }
           }
+        }
+
+        if (god.hasWrath) {
+          batch.setShader(GrayscaleShader.shader);
         }
       }
     }
@@ -226,6 +249,10 @@ public class WorldRenderer {
           continue;
         }
 
+        if (god.hasWrath && cell.forgotten) {
+          continue;
+        }
+
         Entity enemy = WorldManager.mapHelpers.getEnemyAt(x, y);
 
         boolean canHearEnemy = WorldManager.entityHelpers.hasTrait(
@@ -248,7 +275,12 @@ public class WorldRenderer {
 
         alpha = alpha <= .15f ? .15f : alpha;
 
-        shadow.setColor(Colors.get(WorldManager.world.getCurrentMap().type + "Background"));
+        if (god.hasWrath) {
+          shadow.setColor(Color.BLACK);
+        } else {
+          shadow.setColor(Colors.get(WorldManager.world.getCurrentMap().type + "Background"));
+        }
+
         shadow.setAlpha(-alpha);
         shadow.setPosition(x * Main.SPRITE_WIDTH, y * Main.SPRITE_HEIGHT);
 
