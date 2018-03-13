@@ -3,9 +3,7 @@ package me.dannytatom.xibalba.systems;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import me.dannytatom.xibalba.components.AttributesComponent;
-import me.dannytatom.xibalba.components.GodComponent;
 import me.dannytatom.xibalba.utils.ComponentMappers;
-import me.dannytatom.xibalba.world.WorldManager;
 
 public class AttributesSystem extends UsesEnergySystem {
   public AttributesSystem() {
@@ -18,18 +16,9 @@ public class AttributesSystem extends UsesEnergySystem {
     attributes.energy += attributes.speed;
 
     if (ComponentMappers.player.has(entity)) {
-      GodComponent god = ComponentMappers.god.get(WorldManager.god);
-
       // Decrease divineFavor over time.
       if (attributes.divineFavor > 0) {
         attributes.divineFavor -= attributes.divineFavor * 0.005;
-      }
-
-      // Should we start wrath?
-      if (attributes.divineFavor <= 0) {
-        god.hasWrath = true;
-      } else if (attributes.divineFavor >= 25) {
-        god.hasWrath = false;
       }
     }
   }

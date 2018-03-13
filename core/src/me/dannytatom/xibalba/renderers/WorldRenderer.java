@@ -64,7 +64,7 @@ public class WorldRenderer {
   /**
    * Render shit.
    */
-  public void render(float delta) {
+  public void render(float delta, float wrathFade) {
     Main.handheldCamera.update(delta, worldCamera, playerPosition.pos);
 
     // Handle screen shake
@@ -76,16 +76,15 @@ public class WorldRenderer {
 
     if (god.hasWrath) {
       batch.setShader(GrayscaleShader.shader);
+      GrayscaleShader.shader.setUniformf("u_grayness", wrathFade);
     } else {
-      if (batch.getShader() == GrayscaleShader.shader) {
-        batch.setShader(null);
-      }
+      batch.setShader(null);
     }
 
     batch.setProjectionMatrix(worldCamera.combined);
     batch.begin();
 
-    renderCells();
+    renderCells(wrathFade);
     renderStairs();
     renderDecorations();
     renderTraps();
@@ -99,7 +98,7 @@ public class WorldRenderer {
     batch.end();
   }
 
-  private void renderCells() {
+  private void renderCells(float wrathFade) {
     Map map = WorldManager.world.getCurrentMap();
 
     for (int x = 0; x < map.width; x++) {
@@ -136,6 +135,7 @@ public class WorldRenderer {
 
         if (god.hasWrath) {
           batch.setShader(GrayscaleShader.shader);
+          GrayscaleShader.shader.setUniformf("u_grayness", wrathFade);
         }
       }
     }

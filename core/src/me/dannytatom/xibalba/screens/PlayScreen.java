@@ -5,6 +5,7 @@ import aurelienribon.tweenengine.TweenCallback;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Colors;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -34,6 +35,9 @@ public class PlayScreen implements Screen {
   private float autoTimer;
   private float keyHoldTimerDelay;
   private float keyHoldTimer;
+
+  private float wrathFade = 0f;
+  private float wrathFadeTimer = 0f;
 
   /**
    * Play Screen.
@@ -72,7 +76,7 @@ public class PlayScreen implements Screen {
     WorldManager.world.getCurrentMap().dijkstra.updateAll();
 
     // Generate light map
-    WorldManager.world.getCurrentMap().light.update(0);
+    WorldManager.world.getCurrentMap().light.update(.10f);
 
     // Change state to playing
     WorldManager.state = WorldManager.State.PLAYING;
@@ -81,7 +85,22 @@ public class PlayScreen implements Screen {
   @Override
   public void render(float delta) {
     if (god.hasWrath) {
-      Gdx.gl.glClearColor(0, 0, 0, 0);
+      wrathFadeTimer += delta;
+
+      if (wrathFade < 1 && wrathFadeTimer >= 0.1) {
+        wrathFade += 0.1;
+        wrathFadeTimer = 0f;
+      }
+    } else {
+      wrathFade = 0f;
+      wrathFadeTimer = 0f;
+    }
+
+    if (god.hasWrath) {
+      Color color = Colors.get(WorldManager.world.getCurrentMap().type + "Background").cpy().lerp(
+        Color.BLACK, wrathFade * 1.5f
+      );
+      Gdx.gl.glClearColor(color.r, color.g, color.b, color.a);
     } else {
       Gdx.gl.glClearColor(
         Colors.get(WorldManager.world.getCurrentMap().type + "Background").r,
@@ -163,12 +182,19 @@ public class PlayScreen implements Screen {
 
       Main.tweenManager.update(delta);
 
+      // Check for WRATH
+      if (playerAttributes.divineFavor <= 0) {
+        god.hasWrath = true;
+      } else if (playerAttributes.divineFavor >= 25) {
+        god.hasWrath = false;
+      }
+
       // Check player health for DEATH
       if (playerAttributes.health <= 0) {
         WorldManager.state = WorldManager.State.DEAD;
       }
 
-      worldRenderer.render(delta);
+      worldRenderer.render(delta, wrathFade);
       hudRenderer.render(delta);
 
       console.draw();

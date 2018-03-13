@@ -2,6 +2,7 @@ package me.dannytatom.xibalba.utils;
 
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 
+// https://stackoverflow.com/questions/28874621/libgdx-grayscale-shader-fade-effect
 public class GrayscaleShader {
   static String vertexShader = "attribute vec4 a_position;\n" +
     "attribute vec4 a_color;\n" +
@@ -25,11 +26,13 @@ public class GrayscaleShader {
     "varying vec4 v_color;\n" +
     "varying vec2 v_texCoords;\n" +
     "uniform sampler2D u_texture;\n" +
+    "uniform float u_grayness;\n" +
     "\n" +
     "void main() {\n" +
     "  vec4 c = v_color * texture2D(u_texture, v_texCoords);\n" +
-    "  float grey = (c.r + c.g + c.b) / 3.0;\n" +
-    "  gl_FragColor = vec4(grey, grey, grey, c.a);\n" +
+    "  float grey = dot( c.rgb, vec3(0.22, 0.707, 0.071) );\n" +
+    "  vec3 blendedColor = mix(c.rgb, vec3(grey), u_grayness);\n" +
+    "  gl_FragColor = vec4(blendedColor.rgb, c.a);\n" +
     "}";
 
   public static ShaderProgram shader = new ShaderProgram(vertexShader, fragmentShader);
