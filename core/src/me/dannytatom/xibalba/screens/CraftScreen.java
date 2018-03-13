@@ -21,8 +21,10 @@ import me.dannytatom.xibalba.components.ItemComponent;
 import me.dannytatom.xibalba.ui.ActionButton;
 import me.dannytatom.xibalba.utils.ComponentMappers;
 import me.dannytatom.xibalba.utils.yaml.ItemData;
+import me.dannytatom.xibalba.utils.yaml.ItemRequiredComponentData;
 import me.dannytatom.xibalba.world.WorldManager;
 import org.apache.commons.lang3.text.WordUtils;
+import org.yaml.snakeyaml.TypeDescription;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 
@@ -44,7 +46,11 @@ public class CraftScreen implements Screen {
     stage = new Stage(new FitViewport(960, 540));
     i18n = Main.assets.get("i18n/xibalba", I18NBundle.class);
 
-    Yaml yaml = new Yaml(new Constructor(ItemData.class));
+    Constructor constructor = new Constructor(ItemData.class);
+    TypeDescription itemDescription = new TypeDescription(ItemData.class);
+    itemDescription.putListPropertyType("requiredComponent", ItemRequiredComponentData.class);
+    constructor.addTypeDescription(itemDescription);
+    Yaml yaml = new Yaml(constructor);
     FileHandle directoryHandle = Gdx.files.internal("data/items");
     recipes = new HashMap<>();
 

@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import me.dannytatom.xibalba.utils.yaml.ItemData;
+import me.dannytatom.xibalba.utils.yaml.ItemRequiredComponentData;
 import me.dannytatom.xibalba.world.WorldManager;
 
 import java.util.ArrayList;
@@ -60,13 +61,9 @@ public class ItemComponent implements Component {
 
     this.requiredComponents = new ArrayList<>();
     if (data.requiredComponents != null) {
-      for (String component : data.requiredComponents) {
-        String[] split = component.split(":");
-        String key = split[0];
-        int amount = Integer.parseInt(split[1]);
-
-        Entity entity = WorldManager.entityFactory.createItem(key, new Vector2(0, 0));
-        this.requiredComponents.add(new RequiredComponent(entity, amount));
+      for (ItemRequiredComponentData component : data.requiredComponents) {
+        Entity entity = WorldManager.entityFactory.createItem(component.key, new Vector2(0, 0));
+        this.requiredComponents.add(new RequiredComponent(entity, component.amount));
       }
     }
   }

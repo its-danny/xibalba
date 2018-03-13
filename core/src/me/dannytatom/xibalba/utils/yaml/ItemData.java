@@ -29,5 +29,5 @@ public class ItemData {
 
   public boolean craftable;
   public ArrayList<Integer> craftedRange;
-  public ArrayList<String> requiredComponents;
+  public ArrayList<ItemRequiredComponentData> requiredComponents;
 }

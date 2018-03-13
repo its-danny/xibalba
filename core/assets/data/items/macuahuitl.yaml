@@ -34,5 +34,7 @@ craftedRange:
   - 1
 
 requiredComponents:
-  - shortStick:1
-  - shard:6
+  - key: shortStick
+    amount: 1
+  - key: shard
+    amount: 6

@@ -23,4 +23,5 @@ craftedRange:
   - 3
 
 requiredComponents:
-  - longStick:1
+  - key: longStick
+    amount: 1

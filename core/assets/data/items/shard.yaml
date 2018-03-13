@@ -24,4 +24,5 @@ craftedRange:
   - 5
 
 requiredComponents:
-  - stone:1
+  - key: stone
+    amount: 1

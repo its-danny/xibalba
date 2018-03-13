@@ -16,8 +16,10 @@ import me.dannytatom.xibalba.components.items.WeaponComponent;
 import me.dannytatom.xibalba.components.traps.SpiderWebComponent;
 import me.dannytatom.xibalba.utils.yaml.EnemyData;
 import me.dannytatom.xibalba.utils.yaml.ItemData;
+import me.dannytatom.xibalba.utils.yaml.ItemRequiredComponentData;
 import me.dannytatom.xibalba.world.Map;
 import me.dannytatom.xibalba.world.WorldManager;
+import org.yaml.snakeyaml.TypeDescription;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 
@@ -92,7 +94,11 @@ public class EntityFactory {
    * @return The item
    */
   public Entity createItem(String name, Vector2 position) {
-    Yaml yaml = new Yaml(new Constructor(ItemData.class));
+    Constructor constructor = new Constructor(ItemData.class);
+    TypeDescription itemDescription = new TypeDescription(ItemData.class);
+    itemDescription.putListPropertyType("requiredComponent", ItemRequiredComponentData.class);
+    constructor.addTypeDescription(itemDescription);
+    Yaml yaml = new Yaml(constructor);
     ItemData data = (ItemData) yaml.load(
       Gdx.files.internal("data/items/" + name + ".yaml").reader()
     );

@@ -37,5 +37,7 @@ craftedRange:
   - 1
 
 requiredComponents:
-  - longStick:1
-  - shard:1
+  - key: longStick
+    amount: 1
+  - key: shard
+    amount: 1
