@@ -24,7 +24,10 @@ import me.dannytatom.xibalba.utils.yaml.DefectData;
 import me.dannytatom.xibalba.utils.yaml.TraitData;
 import me.dannytatom.xibalba.world.WorldManager;
 import org.apache.commons.lang3.text.WordUtils;
+import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.constructor.Constructor;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -37,6 +40,8 @@ public class CharacterScreen implements Screen {
   private final SkillsComponent skills;
   private final InventoryComponent inventory;
   private final EquipmentComponent equipment;
+  private final ArrayList<TraitData> traits;
+  private final ArrayList<DefectData> defects;
   private final Table table;
   private final VerticalGroup attributesGroup;
   private final VerticalGroup skillsGroup;
@@ -80,6 +85,18 @@ public class CharacterScreen implements Screen {
     skills = ComponentMappers.skills.get(player);
     inventory = ComponentMappers.inventory.get(player);
     equipment = ComponentMappers.equipment.get(player);
+
+    traits = new ArrayList<>();
+    Yaml traitYaml = new Yaml(new Constructor(TraitData.class));
+    for (Map.Entry<String, String> entry : Main.traitsData.entrySet()) {
+      traits.add((TraitData) traitYaml.load(entry.getValue()));
+    }
+
+    defects = new ArrayList<>();
+    Yaml defectYaml = new Yaml(new Constructor(DefectData.class));
+    for (Map.Entry<String, String> entry : Main.defectsData.entrySet()) {
+      defects.add((DefectData) defectYaml.load(entry.getValue()));
+    }
 
     table = new Table();
     table.setFillParent(true);
@@ -350,7 +367,7 @@ public class CharacterScreen implements Screen {
     traitsGroup.addActor(new Label("Traits", Main.skin));
     traitsGroup.addActor(new Label("", Main.skin));
 
-    for (TraitData traitData : Main.traits) {
+    for (TraitData traitData : this.traits) {
       if (WorldManager.entityHelpers.hasTrait(WorldManager.player, traitData.name)) {
         traitsGroup.addActor(
           new Label(
@@ -369,7 +386,7 @@ public class CharacterScreen implements Screen {
     defectsGroup.addActor(new Label("Defects", Main.skin));
     defectsGroup.addActor(new Label("", Main.skin));
 
-    for (DefectData defectData : Main.defects) {
+    for (DefectData defectData : this.defects) {
       if (WorldManager.entityHelpers.hasDefect(WorldManager.player, defectData.name)) {
         defectsGroup.addActor(
           new Label(

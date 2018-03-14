@@ -18,12 +18,17 @@ import me.dannytatom.xibalba.utils.PlayerSetup;
 import me.dannytatom.xibalba.utils.yaml.DefectData;
 import me.dannytatom.xibalba.utils.yaml.TraitData;
 import org.apache.commons.lang3.text.WordUtils;
+import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.constructor.Constructor;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 public class YouScreen implements Screen {
   private final Stage stage;
   private final PlayerSetup playerSetup;
+  private final ArrayList<TraitData> traits;
+  private final ArrayList<DefectData> defects;
   private final VerticalGroup attributesGroup;
   private final VerticalGroup skillsGroup;
   private final VerticalGroup defectsGroup;
@@ -45,6 +50,18 @@ public class YouScreen implements Screen {
     traitPoints = 0;
     stage = new Stage(new FitViewport(960, 540));
     playerSetup = new PlayerSetup();
+
+    traits = new ArrayList<>();
+    Yaml traitYaml = new Yaml(new Constructor(TraitData.class));
+    for (Map.Entry<String, String> entry : Main.traitsData.entrySet()) {
+      traits.add((TraitData) traitYaml.load(entry.getValue()));
+    }
+
+    defects = new ArrayList<>();
+    Yaml defectYaml = new Yaml(new Constructor(DefectData.class));
+    for (Map.Entry<String, String> entry : Main.defectsData.entrySet()) {
+      defects.add((DefectData) defectYaml.load(entry.getValue()));
+    }
 
     Table table = new Table();
     table.setFillParent(true);
@@ -369,8 +386,8 @@ public class YouScreen implements Screen {
     defectsGroup.addActor(instructions);
     defectsGroup.addActor(new Label("", Main.skin));
 
-    for (int i = 0; i < Main.defects.size; i++) {
-      DefectData defectData = Main.defects.get(i);
+    for (int i = 0; i < this.defects.size(); i++) {
+      DefectData defectData = this.defects.get(i);
 
       defectsGroup.addActor(
         new Label(createDefectText(i, defectData), Main.skin)
@@ -388,8 +405,8 @@ public class YouScreen implements Screen {
     traitsGroup.addActor(pointsLeft);
     traitsGroup.addActor(new Label("", Main.skin));
 
-    for (int i = 0; i < Main.traits.size; i++) {
-      TraitData traitData = Main.traits.get(i);
+    for (int i = 0; i < this.traits.size(); i++) {
+      TraitData traitData = this.traits.get(i);
 
       traitsGroup.addActor(
         new Label(createTraitText(i, traitData), Main.skin)
@@ -617,7 +634,7 @@ public class YouScreen implements Screen {
   }
 
   private void addDefect() {
-    DefectData defectData = Main.defects.get(itemSelected);
+    DefectData defectData = this.defects.get(itemSelected);
 
     boolean hasConflictingTrait = false;
 
@@ -636,7 +653,7 @@ public class YouScreen implements Screen {
   }
 
   private void removeDefect() {
-    DefectData defectData = Main.defects.get(itemSelected);
+    DefectData defectData = this.defects.get(itemSelected);
 
     if (playerSetup.defects.contains(defectData.name, false)) {
       playerSetup.defects.removeValue(defectData.name, false);
@@ -645,7 +662,7 @@ public class YouScreen implements Screen {
   }
 
   private void addTrait() {
-    TraitData traitData = Main.traits.get(itemSelected);
+    TraitData traitData = this.traits.get(itemSelected);
 
     boolean hasConflictingDefect = false;
 
@@ -664,7 +681,7 @@ public class YouScreen implements Screen {
   }
 
   private void removeTrait() {
-    TraitData traitData = Main.traits.get(itemSelected);
+    TraitData traitData = this.traits.get(itemSelected);
 
     if (playerSetup.traits.contains(traitData.name, false)) {
       playerSetup.traits.removeValue(traitData.name, false);

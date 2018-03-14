@@ -171,9 +171,7 @@ public class PlayerSetup {
 
     Yaml yaml = new Yaml(new Constructor(AbilityData.class));
     godData.abilities.forEach((String ability) -> {
-      AbilityData details = (AbilityData) yaml.load(
-        Gdx.files.internal("data/abilities/" + ability + ".yaml").read()
-      );
+      AbilityData details = (AbilityData) yaml.load(Main.abilitiesData.get(ability));
 
       details.counter = details.recharge;
       abilitiesComponent.abilities.put(ability, details);

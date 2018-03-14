@@ -1,3 +1,29 @@
+task makeDataManifest {
+    group "Xibalba"
+    description "Generate data/manifest.yaml"
+
+    doLast {
+        HashMap<String, Collection> mapped = new HashMap<>()
+        File root = file("./core/assets/data")
+        File manifest = file("${root}/manifest.yaml")
+
+        manifest.write("")
+
+        ["abilities", "defects", "enemies", "gods", "items", "traits"].each { category ->
+            FileTree tree = fileTree(dir: "${root}/${category}")
+            Collection collection = tree.collect { path -> "${root.toURI().relativize(path.toURI())}" }
+
+            mapped.put(category, collection)
+        }
+
+        for (category in mapped) {
+            manifest.append("${category.key}:\n")
+            manifest.append(category.value.collect { path -> "  - ${path}" }.join("\n"))
+            manifest.append("\n")
+        }
+    }
+}
+
 buildscript {
     repositories {
         mavenCentral()
@@ -13,11 +39,11 @@ allprojects {
     apply plugin: "eclipse"
     apply plugin: "idea"
 
-    version = 'alpha-2018'
+    version = "alpha-2018"
 
     ext {
-        appName = 'xibalba'
-        gdxVersion = '1.9.6'
+        appName = "xibalba"
+        gdxVersion = "1.9.6"
     }
 
     repositories {

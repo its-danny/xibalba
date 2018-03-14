@@ -1,7 +1,6 @@
 package me.dannytatom.xibalba.utils;
 
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Colors;
 import com.badlogic.gdx.math.MathUtils;
@@ -39,10 +38,7 @@ public class EntityFactory {
    */
   public Entity createEnemy(String name, Vector2 position) {
     Yaml yaml = new Yaml(new Constructor(EnemyData.class));
-    EnemyData data = (EnemyData) yaml.load(
-      Gdx.files.internal("data/enemies/" + name + ".yaml").reader()
-    );
-
+    EnemyData data = (EnemyData) yaml.load(Main.enemiesData.get(name));
     Entity entity = new Entity();
 
     entity.add(new PositionComponent(position));
@@ -99,10 +95,7 @@ public class EntityFactory {
     itemDescription.putListPropertyType("requiredComponent", ItemRequiredComponentData.class);
     constructor.addTypeDescription(itemDescription);
     Yaml yaml = new Yaml(constructor);
-    ItemData data = (ItemData) yaml.load(
-      Gdx.files.internal("data/items/" + key + ".yaml").reader()
-    );
-
+    ItemData data = (ItemData) yaml.load(Main.itemsData.get(key));
     Entity entity = new Entity();
 
     entity.add(new PositionComponent(position));

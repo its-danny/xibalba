@@ -1,0 +1,43 @@
+abilities:
+  - abilities/charmAnimal.yaml
+  - abilities/bonusAgainstAnimals.yaml
+traits:
+  - traits/perceptive.yaml
+  - traits/scout.yaml
+  - traits/quick.yaml
+  - traits/carnivore.yaml
+defects:
+  - defects/myopia.yaml
+  - defects/oneArm.yaml
+gods:
+  - gods/ahTabai.yaml
+enemies:
+  - enemies/tarantula.yaml
+  - enemies/jaguar.yaml
+  - enemies/spiderMonkey.yaml
+  - enemies/anaconda.yaml
+  - enemies/piranha.yaml
+  - enemies/poisonDartFrog.yaml
+  - enemies/sloth.yaml
+  - enemies/bat.yaml
+items:
+  - items/shard.yaml
+  - items/poisonPlant.yaml
+  - items/limb.yaml
+  - items/chippedFlint.yaml
+  - items/arrow.yaml
+  - items/shield.yaml
+  - items/macuahuitl.yaml
+  - items/skin.yaml
+  - items/healthPlant.yaml
+  - items/shortStick.yaml
+  - items/stone.yaml
+  - items/longStick.yaml
+  - items/spear.yaml
+  - items/protectiveArmor.yaml
+  - items/bandage.yaml
+  - items/strengthPlant.yaml
+  - items/corpse.yaml
+  - items/bow.yaml
+  - items/atlatl.yaml
+  - items/torch.yaml

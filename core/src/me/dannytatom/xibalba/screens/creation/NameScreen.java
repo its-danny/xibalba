@@ -12,7 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import me.dannytatom.xibalba.Main;
-import me.dannytatom.xibalba.screens.LoadingScreen;
+import me.dannytatom.xibalba.screens.GeneratingWorldScreen;
 import me.dannytatom.xibalba.ui.ActionButton;
 import me.dannytatom.xibalba.utils.PlayerSetup;
 
@@ -124,7 +124,7 @@ class NameScreen implements Screen {
     String playerColor = playerColorField.getText();
     playerSetup.color = Objects.equals(playerColor, "") ? playerSetup.color : playerColor;
 
-    main.setScreen(new LoadingScreen(main, playerSetup));
+    main.setScreen(new GeneratingWorldScreen(main, playerSetup));
   }
 
   @Override

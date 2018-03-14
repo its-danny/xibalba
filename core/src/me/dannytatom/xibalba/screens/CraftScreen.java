@@ -4,7 +4,6 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Colors;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.math.MathUtils;
@@ -48,14 +47,13 @@ public class CraftScreen implements Screen {
     itemDescription.putListPropertyType("requiredComponent", ItemRequiredComponentData.class);
     constructor.addTypeDescription(itemDescription);
     Yaml yaml = new Yaml(constructor);
-    FileHandle directoryHandle = Gdx.files.internal("data/items");
     recipes = new HashMap<>();
 
-    for (FileHandle item : directoryHandle.list()) {
-      ItemData data = (ItemData) yaml.load(item.reader());
+    for (Map.Entry<String, String> entry : Main.itemsData.entrySet()) {
+      ItemData data = (ItemData) yaml.load(entry.getValue());
 
       if (data.craftable) {
-        recipes.put(item.nameWithoutExtension(), data);
+        recipes.put(entry.getKey(), data);
       }
     }
 

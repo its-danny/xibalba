@@ -3,7 +3,6 @@ package me.dannytatom.xibalba.screens.creation;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Colors;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -22,6 +21,7 @@ import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 class GodScreen implements Screen {
   private final PlayerSetup playerSetup;
@@ -50,11 +50,10 @@ class GodScreen implements Screen {
     stage.addActor(table);
 
     Yaml yaml = new Yaml(new Constructor(GodData.class));
-    FileHandle directoryHandle = Gdx.files.internal("data/gods");
     godDataList = new ArrayList<>();
 
-    for (FileHandle god : directoryHandle.list()) {
-      GodData data = (GodData) yaml.load(god.reader());
+    for (Map.Entry<String, String> entry : Main.godsData.entrySet()) {
+      GodData data = (GodData) yaml.load(entry.getValue());
       godDataList.add(data);
     }
 
@@ -172,9 +171,7 @@ class GodScreen implements Screen {
 
     Yaml yaml = new Yaml(new Constructor(AbilityData.class));
     godData.abilities.forEach((String ability) -> {
-      AbilityData details = (AbilityData) yaml.load(
-        Gdx.files.internal("data/abilities/" + ability + ".yaml").read()
-      );
+      AbilityData details = (AbilityData) yaml.load(Main.abilitiesData.get(ability));
 
       abilityGroup.addActor(
         new Label(

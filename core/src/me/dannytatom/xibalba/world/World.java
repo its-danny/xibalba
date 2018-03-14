@@ -58,9 +58,6 @@ public class World {
         WorldManager.entityHelpers.updateSenses(entity);
       }
     }
-
-    Main.playScreen = new PlayScreen(main);
-    main.setScreen(Main.playScreen);
   }
 
   private void changeDepth(int change) {

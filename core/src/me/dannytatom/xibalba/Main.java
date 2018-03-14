@@ -6,7 +6,6 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Colors;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -17,16 +16,13 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.utils.Array;
-import me.dannytatom.xibalba.screens.MainMenuScreen;
+import me.dannytatom.xibalba.screens.LoadingScreen;
 import me.dannytatom.xibalba.utils.CameraShake;
 import me.dannytatom.xibalba.utils.HandheldCamera;
 import me.dannytatom.xibalba.utils.SoundManager;
 import me.dannytatom.xibalba.utils.SpriteAccessor;
-import me.dannytatom.xibalba.utils.yaml.DefectData;
-import me.dannytatom.xibalba.utils.yaml.TraitData;
-import org.yaml.snakeyaml.Yaml;
-import org.yaml.snakeyaml.constructor.Constructor;
+
+import java.util.HashMap;
 
 public class Main extends Game {
   public static final int SPRITE_WIDTH = 10;
@@ -34,8 +30,12 @@ public class Main extends Game {
   public static Debug debug;
   public static AssetManager assets;
   public static TextureAtlas asciiAtlas;
-  public static Array<TraitData> traits;
-  public static Array<DefectData> defects;
+  public static HashMap<String, String> abilitiesData;
+  public static HashMap<String, String> traitsData;
+  public static HashMap<String, String> defectsData;
+  public static HashMap<String, String> godsData;
+  public static HashMap<String, String> enemiesData;
+  public static HashMap<String, String> itemsData;
   public static Skin skin;
   public static Screen playScreen;
   public static TweenManager tweenManager;
@@ -117,26 +117,6 @@ public class Main extends Game {
     skin.load(Gdx.files.internal("ui/uiskin.json"));
     skin.getFont("default-font").getData().markupEnabled = true;
 
-    // Traits
-    Yaml traitYaml = new Yaml(new Constructor(TraitData.class));
-    FileHandle traitDirectoryHandle = Gdx.files.internal("data/traits");
-    traits = new Array<>();
-
-    for (FileHandle trait : traitDirectoryHandle.list()) {
-      TraitData data = (TraitData) traitYaml.load(trait.reader());
-      traits.add(data);
-    }
-
-    // Defects
-    Yaml defectYaml = new Yaml(new Constructor(DefectData.class));
-    FileHandle defectDirectoryHandle = Gdx.files.internal("data/defects");
-    defects = new Array<>();
-
-    for (FileHandle defect : defectDirectoryHandle.list()) {
-      DefectData data = (DefectData) defectYaml.load(defect.reader());
-      defects.add(data);
-    }
-
     // Setup text colors
     Colors.put("LIGHT_GRAY", parseColor("c2c2c2"));
     Colors.put("DARK_GRAY", parseColor("666666"));
@@ -186,6 +166,6 @@ public class Main extends Game {
     cameraShake = new CameraShake();
 
     // Start the main menu
-    setScreen(new MainMenuScreen(this));
+    setScreen(new LoadingScreen(this));
   }
 }

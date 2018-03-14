@@ -12,10 +12,10 @@ public class AbilityHelpers {
   }
 
   /**
-   * Do an abilityData.
+   * Do an ability.
    *
    * @param entity      The entity who wants to do something.
-   * @param abilityData The abilityData they want to do
+   * @param abilityData The abilitiesData they want to do
    */
   public void doAbility(Entity entity, AbilityData abilityData) {
     if (abilityData.counter == abilityData.recharge) {
