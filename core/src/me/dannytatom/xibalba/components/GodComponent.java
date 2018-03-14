@@ -6,19 +6,25 @@ import java.util.ArrayList;
 
 public class GodComponent implements Component {
   public final String name;
-  public final String description;
-  public ArrayList<String> hates;
-  public ArrayList<String> likes;
-  public ArrayList<String> wrath;
+  public final ArrayList<String> hates;
+  public final ArrayList<String> likes;
+  public final ArrayList<String> wrath;
   public boolean hasWrath = false;
 
+  /**
+   * The god component.
+   *
+   * @param name  Their name
+   * @param hates A list of things they hate
+   * @param likes A list of things they like
+   * @param wrath A list of things that happens when wrath triggers
+   */
   public GodComponent(
-    String name, String description,
-    ArrayList<String> hates, ArrayList<String> likes,
-    ArrayList<String> wrath
+      String name,
+      ArrayList<String> hates, ArrayList<String> likes,
+      ArrayList<String> wrath
   ) {
     this.name = name;
-    this.description = description;
     this.hates = hates;
     this.likes = likes;
     this.wrath = wrath;

@@ -18,9 +18,6 @@ brain:
   fearThreshold: 0.2
   dna:
     - TERRESTRIAL
-    - FLYER
-    - STEALTHY
-    - PACK
 
 bodyParts:
   head: 8

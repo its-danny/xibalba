@@ -5,14 +5,15 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import me.dannytatom.xibalba.Main;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import me.dannytatom.xibalba.Main;
+
 public class ActionButton extends TextButton {
+  private final String letter;
   private List<Integer> keys = null;
-  private String letter = null;
 
   /**
    * Create an action button with letter and text.
@@ -42,10 +43,6 @@ public class ActionButton extends TextButton {
 
     setText(createText(text));
     pad(5);
-  }
-
-  public void setLabel(String text) {
-    setText(createText(text));
   }
 
   /**

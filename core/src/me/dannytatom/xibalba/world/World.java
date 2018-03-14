@@ -3,15 +3,16 @@ package me.dannytatom.xibalba.world;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.components.MouseMovementComponent;
 import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.screens.DepthScreen;
 import me.dannytatom.xibalba.screens.PlayScreen;
 import me.dannytatom.xibalba.utils.ComponentMappers;
-
-import java.util.ArrayList;
-import java.util.HashMap;
 
 public class World {
   public final ArrayList<Map> maps;
@@ -84,8 +85,8 @@ public class World {
           entity.remove(MouseMovementComponent.class);
 
           Vector2 position = change > 0
-            ? WorldManager.world.getCurrentMap().entrance
-            : WorldManager.world.getCurrentMap().exit;
+              ? WorldManager.world.getCurrentMap().entrance
+              : WorldManager.world.getCurrentMap().exit;
 
           WorldManager.entityHelpers.updatePosition(entity, position.x, position.y);
           WorldManager.entityHelpers.updateSprite(entity, position.x, position.y);

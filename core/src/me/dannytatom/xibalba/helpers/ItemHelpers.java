@@ -3,17 +3,25 @@ package me.dannytatom.xibalba.helpers;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import me.dannytatom.xibalba.components.*;
-import me.dannytatom.xibalba.components.items.AmmunitionComponent;
-import me.dannytatom.xibalba.components.statuses.EncumberedComponent;
-import me.dannytatom.xibalba.components.statuses.SickComponent;
-import me.dannytatom.xibalba.utils.ComponentMappers;
-import me.dannytatom.xibalba.world.WorldManager;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Objects;
+
+import me.dannytatom.xibalba.components.AttributesComponent;
+import me.dannytatom.xibalba.components.EffectsComponent;
+import me.dannytatom.xibalba.components.EquipmentComponent;
+import me.dannytatom.xibalba.components.InventoryComponent;
+import me.dannytatom.xibalba.components.ItemComponent;
+import me.dannytatom.xibalba.components.LimbComponent;
+import me.dannytatom.xibalba.components.PlayerComponent;
+import me.dannytatom.xibalba.components.PositionComponent;
+import me.dannytatom.xibalba.components.items.AmmunitionComponent;
+import me.dannytatom.xibalba.components.statuses.EncumberedComponent;
+import me.dannytatom.xibalba.components.statuses.SickComponent;
+import me.dannytatom.xibalba.utils.ComponentMappers;
+import me.dannytatom.xibalba.world.WorldManager;
 
 public class ItemHelpers {
   public ItemHelpers() {
@@ -49,10 +57,16 @@ public class ItemHelpers {
     ItemComponent details = ComponentMappers.item.get(item);
 
     return player == null
-      || !(Objects.equals(details.type, "consumable")
-      && !player.identifiedItems.contains(details.name, false));
+        || !(Objects.equals(details.type, "consumable")
+        && !player.identifiedItems.contains(details.name, false));
   }
 
+  /**
+   * Whether or not an item has a stone material.
+   *
+   * @param item The item itself
+   * @return Does it have it?
+   */
   public boolean hasStoneMaterial(Entity item) {
     if (ComponentMappers.item.has(item)) {
       ItemComponent details = ComponentMappers.item.get(item);
@@ -63,6 +77,12 @@ public class ItemHelpers {
     }
   }
 
+  /**
+   * Get the item's stone material type.
+   *
+   * @param item The item itself
+   * @return The stone material type
+   */
   public ItemComponent.StoneMaterial getStoneMaterial(Entity item) {
     if (ComponentMappers.item.has(item)) {
       ItemComponent details = ComponentMappers.item.get(item);
@@ -73,6 +93,13 @@ public class ItemHelpers {
     }
   }
 
+  /**
+   * Does the entity have the necessary items to craft this item.
+   *
+   * @param entity Who's inventory we checkin'
+   * @param item   The item they want to craft
+   * @return Yes/no
+   */
   public boolean hasComponentsForItem(Entity entity, Entity item) {
     ItemComponent itemDetails = ComponentMappers.item.get(item);
     InventoryComponent inventory = ComponentMappers.inventory.get(entity);
@@ -100,6 +127,13 @@ public class ItemHelpers {
     return true;
   }
 
+  /**
+   * Get the quality for a crafted item.
+   *
+   * @param entity Who's inventory we checkin'
+   * @param item   The item who's components we're checkin'
+   * @return The most occurring quality among the components
+   */
   public ItemComponent.Quality qualityFromComponents(Entity entity, Entity item) {
     ItemComponent itemDetails = ComponentMappers.item.get(item);
     InventoryComponent inventory = ComponentMappers.inventory.get(entity);
@@ -140,6 +174,13 @@ public class ItemHelpers {
     return highest;
   }
 
+  /**
+   * Get the stone material for a crafted item.
+   *
+   * @param entity Who's inventory we checkin'
+   * @param item   The item who's components we're checkin'
+   * @return The most occurring stone material type among the components
+   */
   public ItemComponent.StoneMaterial materialFromComponents(Entity entity, Entity item) {
     ItemComponent itemDetails = ComponentMappers.item.get(item);
     InventoryComponent inventory = ComponentMappers.inventory.get(entity);
@@ -153,7 +194,8 @@ public class ItemHelpers {
         for (Entity inventoryItem : inventory.items) {
           ItemComponent inventoryItemDetails = ComponentMappers.item.get(inventoryItem);
 
-          if (requiredComponentDetails.name.equals(inventoryItemDetails.name)) {
+          if (requiredComponentDetails.name.equals(inventoryItemDetails.name)
+              && inventoryItemDetails.stoneMaterial != null) {
             stoneMaterials.add(inventoryItemDetails.stoneMaterial);
             count++;
           }
@@ -185,6 +227,7 @@ public class ItemHelpers {
    *
    * @param entity Entity we wanna to give shit to
    * @param item   The item itself
+   * @param log    Whether or not to log this action
    */
   public void addToInventory(Entity entity, Entity item, boolean log) {
     InventoryComponent inventory = ComponentMappers.inventory.get(entity);
@@ -199,7 +242,7 @@ public class ItemHelpers {
 
       if (log) {
         WorldManager.log.add(
-          "inventory.pickedUp", WorldManager.itemHelpers.getName(entity, item)
+            "inventory.pickedUp", WorldManager.itemHelpers.getName(entity, item)
         );
       }
 
@@ -214,7 +257,7 @@ public class ItemHelpers {
 
             if (log) {
               WorldManager.log.add(
-                "inventory.holding", WorldManager.itemHelpers.getName(entity, item)
+                  "inventory.holding", WorldManager.itemHelpers.getName(entity, item)
               );
             }
           }
@@ -228,7 +271,7 @@ public class ItemHelpers {
 
         if (log) {
           WorldManager.log.add(
-            "inventory.wearing", WorldManager.itemHelpers.getName(entity, item)
+              "inventory.wearing", WorldManager.itemHelpers.getName(entity, item)
           );
         }
       }
@@ -256,7 +299,7 @@ public class ItemHelpers {
     AttributesComponent attributes = ComponentMappers.attributes.get(entity);
 
     if (getTotalWeight(entity) <= attributes.strength * 5
-      && ComponentMappers.encumbered.has(entity)) {
+        && ComponentMappers.encumbered.has(entity)) {
       entity.remove(EncumberedComponent.class);
 
       if (ComponentMappers.player.has(entity)) {
@@ -265,6 +308,12 @@ public class ItemHelpers {
     }
   }
 
+  /**
+   * Remove multiple items from inventory.
+   *
+   * @param entity Who's inventory
+   * @param items  A list of items
+   */
   private void removeMultipleFromInventory(Entity entity, ArrayList<Entity> items) {
     InventoryComponent inventory = ComponentMappers.inventory.get(entity);
     inventory.items.removeAll(items);
@@ -272,7 +321,7 @@ public class ItemHelpers {
     AttributesComponent attributes = ComponentMappers.attributes.get(entity);
 
     if (getTotalWeight(entity) <= attributes.strength * 5
-      && ComponentMappers.encumbered.has(entity)) {
+        && ComponentMappers.encumbered.has(entity)) {
       entity.remove(EncumberedComponent.class);
 
       if (ComponentMappers.player.has(entity)) {
@@ -281,6 +330,13 @@ public class ItemHelpers {
     }
   }
 
+  /**
+   * Remove components from inventory.
+   *
+   * @param entity Who's inventory
+   * @param key    The type of component
+   * @param amount How many to remove
+   */
   public void removeComponentsFromInventory(Entity entity, String key, int amount) {
     InventoryComponent inventory = ComponentMappers.inventory.get(entity);
     int count = 0;
@@ -356,7 +412,7 @@ public class ItemHelpers {
           switch (arr[0]) {
             case "raiseSpeed":
               ComponentMappers.attributes.get(entity).speed
-                += Integer.parseInt(arr[1]);
+                  += Integer.parseInt(arr[1]);
               break;
             default:
           }
@@ -420,11 +476,11 @@ public class ItemHelpers {
         }
 
         AttributesComponent.Type type = ComponentMappers.corpse.has(item)
-          ? ComponentMappers.corpse.get(item).type
-          : ComponentMappers.limb.get(item).type;
+            ? ComponentMappers.corpse.get(item).type
+            : ComponentMappers.limb.get(item).type;
 
         if (ComponentMappers.god.get(WorldManager.god).likes.contains("Eating animals you kill")
-          && type == AttributesComponent.Type.ANIMAL) {
+            && type == AttributesComponent.Type.ANIMAL) {
           AttributesComponent attributes = ComponentMappers.attributes.get(entity);
 
           int amount = MathUtils.random(1, 5);
@@ -433,8 +489,8 @@ public class ItemHelpers {
             attributes.divineFavor += amount;
 
             WorldManager.log.add(
-              "attributes.divineFavor.increased",
-              ComponentMappers.god.get(WorldManager.god).name
+                "attributes.divineFavor.increased",
+                ComponentMappers.god.get(WorldManager.god).name
             );
           }
         }
@@ -454,7 +510,7 @@ public class ItemHelpers {
    * Apply an item to another item.
    *
    * @param entity       Who doing this?
-   * @param applyingItem ItemData we're applying
+   * @param applyingItem Item we're applying
    * @param targetItem   What we're applying it to
    */
   public void apply(Entity entity, Entity applyingItem, Entity targetItem) {
@@ -503,7 +559,7 @@ public class ItemHelpers {
           switch (arr[0]) {
             case "raiseSpeed":
               ComponentMappers.attributes.get(entity).speed
-                -= Integer.parseInt(arr[1]);
+                  -= Integer.parseInt(arr[1]);
               break;
             default:
           }
@@ -582,6 +638,7 @@ public class ItemHelpers {
   /**
    * Get total weight of all items carried.
    *
+   * @param entity The entity we're getting the inventory weight of
    * @return Weight
    */
   public float getTotalWeight(Entity entity) {
@@ -619,7 +676,8 @@ public class ItemHelpers {
   /**
    * Get the slot location of an item.
    *
-   * @param item The item we want to check
+   * @param entity The entity who's equipped the item
+   * @param item   The item we want to check
    * @return Location of item
    */
   public String getLocation(Entity entity, Entity item) {
@@ -660,7 +718,7 @@ public class ItemHelpers {
    *
    * @param entity Entity whose inventory we're looking at
    * @param type   Type of ammunition we're looking for
-   * @return Some (or, well, 1) ammunition
+   * @return An ammunition item
    */
   public Entity getAmmunitionOfType(Entity entity, String type) {
     ArrayList<Entity> items = ComponentMappers.inventory.get(entity).items;

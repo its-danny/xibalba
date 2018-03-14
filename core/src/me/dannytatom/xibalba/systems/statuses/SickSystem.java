@@ -3,6 +3,7 @@ package me.dannytatom.xibalba.systems.statuses;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.math.MathUtils;
+
 import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.statuses.SickComponent;
 import me.dannytatom.xibalba.systems.UsesEnergySystem;
@@ -29,7 +30,7 @@ public class SickSystem extends UsesEnergySystem {
           AttributesComponent attributes = ComponentMappers.attributes.get(entity);
 
           WorldManager.log.add(
-            "effects.sick.tookDamage", (isPlayer ? "You" : attributes.name), sick.damage
+              "effects.sick.tookDamage", (isPlayer ? "You" : attributes.name), sick.damage
           );
 
           if (attributes.health <= 0) {

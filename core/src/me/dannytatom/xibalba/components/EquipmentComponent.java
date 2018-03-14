@@ -9,7 +9,7 @@ public class EquipmentComponent implements Component {
   public final TreeMap<String, Entity> slots = new TreeMap<>();
 
   /**
-   * Set up the equipment slots.
+   * Equipment component.
    */
   public EquipmentComponent() {
     slots.put("head", null);

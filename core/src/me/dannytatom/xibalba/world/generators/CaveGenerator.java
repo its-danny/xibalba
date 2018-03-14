@@ -2,9 +2,10 @@ package me.dannytatom.xibalba.world.generators;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
-import me.dannytatom.xibalba.world.MapCell;
 
 import java.util.Arrays;
+
+import me.dannytatom.xibalba.world.MapCell;
 
 public class CaveGenerator {
   private final int width;
@@ -104,7 +105,7 @@ public class CaveGenerator {
         }
 
         if (x == geometry.length - 1 || y == geometry[x].length - 1
-          || x == geometry.length - 2 || y == geometry[x].length - 2) {
+            || x == geometry.length - 2 || y == geometry[x].length - 2) {
           geometry[x][y] = MapCell.Type.WALL;
         }
       }
@@ -150,7 +151,7 @@ public class CaveGenerator {
 
   private void floodFill(int cellX, int cellY) {
     if (geometry[cellX][cellY] == MapCell.Type.FLOOR
-      && flooded[cellX][cellY] == MapCell.Type.WALL) {
+        && flooded[cellX][cellY] == MapCell.Type.WALL) {
       flooded[cellX][cellY] = MapCell.Type.FLOOR;
     } else {
       return;
@@ -172,7 +173,7 @@ public class CaveGenerator {
 
         if (i != 0 || j != 0) {
           if (neighbourX < 0 || neighbourY < 0
-            || neighbourX >= geometry.length || neighbourY >= geometry[0].length) {
+              || neighbourX >= geometry.length || neighbourY >= geometry[0].length) {
             count += 1;
           } else if (geometry[neighbourX][neighbourY] == MapCell.Type.FLOOR) {
             count += 1;

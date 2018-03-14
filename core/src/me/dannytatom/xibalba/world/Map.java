@@ -7,11 +7,12 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
-import me.dannytatom.xibalba.Main;
-import me.dannytatom.xibalba.utils.SpriteAccessor;
 
 import java.util.Arrays;
 import java.util.Objects;
+
+import me.dannytatom.xibalba.Main;
+import me.dannytatom.xibalba.utils.SpriteAccessor;
 
 public class Map {
   public final int width;
@@ -76,14 +77,14 @@ public class Map {
           floor.setFlip(MathUtils.randomBoolean(), false);
 
           map[x][y] = new MapCell(
-            floor, Colors.get("forestFloor"), MapCell.Type.FLOOR, "the forest floor"
+              floor, MapCell.Type.FLOOR, "the forest floor"
           );
         } else {
           Sprite wall = Main.asciiAtlas.createSprite("0" + MathUtils.random(5, 6) + "00");
           Color color = Colors.get("forestTree-" + MathUtils.random(1, 3));
           wall.setColor(color);
 
-          map[x][y] = new MapCell(wall, color, MapCell.Type.WALL, "a tree");
+          map[x][y] = new MapCell(wall, MapCell.Type.WALL, "a tree");
         }
 
         map[x][y].sprite.setPosition(x * Main.SPRITE_WIDTH, y * Main.SPRITE_HEIGHT);
@@ -105,17 +106,17 @@ public class Map {
           Sprite floor = Main.asciiAtlas.createSprite("0915");
           Color color = Colors.get("caveFloor-" + +MathUtils.random(1, 3));
           floor.setColor(color);
-          map[x][y] = new MapCell(floor, color, MapCell.Type.FLOOR, "a cave floor");
+          map[x][y] = new MapCell(floor, MapCell.Type.FLOOR, "a cave floor");
         } else {
           int neighbours = getGroundNeighbours(x, y);
 
           if (neighbours > 0) {
             Sprite wall = Main.asciiAtlas.createSprite("1113");
             wall.setColor(Colors.get("caveWall"));
-            map[x][y] = new MapCell(wall, Colors.get("caveWall"), MapCell.Type.WALL, "a cave wall");
+            map[x][y] = new MapCell(wall, MapCell.Type.WALL, "a cave wall");
           } else {
             Sprite nothing = Main.asciiAtlas.createSprite("0000");
-            map[x][y] = new MapCell(nothing, null, MapCell.Type.NOTHING, "nothing");
+            map[x][y] = new MapCell(nothing, MapCell.Type.NOTHING, "nothing");
           }
         }
 
@@ -143,8 +144,7 @@ public class Map {
     do {
       floodStartX = MathUtils.random(0, width - 1);
       floodStartY = MathUtils.random(0, height - 1);
-    }
-    while (!map[floodStartX][floodStartY].isFloor());
+    } while (!map[floodStartX][floodStartY].isFloor());
 
     flood(floodStartX, floodStartY);
 
@@ -162,30 +162,30 @@ public class Map {
             waterType = MapCell.Type.SHALLOW_WATER;
 
             lightColor = Colors.get(
-              Objects.equals(type, "forest") ? "waterShallowLightBlue" : "waterShallowLightGreen"
+                Objects.equals(type, "forest") ? "waterShallowLightBlue" : "waterShallowLightGreen"
             );
 
             darkColor = Colors.get(
-              Objects.equals(type, "forest") ? "waterShallowDarkBlue" : "waterShallowDarkGreen"
+                Objects.equals(type, "forest") ? "waterShallowDarkBlue" : "waterShallowDarkGreen"
             );
           } else {
             waterType = MapCell.Type.DEEP_WATER;
 
             lightColor = Colors.get(
-              Objects.equals(type, "forest") ? "waterDeepLightBlue" : "waterDeepLightGreen"
+                Objects.equals(type, "forest") ? "waterDeepLightBlue" : "waterDeepLightGreen"
             );
 
             darkColor = Colors.get(
-              Objects.equals(type, "forest") ? "waterDeepDarkBlue" : "waterDeepDarkGreen"
+                Objects.equals(type, "forest") ? "waterDeepDarkBlue" : "waterDeepDarkGreen"
             );
           }
 
           water.setColor(lightColor);
           Tween tween = Tween.to(water, SpriteAccessor.COLOR, .5f).target(
-            darkColor.r, darkColor.g, darkColor.b
+              darkColor.r, darkColor.g, darkColor.b
           ).repeatYoyo(Tween.INFINITY, MathUtils.random());
 
-          map[x][y] = new MapCell(water, lightColor, waterType, "water", tween);
+          map[x][y] = new MapCell(water, waterType, "water", tween);
         }
       }
     }
@@ -219,7 +219,7 @@ public class Map {
       }
     }
 
-    if (start != null && length > 0) {
+    if (start != null) {
       for (int y = 0; y < length; y++) {
         makeCellBridge(map[(int) start.x][(int) start.y + y], bridge);
       }
@@ -228,8 +228,8 @@ public class Map {
 
   private void makeCellBridge(MapCell cell, Sprite bridge) {
     cell.sprite.setRegion(
-      bridge.getRegionX(), bridge.getRegionY(),
-      bridge.getRegionWidth(), bridge.getRegionHeight()
+        bridge.getRegionX(), bridge.getRegionY(),
+        bridge.getRegionWidth(), bridge.getRegionHeight()
     );
 
     cell.sprite.setColor(Colors.get("bridge"));
@@ -266,7 +266,7 @@ public class Map {
 
   private void flood(int cellX, int cellY) {
     if (geometry[cellX][cellY] == MapCell.Type.FLOOR
-      && flooded[cellX][cellY] == MapCell.Type.WALL) {
+        && flooded[cellX][cellY] == MapCell.Type.WALL) {
       flooded[cellX][cellY] = MapCell.Type.FLOOR;
       floodedCount += 1;
     } else {

@@ -18,7 +18,6 @@ brain:
   fearThreshold: 0.8
   dna:
     - TERRESTRIAL
-    - SOLO
 
 bodyParts:
   head: 8

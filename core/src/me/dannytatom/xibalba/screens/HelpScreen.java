@@ -11,12 +11,18 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.ui.ActionButton;
 
 public class HelpScreen implements Screen {
   private final Stage stage;
 
+  /**
+   * Help screen.
+   *
+   * @param main Instance of Main
+   */
   public HelpScreen(Main main) {
     stage = new Stage(new FitViewport(960, 540));
 
@@ -68,10 +74,10 @@ public class HelpScreen implements Screen {
   @Override
   public void render(float delta) {
     Gdx.gl.glClearColor(
-      Colors.get("screenBackground").r,
-      Colors.get("screenBackground").g,
-      Colors.get("screenBackground").b,
-      Colors.get("screenBackground").a
+        Colors.get("screenBackground").r,
+        Colors.get("screenBackground").g,
+        Colors.get("screenBackground").b,
+        Colors.get("screenBackground").a
     );
 
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);

@@ -5,6 +5,9 @@ import aurelienribon.tweenengine.TweenCallback;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.math.Vector2;
+
+import java.util.Objects;
+
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
@@ -14,8 +17,6 @@ import me.dannytatom.xibalba.systems.UsesEnergySystem;
 import me.dannytatom.xibalba.utils.ComponentMappers;
 import me.dannytatom.xibalba.utils.SpriteAccessor;
 import me.dannytatom.xibalba.world.WorldManager;
-
-import java.util.Objects;
 
 public class RangeSystem extends UsesEnergySystem {
   public RangeSystem() {
@@ -32,7 +33,7 @@ public class RangeSystem extends UsesEnergySystem {
 
       if (target != null) {
         WorldManager.combatHelpers.range(
-          entity, target, range.bodyPart, range.item, range.skill, range.isFocused
+            entity, target, range.bodyPart, range.item, range.skill, range.isFocused
         );
       }
 
@@ -62,17 +63,17 @@ public class RangeSystem extends UsesEnergySystem {
     VisualComponent itemVisual = ComponentMappers.visual.get(item);
 
     WorldManager.tweens.add(Tween.to(itemVisual.sprite, SpriteAccessor.XY, .1f).target(
-      position.x * Main.SPRITE_WIDTH, position.y * Main.SPRITE_HEIGHT
+        position.x * Main.SPRITE_WIDTH, position.y * Main.SPRITE_HEIGHT
     ).setCallback(
-      (type, source) -> {
-        if (type == TweenCallback.COMPLETE) {
-          if (destroy) {
-            WorldManager.itemHelpers.destroy(entity, item);
-          } else {
-            WorldManager.itemHelpers.drop(entity, item, position);
+        (type, source) -> {
+          if (type == TweenCallback.COMPLETE) {
+            if (destroy) {
+              WorldManager.itemHelpers.destroy(entity, item);
+            } else {
+              WorldManager.itemHelpers.drop(entity, item, position);
+            }
           }
         }
-      }
     ));
   }
 }

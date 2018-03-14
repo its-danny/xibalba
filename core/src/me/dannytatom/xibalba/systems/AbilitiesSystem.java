@@ -2,11 +2,13 @@ package me.dannytatom.xibalba.systems;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
+
+import java.util.HashMap;
+
 import me.dannytatom.xibalba.components.AbilitiesComponent;
 import me.dannytatom.xibalba.utils.ComponentMappers;
 import me.dannytatom.xibalba.utils.yaml.AbilityData;
 
-import java.util.HashMap;
 
 public class AbilitiesSystem extends UsesEnergySystem {
   public AbilitiesSystem() {

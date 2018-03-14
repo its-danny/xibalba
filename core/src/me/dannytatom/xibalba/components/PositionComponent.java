@@ -9,12 +9,18 @@ public class PositionComponent implements Component {
   /**
    * Holds entity pos.
    *
-   * @param position where to spawn it
+   * @param position Where to spawn it
    */
   public PositionComponent(Vector2 position) {
     this.pos = position;
   }
 
+  /**
+   * Holds entity pos.
+   *
+   * @param cellX X position of map cell to spawn it
+   * @param cellY Y position of map cell to spawn it
+   */
   public PositionComponent(int cellX, int cellY) {
     this.pos = new Vector2(cellX, cellY);
   }

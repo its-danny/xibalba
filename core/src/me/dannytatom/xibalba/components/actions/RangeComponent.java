@@ -14,10 +14,10 @@ public class RangeComponent implements Component {
   public final boolean isFocused;
 
   /**
-   * It's a constructor, idk wtf I'm supposed to comment here.
+   * Component for doing a ranged attack.
    *
    * @param position Target position
-   * @param item     ItemData we're using
+   * @param item     Item we're using
    * @param skill    What skill is associated with that item
    * @param bodyPart Where we're aiming
    */

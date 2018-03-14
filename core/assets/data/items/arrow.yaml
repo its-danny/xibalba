@@ -25,7 +25,6 @@ actions:
 verbs:
   - shot
 
-craftable: true
 craftedRange:
   - 1
   - 1

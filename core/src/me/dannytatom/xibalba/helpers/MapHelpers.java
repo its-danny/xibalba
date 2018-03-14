@@ -6,17 +6,24 @@ import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.graphics.Colors;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import me.dannytatom.xibalba.components.*;
+
+import java.util.ArrayList;
+import java.util.Objects;
+
+import me.dannytatom.xibalba.components.AttributesComponent;
+import me.dannytatom.xibalba.components.DecorationComponent;
+import me.dannytatom.xibalba.components.EnemyComponent;
+import me.dannytatom.xibalba.components.PlayerComponent;
+import me.dannytatom.xibalba.components.PositionComponent;
+import me.dannytatom.xibalba.components.TrapComponent;
 import me.dannytatom.xibalba.utils.ComponentMappers;
 import me.dannytatom.xibalba.world.Map;
 import me.dannytatom.xibalba.world.MapCell;
 import me.dannytatom.xibalba.world.WorldManager;
+
 import org.xguzm.pathfinding.grid.GridCell;
 import org.xguzm.pathfinding.grid.NavigationGrid;
 import org.xguzm.pathfinding.grid.finders.AStarGridFinder;
-
-import java.util.ArrayList;
-import java.util.Objects;
 
 public class MapHelpers {
   public MapHelpers() {
@@ -30,24 +37,20 @@ public class MapHelpers {
    * @param cellY y of the position we're checking
    * @return If it does indeed exist
    */
-  public boolean cellExists(int cellX, int cellY) {
+  private boolean cellExists(int cellX, int cellY) {
     MapCell[][] map = WorldManager.world.getCurrentMap().getCellMap();
 
     return cellX > 0 && cellX < map.length
-      && cellY > 0 && cellY < map[0].length
-      && getCell(cellX, cellY) != null;
+        && cellY > 0 && cellY < map[0].length
+        && getCell(cellX, cellY) != null;
   }
 
   public boolean cellExists(Vector2 position) {
     return cellExists((int) position.x, (int) position.y);
   }
 
-  public MapCell getCell(int mapIndex, int cellX, int cellY) {
+  private MapCell getCell(int mapIndex, int cellX, int cellY) {
     return WorldManager.world.getMap(mapIndex).getCellMap()[cellX][cellY];
-  }
-
-  public MapCell getCell(int mapIndex, Vector2 position) {
-    return getCell(mapIndex, (int) position.x, (int) position.y);
   }
 
   public MapCell getCell(int cellX, int cellY) {
@@ -62,10 +65,6 @@ public class MapHelpers {
     return isBlocked(WorldManager.world.currentMapIndex, position);
   }
 
-  public boolean isBlocked(int cellX, int cellY) {
-    return isBlocked(WorldManager.world.currentMapIndex, new Vector2(cellX, cellY));
-  }
-
   /**
    * Returns whether or not the given position is blocked.
    *
@@ -76,11 +75,11 @@ public class MapHelpers {
     MapCell[][] map = WorldManager.world.getMap(mapIndex).getCellMap();
 
     boolean blocked = map[(int) position.x][(int) position.y].isWall()
-      || map[(int) position.x][(int) position.y].isNothing();
+        || map[(int) position.x][(int) position.y].isNothing();
 
     if (!blocked) {
       ImmutableArray<Entity> entities =
-        WorldManager.engine.getEntitiesFor(Family.all(PositionComponent.class).get());
+          WorldManager.engine.getEntitiesFor(Family.all(PositionComponent.class).get());
 
       for (Entity entity : entities) {
         PositionComponent ep = ComponentMappers.position.get(entity);
@@ -102,30 +101,6 @@ public class MapHelpers {
     }
 
     return blocked;
-  }
-
-  /**
-   * Get pathfinding cells.
-   *
-   * @return 2d array of GridCells
-   */
-  public GridCell[][] createPathfindingMap(boolean avoidDeepWater) {
-    Map map = WorldManager.world.getCurrentMap();
-    GridCell[][] cells = new GridCell[map.width][map.height];
-
-    for (int x = 0; x < map.width; x++) {
-      for (int y = 0; y < map.height; y++) {
-        boolean walkable = !isBlocked(WorldManager.world.currentMapIndex, new Vector2(x, y));
-
-        if (walkable && avoidDeepWater) {
-          walkable = !getCell(x, y).isDeepWater();
-        }
-
-        cells[x][y] = new GridCell(x, y, walkable);
-      }
-    }
-
-    return cells;
   }
 
   /**
@@ -171,9 +146,9 @@ public class MapHelpers {
     for (int x = 0; x < map.width; x++) {
       for (int y = 0; y < map.height; y++) {
         boolean canTarget = cellExists(new Vector2(x, y))
-          && !getCell(x, y).isWall()
-          && !getCell(x, y).isNothing()
-          && !getCell(x, y).hidden;
+            && !getCell(x, y).isWall()
+            && !getCell(x, y).isNothing()
+            && !getCell(x, y).hidden;
 
         cells[x][y] = new GridCell(x, y, canTarget);
       }
@@ -193,8 +168,8 @@ public class MapHelpers {
     }
 
     playerDetails.path = finder.findPath(
-      (int) start.x, (int) start.y,
-      (int) playerDetails.target.x, (int) playerDetails.target.y, grid
+        (int) start.x, (int) start.y,
+        (int) playerDetails.target.x, (int) playerDetails.target.y, grid
     );
 
     AttributesComponent playerAttributes = ComponentMappers.attributes.get(WorldManager.player);
@@ -205,8 +180,8 @@ public class MapHelpers {
 
       if (playerDetails.target != null) {
         playerDetails.path = finder.findPath(
-          (int) start.x, (int) start.y,
-          (int) playerDetails.target.x, (int) playerDetails.target.y, grid
+            (int) start.x, (int) start.y,
+            (int) playerDetails.target.x, (int) playerDetails.target.y, grid
         );
       }
     }
@@ -230,8 +205,8 @@ public class MapHelpers {
 
         if (careAboutWalls) {
           canTarget = cellExists(new Vector2(x, y))
-            && !getCell(x, y).hidden
-            && !getCell(x, y).isWall();
+              && !getCell(x, y).hidden
+              && !getCell(x, y).isWall();
         } else {
           canTarget = cellExists(new Vector2(x, y)) && !getCell(x, y).hidden;
         }
@@ -254,8 +229,8 @@ public class MapHelpers {
     }
 
     playerDetails.path = finder.findPath(
-      (int) start.x, (int) start.y,
-      (int) playerDetails.target.x, (int) playerDetails.target.y, grid
+        (int) start.x, (int) start.y,
+        (int) playerDetails.target.x, (int) playerDetails.target.y, grid
     );
 
     if (playerDetails.path == null) {
@@ -263,8 +238,8 @@ public class MapHelpers {
 
       if (playerDetails.target != null) {
         playerDetails.path = finder.findPath(
-          (int) start.x, (int) start.y,
-          (int) playerDetails.target.x, (int) playerDetails.target.y, grid
+            (int) start.x, (int) start.y,
+            (int) playerDetails.target.x, (int) playerDetails.target.y, grid
         );
       }
     }
@@ -283,9 +258,9 @@ public class MapHelpers {
    */
   public Entity getEntityAt(float cellX, float cellY) {
     ImmutableArray<Entity> entities =
-      WorldManager.engine.getEntitiesFor(
-        Family.all(PositionComponent.class).exclude(DecorationComponent.class).get()
-      );
+        WorldManager.engine.getEntitiesFor(
+            Family.all(PositionComponent.class).exclude(DecorationComponent.class).get()
+        );
 
     for (Entity entity : entities) {
       PositionComponent entityPosition = ComponentMappers.position.get(entity);
@@ -302,13 +277,13 @@ public class MapHelpers {
    * Get all entities at a given position.
    *
    * @param position Where we're searching
-   * @return ArrayList of entities
+   * @return List of entities at location
    */
   public ArrayList<Entity> getEntitiesAt(Vector2 position) {
     ArrayList<Entity> list = new ArrayList<>();
 
     ImmutableArray<Entity> entities =
-      WorldManager.engine.getEntitiesFor(Family.all(PositionComponent.class).get());
+        WorldManager.engine.getEntitiesFor(Family.all(PositionComponent.class).get());
 
     for (Entity entity : entities) {
       PositionComponent entityPosition = ComponentMappers.position.get(entity);
@@ -340,7 +315,7 @@ public class MapHelpers {
    */
   public Entity getEnemyAt(int cellX, int cellY) {
     ImmutableArray<Entity> entities =
-      WorldManager.engine.getEntitiesFor(Family.all(EnemyComponent.class).get());
+        WorldManager.engine.getEntitiesFor(Family.all(EnemyComponent.class).get());
 
     for (Entity entity : entities) {
       PositionComponent entityPosition = ComponentMappers.position.get(entity);
@@ -356,7 +331,7 @@ public class MapHelpers {
   /**
    * Get all entities in vision of the player.
    *
-   * @return An ArrayList of entities
+   * @return List of entities within player's vision
    */
   ArrayList<Entity> getEnemiesInPlayerVision() {
     ArrayList<Entity> enemies = new ArrayList<>();
@@ -382,8 +357,8 @@ public class MapHelpers {
       PositionComponent enemy2Position = ComponentMappers.position.get(enemy2);
 
       return enemy1Position.pos.x > enemy2Position.pos.x
-        && enemy1Position.pos.y > enemy2Position.pos.y
-        ? -1 : 1;
+          && enemy1Position.pos.y > enemy2Position.pos.y
+          ? -1 : 1;
     });
 
     return enemies;
@@ -397,9 +372,9 @@ public class MapHelpers {
    */
   public Entity getTrapAt(Vector2 position) {
     ImmutableArray<Entity> entities =
-      WorldManager.engine.getEntitiesFor(
-        Family.all(TrapComponent.class).get()
-      );
+        WorldManager.engine.getEntitiesFor(
+            Family.all(TrapComponent.class).get()
+        );
 
     for (Entity entity : entities) {
       PositionComponent entityPosition = ComponentMappers.position.get(entity);
@@ -426,9 +401,9 @@ public class MapHelpers {
     int cellY = MathUtils.random(-1, 1);
 
     if (!isBlocked(
-      WorldManager.world.currentMapIndex,
-      new Vector2(targetPosition.x + cellX, targetPosition.y + cellY))
-      ) {
+        WorldManager.world.currentMapIndex,
+        new Vector2(targetPosition.x + cellX, targetPosition.y + cellY))
+        ) {
       position = new Vector2(targetPosition.x + cellX, targetPosition.y + cellY);
     } else {
       position = null;
@@ -472,6 +447,12 @@ public class MapHelpers {
     return getRandomOpenPositionOnLand(WorldManager.world.currentMapIndex);
   }
 
+  /**
+   * Get a random open position in water.
+   *
+   * @param index Index of map to look on
+   * @return A position
+   */
   public Vector2 getRandomOpenPositionInWater(int index) {
     Map map = WorldManager.world.getMap(index);
     MapCell[][] cellMap = map.getCellMap();
@@ -491,10 +472,6 @@ public class MapHelpers {
     }
 
     return new Vector2(cellX, cellY);
-  }
-
-  public Vector2 getRandomOpenPositionInWater() {
-    return getRandomOpenPositionInWater(WorldManager.world.currentMapIndex);
   }
 
   /**
@@ -548,12 +525,22 @@ public class MapHelpers {
     cell.sprite.setColor(Colors.get(WorldManager.world.getCurrentMap().type + "FloorWet"));
   }
 
+  /**
+   * Make the floor sprite bloody.
+   *
+   * @param position Position of map cell
+   */
   public void makeFloorBloody(Vector2 position) {
     MapCell cell = getCell(position.x, position.y);
     cell.covered = MapCell.Covered.BLOOD;
     cell.sprite.setColor(Colors.get("RED"));
   }
 
+  /**
+   * Make the floor sprite full of vomit.
+   *
+   * @param position Position of map cell
+   */
   public void makeFloorVomit(Vector2 position) {
     MapCell cell = getCell(position.x, position.y);
     cell.covered = MapCell.Covered.VOMIT;

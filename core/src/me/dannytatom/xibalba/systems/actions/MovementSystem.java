@@ -2,6 +2,9 @@ package me.dannytatom.xibalba.systems.actions;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
+
+import java.util.ArrayList;
+
 import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
@@ -10,8 +13,6 @@ import me.dannytatom.xibalba.components.actions.MovementComponent;
 import me.dannytatom.xibalba.systems.UsesEnergySystem;
 import me.dannytatom.xibalba.utils.ComponentMappers;
 import me.dannytatom.xibalba.world.WorldManager;
-
-import java.util.ArrayList;
 
 public class MovementSystem extends UsesEnergySystem {
   public MovementSystem() {
@@ -77,7 +78,7 @@ public class MovementSystem extends UsesEnergySystem {
 
   private void move(Entity entity, MovementComponent movement) {
     WorldManager.entityHelpers.updatePosition(
-      entity, movement.pos.x, movement.pos.y
+        entity, movement.pos.x, movement.pos.y
     );
 
     WorldManager.entityHelpers.updateSenses(entity);
@@ -87,7 +88,8 @@ public class MovementSystem extends UsesEnergySystem {
 
       PlayerComponent playerDetails = ComponentMappers.player.get(WorldManager.player);
 
-      if (playerDetails.lastHitEntity != null && !WorldManager.entityHelpers.canSee(WorldManager.player, playerDetails.lastHitEntity)) {
+      if (playerDetails.lastHitEntity != null
+          && !WorldManager.entityHelpers.canSee(WorldManager.player, playerDetails.lastHitEntity)) {
         playerDetails.lastHitEntity = null;
       }
     }

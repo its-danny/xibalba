@@ -18,7 +18,6 @@ actions:
 verbs:
   - hit
 
-craftable: true
 craftedRange:
   - 2
   - 5

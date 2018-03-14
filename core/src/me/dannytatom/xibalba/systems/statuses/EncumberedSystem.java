@@ -2,6 +2,7 @@ package me.dannytatom.xibalba.systems.statuses;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
+
 import me.dannytatom.xibalba.components.statuses.EncumberedComponent;
 import me.dannytatom.xibalba.systems.UsesEnergySystem;
 import me.dannytatom.xibalba.utils.ComponentMappers;

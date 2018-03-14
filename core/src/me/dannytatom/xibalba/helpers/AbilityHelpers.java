@@ -1,7 +1,7 @@
 package me.dannytatom.xibalba.helpers;
 
 import com.badlogic.ashley.core.Entity;
-import me.dannytatom.xibalba.components.AttributesComponent;
+
 import me.dannytatom.xibalba.utils.ComponentMappers;
 import me.dannytatom.xibalba.utils.yaml.AbilityData;
 import me.dannytatom.xibalba.world.WorldManager;
@@ -15,7 +15,7 @@ public class AbilityHelpers {
    * Do an ability.
    *
    * @param entity      The entity who wants to do something.
-   * @param abilityData The abilitiesData they want to do
+   * @param abilityData The data for the ability they want to do
    */
   public void doAbility(Entity entity, AbilityData abilityData) {
     if (abilityData.counter == abilityData.recharge) {
@@ -23,7 +23,6 @@ public class AbilityHelpers {
       String name = split[0];
       String[] params = split[1].split(",");
 
-      AttributesComponent attributes = ComponentMappers.attributes.get(entity);
       Entity target = null;
 
       if (ComponentMappers.player.has(entity)) {
@@ -32,21 +31,22 @@ public class AbilityHelpers {
         target = ComponentMappers.brain.get(entity).target;
       }
 
+      if (abilityData.targetRequired) {
+        if (target == null) {
+          WorldManager.log.add("effects.requiresTarget", abilityData.name);
+
+          return;
+        }
+
+        if (abilityData.targetType != ComponentMappers.attributes.get(target).type) {
+          WorldManager.log.add("effects.failed", abilityData.name);
+
+          return;
+        }
+      }
+
       switch (name) {
         case "charmEnemy":
-          if (abilityData.targetRequired && target == null) {
-            WorldManager.log.add("effects.requiresTarget", abilityData.name);
-
-            return;
-          }
-
-          if (abilityData.targetRequired
-            && abilityData.targetType != ComponentMappers.attributes.get(target).type) {
-            WorldManager.log.add("effects.failed", abilityData.name);
-
-            return;
-          }
-
           WorldManager.entityHelpers.charm(entity, target, Integer.parseInt(params[0]));
 
           abilityData.counter = 0;

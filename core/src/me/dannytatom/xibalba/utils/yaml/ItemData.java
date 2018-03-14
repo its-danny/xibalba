@@ -7,7 +7,6 @@ public class ItemData {
   public String type;
   public String weaponType;
   public String ammunitionType;
-  public String armorType;
   public boolean hasStoneMaterial;
   public float lightRadius;
   public float weight;
@@ -27,7 +26,6 @@ public class ItemData {
   public ArrayList<String> verbs;
   public HashMap<String, Integer> light;
 
-  public boolean craftable;
   public ArrayList<Integer> craftedRange;
   public ArrayList<ItemRequiredComponentData> requiredComponents;
 }

@@ -14,6 +14,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.components.ItemComponent;
 import me.dannytatom.xibalba.ui.ActionButton;
@@ -21,25 +26,24 @@ import me.dannytatom.xibalba.utils.ComponentMappers;
 import me.dannytatom.xibalba.utils.yaml.ItemData;
 import me.dannytatom.xibalba.utils.yaml.ItemRequiredComponentData;
 import me.dannytatom.xibalba.world.WorldManager;
+
 import org.apache.commons.lang3.text.WordUtils;
 import org.yaml.snakeyaml.TypeDescription;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
 public class CraftScreen implements Screen {
-  private final Main main;
   private final Stage stage;
   private final Table table;
   private final HashMap<String, ItemData> recipes;
   private final VerticalGroup recipeGroup;
 
+  /**
+   * Craft screen.
+   *
+   * @param main Instance of Main
+   */
   public CraftScreen(Main main) {
-    this.main = main;
-
     stage = new Stage(new FitViewport(960, 540));
 
     Constructor constructor = new Constructor(ItemData.class);
@@ -52,7 +56,7 @@ public class CraftScreen implements Screen {
     for (Map.Entry<String, String> entry : Main.itemsData.entrySet()) {
       ItemData data = (ItemData) yaml.load(entry.getValue());
 
-      if (data.craftable) {
+      if (data.requiredComponents != null) {
         recipes.put(entry.getKey(), data);
       }
     }
@@ -114,23 +118,30 @@ public class CraftScreen implements Screen {
           int amountToSpawn;
 
           if (itemDetails.craftedRange.size() > 1) {
-            amountToSpawn = MathUtils.random(itemDetails.craftedRange.get(0), itemDetails.craftedRange.get(1));
+            amountToSpawn = MathUtils.random(
+                itemDetails.craftedRange.get(0), itemDetails.craftedRange.get(1)
+            );
           } else {
             amountToSpawn = itemDetails.craftedRange.get(0);
           }
 
           for (int j = 0; j < amountToSpawn; j++) {
-            itemDetails.quality = WorldManager.itemHelpers.qualityFromComponents(WorldManager.player, item);
-            itemDetails.stoneMaterial = WorldManager.itemHelpers.materialFromComponents(WorldManager.player, item);
+            itemDetails.quality
+                = WorldManager.itemHelpers.qualityFromComponents(WorldManager.player, item);
+            itemDetails.stoneMaterial
+                = WorldManager.itemHelpers.materialFromComponents(WorldManager.player, item);
 
             WorldManager.itemHelpers.addToInventory(WorldManager.player, item, false);
-            WorldManager.log.add("inventory.crafted", WorldManager.itemHelpers.getName(WorldManager.player, item));
+            WorldManager.log.add(
+                "inventory.crafted", WorldManager.itemHelpers.getName(WorldManager.player, item)
+            );
           }
 
           for (ItemComponent.RequiredComponent requiredComponent : itemDetails.requiredComponents) {
-            ItemComponent requiredComponentDetails = ComponentMappers.item.get(requiredComponent.item);
+            ItemComponent requiredComponentDetails
+                = ComponentMappers.item.get(requiredComponent.item);
             WorldManager.itemHelpers.removeComponentsFromInventory(
-              WorldManager.player, requiredComponentDetails.key, requiredComponent.amount
+                WorldManager.player, requiredComponentDetails.key, requiredComponent.amount
             );
 
             WorldManager.executeTurn = true;
@@ -142,17 +153,18 @@ public class CraftScreen implements Screen {
         recipeGroup.addActor(button);
 
         recipeGroup.addActor(new Label(
-          "[DARK_GRAY]" + WordUtils.wrap(itemDetails.description, 140), Main.skin
+            "[DARK_GRAY]" + WordUtils.wrap(itemDetails.description, 140), Main.skin
         ));
 
         ArrayList<String> materialList = new ArrayList<>();
         for (ItemComponent.RequiredComponent requiredComponent : itemDetails.requiredComponents) {
-          ItemComponent requiredComponentDetails = ComponentMappers.item.get(requiredComponent.item);
+          ItemComponent requiredComponentDetails
+              = ComponentMappers.item.get(requiredComponent.item);
           materialList.add(requiredComponent.amount + " " + requiredComponentDetails.name);
         }
 
         recipeGroup.addActor(new Label(
-          "[DARK_GRAY]Requires: []" + String.join(", ", materialList), Main.skin
+            "[DARK_GRAY]Requires: []" + String.join(", ", materialList), Main.skin
         ));
 
         recipeGroup.addActor(new Label("", Main.skin));
@@ -165,10 +177,10 @@ public class CraftScreen implements Screen {
   @Override
   public void render(float delta) {
     Gdx.gl.glClearColor(
-      Colors.get("screenBackground").r,
-      Colors.get("screenBackground").g,
-      Colors.get("screenBackground").b,
-      Colors.get("screenBackground").a
+        Colors.get("screenBackground").r,
+        Colors.get("screenBackground").g,
+        Colors.get("screenBackground").b,
+        Colors.get("screenBackground").a
     );
 
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);

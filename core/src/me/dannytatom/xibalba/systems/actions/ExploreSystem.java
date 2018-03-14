@@ -6,6 +6,7 @@ import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.Vector2;
+
 import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.actions.ExploreComponent;
@@ -20,12 +21,22 @@ public class ExploreSystem extends EntitySystem {
 
   }
 
+  /**
+   * Triggers when this system is added to Ashley engine.
+   *
+   * @param engine An instance of the engine
+   */
   public void addedToEngine(Engine engine) {
     entities = engine.getEntitiesFor(
-      Family.all(PlayerComponent.class, ExploreComponent.class).get()
+        Family.all(PlayerComponent.class, ExploreComponent.class).get()
     );
   }
 
+  /**
+   * Update all entities with the Explore component.
+   *
+   * @param deltaTime Time since last frame.
+   */
   public void update(float deltaTime) {
     for (Entity entity : entities) {
       ExploreComponent explore = ComponentMappers.explore.get(entity);
@@ -51,7 +62,7 @@ public class ExploreSystem extends EntitySystem {
         WorldManager.world.getCurrentMap().dijkstra.updatePlayerExplore();
 
         explore.path = WorldManager.world.getCurrentMap().dijkstra.findExplorePath(
-          ComponentMappers.position.get(WorldManager.player).pos
+            ComponentMappers.position.get(WorldManager.player).pos
         );
       }
 

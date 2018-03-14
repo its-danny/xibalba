@@ -7,8 +7,25 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.I18NBundle;
+
 import me.dannytatom.xibalba.Main;
-import me.dannytatom.xibalba.components.*;
+import me.dannytatom.xibalba.components.AttributesComponent;
+import me.dannytatom.xibalba.components.BodyComponent;
+import me.dannytatom.xibalba.components.BrainComponent;
+import me.dannytatom.xibalba.components.CorpseComponent;
+import me.dannytatom.xibalba.components.DecorationComponent;
+import me.dannytatom.xibalba.components.EffectsComponent;
+import me.dannytatom.xibalba.components.EnemyComponent;
+import me.dannytatom.xibalba.components.EntranceComponent;
+import me.dannytatom.xibalba.components.ExitComponent;
+import me.dannytatom.xibalba.components.ItemComponent;
+import me.dannytatom.xibalba.components.LightComponent;
+import me.dannytatom.xibalba.components.LimbComponent;
+import me.dannytatom.xibalba.components.PositionComponent;
+import me.dannytatom.xibalba.components.RainDropComponent;
+import me.dannytatom.xibalba.components.SkillsComponent;
+import me.dannytatom.xibalba.components.TrapComponent;
+import me.dannytatom.xibalba.components.VisualComponent;
 import me.dannytatom.xibalba.components.items.AmmunitionComponent;
 import me.dannytatom.xibalba.components.items.ArmorComponent;
 import me.dannytatom.xibalba.components.items.WeaponComponent;
@@ -18,6 +35,7 @@ import me.dannytatom.xibalba.utils.yaml.ItemData;
 import me.dannytatom.xibalba.utils.yaml.ItemRequiredComponentData;
 import me.dannytatom.xibalba.world.Map;
 import me.dannytatom.xibalba.world.WorldManager;
+
 import org.yaml.snakeyaml.TypeDescription;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
@@ -47,21 +65,21 @@ public class EntityFactory {
     entity.add(new BodyComponent(data.bodyParts, data.wearableBodyParts));
 
     entity.add(new VisualComponent(
-        Main.asciiAtlas.createSprite(
-          data.visual.get("character")), position, Main.parseColor(data.visual.get("color"))
-      )
+            Main.asciiAtlas.createSprite(
+                data.visual.get("character")), position, Main.parseColor(data.visual.get("color"))
+        )
     );
 
     entity.add(new AttributesComponent(
-      i18n.get("entities.enemies." + name + ".name"),
-      i18n.get("entities.enemies." + name + ".description"),
-      data.type,
-      data.attributes.get("speed"),
-      data.attributes.get("vision"),
-      data.attributes.get("hearing"),
-      data.attributes.get("toughness"),
-      data.attributes.get("strength"),
-      data.attributes.get("agility")
+        i18n.get("entities.enemies." + name + ".name"),
+        i18n.get("entities.enemies." + name + ".description"),
+        data.type,
+        data.attributes.get("speed"),
+        data.attributes.get("vision"),
+        data.attributes.get("hearing"),
+        data.attributes.get("toughness"),
+        data.attributes.get("strength"),
+        data.attributes.get("agility")
     ));
 
     BrainComponent brain = new BrainComponent(entity);
@@ -71,9 +89,7 @@ public class EntityFactory {
     brain.fearThreshold = data.brain.fearThreshold;
 
     brain.dna = new Array<>();
-    data.brain.dna.forEach((str) -> {
-      brain.dna.add(BrainComponent.DNA.valueOf(str));
-    });
+    data.brain.dna.forEach((str) -> brain.dna.add(BrainComponent.Dna.valueOf(str)));
 
     if (data.effects != null) {
       entity.add(new EffectsComponent(data));
@@ -101,20 +117,20 @@ public class EntityFactory {
     entity.add(new PositionComponent(position));
 
     entity.add(
-      new ItemComponent(
-        key,
-        i18n.get("entities.items." + key + ".name"),
-        i18n.get("entities.items." + key + ".description"),
-        data
-      )
+        new ItemComponent(
+            key,
+            i18n.get("entities.items." + key + ".name"),
+            i18n.get("entities.items." + key + ".description"),
+            data
+        )
     );
 
     switch (data.type) {
       case "armor":
-        entity.add(new ArmorComponent(data));
+        entity.add(new ArmorComponent());
         break;
       case "weapon":
-        entity.add(new WeaponComponent(data));
+        entity.add(new WeaponComponent(data.weaponType, data.ammunition));
         break;
       case "light":
         entity.add(new LightComponent(data));
@@ -123,7 +139,7 @@ public class EntityFactory {
     }
 
     if (data.ammunitionType != null) {
-      entity.add(new AmmunitionComponent(data));
+      entity.add(new AmmunitionComponent(data.ammunitionType));
     }
 
     if (data.effects != null) {
@@ -131,8 +147,8 @@ public class EntityFactory {
     }
 
     entity.add(new VisualComponent(
-      Main.asciiAtlas.createSprite(data.visual.get("character")),
-      position, Main.parseColor(data.visual.get("color"))
+        Main.asciiAtlas.createSprite(data.visual.get("character")),
+        position, Main.parseColor(data.visual.get("color"))
     ));
 
     return entity;
@@ -169,7 +185,7 @@ public class EntityFactory {
     Entity entity = createItem("skin", position);
 
     ComponentMappers.item.get(entity).name
-      = ComponentMappers.corpse.get(corpse).entity + " skin";
+        = ComponentMappers.corpse.get(corpse).entity + " skin";
 
     return entity;
   }
@@ -188,7 +204,7 @@ public class EntityFactory {
     ItemComponent item = ComponentMappers.item.get(entity);
 
     item.name = ComponentMappers.corpse.get(corpse).entity
-      + " " + part.replace("left ", "").replace("right ", "");
+        + " " + part.replace("left ", "").replace("right ", "");
 
     entity.add(new LimbComponent(ComponentMappers.corpse.get(corpse).type));
 
@@ -225,8 +241,8 @@ public class EntityFactory {
         entity.add(new SpiderWebComponent());
 
         entity.add(new VisualComponent(
-          Main.asciiAtlas.createSprite("0302"), position, Color.WHITE,
-          WorldManager.entityHelpers.hasTrait(WorldManager.player, "Perceptive") ? .5f : .1f
+            Main.asciiAtlas.createSprite("0302"), position, Color.WHITE,
+            WorldManager.entityHelpers.hasTrait(WorldManager.player, "Perceptive") ? .5f : .1f
         ));
 
         break;
@@ -251,9 +267,8 @@ public class EntityFactory {
     do {
       cellX = MathUtils.random(0, map.width - 1);
       cellY = MathUtils.random(0, map.height - 1);
-    }
-    while (WorldManager.mapHelpers.isBlocked(mapIndex, new Vector2(cellX, cellY))
-      && WorldManager.mapHelpers.getWallNeighbours(mapIndex, cellX, cellY) >= 4);
+    } while (WorldManager.mapHelpers.isBlocked(mapIndex, new Vector2(cellX, cellY))
+        && WorldManager.mapHelpers.getWallNeighbours(mapIndex, cellX, cellY) >= 4);
 
     Vector2 position = new Vector2(cellX, cellY);
     Entity entity = new Entity();
@@ -261,7 +276,7 @@ public class EntityFactory {
     entity.add(new PositionComponent(position));
 
     entity.add(new VisualComponent(
-      Main.asciiAtlas.createSprite("1203"), position
+        Main.asciiAtlas.createSprite("1203"), position
     ));
 
     return entity;
@@ -282,9 +297,8 @@ public class EntityFactory {
     do {
       cellX = MathUtils.random(0, map.width - 1);
       cellY = MathUtils.random(0, map.height - 1);
-    }
-    while (WorldManager.mapHelpers.isBlocked(mapIndex, new Vector2(cellX, cellY))
-      && WorldManager.mapHelpers.getWallNeighbours(mapIndex, cellX, cellY) >= 4);
+    } while (WorldManager.mapHelpers.isBlocked(mapIndex, new Vector2(cellX, cellY))
+        && WorldManager.mapHelpers.getWallNeighbours(mapIndex, cellX, cellY) >= 4);
 
     Vector2 position = new Vector2(cellX, cellY);
     Entity entity = new Entity();
@@ -292,7 +306,7 @@ public class EntityFactory {
     entity.add(new PositionComponent(position));
 
     entity.add(new VisualComponent(
-      Main.asciiAtlas.createSprite("1403"), position
+        Main.asciiAtlas.createSprite("1403"), position
     ));
 
     return entity;
@@ -311,7 +325,7 @@ public class EntityFactory {
     entity.add(new RainDropComponent());
     entity.add(new PositionComponent(position));
     entity.add(new VisualComponent(
-      Main.asciiAtlas.createSprite("1502"), position, Colors.get("CYAN")
+        Main.asciiAtlas.createSprite("1502"), position, Colors.get("CYAN")
     ));
 
     return entity;

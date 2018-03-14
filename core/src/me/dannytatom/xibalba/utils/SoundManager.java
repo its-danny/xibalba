@@ -3,6 +3,7 @@ package me.dannytatom.xibalba.utils;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
+
 import me.dannytatom.xibalba.Main;
 
 public class SoundManager {

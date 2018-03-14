@@ -6,16 +6,18 @@ import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.Vector2;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.MouseMovementComponent;
 import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.actions.MovementComponent;
 import me.dannytatom.xibalba.utils.ComponentMappers;
 import me.dannytatom.xibalba.world.WorldManager;
-import org.xguzm.pathfinding.grid.GridCell;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.xguzm.pathfinding.grid.GridCell;
 
 public class MouseMovementSystem extends EntitySystem {
   private ImmutableArray<Entity> entities;
@@ -31,7 +33,7 @@ public class MouseMovementSystem extends EntitySystem {
    */
   public void addedToEngine(Engine engine) {
     entities = engine.getEntitiesFor(
-      Family.all(PlayerComponent.class, MouseMovementComponent.class).get()
+        Family.all(PlayerComponent.class, MouseMovementComponent.class).get()
     );
   }
 

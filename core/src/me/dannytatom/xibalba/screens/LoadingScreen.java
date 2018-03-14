@@ -12,19 +12,26 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.I18NBundle;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import me.dannytatom.xibalba.Main;
-import me.dannytatom.xibalba.utils.SoundManager;
-import org.yaml.snakeyaml.Yaml;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import me.dannytatom.xibalba.Main;
+import me.dannytatom.xibalba.utils.SoundManager;
+
+import org.yaml.snakeyaml.Yaml;
+
 public class LoadingScreen implements Screen {
   private final Main main;
   private final Stage stage;
-  private Label label;
+  private final Label label;
 
+  /**
+   * Loading screen.
+   *
+   * @param main Instance of Main
+   */
   public LoadingScreen(Main main) {
     this.main = main;
 
@@ -43,10 +50,10 @@ public class LoadingScreen implements Screen {
   @Override
   public void render(float delta) {
     Gdx.gl.glClearColor(
-      Colors.get("screenBackground").r,
-      Colors.get("screenBackground").g,
-      Colors.get("screenBackground").b,
-      Colors.get("screenBackground").a
+        Colors.get("screenBackground").r,
+        Colors.get("screenBackground").g,
+        Colors.get("screenBackground").b,
+        Colors.get("screenBackground").a
     );
 
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -67,8 +74,9 @@ public class LoadingScreen implements Screen {
     label.setText("Loading data");
     Yaml dataManifestYaml = new Yaml();
     FileHandle dataManifest = Gdx.files.internal("data/manifest.yaml");
+    //noinspection unchecked
     HashMap<String, ArrayList<String>> dataFiles
-      = (HashMap<String, ArrayList<String>>) dataManifestYaml.load(dataManifest.reader());
+        = (HashMap<String, ArrayList<String>>) dataManifestYaml.load(dataManifest.reader());
 
     for (Map.Entry<String, ArrayList<String>> entry : dataFiles.entrySet()) {
       String category = entry.getKey();
@@ -80,7 +88,10 @@ public class LoadingScreen implements Screen {
 
           for (String file : files) {
             FileHandle handler = Gdx.files.internal("data/" + file);
-            Main.abilitiesData.put(file.split("/")[1].replaceAll(".yaml", ""), handler.readString());
+            Main.abilitiesData.put(
+                file.split("/")[1].replaceAll(".yaml", ""),
+                handler.readString()
+            );
           }
 
           break;

@@ -28,7 +28,6 @@ verbs:
   - slashed
   - rekt
 
-craftable: true
 craftedRange:
   - 1
   - 1

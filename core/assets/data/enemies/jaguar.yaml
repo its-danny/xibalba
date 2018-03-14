@@ -18,7 +18,6 @@ brain:
   fearThreshold: 1
   dna:
     - TERRESTRIAL
-    - STEALTHY
 
 bodyParts:
   head: 8

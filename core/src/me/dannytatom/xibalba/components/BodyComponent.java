@@ -13,7 +13,8 @@ public class BodyComponent implements Component {
   /**
    * Body parts.
    *
-   * @param parts HashMap of parts
+   * @param parts    The entity's body parts
+   * @param wearable Which body parts are wearable
    */
   public BodyComponent(TreeMap<String, Integer> parts, TreeMap<String, String> wearable) {
     this.parts = parts;

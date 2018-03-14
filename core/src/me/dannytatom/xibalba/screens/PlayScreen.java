@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.strongjoshua.console.Console;
 import com.strongjoshua.console.GUIConsole;
+
 import me.dannytatom.xibalba.ConsoleCommandExecutor;
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.PlayerInput;
@@ -98,106 +99,110 @@ public class PlayScreen implements Screen {
 
     if (god.hasWrath) {
       Color color = Colors.get(WorldManager.world.getCurrentMap().type + "Background").cpy().lerp(
-        Color.BLACK, wrathFade * 1.5f
+          Color.BLACK, wrathFade * 1.5f
       );
       Gdx.gl.glClearColor(color.r, color.g, color.b, color.a);
     } else {
       Gdx.gl.glClearColor(
-        Colors.get(WorldManager.world.getCurrentMap().type + "Background").r,
-        Colors.get(WorldManager.world.getCurrentMap().type + "Background").g,
-        Colors.get(WorldManager.world.getCurrentMap().type + "Background").b,
-        Colors.get(WorldManager.world.getCurrentMap().type + "Background").a
+          Colors.get(WorldManager.world.getCurrentMap().type + "Background").r,
+          Colors.get(WorldManager.world.getCurrentMap().type + "Background").g,
+          Colors.get(WorldManager.world.getCurrentMap().type + "Background").b,
+          Colors.get(WorldManager.world.getCurrentMap().type + "Background").a
       );
     }
 
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
     // Check if going up or down levels
-    if (WorldManager.state == WorldManager.State.GOING_DOWN) {
-      WorldManager.world.goDown();
-    } else if (WorldManager.state == WorldManager.State.GOING_UP) {
-      WorldManager.world.goUp();
-    } else {
-      autoTimer += delta;
-      keyHoldTimer += delta;
+    switch (WorldManager.state) {
+      case GOING_DOWN:
+        WorldManager.world.goDown();
+        break;
+      case GOING_UP:
+        WorldManager.world.goUp();
+        break;
+      default:
+        autoTimer += delta;
+        keyHoldTimer += delta;
 
-      // Light
-      WorldManager.world.getCurrentMap().light.update(delta);
+        // Light
+        WorldManager.world.getCurrentMap().light.update(delta);
 
-      // Weather!
-      if (WorldManager.world.getCurrentMap().weather != null && Main.debug.weatherEnabled) {
-        WorldManager.world.getCurrentMap().weather.update(delta);
-      }
-
-      // Keep moving if a key is held down
-      if (playerInput.keyHeld != -1) {
-        keyHoldTimerDelay += delta;
-
-        if (keyHoldTimerDelay >= .5f) {
-          if (keyHoldTimer >= .10f) {
-            keyHoldTimer = 0;
-            playerInput.keyDown(playerInput.keyHeld);
-          }
-        }
-      } else {
-        keyHoldTimerDelay = 0;
-      }
-
-      // In some cases, we want the game to take turns on it's own
-      if ((WorldManager.state == WorldManager.State.MOVING
-        || WorldManager.state == WorldManager.State.DEAD
-        || WorldManager.entityHelpers.shouldSkipTurn(WorldManager.player))
-        && autoTimer >= .10f) {
-        autoTimer = 0;
-        WorldManager.executeTurn = true;
-      }
-
-      // Update engine if it's time to execute a turn
-      if (WorldManager.executeTurn) {
-        WorldManager.turnCount += 1;
-
-        WorldManager.engine.update(delta);
-
-        WorldManager.executeTurn = false;
-      }
-
-      // Start tweens
-      if (WorldManager.tweens.size > 0) {
-        WorldManager.state = WorldManager.State.WAITING;
-        Timeline timeline = Timeline.createParallel();
-
-        for (int i = 0; i < WorldManager.tweens.size; i++) {
-          timeline.push(WorldManager.tweens.get(i));
-          WorldManager.tweens.removeIndex(i);
+        // Weather!
+        if (WorldManager.world.getCurrentMap().weather != null && Main.debug.weatherEnabled) {
+          WorldManager.world.getCurrentMap().weather.update(delta);
         }
 
-        timeline.setCallback(
-          (type, source) -> {
-            if (type == TweenCallback.COMPLETE) {
-              WorldManager.state = WorldManager.State.PLAYING;
+        // Keep moving if a key is held down
+        if (playerInput.keyHeld != -1) {
+          keyHoldTimerDelay += delta;
+
+          if (keyHoldTimerDelay >= .5f) {
+            if (keyHoldTimer >= .10f) {
+              keyHoldTimer = 0;
+              playerInput.keyDown(playerInput.keyHeld);
             }
           }
-        ).start(Main.tweenManager);
-      }
+        } else {
+          keyHoldTimerDelay = 0;
+        }
 
-      Main.tweenManager.update(delta);
+        // In some cases, we want the game to take turns on it's own
+        if ((WorldManager.state == WorldManager.State.MOVING
+            || WorldManager.state == WorldManager.State.DEAD
+            || WorldManager.entityHelpers.shouldSkipTurn(WorldManager.player))
+            && autoTimer >= .10f) {
+          autoTimer = 0;
+          WorldManager.executeTurn = true;
+        }
 
-      // Check for WRATH
-      if (playerAttributes.divineFavor <= 0) {
-        god.hasWrath = true;
-      } else if (playerAttributes.divineFavor >= 25) {
-        god.hasWrath = false;
-      }
+        // Update engine if it's time to execute a turn
+        if (WorldManager.executeTurn) {
+          WorldManager.turnCount += 1;
 
-      // Check player health for DEATH
-      if (playerAttributes.health <= 0) {
-        WorldManager.state = WorldManager.State.DEAD;
-      }
+          WorldManager.engine.update(delta);
 
-      worldRenderer.render(delta, wrathFade);
-      hudRenderer.render(delta);
+          WorldManager.executeTurn = false;
+        }
 
-      console.draw();
+        // Start tweens
+        if (WorldManager.tweens.size > 0) {
+          WorldManager.state = WorldManager.State.WAITING;
+          Timeline timeline = Timeline.createParallel();
+
+          for (int i = 0; i < WorldManager.tweens.size; i++) {
+            timeline.push(WorldManager.tweens.get(i));
+            WorldManager.tweens.removeIndex(i);
+          }
+
+          timeline.setCallback(
+              (type, source) -> {
+                if (type == TweenCallback.COMPLETE) {
+                  WorldManager.state = WorldManager.State.PLAYING;
+                }
+              }
+          ).start(Main.tweenManager);
+        }
+
+        Main.tweenManager.update(delta);
+
+        // Check for WRATH
+        if (playerAttributes.divineFavor <= 0) {
+          god.hasWrath = true;
+        } else if (playerAttributes.divineFavor >= 25) {
+          god.hasWrath = false;
+        }
+
+        // Check player health for DEATH
+        if (playerAttributes.health <= 0) {
+          WorldManager.state = WorldManager.State.DEAD;
+        }
+
+        worldRenderer.render(delta, wrathFade);
+        hudRenderer.render(delta);
+
+        console.draw();
+        break;
     }
   }
 

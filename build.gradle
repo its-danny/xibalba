@@ -1,6 +1,6 @@
-task makeDataManifest {
+task updateDataManifest {
     group "Xibalba"
-    description "Generate data/manifest.yaml"
+    description "Generate core/assets/data/manifest.yaml"
 
     doLast {
         HashMap<String, Collection> mapped = new HashMap<>()
@@ -39,7 +39,7 @@ allprojects {
     apply plugin: "eclipse"
     apply plugin: "idea"
 
-    version = "alpha-2018"
+    version = "alpha-${new Date().time}"
 
     ext {
         appName = "xibalba"

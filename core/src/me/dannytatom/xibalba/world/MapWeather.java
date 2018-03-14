@@ -6,6 +6,7 @@ import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.graphics.Colors;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
+
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.RainDropComponent;
@@ -13,7 +14,6 @@ import me.dannytatom.xibalba.components.VisualComponent;
 import me.dannytatom.xibalba.utils.ComponentMappers;
 
 public class MapWeather {
-  private final int mapIndex;
   private final ImmutableArray<Entity> rainDrops;
   private final Sprite falling;
   private final Sprite splash;
@@ -26,7 +26,6 @@ public class MapWeather {
    * @param mapIndex The map we're working on
    */
   public MapWeather(int mapIndex) {
-    this.mapIndex = mapIndex;
 
     for (int i = 0; i < 250; i++) {
       Entity drop = WorldManager.entityFactory.createRainDrop();

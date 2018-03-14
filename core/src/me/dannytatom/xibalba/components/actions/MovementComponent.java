@@ -8,6 +8,11 @@ public class MovementComponent implements Component {
 
   public final Vector2 pos;
 
+  /**
+   * Component for movement.
+   *
+   * @param pos Target position on the current map
+   */
   public MovementComponent(Vector2 pos) {
     this.pos = pos;
   }

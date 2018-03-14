@@ -11,17 +11,19 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+
+import java.util.ArrayList;
+import java.util.Map;
+
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.ui.ActionButton;
 import me.dannytatom.xibalba.utils.PlayerSetup;
 import me.dannytatom.xibalba.utils.yaml.AbilityData;
 import me.dannytatom.xibalba.utils.yaml.GodData;
+
 import org.apache.commons.lang3.text.WordUtils;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
-
-import java.util.ArrayList;
-import java.util.Map;
 
 class GodScreen implements Screen {
   private final PlayerSetup playerSetup;
@@ -33,7 +35,7 @@ class GodScreen implements Screen {
   private int godSelected = 0;
 
   /**
-   * Character Creation: GodData Screen.
+   * Character Creation: God Screen.
    *
    * @param main        Instance of main class
    * @param playerSetup Instance of PlayerSetup (used to store creation info)
@@ -72,8 +74,8 @@ class GodScreen implements Screen {
     titleGroup.addActor(title);
 
     Label instructions = new Label(
-      "[LIGHT_GRAY]Up & down to navigate gods, enter to select.",
-      Main.skin
+        "[LIGHT_GRAY]Up & down to navigate gods, enter to select.",
+        Main.skin
     );
     titleGroup.addActor(instructions);
 
@@ -110,10 +112,10 @@ class GodScreen implements Screen {
   @Override
   public void render(float delta) {
     Gdx.gl.glClearColor(
-      Colors.get("screenBackground").r,
-      Colors.get("screenBackground").g,
-      Colors.get("screenBackground").b,
-      Colors.get("screenBackground").a
+        Colors.get("screenBackground").r,
+        Colors.get("screenBackground").g,
+        Colors.get("screenBackground").b,
+        Colors.get("screenBackground").a
     );
 
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -174,8 +176,8 @@ class GodScreen implements Screen {
       AbilityData details = (AbilityData) yaml.load(Main.abilitiesData.get(ability));
 
       abilityGroup.addActor(
-        new Label(
-          createAbilityText(details), Main.skin)
+          new Label(
+              createAbilityText(details), Main.skin)
       );
     });
   }
@@ -191,7 +193,8 @@ class GodScreen implements Screen {
     if (abilityData.type == AbilityData.Type.PASSIVE) {
       return abilityData.name + "[LIGHT_GRAY] Passive\n[DARK_GRAY]" + desc;
     } else {
-      return abilityData.name + "[LIGHT_GRAY] Usable every " + abilityData.recharge + " turns\n" + "[DARK_GRAY]" + desc;
+      return abilityData.name + "[LIGHT_GRAY] Usable every "
+          + abilityData.recharge + " turns\n" + "[DARK_GRAY]" + desc;
     }
   }
 

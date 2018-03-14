@@ -2,9 +2,10 @@ package me.dannytatom.xibalba.utils;
 
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.math.Vector2;
-import me.dannytatom.xibalba.Main;
 
 import java.util.Random;
+
+import me.dannytatom.xibalba.Main;
 
 public class CameraShake {
   public float time;
@@ -58,8 +59,8 @@ public class CameraShake {
       currentTime = 0;
 
       camera.position.set(
-        position.x * Main.SPRITE_WIDTH,
-        position.y * Main.SPRITE_HEIGHT, 0
+          position.x * Main.SPRITE_WIDTH,
+          position.y * Main.SPRITE_HEIGHT, 0
       );
     }
   }

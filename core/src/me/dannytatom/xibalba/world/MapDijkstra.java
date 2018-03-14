@@ -3,21 +3,25 @@ package me.dannytatom.xibalba.world;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+
 import me.dannytatom.xibalba.utils.ComponentMappers;
 
 public class MapDijkstra {
+  private final Dijkstra[] wanderLand = new Dijkstra[5];
+  private final Dijkstra[] wanderWater = new Dijkstra[3];
+  private final Map map;
   public Array<Vector2> exploreGoals;
-  public Dijkstra[] wanderLand = new Dijkstra[5];
-  public Dijkstra[] wanderWater = new Dijkstra[3];
-  public Dijkstra targetPlayerLand;
-  public Dijkstra targetPlayerWater;
-  public Dijkstra playerExplore;
-  private Map map;
+  private Dijkstra targetPlayerLand;
+  private Dijkstra targetPlayerWater;
+  private Dijkstra playerExplore;
 
   public MapDijkstra(Map map) {
     this.map = map;
   }
 
+  /**
+   * Update all djikstra maps.
+   */
   public void updateAll() {
     updateWanderLand();
     updateWanderWater();
@@ -26,7 +30,10 @@ public class MapDijkstra {
     updatePlayerExplore();
   }
 
-  public void updateWanderLand() {
+  /**
+   * Update wanderLand map.
+   */
+  private void updateWanderLand() {
     for (int i = 0; i < wanderLand.length; i++) {
       Array<Vector2> goal = new Array<>();
       goal.add(WorldManager.mapHelpers.getRandomOpenPositionOnLand(map.depth));
@@ -39,11 +46,20 @@ public class MapDijkstra {
     }
   }
 
+  /**
+   * Find a wandering path on land.
+   *
+   * @param start Starting position
+   * @return A path
+   */
   public Array<Vector2> findWanderLandPath(Vector2 start) {
     return wanderLand[MathUtils.random(0, wanderLand.length - 1)].findPath(start);
   }
 
-  public void updateWanderWater() {
+  /**
+   * Update wanderWater map.
+   */
+  private void updateWanderWater() {
     if (map.hasWater) {
       for (int i = 0; i < wanderWater.length; i++) {
         Array<Vector2> goal = new Array<>();
@@ -57,6 +73,12 @@ public class MapDijkstra {
     }
   }
 
+  /**
+   * Find a wandering path in water.
+   *
+   * @param start Starting position
+   * @return A path
+   */
   public Array<Vector2> findWanderWaterPath(Vector2 start) {
     if (map.hasWater) {
       return wanderWater[MathUtils.random(0, wanderWater.length - 1)].findPath(start);
@@ -69,6 +91,9 @@ public class MapDijkstra {
     return playerExplore.findPath(start);
   }
 
+  /**
+   * Update targetPlayerLand map.
+   */
   public void updateTargetPlayerLand() {
     Vector2 position = ComponentMappers.position.get(WorldManager.player).pos;
     Array<Vector2> goals = new Array<>();
@@ -85,7 +110,10 @@ public class MapDijkstra {
     return targetPlayerLand.findPath(start);
   }
 
-  public void updateTargetPlayerWater() {
+  /**
+   * Update targetPlayerWater map.
+   */
+  private void updateTargetPlayerWater() {
     Vector2 position = ComponentMappers.position.get(WorldManager.player).pos;
     Array<Vector2> goals = new Array<>();
     goals.add(position);
@@ -101,6 +129,9 @@ public class MapDijkstra {
     return targetPlayerWater.findPath(start);
   }
 
+  /**
+   * Update playerExplore map.
+   */
   public void updatePlayerExplore() {
     exploreGoals = new Array<>();
 

@@ -6,15 +6,20 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
-import me.dannytatom.xibalba.components.*;
+
+import java.util.Objects;
+
+import me.dannytatom.xibalba.components.AttributesComponent;
+import me.dannytatom.xibalba.components.ItemComponent;
+import me.dannytatom.xibalba.components.MouseMovementComponent;
+import me.dannytatom.xibalba.components.PlayerComponent;
+import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.actions.ExploreComponent;
 import me.dannytatom.xibalba.components.actions.MovementComponent;
 import me.dannytatom.xibalba.components.actions.RangeComponent;
 import me.dannytatom.xibalba.components.items.WeaponComponent;
 import me.dannytatom.xibalba.utils.ComponentMappers;
 import me.dannytatom.xibalba.world.WorldManager;
-
-import java.util.Objects;
 
 public class PlayerInput implements InputProcessor {
   private final OrthographicCamera worldCamera;
@@ -40,96 +45,128 @@ public class PlayerInput implements InputProcessor {
       case Keys.NUMPAD_8:
         keyHeld = Keys.NUMPAD_8;
 
-        if (WorldManager.state == WorldManager.State.PLAYING) {
-          handleMovement(attributes.energy, new Vector2(position.pos.x, position.pos.y + 1));
-        } else if (WorldManager.state == WorldManager.State.TARGETING) {
-          WorldManager.inputHelpers.handleTargeting(new Vector2(0, 1));
-        } else if (WorldManager.state == WorldManager.State.LOOKING) {
-          handleLooking(new Vector2(0, 1), false);
+        switch (WorldManager.state) {
+          case PLAYING:
+            handleMovement(attributes.energy, new Vector2(position.pos.x, position.pos.y + 1));
+            break;
+          case TARGETING:
+            WorldManager.inputHelpers.handleTargeting(new Vector2(0, 1));
+            break;
+          case LOOKING:
+            handleLooking(new Vector2(0, 1), false);
+            break;
         }
         break;
       // Move North East
       case Keys.NUMPAD_9:
         keyHeld = Keys.NUMPAD_9;
 
-        if (WorldManager.state == WorldManager.State.PLAYING) {
-          handleMovement(attributes.energy, new Vector2(position.pos.x + 1, position.pos.y + 1));
-        } else if (WorldManager.state == WorldManager.State.TARGETING) {
-          WorldManager.inputHelpers.handleTargeting(new Vector2(1, 1));
-        } else if (WorldManager.state == WorldManager.State.LOOKING) {
-          handleLooking(new Vector2(1, 1), false);
+        switch (WorldManager.state) {
+          case PLAYING:
+            handleMovement(attributes.energy, new Vector2(position.pos.x + 1, position.pos.y + 1));
+            break;
+          case TARGETING:
+            WorldManager.inputHelpers.handleTargeting(new Vector2(1, 1));
+            break;
+          case LOOKING:
+            handleLooking(new Vector2(1, 1), false);
+            break;
         }
         break;
       // Move East
       case Keys.NUMPAD_6:
         keyHeld = Keys.NUMPAD_6;
 
-        if (WorldManager.state == WorldManager.State.PLAYING) {
-          handleMovement(attributes.energy, new Vector2(position.pos.x + 1, position.pos.y));
-        } else if (WorldManager.state == WorldManager.State.TARGETING) {
-          WorldManager.inputHelpers.handleTargeting(new Vector2(1, 0));
-        } else if (WorldManager.state == WorldManager.State.LOOKING) {
-          handleLooking(new Vector2(1, 0), false);
+        switch (WorldManager.state) {
+          case PLAYING:
+            handleMovement(attributes.energy, new Vector2(position.pos.x + 1, position.pos.y));
+            break;
+          case TARGETING:
+            WorldManager.inputHelpers.handleTargeting(new Vector2(1, 0));
+            break;
+          case LOOKING:
+            handleLooking(new Vector2(1, 0), false);
+            break;
         }
         break;
       // Move South East
       case Keys.NUMPAD_3:
         keyHeld = Keys.NUMPAD_3;
 
-        if (WorldManager.state == WorldManager.State.PLAYING) {
-          handleMovement(attributes.energy, new Vector2(position.pos.x + 1, position.pos.y - 1));
-        } else if (WorldManager.state == WorldManager.State.TARGETING) {
-          WorldManager.inputHelpers.handleTargeting(new Vector2(1, -1));
-        } else if (WorldManager.state == WorldManager.State.LOOKING) {
-          handleLooking(new Vector2(1, -1), false);
+        switch (WorldManager.state) {
+          case PLAYING:
+            handleMovement(attributes.energy, new Vector2(position.pos.x + 1, position.pos.y - 1));
+            break;
+          case TARGETING:
+            WorldManager.inputHelpers.handleTargeting(new Vector2(1, -1));
+            break;
+          case LOOKING:
+            handleLooking(new Vector2(1, -1), false);
+            break;
         }
         break;
       // Move South
       case Keys.NUMPAD_2:
         keyHeld = Keys.NUMPAD_2;
 
-        if (WorldManager.state == WorldManager.State.PLAYING) {
-          handleMovement(attributes.energy, new Vector2(position.pos.x, position.pos.y - 1));
-        } else if (WorldManager.state == WorldManager.State.TARGETING) {
-          WorldManager.inputHelpers.handleTargeting(new Vector2(0, -1));
-        } else if (WorldManager.state == WorldManager.State.LOOKING) {
-          handleLooking(new Vector2(0, -1), false);
+        switch (WorldManager.state) {
+          case PLAYING:
+            handleMovement(attributes.energy, new Vector2(position.pos.x, position.pos.y - 1));
+            break;
+          case TARGETING:
+            WorldManager.inputHelpers.handleTargeting(new Vector2(0, -1));
+            break;
+          case LOOKING:
+            handleLooking(new Vector2(0, -1), false);
+            break;
         }
         break;
       // Move South West
       case Keys.NUMPAD_1:
         keyHeld = Keys.NUMPAD_1;
 
-        if (WorldManager.state == WorldManager.State.PLAYING) {
-          handleMovement(attributes.energy, new Vector2(position.pos.x - 1, position.pos.y - 1));
-        } else if (WorldManager.state == WorldManager.State.TARGETING) {
-          WorldManager.inputHelpers.handleTargeting(new Vector2(-1, -1));
-        } else if (WorldManager.state == WorldManager.State.LOOKING) {
-          handleLooking(new Vector2(-1, -1), false);
+        switch (WorldManager.state) {
+          case PLAYING:
+            handleMovement(attributes.energy, new Vector2(position.pos.x - 1, position.pos.y - 1));
+            break;
+          case TARGETING:
+            WorldManager.inputHelpers.handleTargeting(new Vector2(-1, -1));
+            break;
+          case LOOKING:
+            handleLooking(new Vector2(-1, -1), false);
+            break;
         }
         break;
       // Move West
       case Keys.NUMPAD_4:
         keyHeld = Keys.NUMPAD_4;
 
-        if (WorldManager.state == WorldManager.State.PLAYING) {
-          handleMovement(attributes.energy, new Vector2(position.pos.x - 1, position.pos.y));
-        } else if (WorldManager.state == WorldManager.State.TARGETING) {
-          WorldManager.inputHelpers.handleTargeting(new Vector2(-1, 0));
-        } else if (WorldManager.state == WorldManager.State.LOOKING) {
-          handleLooking(new Vector2(-1, 0), false);
+        switch (WorldManager.state) {
+          case PLAYING:
+            handleMovement(attributes.energy, new Vector2(position.pos.x - 1, position.pos.y));
+            break;
+          case TARGETING:
+            WorldManager.inputHelpers.handleTargeting(new Vector2(-1, 0));
+            break;
+          case LOOKING:
+            handleLooking(new Vector2(-1, 0), false);
+            break;
         }
         break;
       // Move North West
       case Keys.NUMPAD_7:
         keyHeld = Keys.NUMPAD_7;
 
-        if (WorldManager.state == WorldManager.State.PLAYING) {
-          handleMovement(attributes.energy, new Vector2(position.pos.x - 1, position.pos.y + 1));
-        } else if (WorldManager.state == WorldManager.State.TARGETING) {
-          WorldManager.inputHelpers.handleTargeting(new Vector2(-1, 1));
-        } else if (WorldManager.state == WorldManager.State.LOOKING) {
-          handleLooking(new Vector2(-1, 1), false);
+        switch (WorldManager.state) {
+          case PLAYING:
+            handleMovement(attributes.energy, new Vector2(position.pos.x - 1, position.pos.y + 1));
+            break;
+          case TARGETING:
+            WorldManager.inputHelpers.handleTargeting(new Vector2(-1, 1));
+            break;
+          case LOOKING:
+            handleLooking(new Vector2(-1, 1), false);
+            break;
         }
         break;
       // Look
@@ -148,7 +185,7 @@ public class PlayerInput implements InputProcessor {
 
             if (Objects.equals(weaponDetails.type, "range")) {
               if (WorldManager.itemHelpers.hasAmmunitionOfType(WorldManager.player,
-                weaponDetails.ammunitionType)) {
+                  weaponDetails.ammunitionType)) {
                 WorldManager.inputHelpers.startTargeting();
               } else {
                 WorldManager.log.add("inventory.noAmmunitionAvailable");
@@ -165,7 +202,7 @@ public class PlayerInput implements InputProcessor {
       case Keys.T: {
         if (WorldManager.state == WorldManager.State.PLAYING) {
           Entity primaryWeapon
-            = WorldManager.itemHelpers.getRightHand(WorldManager.player);
+              = WorldManager.itemHelpers.getRightHand(WorldManager.player);
 
           if (primaryWeapon != null) {
             ItemComponent itemDetails = ComponentMappers.item.get(primaryWeapon);
@@ -185,7 +222,7 @@ public class PlayerInput implements InputProcessor {
       case Keys.D: {
         if (WorldManager.state == WorldManager.State.PLAYING) {
           Entity primaryWeapon
-            = WorldManager.itemHelpers.getRightHand(WorldManager.player);
+              = WorldManager.itemHelpers.getRightHand(WorldManager.player);
 
           if (primaryWeapon != null) {
             WorldManager.itemHelpers.drop(WorldManager.player, primaryWeapon);
@@ -278,7 +315,7 @@ public class PlayerInput implements InputProcessor {
       } else {
         if (ComponentMappers.mouseMovement.get(WorldManager.player) == null) {
           if (WorldManager.mapHelpers.cellExists(mousePosition)
-            && !WorldManager.mapHelpers.getCell(mousePosition.x, mousePosition.y).hidden) {
+              && !WorldManager.mapHelpers.getCell(mousePosition.x, mousePosition.y).hidden) {
             WorldManager.player.add(new MouseMovementComponent());
 
             WorldManager.state = WorldManager.State.MOVING;
@@ -312,37 +349,41 @@ public class PlayerInput implements InputProcessor {
     Vector2 relativeToPlayer = mousePosition.cpy().sub(playerPosition.pos);
 
     if (playerDetails.target != null
-      && playerDetails.target.epsilonEquals(mousePosition, 0.00001f)) {
+        && playerDetails.target.epsilonEquals(mousePosition, 0.00001f)) {
       return false;
     }
 
-    if (WorldManager.state == WorldManager.State.PLAYING) {
-      playerDetails.target = null;
-      playerDetails.path = null;
+    switch (WorldManager.state) {
+      case PLAYING:
+        playerDetails.target = null;
+        playerDetails.path = null;
 
-      if (WorldManager.mapHelpers.cellExists(mousePosition)) {
-        handleLooking(relativeToPlayer, true);
+        if (WorldManager.mapHelpers.cellExists(mousePosition)) {
+          handleLooking(relativeToPlayer, true);
 
-        return true;
-      }
-    } else if (WorldManager.state == WorldManager.State.LOOKING) {
-      playerDetails.target = null;
-      playerDetails.path = null;
+          return true;
+        }
+        break;
+      case LOOKING:
+        playerDetails.target = null;
+        playerDetails.path = null;
 
-      if (WorldManager.mapHelpers.cellExists(mousePosition)) {
-        handleLooking(relativeToPlayer, false);
+        if (WorldManager.mapHelpers.cellExists(mousePosition)) {
+          handleLooking(relativeToPlayer, false);
 
-        return true;
-      }
-    } else if (WorldManager.state == WorldManager.State.TARGETING) {
-      playerDetails.target = null;
-      playerDetails.path = null;
+          return true;
+        }
+        break;
+      case TARGETING:
+        playerDetails.target = null;
+        playerDetails.path = null;
 
-      if (WorldManager.mapHelpers.cellExists(mousePosition)) {
-        WorldManager.inputHelpers.handleTargeting(relativeToPlayer);
+        if (WorldManager.mapHelpers.cellExists(mousePosition)) {
+          WorldManager.inputHelpers.handleTargeting(relativeToPlayer);
 
-        return true;
-      }
+          return true;
+        }
+        break;
     }
 
     return false;
@@ -392,7 +433,7 @@ public class PlayerInput implements InputProcessor {
 
   private void handleLooking(Vector2 pos, boolean careAboutWalls) {
     WorldManager.mapHelpers.createLookingPath(
-      ComponentMappers.position.get(WorldManager.player).pos, pos, careAboutWalls
+        ComponentMappers.position.get(WorldManager.player).pos, pos, careAboutWalls
     );
   }
 

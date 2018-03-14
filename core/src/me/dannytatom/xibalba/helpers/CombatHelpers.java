@@ -4,8 +4,19 @@ import aurelienribon.tweenengine.Tween;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+
+import java.util.Objects;
+
 import me.dannytatom.xibalba.Main;
-import me.dannytatom.xibalba.components.*;
+import me.dannytatom.xibalba.components.AttributesComponent;
+import me.dannytatom.xibalba.components.BodyComponent;
+import me.dannytatom.xibalba.components.BrainComponent;
+import me.dannytatom.xibalba.components.EffectsComponent;
+import me.dannytatom.xibalba.components.GodComponent;
+import me.dannytatom.xibalba.components.ItemComponent;
+import me.dannytatom.xibalba.components.PlayerComponent;
+import me.dannytatom.xibalba.components.SkillsComponent;
+import me.dannytatom.xibalba.components.VisualComponent;
 import me.dannytatom.xibalba.components.actions.MeleeComponent;
 import me.dannytatom.xibalba.components.actions.RangeComponent;
 import me.dannytatom.xibalba.components.items.WeaponComponent;
@@ -15,8 +26,9 @@ import me.dannytatom.xibalba.utils.ComponentMappers;
 import me.dannytatom.xibalba.utils.SpriteAccessor;
 import me.dannytatom.xibalba.world.WorldManager;
 
-import java.util.Objects;
-
+/**
+ * https://github.com/dannytatom/xibalba/wiki/Combat
+ */
 public class CombatHelpers {
   public CombatHelpers() {
 
@@ -66,13 +78,13 @@ public class CombatHelpers {
       WeaponComponent weapon = ComponentMappers.weapon.get(primaryWeapon);
 
       Entity item = WorldManager.itemHelpers.getAmmunitionOfType(
-        WorldManager.player, weapon.ammunitionType
+          WorldManager.player, weapon.ammunitionType
       );
 
       ItemComponent itemDetails = ComponentMappers.item.get(item);
 
       WorldManager.player.add(
-        new RangeComponent(position, item, itemDetails.skill, bodyPart, isFocused)
+          new RangeComponent(position, item, itemDetails.skill, bodyPart, isFocused)
       );
     }
   }
@@ -141,8 +153,8 @@ public class CombatHelpers {
       }
 
       int damage = rollDamage(Objects.equals(skill, "throwing")
-        ? AttackType.THROW
-        : AttackType.RANGE, starter, target, item, hit, bodyPart);
+          ? AttackType.THROW
+          : AttackType.RANGE, starter, target, item, hit, bodyPart);
 
       applyDamage(starter, target, item, damage, skill, bodyPart, isFocused);
     } else {
@@ -193,7 +205,7 @@ public class CombatHelpers {
     VisualComponent targetVisual = ComponentMappers.visual.get(target);
 
     WorldManager.tweens.add(
-      Tween.to(targetVisual.sprite, SpriteAccessor.ALPHA, .05f).target(.25f).repeatYoyo(1, 0f)
+        Tween.to(targetVisual.sprite, SpriteAccessor.ALPHA, .05f).target(.25f).repeatYoyo(1, 0f)
     );
 
     // Ya didn't miss!
@@ -212,7 +224,7 @@ public class CombatHelpers {
 
         if (item != null) {
           baseDamage += MathUtils.random(
-            1, ComponentMappers.item.get(item).attributes.get("hitDamage")
+              1, ComponentMappers.item.get(item).attributes.get("hitDamage")
           );
         }
 
@@ -220,7 +232,7 @@ public class CombatHelpers {
       case RANGE:
         if (item != null) {
           baseDamage += MathUtils.random(
-            1, ComponentMappers.item.get(item).attributes.get("shotDamage")
+              1, ComponentMappers.item.get(item).attributes.get("shotDamage")
           );
         }
 
@@ -228,7 +240,7 @@ public class CombatHelpers {
       case THROW:
         if (item != null) {
           baseDamage += MathUtils.random(
-            1, ComponentMappers.item.get(item).attributes.get("throwDamage")
+              1, ComponentMappers.item.get(item).attributes.get("throwDamage")
           );
         }
 
@@ -269,8 +281,8 @@ public class CombatHelpers {
     // Modify based on abilities
 
     if (ComponentMappers.abilities.has(starter)
-      && ComponentMappers.abilities.get(starter).abilities.get("Bonus against Animals") != null
-      && ComponentMappers.attributes.get(target).type == AttributesComponent.Type.ANIMAL) {
+        && ComponentMappers.abilities.get(starter).abilities.get("Bonus against Animals") != null
+        && ComponentMappers.attributes.get(target).type == AttributesComponent.Type.ANIMAL) {
       totalDamage += MathUtils.random(1, 4);
     }
 
@@ -280,8 +292,8 @@ public class CombatHelpers {
     AttributesComponent targetAttributes = ComponentMappers.attributes.get(target);
 
     if (ComponentMappers.player.has(target)
-      && targetAttributes.divineFavor <= 0
-      && god.wrath.contains("Animals do more damage")) {
+        && targetAttributes.divineFavor <= 0
+        && god.wrath.contains("Animals do more damage")) {
       if (ComponentMappers.attributes.get(starter).type == AttributesComponent.Type.ANIMAL) {
         totalDamage += MathUtils.random(1, 8);
       }
@@ -376,10 +388,10 @@ public class CombatHelpers {
 
       if (addEffect) {
         if (bodyPart.contains("leg") && !ComponentMappers.crippled.has(target)) {
-          target.add(new CrippledComponent());
+          target.add(new CrippledComponent(4));
           WorldManager.log.add("effects.crippled.started", getName(starter), getName(target));
         } else if (bodyPart.contains("body") && !ComponentMappers.bleeding.has(target)) {
-          target.add(new BleedingComponent());
+          target.add(new BleedingComponent(5));
           WorldManager.log.add("effects.bleeding.started", getName(starter), getName(target));
         }
       }
@@ -390,7 +402,7 @@ public class CombatHelpers {
       if (isFocused && MathUtils.random() > .75) {
         if (starterAttributes.agility < 12) {
           starterAttributes.agility
-            = starterAttributes.agility == 0 ? 4 : starterAttributes.agility + 2;
+              = starterAttributes.agility == 0 ? 4 : starterAttributes.agility + 2;
         }
 
         if (ComponentMappers.player.has(starter)) {
@@ -419,19 +431,19 @@ public class CombatHelpers {
             case "agility":
               if (starterAttributes.agility < 12) {
                 starterAttributes.agility
-                  = starterAttributes.agility == 0 ? 4 : starterAttributes.agility + 2;
+                    = starterAttributes.agility == 0 ? 4 : starterAttributes.agility + 2;
               }
               break;
             case "strength":
               if (starterAttributes.strength < 12) {
                 starterAttributes.strength
-                  = starterAttributes.strength == 0 ? 4 : starterAttributes.strength + 2;
+                    = starterAttributes.strength == 0 ? 4 : starterAttributes.strength + 2;
               }
               break;
             case "toughness":
               if (starterAttributes.toughness < 12) {
                 starterAttributes.toughness
-                  = starterAttributes.toughness == 0 ? 4 : starterAttributes.toughness + 2;
+                    = starterAttributes.toughness == 0 ? 4 : starterAttributes.toughness + 2;
               }
               break;
             default:
@@ -466,7 +478,7 @@ public class CombatHelpers {
             PlayerComponent playerDetails = ComponentMappers.player.get(starter);
 
             if (playerDetails != null
-              && !playerDetails.identifiedItems.contains(itemDetails.name, true)) {
+                && !playerDetails.identifiedItems.contains(itemDetails.name, true)) {
               playerDetails.identifiedItems.add(itemDetails.name);
             }
           }
@@ -476,9 +488,9 @@ public class CombatHelpers {
       // Log some shit
 
       WorldManager.log.add(
-        "combat.hit", getName(starter),
-        (item == null ? "hit" : ComponentMappers.item.get(item).verbs.random()),
-        getName(target), totalDamage, bodyPart
+          "combat.hit", getName(starter),
+          (item == null ? "hit" : ComponentMappers.item.get(item).verbs.random()),
+          getName(target), totalDamage, bodyPart
       );
 
       // Kill it?
@@ -491,12 +503,12 @@ public class CombatHelpers {
           playerDetails.totalKills += 1;
 
           if (ComponentMappers.god.get(WorldManager.god).hates.contains("Unworthy prey")
-            && ComponentMappers.enemy.get(target).attacksToKill <= 10) {
+              && ComponentMappers.enemy.get(target).attacksToKill <= 10) {
             ComponentMappers.attributes.get(starter).divineFavor -= MathUtils.random(1, 10);
 
             WorldManager.log.add(
-              "attributes.divineFavor.decreased",
-              ComponentMappers.god.get(WorldManager.god).name
+                "attributes.divineFavor.decreased",
+                ComponentMappers.god.get(WorldManager.god).name
             );
           }
 
@@ -510,7 +522,7 @@ public class CombatHelpers {
 
   private String getName(Entity entity) {
     return ComponentMappers.player.has(entity)
-      ? "You" : ComponentMappers.attributes.get(entity).name;
+        ? "You" : ComponentMappers.attributes.get(entity).name;
   }
 
   private enum AttackType {

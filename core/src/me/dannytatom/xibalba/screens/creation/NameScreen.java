@@ -11,12 +11,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+
+import java.util.Objects;
+
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.screens.GeneratingWorldScreen;
 import me.dannytatom.xibalba.ui.ActionButton;
 import me.dannytatom.xibalba.utils.PlayerSetup;
-
-import java.util.Objects;
 
 class NameScreen implements Screen {
   private final Main main;
@@ -93,10 +94,10 @@ class NameScreen implements Screen {
   @Override
   public void render(float delta) {
     Gdx.gl.glClearColor(
-      Colors.get("screenBackground").r,
-      Colors.get("screenBackground").g,
-      Colors.get("screenBackground").b,
-      Colors.get("screenBackground").a
+        Colors.get("screenBackground").r,
+        Colors.get("screenBackground").g,
+        Colors.get("screenBackground").b,
+        Colors.get("screenBackground").a
     );
 
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);

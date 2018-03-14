@@ -2,6 +2,7 @@ package me.dannytatom.xibalba.systems.statuses;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
+
 import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.statuses.PoisonedComponent;
 import me.dannytatom.xibalba.systems.UsesEnergySystem;
@@ -27,7 +28,7 @@ public class PoisonedSystem extends UsesEnergySystem {
         AttributesComponent attributes = ComponentMappers.attributes.get(entity);
 
         WorldManager.log.add(
-          "effects.poisoned.tookDamage", (isPlayer ? "You" : attributes.name), poisoned.damage
+            "effects.poisoned.tookDamage", (isPlayer ? "You" : attributes.name), poisoned.damage
         );
 
         if (attributes.health <= 0) {

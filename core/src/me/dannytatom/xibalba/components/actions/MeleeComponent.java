@@ -11,7 +11,7 @@ public class MeleeComponent implements Component {
   public final boolean isFocused;
 
   /**
-   * Component for melee combat.
+   * Component for doing a melee attack.
    *
    * @param target    Who they're attacking
    * @param bodyPart  Where on that entity they're attacking

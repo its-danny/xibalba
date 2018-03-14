@@ -3,6 +3,7 @@ package me.dannytatom.xibalba.systems;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.math.Vector2;
+
 import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.BrainComponent;
 import me.dannytatom.xibalba.components.actions.MovementComponent;

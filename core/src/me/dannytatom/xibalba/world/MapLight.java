@@ -5,6 +5,7 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
+
 import me.dannytatom.xibalba.components.LightComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.utils.ComponentMappers;
@@ -68,7 +69,7 @@ public class MapLight {
         }
 
         float[][] map = caster.calculateFov(
-          fovMap, (int) position.pos.x, (int) position.pos.y, radius
+            fovMap, (int) position.pos.x, (int) position.pos.y, radius
         );
 
         int colorIndex = MathUtils.random(0, light.colors.size() - 1);

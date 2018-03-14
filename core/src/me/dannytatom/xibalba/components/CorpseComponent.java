@@ -17,8 +17,8 @@ public class CorpseComponent implements Component {
    * @param parts    What parts it has that can be dismembered
    * @param wearable What parts of it are wearable
    */
-  public CorpseComponent(String entity, AttributesComponent.Type type, TreeMap<String, Integer> parts,
-                         TreeMap<String, String> wearable) {
+  public CorpseComponent(String entity, AttributesComponent.Type type,
+                         TreeMap<String, Integer> parts, TreeMap<String, String> wearable) {
     this.entity = entity;
     this.type = type;
     this.parts = parts;

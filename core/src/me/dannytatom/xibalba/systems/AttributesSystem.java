@@ -2,6 +2,7 @@ package me.dannytatom.xibalba.systems;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
+
 import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.utils.ComponentMappers;
 

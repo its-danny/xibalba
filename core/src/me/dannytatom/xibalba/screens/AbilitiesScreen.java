@@ -11,14 +11,16 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+
+import java.util.HashMap;
+
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.ui.ActionButton;
 import me.dannytatom.xibalba.utils.ComponentMappers;
 import me.dannytatom.xibalba.utils.yaml.AbilityData;
 import me.dannytatom.xibalba.world.WorldManager;
-import org.apache.commons.lang3.text.WordUtils;
 
-import java.util.HashMap;
+import org.apache.commons.lang3.text.WordUtils;
 
 public class AbilitiesScreen implements Screen {
   private final Main main;
@@ -27,6 +29,11 @@ public class AbilitiesScreen implements Screen {
   private final VerticalGroup abilitiesGroup;
   private final HashMap<String, AbilityData> abilities;
 
+  /**
+   * View and use your abilities.
+   *
+   * @param main Instance of Main
+   */
   public AbilitiesScreen(Main main) {
     this.main = main;
 
@@ -85,8 +92,8 @@ public class AbilitiesScreen implements Screen {
         // (e.g. 0 = 7, 1 = 8, etc)
 
         ActionButton button = new ActionButton(
-          i + 1,
-          abilityData.name + " [LIGHT_GRAY]Usable every " + abilityData.recharge + " turns"
+            i + 1,
+            abilityData.name + " [LIGHT_GRAY]Usable every " + abilityData.recharge + " turns"
         );
 
         button.setKeys(i + 8);
@@ -103,11 +110,11 @@ public class AbilitiesScreen implements Screen {
       }
 
       abilitiesGroup.addActor(new Label(
-        "[DARK_GRAY]" + WordUtils.wrap(abilityData.description, 140), Main.skin
+          "[DARK_GRAY]" + WordUtils.wrap(abilityData.description, 140), Main.skin
       ));
 
       abilitiesGroup.addActor(new Label(
-        "[DARK_GRAY]" + (abilityData.recharge - abilityData.counter) + " turns left", Main.skin
+          "[DARK_GRAY]" + (abilityData.recharge - abilityData.counter) + " turns left", Main.skin
       ));
 
       abilitiesGroup.addActor(new Label("", Main.skin));
@@ -117,10 +124,10 @@ public class AbilitiesScreen implements Screen {
   @Override
   public void render(float delta) {
     Gdx.gl.glClearColor(
-      Colors.get("screenBackground").r,
-      Colors.get("screenBackground").g,
-      Colors.get("screenBackground").b,
-      Colors.get("screenBackground").a
+        Colors.get("screenBackground").r,
+        Colors.get("screenBackground").g,
+        Colors.get("screenBackground").b,
+        Colors.get("screenBackground").a
     );
 
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);

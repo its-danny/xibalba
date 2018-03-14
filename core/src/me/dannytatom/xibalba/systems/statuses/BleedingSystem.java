@@ -2,6 +2,7 @@ package me.dannytatom.xibalba.systems.statuses;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
+
 import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.statuses.BleedingComponent;
@@ -32,7 +33,7 @@ public class BleedingSystem extends UsesEnergySystem {
         boolean isPlayer = ComponentMappers.player.has(entity);
 
         WorldManager.log.add(
-          "effects.bleeding.tookDamage", (isPlayer ? "You" : attributes.name), 5
+            "effects.bleeding.tookDamage", (isPlayer ? "You" : attributes.name), 5
         );
 
         if (attributes.health <= 0) {

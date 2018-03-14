@@ -1,12 +1,10 @@
 package me.dannytatom.xibalba.world;
 
 import aurelienribon.tweenengine.Tween;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 
 public class MapCell {
   public final Sprite sprite;
-  public final Color color;
   public final Tween tween;
   public String description;
   public Type type;
@@ -21,17 +19,16 @@ public class MapCell {
    * @param type        whether or not an entity can move onto this cell
    * @param description what this cell like?
    */
-  MapCell(Sprite sprite, Color color, Type type, String description, Tween tween) {
+  MapCell(Sprite sprite, Type type, String description, Tween tween) {
     this.sprite = sprite;
-    this.color = color;
     this.type = type;
     this.covered = Covered.NOTHING;
     this.description = description;
     this.tween = tween;
   }
 
-  MapCell(Sprite sprite, Color color, Type type, String description) {
-    this(sprite, color, type, description, null);
+  MapCell(Sprite sprite, Type type, String description) {
+    this(sprite, type, description, null);
   }
 
   public boolean isNothing() {
@@ -48,10 +45,6 @@ public class MapCell {
 
   public boolean isWater() {
     return type == Type.SHALLOW_WATER || type == Type.DEEP_WATER;
-  }
-
-  public boolean isShallowWater() {
-    return type == Type.SHALLOW_WATER;
   }
 
   public boolean isDeepWater() {

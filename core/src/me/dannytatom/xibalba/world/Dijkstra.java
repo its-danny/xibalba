@@ -2,14 +2,22 @@ package me.dannytatom.xibalba.world;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+
 import org.apache.commons.lang3.ArrayUtils;
 
-public class Dijkstra {
-  private Map map;
-  private MapCell[][] cellMap;
+class Dijkstra {
+  private final Map map;
+  private final MapCell[][] cellMap;
+  private final MapCell.Type[] walkableTypes;
   private int[][] graph;
-  private MapCell.Type[] walkableTypes;
 
+  /**
+   * Dijkstra map.
+   *
+   * @param map           The level map
+   * @param walkableTypes A list of walkable types
+   * @param goals         A list of goals for this dijkstra map
+   */
   public Dijkstra(Map map, MapCell.Type[] walkableTypes, Array<Vector2> goals) {
     this.map = map;
     this.cellMap = this.map.getCellMap();
@@ -23,7 +31,8 @@ public class Dijkstra {
   //
   // Iterate through the graph's "floor" cells -- skip the impassable wall cells.
   // If any floor tile has a value that is at least 2 greater than its lowest-value floor neighbor,
-  // set it to be exactly 1 greater than its lowest value neighbor. Repeat until no changes are made.
+  // set it to be exactly 1 greater than its lowest value neighbor.
+  // Repeat until no changes are made.
   //
   // The resulting grid of numbers represents the number of steps that it
   // will take to get from any given tile to the nearest goal.
@@ -208,13 +217,13 @@ public class Dijkstra {
     return path;
   }
 
-  public int get(int cellX, int cellY) {
+  private int get(int cellX, int cellY) {
     return graph[cellX][cellY];
   }
 
   private boolean canWalk(int cellX, int cellY) {
     return cellX > 0 && cellX < cellMap.length
-      && cellY > 0 && cellY < cellMap[0].length
-      && ArrayUtils.contains(walkableTypes, cellMap[cellX][cellY].type);
+        && cellY > 0 && cellY < cellMap[0].length
+        && ArrayUtils.contains(walkableTypes, cellMap[cellX][cellY].type);
   }
 }

@@ -2,6 +2,7 @@ package me.dannytatom.xibalba.systems.statuses;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
+
 import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.statuses.DrowningComponent;
@@ -16,9 +17,9 @@ public class DrowningSystem extends UsesEnergySystem {
    */
   public DrowningSystem() {
     super(
-      Family.all(
-        DrowningComponent.class, AttributesComponent.class, PositionComponent.class
-      ).get()
+        Family.all(
+            DrowningComponent.class, AttributesComponent.class, PositionComponent.class
+        ).get()
     );
   }
 
@@ -40,7 +41,7 @@ public class DrowningSystem extends UsesEnergySystem {
         boolean isPlayer = ComponentMappers.player.has(entity);
 
         WorldManager.log.add(
-          "effects.drowning.tookDamage", (isPlayer ? "You" : attributes.name), 5
+            "effects.drowning.tookDamage", (isPlayer ? "You" : attributes.name), 5
         );
 
         if (attributes.health <= 0) {

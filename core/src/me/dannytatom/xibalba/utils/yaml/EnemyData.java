@@ -1,9 +1,9 @@
 package me.dannytatom.xibalba.utils.yaml;
 
-import me.dannytatom.xibalba.components.AttributesComponent;
-
 import java.util.HashMap;
 import java.util.TreeMap;
+
+import me.dannytatom.xibalba.components.AttributesComponent;
 
 public class EnemyData {
   public AttributesComponent.Type type;

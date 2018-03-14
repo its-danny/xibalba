@@ -14,14 +14,26 @@ import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+
 import me.dannytatom.xibalba.Main;
-import me.dannytatom.xibalba.components.*;
+import me.dannytatom.xibalba.components.AttributesComponent;
+import me.dannytatom.xibalba.components.BodyComponent;
+import me.dannytatom.xibalba.components.BrainComponent;
+import me.dannytatom.xibalba.components.GodComponent;
+import me.dannytatom.xibalba.components.PlayerComponent;
+import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.actions.ExploreComponent;
-import me.dannytatom.xibalba.screens.*;
+import me.dannytatom.xibalba.screens.AbilitiesScreen;
+import me.dannytatom.xibalba.screens.CharacterScreen;
+import me.dannytatom.xibalba.screens.CraftScreen;
+import me.dannytatom.xibalba.screens.HelpScreen;
+import me.dannytatom.xibalba.screens.MainMenuScreen;
+import me.dannytatom.xibalba.screens.PauseScreen;
 import me.dannytatom.xibalba.ui.ActionButton;
 import me.dannytatom.xibalba.utils.ComponentMappers;
 import me.dannytatom.xibalba.world.MapCell;
 import me.dannytatom.xibalba.world.WorldManager;
+
 import org.apache.commons.lang3.text.WordUtils;
 
 public class HudRenderer {
@@ -191,12 +203,16 @@ public class HudRenderer {
   private void updatePlayerInfo() {
     String name = playerAttributes.name;
 
-    if (WorldManager.state == WorldManager.State.LOOKING) {
-      name += " [DARK_GRAY][LOOKING][]";
-    } else if (WorldManager.state == WorldManager.State.TARGETING) {
-      name += " [DARK_GRAY][TARGETING][]";
-    } else if (WorldManager.state == WorldManager.State.FOCUSED) {
-      name += " [DARK_GRAY][FOCUSED][]";
+    switch (WorldManager.state) {
+      case LOOKING:
+        name += " [DARK_GRAY][LOOKING][]";
+        break;
+      case TARGETING:
+        name += " [DARK_GRAY][TARGETING][]";
+        break;
+      case FOCUSED:
+        name += " [DARK_GRAY][FOCUSED][]";
+        break;
     }
 
     if (playerInfo.getChildren().size == 0) {
@@ -224,7 +240,7 @@ public class HudRenderer {
       enemyInfo.clear();
     } else {
       AttributesComponent enemyAttributes
-        = ComponentMappers.attributes.get(playerDetails.lastHitEntity);
+          = ComponentMappers.attributes.get(playerDetails.lastHitEntity);
       String name = enemyAttributes.name;
 
       if (enemyInfo.getChildren().size == 0) {
@@ -251,10 +267,11 @@ public class HudRenderer {
     String dijkstraInfo = "";
 
     if (Main.debug.debugEnabled) {
-      performanceInfo = "[DARK_GRAY]v0.1.0, FPS: " + Gdx.graphics.getFramesPerSecond() + ", Turn: " + WorldManager.turnCount;
+      performanceInfo = "[DARK_GRAY]v0.1.0, FPS: " + Gdx.graphics.getFramesPerSecond()
+          + ", Turn: " + WorldManager.turnCount;
 
       positionInfo = "[DARK_GRAY]" + playerPosition.pos.toString()
-        + (playerDetails.target != null ? ", " + playerDetails.target.toString() : "");
+          + (playerDetails.target != null ? ", " + playerDetails.target.toString() : "");
     }
 
     if (gameInfo.getChildren().size == 0) {
@@ -340,7 +357,7 @@ public class HudRenderer {
       }
 
       MapCell cell
-        = WorldManager.mapHelpers.getCell(playerDetails.target.x, playerDetails.target.y);
+          = WorldManager.mapHelpers.getCell(playerDetails.target.x, playerDetails.target.y);
       String cellDescription;
 
       if (cell.forgotten) {
@@ -350,7 +367,7 @@ public class HudRenderer {
       }
 
       Entity entity
-        = WorldManager.mapHelpers.getEntityAt(playerDetails.target.x, playerDetails.target.y);
+          = WorldManager.mapHelpers.getEntityAt(playerDetails.target.x, playerDetails.target.y);
 
       if (!WorldManager.entityHelpers.canSee(WorldManager.player, entity)) {
         entity = null;
@@ -378,7 +395,7 @@ public class HudRenderer {
 
           BrainComponent brain = ComponentMappers.brain.get(entity);
           entityName = "[RED]" + enemyAttributes.name
-            + " [DARK_GRAY]" + brain.stateMachine.getCurrentState().name();
+              + " [DARK_GRAY]" + brain.stateMachine.getCurrentState().toString();
 
           entityDescription = WordUtils.wrap(enemyAttributes.description, 50);
         }
@@ -400,16 +417,16 @@ public class HudRenderer {
     table.add(new Label(depth, Main.skin)).left().row();
 
     String hits = "[LIGHT_GRAY]You hit enemies[] " + playerDetails.totalHits
-      + "[LIGHT_GRAY] times and missed[] " + playerDetails.totalMisses;
+        + "[LIGHT_GRAY] times and missed[] " + playerDetails.totalMisses;
     table.add(new Label(hits, Main.skin)).left().row();
 
     String damage = "[LIGHT_GRAY]You did[] " + playerDetails.totalDamageDone
-      + "[LIGHT_GRAY] damage, took[] " + playerDetails.totalDamageReceived
-      + "[LIGHT_GRAY], and healed[] " + playerDetails.totalDamageHealed;
+        + "[LIGHT_GRAY] damage, took[] " + playerDetails.totalDamageReceived
+        + "[LIGHT_GRAY], and healed[] " + playerDetails.totalDamageHealed;
     table.add(new Label(damage, Main.skin)).left().row();
 
     String kills = "[LIGHT_GRAY]You killed[] "
-      + playerDetails.totalKills + "[LIGHT_GRAY] enemies";
+        + playerDetails.totalKills + "[LIGHT_GRAY] enemies";
     table.add(new Label(kills, Main.skin)).left().row();
 
     deathDialog.getButtonTable().pad(5, 0, 0, 0);
@@ -417,7 +434,7 @@ public class HudRenderer {
     deathDialog.show(stage);
 
     deathDialog.setPosition(
-      deathDialog.getX(), deathDialog.getY() + (deathDialog.getY() / 2)
+        deathDialog.getX(), deathDialog.getY() + (deathDialog.getY() / 2)
     );
   }
 
@@ -426,7 +443,7 @@ public class HudRenderer {
 
     String healthTextColor = attributes.health < attributes.maxHealth / 2 ? "[RED]" : "[WHITE]";
     String healthText = healthTextColor + attributes.health
-      + "[LIGHT_GRAY]/" + attributes.maxHealth;
+        + "[LIGHT_GRAY]/" + attributes.maxHealth;
     StringBuilder healthBar = new StringBuilder("[LIGHT_GRAY]HP [[");
 
     for (int i = 0; i < MathUtils.floor(attributes.maxHealth / 10); i++) {
@@ -455,7 +472,8 @@ public class HudRenderer {
       divineFavorColor = "[WHITE]";
     }
 
-    String divineFavorText = divineFavorColor + Math.round(attributes.divineFavor) + "[LIGHT_GRAY]/100";
+    String divineFavorText
+        = divineFavorColor + Math.round(attributes.divineFavor) + "[LIGHT_GRAY]/100";
     StringBuilder divineFavorBar = new StringBuilder("[LIGHT_GRAY]DF [[");
 
     for (int i = 0; i < MathUtils.floor(100 / 10); i++) {
@@ -476,7 +494,7 @@ public class HudRenderer {
 
     String oxygenTextColor = attributes.oxygen < attributes.maxOxygen / 2 ? "[RED]" : "[CYAN]";
     String oxygenText = oxygenTextColor + attributes.oxygen
-      + "[LIGHT_GRAY]/" + attributes.maxOxygen;
+        + "[LIGHT_GRAY]/" + attributes.maxOxygen;
     StringBuilder oxygenBar = new StringBuilder("[LIGHT_GRAY]OX [[");
 
     for (int i = 0; i < MathUtils.floor(attributes.maxOxygen / 4); i++) {
@@ -535,12 +553,16 @@ public class HudRenderer {
 
     PositionComponent focusedPosition = ComponentMappers.position.get(playerDetails.focusedEntity);
 
-    if (playerDetails.focusedAction == PlayerComponent.FocusedAction.MELEE) {
-      WorldManager.combatHelpers.preparePlayerForMelee(playerDetails.focusedEntity, part, true);
-    } else if (playerDetails.focusedAction == PlayerComponent.FocusedAction.THROWING) {
-      WorldManager.combatHelpers.preparePlayerForThrowing(focusedPosition.pos, part, true);
-    } else if (playerDetails.focusedAction == PlayerComponent.FocusedAction.RANGED) {
-      WorldManager.combatHelpers.preparePlayerForRanged(focusedPosition.pos, part, true);
+    switch (playerDetails.focusedAction) {
+      case MELEE:
+        WorldManager.combatHelpers.preparePlayerForMelee(playerDetails.focusedEntity, part, true);
+        break;
+      case THROWING:
+        WorldManager.combatHelpers.preparePlayerForThrowing(focusedPosition.pos, part, true);
+        break;
+      case RANGED:
+        WorldManager.combatHelpers.preparePlayerForRanged(focusedPosition.pos, part, true);
+        break;
     }
 
     WorldManager.state = WorldManager.State.PLAYING;

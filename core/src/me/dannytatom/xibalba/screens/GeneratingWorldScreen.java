@@ -13,6 +13,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Objects;
+
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.components.BrainComponent;
 import me.dannytatom.xibalba.utils.ComponentMappers;
@@ -25,15 +30,17 @@ import me.dannytatom.xibalba.world.WorldManager;
 import me.dannytatom.xibalba.world.generators.CaveGenerator;
 import me.dannytatom.xibalba.world.generators.ForestGenerator;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Objects;
-
 public class GeneratingWorldScreen implements Screen {
   private final Main main;
   private final Stage stage;
   private final PlayerSetup playerSetup;
 
+  /**
+   * World generation screen.
+   *
+   * @param main        Instance of Main
+   * @param playerSetup Holds data for player creation
+   */
   public GeneratingWorldScreen(Main main, PlayerSetup playerSetup) {
     this.main = main;
     this.playerSetup = playerSetup;
@@ -52,10 +59,10 @@ public class GeneratingWorldScreen implements Screen {
   @Override
   public void render(float delta) {
     Gdx.gl.glClearColor(
-      Colors.get("screenBackground").r,
-      Colors.get("screenBackground").g,
-      Colors.get("screenBackground").b,
-      Colors.get("screenBackground").a
+        Colors.get("screenBackground").r,
+        Colors.get("screenBackground").g,
+        Colors.get("screenBackground").b,
+        Colors.get("screenBackground").a
     );
 
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -68,7 +75,7 @@ public class GeneratingWorldScreen implements Screen {
     WorldManager.setup();
 
     ArrayList levels = (new Json()).fromJson(
-      ArrayList.class, JsonToLevel.class, Gdx.files.internal("data/world.json")
+        ArrayList.class, JsonToLevel.class, Gdx.files.internal("data/world.json")
     );
 
     for (int i = 0; i < levels.size(); i++) {
@@ -78,17 +85,17 @@ public class GeneratingWorldScreen implements Screen {
       String[] heightRange = level.size.get("height").split(",");
 
       int mapWidth = MathUtils.random(
-        Integer.parseInt(widthRange[0]), Integer.parseInt(widthRange[1])
+          Integer.parseInt(widthRange[0]), Integer.parseInt(widthRange[1])
       );
 
       int mapHeight = MathUtils.random(
-        Integer.parseInt(heightRange[0]), Integer.parseInt(heightRange[1])
+          Integer.parseInt(heightRange[0]), Integer.parseInt(heightRange[1])
       );
 
       Gdx.app.log(
-        "World Generation",
-        "Starting " + level.type + " generation for level " + (i + 1)
-          + ", size " + mapWidth + "x" + mapHeight
+          "World Generation",
+          "Starting " + level.type + " generation for level " + (i + 1)
+              + ", size " + mapWidth + "x" + mapHeight
       );
 
       switch (level.type) {
@@ -134,10 +141,10 @@ public class GeneratingWorldScreen implements Screen {
       WorldManager.world.entities.get(mapIndex).add(entrance);
 
       WorldManager.world.getMap(mapIndex).entrance
-        = ComponentMappers.position.get(entrance).pos;
+          = ComponentMappers.position.get(entrance).pos;
     } else {
       WorldManager.world.getMap(mapIndex).entrance
-        = WorldManager.mapHelpers.getRandomOpenPositionOnLand();
+          = WorldManager.mapHelpers.getRandomOpenPositionOnLand();
     }
 
     // Spawn an exit on every level but last
@@ -147,7 +154,8 @@ public class GeneratingWorldScreen implements Screen {
       WorldManager.world.entities.get(mapIndex).add(exit);
       WorldManager.world.getMap(mapIndex).exit = ComponentMappers.position.get(exit).pos;
     } else {
-      WorldManager.world.getMap(mapIndex).exit = WorldManager.mapHelpers.getRandomOpenPositionOnLand();
+      WorldManager.world.getMap(mapIndex).exit
+          = WorldManager.mapHelpers.getRandomOpenPositionOnLand();
     }
 
     // Spawn player on first
@@ -164,9 +172,9 @@ public class GeneratingWorldScreen implements Screen {
 
       for (int j = 0; j < amount; j++) {
         WorldManager.world.entities.get(mapIndex).add(
-          WorldManager.entityFactory.createTrap(trap.get("name"),
-            WorldManager.mapHelpers.getRandomOpenPositionOnLand(mapIndex)
-          )
+            WorldManager.entityFactory.createTrap(trap.get("name"),
+                WorldManager.mapHelpers.getRandomOpenPositionOnLand(mapIndex)
+            )
         );
       }
     }
@@ -179,8 +187,8 @@ public class GeneratingWorldScreen implements Screen {
 
       for (int j = 0; j < amount; j++) {
         WorldManager.world.entities.get(mapIndex).add(
-          WorldManager.entityFactory.createItem(item.get("name"),
-            WorldManager.mapHelpers.getRandomOpenPositionOnLand(mapIndex))
+            WorldManager.entityFactory.createItem(item.get("name"),
+                WorldManager.mapHelpers.getRandomOpenPositionOnLand(mapIndex))
         );
       }
     }
@@ -193,13 +201,13 @@ public class GeneratingWorldScreen implements Screen {
 
       for (int j = 0; j < amount; j++) {
         Entity entity = WorldManager.entityFactory.createEnemy(
-          enemy.get("name"), new Vector2(0, 0)
+            enemy.get("name"), new Vector2(0, 0)
         );
 
         BrainComponent brain = ComponentMappers.brain.get(entity);
         Vector2 position;
 
-        if (brain.dna.contains(BrainComponent.DNA.AQUATIC, false)) {
+        if (brain.dna.contains(BrainComponent.Dna.AQUATIC, false)) {
           if (WorldManager.world.getMap(mapIndex).hasWater) {
             position = WorldManager.mapHelpers.getRandomOpenPositionInWater(mapIndex);
           } else {

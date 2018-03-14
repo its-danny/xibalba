@@ -16,13 +16,14 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+
+import java.util.HashMap;
+
 import me.dannytatom.xibalba.screens.LoadingScreen;
 import me.dannytatom.xibalba.utils.CameraShake;
 import me.dannytatom.xibalba.utils.HandheldCamera;
 import me.dannytatom.xibalba.utils.SoundManager;
 import me.dannytatom.xibalba.utils.SpriteAccessor;
-
-import java.util.HashMap;
 
 public class Main extends Game {
   public static final int SPRITE_WIDTH = 10;
@@ -54,8 +55,8 @@ public class Main extends Game {
     camera.unproject(position);
 
     return new Vector2(
-      Math.round(position.x) / Main.SPRITE_WIDTH,
-      Math.round(position.y) / Main.SPRITE_HEIGHT
+        Math.round(position.x) / Main.SPRITE_WIDTH,
+        Math.round(position.y) / Main.SPRITE_HEIGHT
     );
   }
 
@@ -103,9 +104,9 @@ public class Main extends Game {
     // Load custom font
     assets = new AssetManager();
     FreeTypeFontGenerator generator =
-      new FreeTypeFontGenerator(Gdx.files.internal("ui/Aller_Rg.ttf"));
+        new FreeTypeFontGenerator(Gdx.files.internal("ui/Aller_Rg.ttf"));
     FreeTypeFontGenerator.FreeTypeFontParameter parameter =
-      new FreeTypeFontGenerator.FreeTypeFontParameter();
+        new FreeTypeFontGenerator.FreeTypeFontParameter();
     parameter.size = 12;
     BitmapFont font = generator.generateFont(parameter);
     generator.dispose();

@@ -9,7 +9,6 @@ public class AttributesComponent implements Component {
   public float divineFavor;
   public int speed;
   public int maxOxygen;
-  public int maxVision;
   public int maxHealth;
   public int toughness;
   public int vision;
@@ -45,7 +44,6 @@ public class AttributesComponent implements Component {
     this.strength = strength;
     this.agility = agility;
 
-    this.maxVision = maxVision;
     this.maxHealth = toughness * 10;
     this.maxOxygen = toughness * 4;
     this.vision = maxVision;

@@ -11,11 +11,11 @@ public class ShadowCaster {
 
   /**
    * http://www.roguebasin.com/index.php?title=Improved_Shadowcasting_in_Java
-   * <p>
+   *
    * <p>Calculates the Field Of View for the provided world from the given x, y coordinates. Returns
-   * a lightmap for a result where the values represent a percentage of fully lit.
-   * <p>
-   * <p>A value equal to or below 0 means that cell is not in the field of view, whereas a value
+   * a light map for a result where the values represent a percentage of fully lit.
+   *
+   * <p>A value equal to or below 0means that cell is not in the field of view, whereas a value
    * equal to or above 1 means that cell is in the field of view.
    *
    * @param resistanceMap the grid of cells to calculate on where 0 is transparent and 1 is opaque
@@ -65,9 +65,9 @@ public class ShadowCaster {
         float rightSlope = (deltaX + 0.5f) / (deltaY - 0.5f);
 
         if (
-          !(currentX >= 0 && currentY >= 0 && currentX < this.width && currentY < this.height)
-            || start < rightSlope
-          ) {
+            !(currentX >= 0 && currentY >= 0 && currentX < this.width && currentY < this.height)
+                || start < rightSlope
+            ) {
           continue;
         } else if (end > leftSlope) {
           break;
@@ -115,10 +115,10 @@ public class ShadowCaster {
     DOWN_LEFT(-1, 1), DOWN_RIGHT(1, 1),
     NONE(0, 0);
 
-    public static final Direction[] DIAGONALS = {UP_LEFT, UP_RIGHT, DOWN_LEFT, DOWN_RIGHT};
+    static final Direction[] DIAGONALS = {UP_LEFT, UP_RIGHT, DOWN_LEFT, DOWN_RIGHT};
 
-    public final int deltaX;
-    public final int deltaY;
+    final int deltaX;
+    final int deltaY;
 
     Direction(int deltaX, int deltaY) {
       this.deltaX = deltaX;

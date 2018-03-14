@@ -18,7 +18,6 @@ brain:
   fearThreshold: 0.8
   dna:
     - AQUATIC
-    - PACK
 
 bodyParts:
   body: 8
