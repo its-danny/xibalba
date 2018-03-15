@@ -309,6 +309,9 @@ public class CharacterScreen implements Screen {
         )
     );
 
+    // Speed
+    attributesGroup.addActor(new Label("[LIGHT_GRAY]Speed []" + attributes.speed, Main.skin));
+
     // Encumbrance
     attributesGroup.addActor(
         new Label(
@@ -669,7 +672,7 @@ public class CharacterScreen implements Screen {
 
         int actionNumber = 0;
 
-        for (String part : body.parts.keySet()) {
+        for (String part : body.bodyParts.keySet()) {
           if (Objects.equals(part, "body")) {
             continue;
           }
@@ -687,14 +690,14 @@ public class CharacterScreen implements Screen {
               Entity limb = WorldManager.entityFactory.createLimb(corpse, part, position);
               WorldManager.world.addEntity(limb);
               WorldManager.itemHelpers.addToInventory(player, limb, false);
-              body.parts.remove(part);
+              body.bodyParts.remove(part);
 
               WorldManager.log.add(
                   "inventory.dismembered", part, ComponentMappers.corpse.get(corpse).entity
               );
 
-              if (body.parts.size() == 0
-                  || (body.parts.size() == 1 && body.parts.containsKey("body"))) {
+              if (body.bodyParts.size() == 0
+                  || (body.bodyParts.size() == 1 && body.bodyParts.containsKey("body"))) {
                 ComponentMappers.item.get(corpse).actions.removeValue("dismember", false);
               }
 

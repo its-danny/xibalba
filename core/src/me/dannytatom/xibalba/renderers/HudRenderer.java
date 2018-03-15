@@ -312,7 +312,7 @@ public class HudRenderer {
         BodyComponent body = ComponentMappers.body.get(playerDetails.focusedEntity);
 
         int actionNumber = 0;
-        for (String part : body.parts.keySet()) {
+        for (String part : body.bodyParts.keySet()) {
           actionNumber++;
 
           // If you look at the docs for Input.Keys, number keys are offset by 7

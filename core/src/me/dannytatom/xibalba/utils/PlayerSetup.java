@@ -129,7 +129,7 @@ public class PlayerSetup {
       defectsComponent.defects.add("One arm");
 
       BodyComponent body = ComponentMappers.body.get(player);
-      body.parts.remove("left arm");
+      body.bodyParts.remove("left arm");
 
       AttributesComponent attributes = ComponentMappers.attributes.get(player);
       attributes.maxHealth = MathUtils.ceil(attributes.maxHealth - (attributes.maxHealth * .20f));

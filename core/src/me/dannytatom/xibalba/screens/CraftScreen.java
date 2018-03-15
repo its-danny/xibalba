@@ -20,10 +20,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import me.dannytatom.xibalba.Main;
+import me.dannytatom.xibalba.components.EffectsComponent;
 import me.dannytatom.xibalba.components.ItemComponent;
 import me.dannytatom.xibalba.effects.Bleed;
 import me.dannytatom.xibalba.effects.Charm;
 import me.dannytatom.xibalba.effects.DealDamage;
+import me.dannytatom.xibalba.effects.Effect;
 import me.dannytatom.xibalba.effects.Poison;
 import me.dannytatom.xibalba.effects.RaiseHealth;
 import me.dannytatom.xibalba.ui.ActionButton;
@@ -115,62 +117,92 @@ public class CraftScreen implements Screen {
 
     int i = 0;
     for (Map.Entry<String, ItemData> entry : recipes.entrySet()) {
-      Entity item = WorldManager.entityFactory.createItem(entry.getKey(), new Vector2(0, 0));
-      ItemComponent itemDetails = ComponentMappers.item.get(item);
+      Entity testItem = WorldManager.entityFactory.createItem(entry.getKey(), new Vector2(0, 0));
 
-      if (WorldManager.itemHelpers.hasComponentsForItem(WorldManager.player, item)) {
+      if (WorldManager.itemHelpers.hasComponentsForItem(WorldManager.player, testItem)) {
+        ItemComponent testItemDetails = ComponentMappers.item.get(testItem);
+
         // If you look at the docs for Input.Keys, number keys are offset by 7
         // (e.g. 0 = 7, 1 = 8, etc)
-
-        ActionButton button = new ActionButton(i + 1, itemDetails.name);
+        ActionButton button = new ActionButton(i + 1, testItemDetails.name);
         button.setKeys(i + 8);
         button.setAction(table, () -> {
+          ArrayList<Entity> components
+              = WorldManager.itemHelpers.getComponentsForItem(WorldManager.player, testItem);
+          ArrayList<Effect> effects = new ArrayList<>();
+
+          for (Entity component : components) {
+            ArrayList<Effect> componentEffects
+                = WorldManager.itemHelpers.effectsFromComponent(component);
+
+            if (componentEffects != null) {
+              effects.addAll(componentEffects);
+            }
+          }
+
           int amountToSpawn;
 
-          if (itemDetails.craftedRange.size() > 1) {
+          if (testItemDetails.craftedRange.size() > 1) {
             amountToSpawn = MathUtils.random(
-                itemDetails.craftedRange.get(0), itemDetails.craftedRange.get(1)
+                testItemDetails.craftedRange.get(0), testItemDetails.craftedRange.get(1)
             );
           } else {
-            amountToSpawn = itemDetails.craftedRange.get(0);
+            amountToSpawn = testItemDetails.craftedRange.get(0);
           }
 
           for (int j = 0; j < amountToSpawn; j++) {
-            itemDetails.quality
-                = WorldManager.itemHelpers.qualityFromComponents(WorldManager.player, item);
-            itemDetails.stoneMaterial
-                = WorldManager.itemHelpers.materialFromComponents(WorldManager.player, item);
+            Entity craftedItem
+                = WorldManager.entityFactory.createItem(entry.getKey(), new Vector2(0, 0));
+            ItemComponent craftedItemDetails = ComponentMappers.item.get(craftedItem);
 
-            WorldManager.itemHelpers.addToInventory(WorldManager.player, item, false);
+            craftedItemDetails.quality
+                = WorldManager.itemHelpers.qualityFromComponents(components);
+            craftedItemDetails.stoneMaterial
+                = WorldManager.itemHelpers.materialFromComponents(components);
+
+            if (craftedItemDetails.attributes.get("defense") != null) {
+              if (craftedItemDetails.attributes.get("defense")
+                  + craftedItemDetails.quality.getModifier() >= 0) {
+                craftedItemDetails.attributes.put(
+                    "defense", craftedItemDetails.attributes.get("defense")
+                        + craftedItemDetails.quality.getModifier()
+                );
+              }
+            }
+
+            if (!ComponentMappers.effects.has(craftedItem)) {
+              craftedItem.add(new EffectsComponent());
+            }
+
+            ComponentMappers.effects.get(craftedItem).effects.add(
+                effects.get(MathUtils.random(0, effects.size() - 1))
+            );
+
+            WorldManager.itemHelpers.addToInventory(WorldManager.player, craftedItem, false);
             WorldManager.log.add(
-                "inventory.crafted", WorldManager.itemHelpers.getName(WorldManager.player, item)
+                "inventory.crafted",
+                WorldManager.itemHelpers.getName(WorldManager.player, craftedItem)
             );
           }
 
-          for (ItemComponent.RequiredComponent requiredComponent : itemDetails.requiredComponents) {
-            ItemComponent requiredComponentDetails
-                = ComponentMappers.item.get(requiredComponent.item);
-            WorldManager.itemHelpers.removeComponentsFromInventory(
-                WorldManager.player, requiredComponentDetails.key, requiredComponent.amount
-            );
+          WorldManager.itemHelpers.removeMultipleFromInventory(WorldManager.player, components);
+          WorldManager.executeTurn = true;
 
-            WorldManager.executeTurn = true;
-
-            setupRecipes();
-          }
+          setupRecipes();
         });
 
         recipeGroup.addActor(button);
 
         recipeGroup.addActor(new Label(
-            "[DARK_GRAY]" + WordUtils.wrap(itemDetails.description, 140), Main.skin
+            "[DARK_GRAY]" + WordUtils.wrap(testItemDetails.description, 140),
+            Main.skin
         ));
 
         ArrayList<String> materialList = new ArrayList<>();
-        for (ItemComponent.RequiredComponent requiredComponent : itemDetails.requiredComponents) {
+        for (ItemComponent.RequiredComponent component : testItemDetails.requiredComponents) {
           ItemComponent requiredComponentDetails
-              = ComponentMappers.item.get(requiredComponent.item);
-          materialList.add(requiredComponent.amount + " " + requiredComponentDetails.name);
+              = ComponentMappers.item.get(component.item);
+          materialList.add(component.amount + " " + requiredComponentDetails.name);
         }
 
         recipeGroup.addActor(new Label(

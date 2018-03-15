@@ -28,5 +28,21 @@ bodyParts:
   right leg: 8
 
 wearableBodyParts:
-  left leg: raiseSpeed:10
-  right leg: raiseSpeed:10
+  skin:
+    - !RaiseSpeed {
+      type: PASSIVE,
+      trigger: WEAR,
+      amount: 10
+    }
+  left leg:
+    - !RaiseSpeed {
+      type: PASSIVE,
+      trigger: WEAR,
+      amount: 10
+    }
+  right leg:
+    - !RaiseSpeed {
+      type: PASSIVE,
+      trigger: WEAR,
+      amount: 10
+    }

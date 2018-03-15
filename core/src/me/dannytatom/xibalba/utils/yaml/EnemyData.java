@@ -13,6 +13,6 @@ public class EnemyData {
   public HashMap<String, Integer> attributes;
   public BrainData brain;
   public TreeMap<String, Integer> bodyParts;
-  public TreeMap<String, Effect> wearableBodyParts;
+  public TreeMap<String, ArrayList<Effect>> wearableBodyParts;
   public ArrayList<Effect> effects;
 }

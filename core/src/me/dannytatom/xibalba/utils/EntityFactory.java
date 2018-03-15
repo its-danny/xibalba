@@ -35,6 +35,7 @@ import me.dannytatom.xibalba.effects.Charm;
 import me.dannytatom.xibalba.effects.DealDamage;
 import me.dannytatom.xibalba.effects.Poison;
 import me.dannytatom.xibalba.effects.RaiseHealth;
+import me.dannytatom.xibalba.effects.RaiseSpeed;
 import me.dannytatom.xibalba.utils.yaml.EnemyData;
 import me.dannytatom.xibalba.utils.yaml.ItemData;
 import me.dannytatom.xibalba.utils.yaml.ItemRequiredComponentData;
@@ -66,6 +67,7 @@ public class EntityFactory {
     constructor.addTypeDescription(new TypeDescription(DealDamage.class, "!DealDamage"));
     constructor.addTypeDescription(new TypeDescription(Poison.class, "!Poison"));
     constructor.addTypeDescription(new TypeDescription(RaiseHealth.class, "!RaiseHealth"));
+    constructor.addTypeDescription(new TypeDescription(RaiseSpeed.class, "!RaiseSpeed"));
     Yaml yaml = new Yaml(constructor);
 
     EnemyData data = (EnemyData) yaml.load(Main.enemiesData.get(name));
@@ -186,7 +188,7 @@ public class EntityFactory {
 
     BodyComponent body = ComponentMappers.body.get(enemy);
     AttributesComponent.Type type = ComponentMappers.attributes.get(enemy).type;
-    entity.add(new CorpseComponent(name, type, body.parts, body.wearable));
+    entity.add(new CorpseComponent(name, type, body.bodyParts, body.wearableBodyParts));
 
     return entity;
   }
@@ -203,6 +205,15 @@ public class EntityFactory {
 
     ComponentMappers.item.get(entity).name
         = ComponentMappers.corpse.get(corpse).entity + " skin";
+
+    CorpseComponent body = ComponentMappers.corpse.get(corpse);
+
+    if (body.wearableBodyParts != null && body.wearableBodyParts.get("skin") != null) {
+      EffectsComponent effects = new EffectsComponent();
+      effects.effects.addAll(body.wearableBodyParts.get("skin"));
+
+      entity.add(effects);
+    }
 
     return entity;
   }
@@ -227,12 +238,12 @@ public class EntityFactory {
 
     CorpseComponent body = ComponentMappers.corpse.get(corpse);
 
-    if (body.wearable != null && body.wearable.get(part) != null) {
+    if (body.wearableBodyParts != null && body.wearableBodyParts.get(part) != null) {
       item.location = part;
       item.actions.add("wear");
 
       EffectsComponent effects = new EffectsComponent();
-      effects.effects.add(body.wearable.get(part));
+      effects.effects.addAll(body.wearableBodyParts.get(part));
 
       entity.add(effects);
     }

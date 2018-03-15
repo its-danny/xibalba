@@ -129,35 +129,61 @@ public class ItemHelpers {
   }
 
   /**
-   * Get the quality for a crafted item.
+   * Get a list of components from the entity's inventory for the given item.
    *
-   * @param entity Who's inventory we checkin'
-   * @param item   The item who's components we're checkin'
-   * @return The most occurring quality among the components
+   * @param entity Who's inventory to check
+   * @param item   The item who's components we're getting
+   * @return A list of components
    */
-  public ItemComponent.Quality qualityFromComponents(Entity entity, Entity item) {
+  public ArrayList<Entity> getComponentsForItem(Entity entity, Entity item) {
     ItemComponent itemDetails = ComponentMappers.item.get(item);
     InventoryComponent inventory = ComponentMappers.inventory.get(entity);
-    ArrayList<ItemComponent.Quality> qualities = new ArrayList<>();
+    ArrayList<Entity> components = new ArrayList<>();
 
     if (inventory != null) {
       for (ItemComponent.RequiredComponent requiredComponent : itemDetails.requiredComponents) {
         ItemComponent requiredComponentDetails = ComponentMappers.item.get(requiredComponent.item);
-        int count = 0;
 
         for (Entity inventoryItem : inventory.items) {
           ItemComponent inventoryItemDetails = ComponentMappers.item.get(inventoryItem);
 
           if (requiredComponentDetails.key.equals(inventoryItemDetails.key)) {
-            qualities.add(inventoryItemDetails.quality);
-            count++;
-          }
-
-          if (count == requiredComponent.amount) {
-            break;
+            components.add(inventoryItem);
           }
         }
       }
+    }
+
+    return components;
+  }
+
+  /**
+   * Get a list of effects from a component.
+   *
+   * @param component The component to check
+   * @return A list of effects
+   */
+  public ArrayList<Effect> effectsFromComponent(Entity component) {
+    if (ComponentMappers.effects.has(component)) {
+      EffectsComponent effects = ComponentMappers.effects.get(component);
+      return effects.effects;
+    } else {
+      return null;
+    }
+  }
+
+  /**
+   * Get the quality for a crafted item.
+   *
+   * @param components List of components to look through
+   * @return The most occurring quality among the components
+   */
+  public ItemComponent.Quality qualityFromComponents(ArrayList<Entity> components) {
+    ArrayList<ItemComponent.Quality> qualities = new ArrayList<>();
+
+    for (Entity component : components) {
+      ItemComponent componentDetails = ComponentMappers.item.get(component);
+      qualities.add(componentDetails.quality);
     }
 
     int max = 0;
@@ -178,45 +204,29 @@ public class ItemHelpers {
   /**
    * Get the stone material for a crafted item.
    *
-   * @param entity Who's inventory we checkin'
-   * @param item   The item who's components we're checkin'
+   * @param components List of components to look through
    * @return The most occurring stone material type among the components
    */
-  public ItemComponent.StoneMaterial materialFromComponents(Entity entity, Entity item) {
-    ItemComponent itemDetails = ComponentMappers.item.get(item);
-    InventoryComponent inventory = ComponentMappers.inventory.get(entity);
-    ArrayList<ItemComponent.StoneMaterial> stoneMaterials = new ArrayList<>();
+  public ItemComponent.StoneMaterial materialFromComponents(ArrayList<Entity> components) {
+    ArrayList<ItemComponent.StoneMaterial> materials = new ArrayList<>();
 
-    if (inventory != null) {
-      for (ItemComponent.RequiredComponent requiredComponent : itemDetails.requiredComponents) {
-        ItemComponent requiredComponentDetails = ComponentMappers.item.get(requiredComponent.item);
-        int count = 0;
+    for (Entity component : components) {
+      ItemComponent componentDetails = ComponentMappers.item.get(component);
 
-        for (Entity inventoryItem : inventory.items) {
-          ItemComponent inventoryItemDetails = ComponentMappers.item.get(inventoryItem);
-
-          if (requiredComponentDetails.name.equals(inventoryItemDetails.name)
-              && inventoryItemDetails.stoneMaterial != null) {
-            stoneMaterials.add(inventoryItemDetails.stoneMaterial);
-            count++;
-          }
-
-          if (count == requiredComponent.amount) {
-            break;
-          }
-        }
+      if (componentDetails.stoneMaterial != null) {
+        materials.add(componentDetails.stoneMaterial);
       }
     }
 
     int max = 0;
     ItemComponent.StoneMaterial highest = null;
 
-    for (ItemComponent.StoneMaterial stoneMaterial : stoneMaterials) {
-      int frequency = Collections.frequency(stoneMaterials, stoneMaterial);
+    for (ItemComponent.StoneMaterial material : materials) {
+      int frequency = Collections.frequency(materials, material);
 
       if (max < frequency) {
         max = frequency;
-        highest = stoneMaterial;
+        highest = material;
       }
     }
 
@@ -315,7 +325,7 @@ public class ItemHelpers {
    * @param entity Who's inventory
    * @param items  A list of items
    */
-  private void removeMultipleFromInventory(Entity entity, ArrayList<Entity> items) {
+  public void removeMultipleFromInventory(Entity entity, ArrayList<Entity> items) {
     InventoryComponent inventory = ComponentMappers.inventory.get(entity);
     inventory.items.removeAll(items);
 
@@ -329,34 +339,6 @@ public class ItemHelpers {
         WorldManager.log.add("effects.encumbered.stopped");
       }
     }
-  }
-
-  /**
-   * Remove components from inventory.
-   *
-   * @param entity Who's inventory
-   * @param key    The type of component
-   * @param amount How many to remove
-   */
-  public void removeComponentsFromInventory(Entity entity, String key, int amount) {
-    InventoryComponent inventory = ComponentMappers.inventory.get(entity);
-    int count = 0;
-
-    ArrayList<Entity> toRemove = new ArrayList<>();
-    for (Entity item : inventory.items) {
-      ItemComponent itemDetails = ComponentMappers.item.get(item);
-
-      if (itemDetails.key.equals(key) && count < amount) {
-        toRemove.add(item);
-        count += 1;
-
-        if (count == amount) {
-          break;
-        }
-      }
-    }
-
-    removeMultipleFromInventory(entity, toRemove);
   }
 
   /**
@@ -404,7 +386,7 @@ public class ItemHelpers {
       EffectsComponent effects = ComponentMappers.effects.get(item);
 
       for (Effect effect : effects.effects) {
-        if (effect.type == Effect.Type.PASSIVE) {
+        if (effect.trigger == Effect.Trigger.WEAR) {
           effect.act(entity);
         }
       }
@@ -542,7 +524,7 @@ public class ItemHelpers {
       EffectsComponent effects = ComponentMappers.effects.get(item);
 
       for (Effect effect : effects.effects) {
-        if (effect.type == Effect.Type.PASSIVE) {
+        if (effect.trigger == Effect.Trigger.WEAR) {
           effect.revoke(entity);
         }
       }

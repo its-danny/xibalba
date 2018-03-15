@@ -194,7 +194,7 @@ public class CombatHelpers {
     // Roll target body part
 
     BodyComponent targetBody = ComponentMappers.body.get(target);
-    int bodyPartRoll = MathUtils.random(1, targetBody.parts.get(bodyPart));
+    int bodyPartRoll = MathUtils.random(1, targetBody.bodyParts.get(bodyPart));
 
     // Miss if under
 
