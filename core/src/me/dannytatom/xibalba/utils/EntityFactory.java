@@ -30,6 +30,10 @@ import me.dannytatom.xibalba.components.items.AmmunitionComponent;
 import me.dannytatom.xibalba.components.items.ArmorComponent;
 import me.dannytatom.xibalba.components.items.WeaponComponent;
 import me.dannytatom.xibalba.components.traps.SpiderWebComponent;
+import me.dannytatom.xibalba.effects.Bleed;
+import me.dannytatom.xibalba.effects.DealDamage;
+import me.dannytatom.xibalba.effects.Poison;
+import me.dannytatom.xibalba.effects.RaiseHealth;
 import me.dannytatom.xibalba.utils.yaml.EnemyData;
 import me.dannytatom.xibalba.utils.yaml.ItemData;
 import me.dannytatom.xibalba.utils.yaml.ItemRequiredComponentData;
@@ -55,7 +59,13 @@ public class EntityFactory {
    * @return The enemy
    */
   public Entity createEnemy(String name, Vector2 position) {
-    Yaml yaml = new Yaml(new Constructor(EnemyData.class));
+    Constructor constructor = new Constructor(EnemyData.class);
+    constructor.addTypeDescription(new TypeDescription(Bleed.class, "!Bleed"));
+    constructor.addTypeDescription(new TypeDescription(DealDamage.class, "!DealDamage"));
+    constructor.addTypeDescription(new TypeDescription(Poison.class, "!Poison"));
+    constructor.addTypeDescription(new TypeDescription(RaiseHealth.class, "!RaiseHealth"));
+    Yaml yaml = new Yaml(constructor);
+
     EnemyData data = (EnemyData) yaml.load(Main.enemiesData.get(name));
     Entity entity = new Entity();
 
@@ -107,6 +117,10 @@ public class EntityFactory {
    */
   public Entity createItem(String key, Vector2 position) {
     Constructor constructor = new Constructor(ItemData.class);
+    constructor.addTypeDescription(new TypeDescription(Bleed.class, "!Bleed"));
+    constructor.addTypeDescription(new TypeDescription(DealDamage.class, "!DealDamage"));
+    constructor.addTypeDescription(new TypeDescription(Poison.class, "!Poison"));
+    constructor.addTypeDescription(new TypeDescription(RaiseHealth.class, "!RaiseHealth"));
     TypeDescription itemDescription = new TypeDescription(ItemData.class);
     itemDescription.putListPropertyType("requiredComponent", ItemRequiredComponentData.class);
     constructor.addTypeDescription(itemDescription);
@@ -215,7 +229,7 @@ public class EntityFactory {
       item.actions.add("wear");
 
       EffectsComponent effects = new EffectsComponent();
-      effects.effects.put("passive", body.wearable.get(part));
+      effects.effects.add(body.wearable.get(part));
 
       entity.add(effects);
     }

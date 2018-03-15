@@ -14,7 +14,6 @@ import me.dannytatom.xibalba.components.ItemComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.VisualComponent;
 import me.dannytatom.xibalba.components.statuses.CharmedComponent;
-import me.dannytatom.xibalba.components.statuses.PoisonedComponent;
 import me.dannytatom.xibalba.utils.ComponentMappers;
 import me.dannytatom.xibalba.world.Map;
 import me.dannytatom.xibalba.world.MapCell;
@@ -278,37 +277,6 @@ public class EntityHelpers {
   }
 
   /**
-   * Apply an effect to an entity.
-   *
-   * @param entity The entity
-   * @param effect The effect. This is a string like "raiseHealth:5" where the part before colon is
-   *               the method on EffectsHelpers, and the part after is the parameters (split by
-   *               commas)
-   */
-  void applyEffect(Entity entity, String effect) {
-    String[] split = effect.split(":");
-    String name = split[0];
-    String[] params = split[1].split(",");
-
-    switch (name) {
-      case "raiseHealth":
-        raiseHealth(entity, Integer.parseInt(params[0]));
-        break;
-      case "raiseStrength":
-        raiseStrength(entity, Integer.parseInt(params[0]));
-        break;
-      case "takeDamage":
-        takeDamage(entity, Integer.parseInt(params[0]));
-        break;
-      case "poison":
-        poison(entity, Integer.parseInt(params[0]),
-            Integer.parseInt(params[1]), Integer.parseInt(params[2]));
-        break;
-      default:
-    }
-  }
-
-  /**
    * Raise health.
    *
    * @param entity Entity whose health we're raising
@@ -333,26 +301,6 @@ public class EntityHelpers {
   }
 
   /**
-   * Raise strength.
-   *
-   * @param entity Entity whose strength we're raising
-   * @param amount How much
-   */
-  private void raiseStrength(Entity entity, int amount) {
-    AttributesComponent attributes = ComponentMappers.attributes.get(entity);
-
-    if (attributes.strength < 12) {
-      attributes.strength += amount;
-
-      if (ComponentMappers.player.has(entity)) {
-        WorldManager.log.add("stats.strengthRaised", "You");
-      } else {
-        WorldManager.log.add("stats.strengthRaised", attributes.name);
-      }
-    }
-  }
-
-  /**
    * Take some damage.
    *
    * @param entity Who gettin' hurt
@@ -365,24 +313,6 @@ public class EntityHelpers {
 
     if (ComponentMappers.player.has(entity)) {
       ComponentMappers.player.get(entity).totalDamageReceived += amount;
-    }
-  }
-
-  private void poison(Entity entity, int chance, int damage, int turns) {
-    if (ComponentMappers.poisoned.has(entity)) {
-      return;
-    }
-
-    if (MathUtils.random() > chance / 100) {
-      entity.add(new PoisonedComponent(damage, turns));
-
-      if (ComponentMappers.player.has(entity)) {
-        WorldManager.log.add("effects.poisoned.started", "You", "are");
-      } else {
-        AttributesComponent attributes = ComponentMappers.attributes.get(entity);
-
-        WorldManager.log.add("effects.poisoned.started", attributes.name, "is");
-      }
     }
   }
 

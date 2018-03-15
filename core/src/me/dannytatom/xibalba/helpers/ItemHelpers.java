@@ -20,6 +20,7 @@ import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.items.AmmunitionComponent;
 import me.dannytatom.xibalba.components.statuses.EncumberedComponent;
 import me.dannytatom.xibalba.components.statuses.SickComponent;
+import me.dannytatom.xibalba.effects.Effect;
 import me.dannytatom.xibalba.utils.ComponentMappers;
 import me.dannytatom.xibalba.world.WorldManager;
 
@@ -402,20 +403,9 @@ public class ItemHelpers {
     if (ComponentMappers.effects.has(item)) {
       EffectsComponent effects = ComponentMappers.effects.get(item);
 
-      for (Map.Entry<String, String> entry : effects.effects.entrySet()) {
-        String type = entry.getKey();
-        String value = entry.getValue();
-
-        if (Objects.equals(type, "passive")) {
-          String[] arr = value.split(":");
-
-          switch (arr[0]) {
-            case "raiseSpeed":
-              ComponentMappers.attributes.get(entity).speed
-                  += Integer.parseInt(arr[1]);
-              break;
-            default:
-          }
+      for (Effect effect : effects.effects) {
+        if (effect.type == Effect.Type.PASSIVE) {
+          effect.act(entity);
         }
       }
     }
@@ -446,23 +436,23 @@ public class ItemHelpers {
       EffectsComponent itemEffects = ComponentMappers.effects.get(item);
 
       if (itemEffects != null) {
-        for (Map.Entry<String, String> entry : itemEffects.effects.entrySet()) {
-          String event = entry.getKey();
-          String action = entry.getValue();
-
-          if (Objects.equals(event, "onConsume")) {
-            WorldManager.entityHelpers.applyEffect(entity, action);
+        for (Effect effect : itemEffects.effects) {
+          if (effect.trigger == Effect.Trigger.CONSUME) {
+            effect.act(entity);
           }
         }
       }
 
-      if (Objects.equals(itemDetails.type, "corpse") || Objects.equals(itemDetails.type, "limb")) {
+      if (Objects.equals(itemDetails.type, "corpse")
+          || Objects.equals(itemDetails.type, "limb")) {
         if (WorldManager.entityHelpers.hasTrait(entity, "Carnivore")) {
           if (MathUtils.random() > 0.5) {
             WorldManager.entityHelpers.raiseHealth(entity, MathUtils.random(5, 20));
           }
         } else {
           if (MathUtils.random() > 0.75) {
+            entity.add(new SickComponent(MathUtils.random(5, 20)));
+
             if (ComponentMappers.player.has(entity)) {
               WorldManager.log.add("effects.sick.started", "You", "are");
             } else {
@@ -470,8 +460,6 @@ public class ItemHelpers {
 
               WorldManager.log.add("effects.sick.started", attributes.name, "is");
             }
-
-            entity.add(new SickComponent(MathUtils.random(5, 20)));
           }
         }
 
@@ -523,7 +511,11 @@ public class ItemHelpers {
       }
 
       if (targetItemEffects != null) {
-        targetItemEffects.effects.put("onHit", applyingItemEffects.effects.get("onApply"));
+        for (Effect effect : applyingItemEffects.effects) {
+          if (effect.trigger == Effect.Trigger.APPLY) {
+            targetItemEffects.effects.add(effect);
+          }
+        }
       }
 
       destroy(entity, applyingItem);
@@ -549,20 +541,9 @@ public class ItemHelpers {
     if (ComponentMappers.effects.has(item)) {
       EffectsComponent effects = ComponentMappers.effects.get(item);
 
-      for (Map.Entry<String, String> entry : effects.effects.entrySet()) {
-        String type = entry.getKey();
-        String value = entry.getValue();
-
-        if (Objects.equals(type, "passive")) {
-          String[] arr = value.split(":");
-
-          switch (arr[0]) {
-            case "raiseSpeed":
-              ComponentMappers.attributes.get(entity).speed
-                  -= Integer.parseInt(arr[1]);
-              break;
-            default:
-          }
+      for (Effect effect : effects.effects) {
+        if (effect.type == Effect.Type.PASSIVE) {
+          effect.revoke(entity);
         }
       }
     }

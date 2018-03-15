@@ -12,10 +12,7 @@ location: left hand
 attributes:
   hitDamage: 6
   throwDamage: 6
-  defense: 10
-
-effects:
-  onConsume: dealDamage:24
+  defense: 6
 
 actions:
   - consume

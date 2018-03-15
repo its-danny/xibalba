@@ -21,6 +21,10 @@ import java.util.Map;
 
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.components.ItemComponent;
+import me.dannytatom.xibalba.effects.Bleed;
+import me.dannytatom.xibalba.effects.DealDamage;
+import me.dannytatom.xibalba.effects.Poison;
+import me.dannytatom.xibalba.effects.RaiseHealth;
 import me.dannytatom.xibalba.ui.ActionButton;
 import me.dannytatom.xibalba.utils.ComponentMappers;
 import me.dannytatom.xibalba.utils.yaml.ItemData;
@@ -47,6 +51,10 @@ public class CraftScreen implements Screen {
     stage = new Stage(new FitViewport(960, 540));
 
     Constructor constructor = new Constructor(ItemData.class);
+    constructor.addTypeDescription(new TypeDescription(Bleed.class, "!Bleed"));
+    constructor.addTypeDescription(new TypeDescription(DealDamage.class, "!DealDamage"));
+    constructor.addTypeDescription(new TypeDescription(Poison.class, "!Poison"));
+    constructor.addTypeDescription(new TypeDescription(RaiseHealth.class, "!RaiseHealth"));
     TypeDescription itemDescription = new TypeDescription(ItemData.class);
     itemDescription.putListPropertyType("requiredComponent", ItemRequiredComponentData.class);
     constructor.addTypeDescription(itemDescription);

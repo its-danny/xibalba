@@ -1,9 +1,11 @@
 package me.dannytatom.xibalba.utils.yaml;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.TreeMap;
 
 import me.dannytatom.xibalba.components.AttributesComponent;
+import me.dannytatom.xibalba.effects.Effect;
 
 public class EnemyData {
   public AttributesComponent.Type type;
@@ -11,6 +13,6 @@ public class EnemyData {
   public HashMap<String, Integer> attributes;
   public BrainData brain;
   public TreeMap<String, Integer> bodyParts;
-  public TreeMap<String, String> wearableBodyParts;
-  public HashMap<String, String> effects;
+  public TreeMap<String, Effect> wearableBodyParts;
+  public ArrayList<Effect> effects;
 }

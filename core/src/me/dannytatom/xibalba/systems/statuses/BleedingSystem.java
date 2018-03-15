@@ -22,7 +22,7 @@ public class BleedingSystem extends UsesEnergySystem {
     if (bleeding.counter == bleeding.life) {
       entity.remove(BleedingComponent.class);
     } else {
-      WorldManager.entityHelpers.takeDamage(entity, 5);
+      WorldManager.entityHelpers.takeDamage(entity, bleeding.damage);
 
       PositionComponent position = ComponentMappers.position.get(entity);
       WorldManager.mapHelpers.makeFloorBloody(position.pos);
@@ -33,7 +33,8 @@ public class BleedingSystem extends UsesEnergySystem {
         boolean isPlayer = ComponentMappers.player.has(entity);
 
         WorldManager.log.add(
-            "effects.bleeding.tookDamage", (isPlayer ? "You" : attributes.name), 5
+            "effects.bleeding.tookDamage", (isPlayer ? "You" : attributes.name),
+            bleeding.damage
         );
 
         if (attributes.health <= 0) {

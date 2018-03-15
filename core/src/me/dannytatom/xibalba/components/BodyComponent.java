@@ -5,9 +5,11 @@ import com.badlogic.ashley.core.Component;
 import java.util.HashMap;
 import java.util.TreeMap;
 
+import me.dannytatom.xibalba.effects.Effect;
+
 public class BodyComponent implements Component {
   public final TreeMap<String, Integer> parts;
-  public final TreeMap<String, String> wearable;
+  public final TreeMap<String, Effect> wearable;
   public final HashMap<String, Integer> damage;
 
   /**
@@ -16,7 +18,7 @@ public class BodyComponent implements Component {
    * @param parts    The entity's body parts
    * @param wearable Which body parts are wearable
    */
-  public BodyComponent(TreeMap<String, Integer> parts, TreeMap<String, String> wearable) {
+  public BodyComponent(TreeMap<String, Integer> parts, TreeMap<String, Effect> wearable) {
     this.parts = parts;
     this.wearable = wearable;
 

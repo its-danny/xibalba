@@ -36,7 +36,6 @@ items:
   - items/spear.yaml
   - items/protectiveArmor.yaml
   - items/bandage.yaml
-  - items/strengthPlant.yaml
   - items/corpse.yaml
   - items/bow.yaml
   - items/atlatl.yaml

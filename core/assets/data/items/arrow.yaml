@@ -14,7 +14,11 @@ attributes:
   shotDamage: 8
 
 effects:
-  onConsume: dealDamage:16
+  - !DealDamage {
+    type: ACTIVE,
+    trigger: CONSUME,
+    damage: 16
+  }
 
 actions:
   - consume

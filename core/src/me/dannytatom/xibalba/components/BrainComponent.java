@@ -31,9 +31,7 @@ public class BrainComponent implements Component {
 
     dna = new Array<>();
 
-    aggression = 0.5f;
     fear = 0f;
-    fearThreshold = 0.5f;
   }
 
   public enum Dna {

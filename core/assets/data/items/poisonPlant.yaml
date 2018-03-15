@@ -11,5 +11,17 @@ actions:
   - apply
 
 effects:
-  onConsume: poison:100,2,3
-  onApply: poison:100,2,3
+  - !Poison {
+    type: ACTIVE,
+    trigger: CONSUME,
+    chance: 100,
+    damage: 2,
+    life: 3
+  }
+  - !Poison {
+    type: ACTIVE,
+    trigger: APPLY,
+    chance: 100,
+    damage: 2,
+    life: 3
+  }

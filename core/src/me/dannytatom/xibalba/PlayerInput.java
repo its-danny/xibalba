@@ -55,6 +55,7 @@ public class PlayerInput implements InputProcessor {
           case LOOKING:
             handleLooking(new Vector2(0, 1), false);
             break;
+          default:
         }
         break;
       // Move North East
@@ -71,6 +72,7 @@ public class PlayerInput implements InputProcessor {
           case LOOKING:
             handleLooking(new Vector2(1, 1), false);
             break;
+          default:
         }
         break;
       // Move East
@@ -87,6 +89,7 @@ public class PlayerInput implements InputProcessor {
           case LOOKING:
             handleLooking(new Vector2(1, 0), false);
             break;
+          default:
         }
         break;
       // Move South East
@@ -103,6 +106,7 @@ public class PlayerInput implements InputProcessor {
           case LOOKING:
             handleLooking(new Vector2(1, -1), false);
             break;
+          default:
         }
         break;
       // Move South
@@ -119,6 +123,7 @@ public class PlayerInput implements InputProcessor {
           case LOOKING:
             handleLooking(new Vector2(0, -1), false);
             break;
+          default:
         }
         break;
       // Move South West
@@ -135,6 +140,7 @@ public class PlayerInput implements InputProcessor {
           case LOOKING:
             handleLooking(new Vector2(-1, -1), false);
             break;
+          default:
         }
         break;
       // Move West
@@ -151,6 +157,7 @@ public class PlayerInput implements InputProcessor {
           case LOOKING:
             handleLooking(new Vector2(-1, 0), false);
             break;
+          default:
         }
         break;
       // Move North West
@@ -167,6 +174,7 @@ public class PlayerInput implements InputProcessor {
           case LOOKING:
             handleLooking(new Vector2(-1, 1), false);
             break;
+          default:
         }
         break;
       // Look
@@ -384,6 +392,7 @@ public class PlayerInput implements InputProcessor {
           return true;
         }
         break;
+      default:
     }
 
     return false;

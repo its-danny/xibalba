@@ -225,7 +225,7 @@ public enum Brain implements State<Entity> {
     BrainComponent brain = ComponentMappers.brain.get(entity);
     GodComponent god = ComponentMappers.god.get(WorldManager.god);
 
-    return MathUtils.random() > brain.aggression
+    return MathUtils.random() < brain.aggression
         || (god.hasWrath && god.wrath.contains("Animals more aggressive"));
   }
 

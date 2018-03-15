@@ -26,4 +26,10 @@ bodyParts:
 wearableBodyParts:
 
 effects:
-  onHit: poison:33,3,5
+  - !Poison {
+    type: ACTIVE,
+    trigger: HIT,
+    chance: 33,
+    damage: 3,
+    life: 5
+  }

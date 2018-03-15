@@ -3,6 +3,8 @@ package me.dannytatom.xibalba.utils.yaml;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import me.dannytatom.xibalba.effects.Effect;
+
 public class ItemData {
   public String type;
   public String weaponType;
@@ -22,7 +24,7 @@ public class ItemData {
 
   public HashMap<String, Integer> attributes;
   public ArrayList<String> actions;
-  public HashMap<String, String> effects;
+  public ArrayList<Effect> effects;
   public ArrayList<String> verbs;
   public HashMap<String, Integer> light;
 

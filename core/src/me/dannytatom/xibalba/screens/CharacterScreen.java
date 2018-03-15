@@ -30,6 +30,7 @@ import me.dannytatom.xibalba.components.InventoryComponent;
 import me.dannytatom.xibalba.components.ItemComponent;
 import me.dannytatom.xibalba.components.SkillsComponent;
 import me.dannytatom.xibalba.components.statuses.BleedingComponent;
+import me.dannytatom.xibalba.effects.Effect;
 import me.dannytatom.xibalba.ui.ActionButton;
 import me.dannytatom.xibalba.utils.ComponentMappers;
 import me.dannytatom.xibalba.utils.yaml.DefectData;
@@ -626,21 +627,11 @@ public class CharacterScreen implements Screen {
         EffectsComponent selectedItemEffects = ComponentMappers.effects.get(item);
 
         if (selectedItemEffects != null) {
-          for (Map.Entry<String, String> entry : selectedItemEffects.effects.entrySet()) {
-            String event = entry.getKey();
-            String action = entry.getValue();
-            String[] split = action.split(":");
+          for (Effect effect : selectedItemEffects.effects) {
+            String prettyEvent = WordUtils.capitalize(effect.trigger.toString());
+            String prettyEffect = WordUtils.capitalize(effect.type.toString());
 
-            String prettyEvent = WordUtils.capitalize(
-                String.join(" ", (CharSequence[]) event.split("(?<=[a-z])(?=[A-Z])"))
-            );
-
-            String prettyEffect = WordUtils.capitalize(
-                String.join(" ", (CharSequence[]) split[0].split("(?<=[a-z])(?=[A-Z])"))
-            );
-
-            String string = "[DARK_GRAY]" + prettyEvent
-                + " [LIGHT_GRAY]" + prettyEffect + " [CYAN]" + split[1];
+            String string = "[DARK_GRAY]" + prettyEvent + " [LIGHT_GRAY]" + prettyEffect;
 
             statsGroup.addActor(new Label(string, Main.skin));
           }

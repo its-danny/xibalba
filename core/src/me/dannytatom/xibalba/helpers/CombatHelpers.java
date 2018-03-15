@@ -22,6 +22,7 @@ import me.dannytatom.xibalba.components.actions.RangeComponent;
 import me.dannytatom.xibalba.components.items.WeaponComponent;
 import me.dannytatom.xibalba.components.statuses.BleedingComponent;
 import me.dannytatom.xibalba.components.statuses.CrippledComponent;
+import me.dannytatom.xibalba.effects.Effect;
 import me.dannytatom.xibalba.utils.ComponentMappers;
 import me.dannytatom.xibalba.utils.SpriteAccessor;
 import me.dannytatom.xibalba.world.WorldManager;
@@ -391,7 +392,7 @@ public class CombatHelpers {
           target.add(new CrippledComponent(4));
           WorldManager.log.add("effects.crippled.started", getName(starter), getName(target));
         } else if (bodyPart.contains("body") && !ComponentMappers.bleeding.has(target)) {
-          target.add(new BleedingComponent(5));
+          target.add(new BleedingComponent(5, 5));
           WorldManager.log.add("effects.bleeding.started", getName(starter), getName(target));
         }
       }
@@ -457,21 +458,28 @@ public class CombatHelpers {
 
       // Apply entity status effects
 
-      EffectsComponent starterEffects = ComponentMappers.effects.get(starter);
+      if (ComponentMappers.effects.has(starter)) {
+        EffectsComponent starterEffects = ComponentMappers.effects.get(starter);
 
-      if (starterEffects != null && starterEffects.effects.containsKey("onHit")) {
-        WorldManager.entityHelpers.applyEffect(target, starterEffects.effects.get("onHit"));
+        for (Effect effect : starterEffects.effects) {
+          if (effect.trigger == Effect.Trigger.HIT) {
+            effect.act(target);
+          }
+        }
       }
 
       // Apply weapon effects
 
       if (item != null) {
         ItemComponent itemDetails = ComponentMappers.item.get(item);
-        EffectsComponent itemEffects = ComponentMappers.effects.get(item);
 
-        if (itemEffects != null) {
-          if (itemEffects.effects.containsKey("onHit")) {
-            WorldManager.entityHelpers.applyEffect(target, itemEffects.effects.get("onHit"));
+        if (ComponentMappers.effects.has(item)) {
+          EffectsComponent itemEffects = ComponentMappers.effects.get(item);
+
+          for (Effect effect : itemEffects.effects) {
+            if (effect.trigger == Effect.Trigger.HIT) {
+              effect.act(target);
+            }
           }
 
           if (ComponentMappers.player.has(starter)) {

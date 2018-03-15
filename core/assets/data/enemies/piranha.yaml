@@ -25,4 +25,10 @@ bodyParts:
 wearableBodyParts:
 
 effects:
-  onHit: bleed:75,5,3
+  - !Bleed {
+    type: ACTIVE,
+    trigger: HIT,
+    chance: 75,
+    damage: 5,
+    life: 3
+  }

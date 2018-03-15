@@ -2,13 +2,14 @@ package me.dannytatom.xibalba.components;
 
 import com.badlogic.ashley.core.Component;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 
+import me.dannytatom.xibalba.effects.Effect;
 import me.dannytatom.xibalba.utils.yaml.EnemyData;
 import me.dannytatom.xibalba.utils.yaml.ItemData;
 
 public class EffectsComponent implements Component {
-  public final HashMap<String, String> effects;
+  public final ArrayList<Effect> effects;
 
   /**
    * Effects for an item.
@@ -29,6 +30,6 @@ public class EffectsComponent implements Component {
   }
 
   public EffectsComponent() {
-    this.effects = new HashMap<>();
+    this.effects = new ArrayList<>();
   }
 }

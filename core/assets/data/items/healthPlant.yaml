@@ -11,5 +11,13 @@ actions:
   - apply
 
 effects:
-  onConsume: raiseHealth:20
-  onApply: raiseHealth:20
+  - !RaiseHealth {
+    type: ACTIVE,
+    trigger: CONSUME,
+    amount: 20
+  }
+  - !RaiseHealth {
+      type: ACTIVE,
+      trigger: APPLY,
+      amount: 20
+    }

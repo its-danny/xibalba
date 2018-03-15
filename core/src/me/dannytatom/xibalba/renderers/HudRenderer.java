@@ -213,6 +213,7 @@ public class HudRenderer {
       case FOCUSED:
         name += " [DARK_GRAY][FOCUSED][]";
         break;
+      default:
     }
 
     if (playerInfo.getChildren().size == 0) {
@@ -563,6 +564,7 @@ public class HudRenderer {
       case RANGED:
         WorldManager.combatHelpers.preparePlayerForRanged(focusedPosition.pos, part, true);
         break;
+      default:
     }
 
     WorldManager.state = WorldManager.State.PLAYING;
