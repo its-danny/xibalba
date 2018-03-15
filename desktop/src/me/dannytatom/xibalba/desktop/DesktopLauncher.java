@@ -2,6 +2,7 @@ package me.dannytatom.xibalba.desktop;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
+
 import me.dannytatom.xibalba.Main;
 
 class DesktopLauncher {

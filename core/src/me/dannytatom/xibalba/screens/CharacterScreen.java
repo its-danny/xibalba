@@ -870,7 +870,7 @@ public class CharacterScreen implements Screen {
       if (itemActionTable.getChildren().contains(throwButton, true)) {
         ComponentMappers.item.get(inventory.items.get(itemSelected)).throwing = true;
 
-        WorldManager.inputHelpers.startTargeting();
+        WorldManager.inputHelpers.startTargeting(WorldManager.TargetState.THROW);
 
         main.setScreen(Main.playScreen);
       }

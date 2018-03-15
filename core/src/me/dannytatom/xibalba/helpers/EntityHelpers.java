@@ -13,7 +13,6 @@ import me.dannytatom.xibalba.components.EquipmentComponent;
 import me.dannytatom.xibalba.components.ItemComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.VisualComponent;
-import me.dannytatom.xibalba.components.statuses.CharmedComponent;
 import me.dannytatom.xibalba.utils.ComponentMappers;
 import me.dannytatom.xibalba.world.Map;
 import me.dannytatom.xibalba.world.MapCell;

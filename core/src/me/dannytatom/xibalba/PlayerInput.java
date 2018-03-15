@@ -194,7 +194,7 @@ public class PlayerInput implements InputProcessor {
             if (Objects.equals(weaponDetails.type, "range")) {
               if (WorldManager.itemHelpers.hasAmmunitionOfType(WorldManager.player,
                   weaponDetails.ammunitionType)) {
-                WorldManager.inputHelpers.startTargeting();
+                WorldManager.inputHelpers.startTargeting(WorldManager.TargetState.RELEASE);
               } else {
                 WorldManager.log.add("inventory.noAmmunitionAvailable");
               }
@@ -218,7 +218,7 @@ public class PlayerInput implements InputProcessor {
             if (itemDetails.actions.contains("throw", false)) {
               itemDetails.throwing = true;
 
-              WorldManager.inputHelpers.startTargeting();
+              WorldManager.inputHelpers.startTargeting(WorldManager.TargetState.THROW);
             } else {
               WorldManager.log.add("inventory.cantThrowItem");
             }
@@ -254,10 +254,17 @@ public class PlayerInput implements InputProcessor {
       // Confirm action
       case Keys.SPACE:
         if (WorldManager.state == WorldManager.State.TARGETING) {
-          if (WorldManager.itemHelpers.getThrowing(WorldManager.player) == null) {
-            handleRange();
-          } else {
-            handleThrow();
+          switch (WorldManager.targetState) {
+            case ABILITY:
+              handleAbility();
+              break;
+            case RELEASE:
+              handleRange();
+              break;
+            case THROW:
+              handleThrow();
+              break;
+            default:
           }
 
           playerDetails.target = null;
@@ -444,6 +451,18 @@ public class PlayerInput implements InputProcessor {
     WorldManager.mapHelpers.createLookingPath(
         ComponentMappers.position.get(WorldManager.player).pos, pos, careAboutWalls
     );
+  }
+
+  private void handleAbility() {
+    PlayerComponent playerDetails = ComponentMappers.player.get(WorldManager.player);
+    Entity enemy = WorldManager.mapHelpers.getEnemyAt(playerDetails.target);
+
+    if (enemy != null) {
+      playerDetails.targetingAbility.act(enemy);
+
+      WorldManager.executeTurn = true;
+      WorldManager.state = WorldManager.State.PLAYING;
+    }
   }
 
   private void handleThrow() {

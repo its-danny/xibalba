@@ -37,6 +37,7 @@ public class WorldManager {
   public static ActionLog log;
   public static World world;
   public static State state;
+  public static TargetState targetState;
   public static Array<Tween> tweens;
   public static EntityFactory entityFactory;
   public static InputHelpers inputHelpers;
@@ -92,5 +93,9 @@ public class WorldManager {
 
   public enum State {
     PLAYING, TARGETING, LOOKING, FOCUSED, MOVING, GOING_DOWN, GOING_UP, WAITING, DEAD
+  }
+
+  public enum TargetState {
+    ABILITY, RELEASE, THROW
   }
 }

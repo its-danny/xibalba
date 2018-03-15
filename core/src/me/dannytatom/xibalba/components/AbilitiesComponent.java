@@ -2,7 +2,6 @@ package me.dannytatom.xibalba.components;
 
 import com.badlogic.ashley.core.Component;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import me.dannytatom.xibalba.abilities.Ability;

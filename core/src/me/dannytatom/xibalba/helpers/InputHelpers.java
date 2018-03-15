@@ -20,8 +20,9 @@ public class InputHelpers {
   /**
    * Decide where to place cursor when the player has switched to targeting.
    */
-  public void startTargeting() {
+  public void startTargeting(WorldManager.TargetState targetState) {
     WorldManager.state = WorldManager.State.TARGETING;
+    WorldManager.targetState = targetState;
 
     enemiesAround = WorldManager.mapHelpers.getEnemiesInPlayerVision();
 

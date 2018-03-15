@@ -12,11 +12,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.abilities.Ability;
+import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.ui.ActionButton;
 import me.dannytatom.xibalba.utils.ComponentMappers;
 import me.dannytatom.xibalba.world.WorldManager;
@@ -29,6 +29,7 @@ public class AbilitiesScreen implements Screen {
   private final Table table;
   private final VerticalGroup abilitiesGroup;
   private final HashMap<String, Ability> abilities;
+  private final PlayerComponent playerDetails;
 
   /**
    * View and use your abilities.
@@ -39,6 +40,7 @@ public class AbilitiesScreen implements Screen {
     this.main = main;
 
     abilities = ComponentMappers.abilities.get(WorldManager.player).abilities;
+    playerDetails = ComponentMappers.player.get(WorldManager.player);
 
     stage = new Stage(new FitViewport(960, 540));
 
@@ -100,7 +102,13 @@ public class AbilitiesScreen implements Screen {
         button.setKeys(i + 8);
         button.setAction(table, () -> {
           if (WorldManager.state != WorldManager.State.FOCUSED) {
-            ability.act(WorldManager.player);
+            if (ability.targetRequired && WorldManager.state != WorldManager.State.TARGETING) {
+              playerDetails.targetingAbility = ability;
+              WorldManager.inputHelpers.startTargeting(WorldManager.TargetState.ABILITY);
+            } else {
+              ability.act(WorldManager.player);
+            }
+
             main.setScreen(Main.playScreen);
           }
         });

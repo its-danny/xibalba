@@ -19,6 +19,11 @@ public class Ability {
   public int recharge;
   public int counter = recharge;
 
+  /**
+   * Do the ability.
+   *
+   * @param entity Who the ability is acting on
+   */
   public void act(Entity entity) {
     for (Effect effect : effects) {
       if (this.counter == this.recharge) {

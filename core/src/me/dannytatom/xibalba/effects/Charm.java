@@ -1,10 +1,8 @@
 package me.dannytatom.xibalba.effects;
 
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.gdx.math.MathUtils;
 
 import me.dannytatom.xibalba.components.AttributesComponent;
-import me.dannytatom.xibalba.components.statuses.BleedingComponent;
 import me.dannytatom.xibalba.components.statuses.CharmedComponent;
 import me.dannytatom.xibalba.utils.ComponentMappers;
 import me.dannytatom.xibalba.world.WorldManager;

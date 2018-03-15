@@ -7,6 +7,8 @@ import com.badlogic.gdx.utils.Array;
 
 import java.util.List;
 
+import me.dannytatom.xibalba.abilities.Ability;
+
 import org.xguzm.pathfinding.grid.GridCell;
 
 public class PlayerComponent implements Component {
@@ -16,6 +18,7 @@ public class PlayerComponent implements Component {
   public Entity lastHitEntity = null;
   public FocusedAction focusedAction = null;
   public Entity focusedEntity = null;
+  public Ability targetingAbility = null;
   public int lowestDepth = 1;
   public int totalHits = 0;
   public int totalMisses = 0;
