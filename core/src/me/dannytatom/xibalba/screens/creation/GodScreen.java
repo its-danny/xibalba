@@ -16,12 +16,14 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import me.dannytatom.xibalba.Main;
+import me.dannytatom.xibalba.abilities.Ability;
+import me.dannytatom.xibalba.effects.Charm;
 import me.dannytatom.xibalba.ui.ActionButton;
 import me.dannytatom.xibalba.utils.PlayerSetup;
-import me.dannytatom.xibalba.utils.yaml.AbilityData;
 import me.dannytatom.xibalba.utils.yaml.GodData;
 
 import org.apache.commons.lang3.text.WordUtils;
+import org.yaml.snakeyaml.TypeDescription;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 
@@ -171,9 +173,11 @@ class GodScreen implements Screen {
 
     GodData godData = godDataList.get(godSelected);
 
-    Yaml yaml = new Yaml(new Constructor(AbilityData.class));
+    Constructor constructor = new Constructor(Ability.class);
+    constructor.addTypeDescription(new TypeDescription(Charm.class, "!Charm"));
+    Yaml yaml = new Yaml(constructor);
     godData.abilities.forEach((String ability) -> {
-      AbilityData details = (AbilityData) yaml.load(Main.abilitiesData.get(ability));
+      Ability details = (Ability) yaml.load(Main.abilitiesData.get(ability));
 
       abilityGroup.addActor(
           new Label(
@@ -187,14 +191,14 @@ class GodScreen implements Screen {
     main.setScreen(new NameScreen(main, playerSetup));
   }
 
-  private String createAbilityText(AbilityData abilityData) {
-    String desc = WordUtils.wrap(abilityData.description, 70);
+  private String createAbilityText(Ability ability) {
+    String desc = WordUtils.wrap(ability.description, 70);
 
-    if (abilityData.type == AbilityData.Type.PASSIVE) {
-      return abilityData.name + "[LIGHT_GRAY] Passive\n[DARK_GRAY]" + desc;
+    if (ability.type == Ability.Type.PASSIVE) {
+      return ability.name + "[LIGHT_GRAY] Passive\n[DARK_GRAY]" + desc;
     } else {
-      return abilityData.name + "[LIGHT_GRAY] Usable every "
-          + abilityData.recharge + " turns\n" + "[DARK_GRAY]" + desc;
+      return ability.name + "[LIGHT_GRAY] Usable every "
+          + ability.recharge + " turns\n" + "[DARK_GRAY]" + desc;
     }
   }
 

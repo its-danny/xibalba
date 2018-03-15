@@ -6,7 +6,6 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.utils.Array;
 
 import me.dannytatom.xibalba.ActionLog;
-import me.dannytatom.xibalba.helpers.AbilityHelpers;
 import me.dannytatom.xibalba.helpers.CombatHelpers;
 import me.dannytatom.xibalba.helpers.EntityHelpers;
 import me.dannytatom.xibalba.helpers.InputHelpers;
@@ -45,7 +44,6 @@ public class WorldManager {
   public static CombatHelpers combatHelpers;
   public static EntityHelpers entityHelpers;
   public static ItemHelpers itemHelpers;
-  public static AbilityHelpers abilityHelpers;
   public static Entity player;
   public static Entity god;
   public static boolean executeTurn;
@@ -66,7 +64,6 @@ public class WorldManager {
     entityHelpers = new EntityHelpers();
     itemHelpers = new ItemHelpers();
     combatHelpers = new CombatHelpers();
-    abilityHelpers = new AbilityHelpers();
 
     executeTurn = false;
     turnCount = 0;

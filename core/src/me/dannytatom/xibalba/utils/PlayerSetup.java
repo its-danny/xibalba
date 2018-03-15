@@ -10,6 +10,7 @@ import java.util.Calendar;
 import java.util.TreeMap;
 
 import me.dannytatom.xibalba.Main;
+import me.dannytatom.xibalba.abilities.Ability;
 import me.dannytatom.xibalba.components.AbilitiesComponent;
 import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.BodyComponent;
@@ -22,10 +23,11 @@ import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.SkillsComponent;
 import me.dannytatom.xibalba.components.TraitsComponent;
 import me.dannytatom.xibalba.components.VisualComponent;
-import me.dannytatom.xibalba.utils.yaml.AbilityData;
+import me.dannytatom.xibalba.effects.Charm;
 import me.dannytatom.xibalba.utils.yaml.GodData;
 import me.dannytatom.xibalba.world.WorldManager;
 
+import org.yaml.snakeyaml.TypeDescription;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 
@@ -180,12 +182,12 @@ public class PlayerSetup {
 
     AbilitiesComponent abilitiesComponent = new AbilitiesComponent();
 
-    Yaml yaml = new Yaml(new Constructor(AbilityData.class));
-    godData.abilities.forEach((String ability) -> {
-      AbilityData details = (AbilityData) yaml.load(Main.abilitiesData.get(ability));
-
-      details.counter = details.recharge;
-      abilitiesComponent.abilities.put(ability, details);
+    Constructor constructor = new Constructor(Ability.class);
+    constructor.addTypeDescription(new TypeDescription(Charm.class, "!Charm"));
+    Yaml yaml = new Yaml(constructor);
+    godData.abilities.forEach((String abilityKey) -> {
+      Ability ability = (Ability) yaml.load(Main.abilitiesData.get(abilityKey));
+      abilitiesComponent.abilities.put(abilityKey, ability);
     });
 
     player.add(abilitiesComponent);

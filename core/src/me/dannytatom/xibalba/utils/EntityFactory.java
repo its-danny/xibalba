@@ -31,6 +31,7 @@ import me.dannytatom.xibalba.components.items.ArmorComponent;
 import me.dannytatom.xibalba.components.items.WeaponComponent;
 import me.dannytatom.xibalba.components.traps.SpiderWebComponent;
 import me.dannytatom.xibalba.effects.Bleed;
+import me.dannytatom.xibalba.effects.Charm;
 import me.dannytatom.xibalba.effects.DealDamage;
 import me.dannytatom.xibalba.effects.Poison;
 import me.dannytatom.xibalba.effects.RaiseHealth;
@@ -61,6 +62,7 @@ public class EntityFactory {
   public Entity createEnemy(String name, Vector2 position) {
     Constructor constructor = new Constructor(EnemyData.class);
     constructor.addTypeDescription(new TypeDescription(Bleed.class, "!Bleed"));
+    constructor.addTypeDescription(new TypeDescription(Charm.class, "!Charm"));
     constructor.addTypeDescription(new TypeDescription(DealDamage.class, "!DealDamage"));
     constructor.addTypeDescription(new TypeDescription(Poison.class, "!Poison"));
     constructor.addTypeDescription(new TypeDescription(RaiseHealth.class, "!RaiseHealth"));
@@ -118,6 +120,7 @@ public class EntityFactory {
   public Entity createItem(String key, Vector2 position) {
     Constructor constructor = new Constructor(ItemData.class);
     constructor.addTypeDescription(new TypeDescription(Bleed.class, "!Bleed"));
+    constructor.addTypeDescription(new TypeDescription(Charm.class, "!Charm"));
     constructor.addTypeDescription(new TypeDescription(DealDamage.class, "!DealDamage"));
     constructor.addTypeDescription(new TypeDescription(Poison.class, "!Poison"));
     constructor.addTypeDescription(new TypeDescription(RaiseHealth.class, "!RaiseHealth"));

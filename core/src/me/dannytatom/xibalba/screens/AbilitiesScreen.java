@@ -12,12 +12,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import me.dannytatom.xibalba.Main;
+import me.dannytatom.xibalba.abilities.Ability;
 import me.dannytatom.xibalba.ui.ActionButton;
 import me.dannytatom.xibalba.utils.ComponentMappers;
-import me.dannytatom.xibalba.utils.yaml.AbilityData;
 import me.dannytatom.xibalba.world.WorldManager;
 
 import org.apache.commons.lang3.text.WordUtils;
@@ -27,7 +28,7 @@ public class AbilitiesScreen implements Screen {
   private final Stage stage;
   private final Table table;
   private final VerticalGroup abilitiesGroup;
-  private final HashMap<String, AbilityData> abilities;
+  private final HashMap<String, Ability> abilities;
 
   /**
    * View and use your abilities.
@@ -84,22 +85,22 @@ public class AbilitiesScreen implements Screen {
     abilitiesGroup.clear();
 
     int i = 0;
-    for (AbilityData abilityData : abilities.values()) {
-      if (abilityData.type == AbilityData.Type.PASSIVE) {
-        abilitiesGroup.addActor(new Label(abilityData.name + " [LIGHT_GRAY]Passive", Main.skin));
+    for (Ability ability : abilities.values()) {
+      if (ability.type == Ability.Type.PASSIVE) {
+        abilitiesGroup.addActor(new Label(ability.name + " [LIGHT_GRAY]Passive", Main.skin));
       } else {
         // If you look at the docs for Input.Keys, number keys are offset by 7
         // (e.g. 0 = 7, 1 = 8, etc)
 
         ActionButton button = new ActionButton(
             i + 1,
-            abilityData.name + " [LIGHT_GRAY]Usable every " + abilityData.recharge + " turns"
+            ability.name + " [LIGHT_GRAY]Usable every " + ability.recharge + " turns"
         );
 
         button.setKeys(i + 8);
         button.setAction(table, () -> {
           if (WorldManager.state != WorldManager.State.FOCUSED) {
-            WorldManager.abilityHelpers.doAbility(WorldManager.player, abilityData);
+            ability.act(WorldManager.player);
             main.setScreen(Main.playScreen);
           }
         });
@@ -110,11 +111,11 @@ public class AbilitiesScreen implements Screen {
       }
 
       abilitiesGroup.addActor(new Label(
-          "[DARK_GRAY]" + WordUtils.wrap(abilityData.description, 140), Main.skin
+          "[DARK_GRAY]" + WordUtils.wrap(ability.description, 140), Main.skin
       ));
 
       abilitiesGroup.addActor(new Label(
-          "[DARK_GRAY]" + (abilityData.recharge - abilityData.counter) + " turns left", Main.skin
+          "[DARK_GRAY]" + (ability.recharge - ability.counter) + " turns left", Main.skin
       ));
 
       abilitiesGroup.addActor(new Label("", Main.skin));

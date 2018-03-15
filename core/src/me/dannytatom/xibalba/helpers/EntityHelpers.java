@@ -317,25 +317,6 @@ public class EntityHelpers {
   }
 
   /**
-   * Charm an entity.
-   *
-   * @param starter Who's doing the charming
-   * @param target  Who are they charming
-   * @param turns   How long the charm lasts
-   */
-  public void charm(Entity starter, Entity target, int turns) {
-    target.add(new CharmedComponent(turns));
-
-    AttributesComponent targetAttributes = ComponentMappers.attributes.get(target);
-
-    if (ComponentMappers.player.has(starter)) {
-      WorldManager.log.add("effects.charmed.started", "You", targetAttributes.name);
-    } else {
-      WorldManager.log.add("effects.charmed.started", targetAttributes.name, "you");
-    }
-  }
-
-  /**
    * Throw up a little bit.
    *
    * @param entity Who's vomiting

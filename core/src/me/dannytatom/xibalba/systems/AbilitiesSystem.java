@@ -5,9 +5,9 @@ import com.badlogic.ashley.core.Family;
 
 import java.util.HashMap;
 
+import me.dannytatom.xibalba.abilities.Ability;
 import me.dannytatom.xibalba.components.AbilitiesComponent;
 import me.dannytatom.xibalba.utils.ComponentMappers;
-import me.dannytatom.xibalba.utils.yaml.AbilityData;
 
 
 public class AbilitiesSystem extends UsesEnergySystem {
@@ -17,7 +17,7 @@ public class AbilitiesSystem extends UsesEnergySystem {
 
   @Override
   protected void processEntity(Entity entity, float deltaTime) {
-    HashMap<String, AbilityData> abilities = ComponentMappers.abilities.get(entity).abilities;
+    HashMap<String, Ability> abilities = ComponentMappers.abilities.get(entity).abilities;
 
     abilities.forEach((name, ability) -> {
       if (ability.counter < ability.recharge) {
