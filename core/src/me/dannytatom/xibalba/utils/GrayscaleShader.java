@@ -4,12 +4,11 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 
 // https://stackoverflow.com/questions/28874621/libgdx-grayscale-shader-fade-effect
 public class GrayscaleShader {
-  private static final String vertexShader = "attribute vec4 a_position;\n"
+  private static final String vertexShader
+      = "attribute vec4 a_position;\n"
       + "attribute vec4 a_color;\n"
       + "attribute vec2 a_texCoord0;\n"
-      + "\n"
       + "uniform mat4 u_projTrans;\n"
-      + "\n"
       + "varying vec4 v_color;\n"
       + "varying vec2 v_texCoords;\n"
       + "\n"
@@ -19,7 +18,8 @@ public class GrayscaleShader {
       + "    gl_Position = u_projTrans * a_position;\n"
       + "}";
 
-  private static final String fragmentShader = "#ifdef GL_ES\n"
+  private static final String fragmentShader
+      = "#ifdef GL_ES\n"
       + "    precision mediump float;\n"
       + "#endif\n"
       + "\n"
@@ -30,8 +30,8 @@ public class GrayscaleShader {
       + "\n"
       + "void main() {\n"
       + "  vec4 c = v_color * texture2D(u_texture, v_texCoords);\n"
-      + "  float grey = dot( c.rgb, vec3(0.22, 0.707, 0.071) );\n"
-      + "  vec3 blendedColor = mix(c.rgb, vec3(grey), u_grayness);\n"
+      + "  float gray = dot(c.rgb, vec3(0.22, 0.707, 0.071));\n"
+      + "  vec3 blendedColor = mix(c.rgb, vec3(gray), u_grayness);\n"
       + "  gl_FragColor = vec4(blendedColor.rgb, c.a);\n"
       + "}";
 

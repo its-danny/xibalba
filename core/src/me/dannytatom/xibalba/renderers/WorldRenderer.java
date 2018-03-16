@@ -3,6 +3,7 @@ package me.dannytatom.xibalba.renderers;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Colors;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -86,9 +87,11 @@ public class WorldRenderer {
     worldCamera.update();
 
     if (god.hasWrath) {
-      batch.setShader(GrayscaleShader.shader);
+      GrayscaleShader.shader.begin();
       GrayscaleShader.shader.setUniformf("u_grayness", wrathFade);
+      batch.setShader(GrayscaleShader.shader);
     } else {
+      GrayscaleShader.shader.end();
       batch.setShader(null);
     }
 
@@ -146,7 +149,6 @@ public class WorldRenderer {
 
         if (god.hasWrath) {
           batch.setShader(GrayscaleShader.shader);
-          GrayscaleShader.shader.setUniformf("u_grayness", wrathFade);
         }
       }
     }

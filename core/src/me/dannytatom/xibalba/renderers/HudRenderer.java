@@ -15,6 +15,8 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+import java.util.Map;
+
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.BodyComponent;
@@ -263,25 +265,35 @@ public class HudRenderer {
   }
 
   private void updateGameInfo() {
-    String performanceInfo = "";
+    StringBuilder performanceInfo = new StringBuilder();
     String positionInfo = "";
     String dijkstraInfo = "";
 
     if (Main.debug.debugEnabled) {
-      performanceInfo = "[DARK_GRAY]v0.1.0, FPS: " + Gdx.graphics.getFramesPerSecond()
-          + ", Turn: " + WorldManager.turnCount;
+      performanceInfo = new StringBuilder("[DARK_GRAY]v0.1.0"
+          + ", FPS: " + Gdx.graphics.getFramesPerSecond()
+          + ", Turn: " + WorldManager.turnCount);
+
+      for (Map.Entry<String, String> glEntry : Main.debug.gl.entrySet()) {
+        String label = glEntry.getKey();
+        String value = glEntry.getValue();
+
+        performanceInfo.append("\n").append(label).append(": ").append(value);
+      }
+
+      performanceInfo.append("\n");
 
       positionInfo = "[DARK_GRAY]" + playerPosition.pos.toString()
           + (playerDetails.target != null ? ", " + playerDetails.target.toString() : "");
     }
 
     if (gameInfo.getChildren().size == 0) {
-      gameInfo.addActor(new Label(performanceInfo, Main.skin));
+      gameInfo.addActor(new Label(performanceInfo.toString(), Main.skin));
       gameInfo.addActor(new Label(positionInfo, Main.skin));
       gameInfo.addActor(new Label(dijkstraInfo, Main.skin));
     } else {
       Label performanceInfoLabel = (Label) gameInfo.getChildren().get(0);
-      performanceInfoLabel.setText(performanceInfo);
+      performanceInfoLabel.setText(performanceInfo.toString());
       Label positionInfoLabel = (Label) gameInfo.getChildren().get(1);
       positionInfoLabel.setText(positionInfo);
       Label dijkstraInfoLabel = (Label) gameInfo.getChildren().get(2);

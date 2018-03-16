@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.Colors;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.profiling.GLProfiler;
 import com.strongjoshua.console.Console;
 import com.strongjoshua.console.GUIConsole;
 
@@ -24,6 +25,7 @@ import me.dannytatom.xibalba.utils.ComponentMappers;
 import me.dannytatom.xibalba.world.WorldManager;
 
 public class PlayScreen implements Screen {
+  private GLProfiler glProfiler;
   private final WorldRenderer worldRenderer;
   private final HudRenderer hudRenderer;
   private final Console console;
@@ -46,6 +48,8 @@ public class PlayScreen implements Screen {
    * @param main Instance of Main class
    */
   public PlayScreen(Main main) {
+    glProfiler = new GLProfiler(Gdx.graphics);
+
     autoTimer = 0;
     keyHoldTimerDelay = 0;
     keyHoldTimer = 0;
@@ -85,7 +89,7 @@ public class PlayScreen implements Screen {
     if (god.hasWrath) {
       wrathFadeTimer += delta;
 
-      if (wrathFade < 1 && wrathFadeTimer >= 0.1) {
+      if (wrathFade + 0.1 <= 1 && wrathFadeTimer >= 0.1) {
         wrathFade += 0.1;
         wrathFadeTimer = 0f;
       }
@@ -205,6 +209,20 @@ public class PlayScreen implements Screen {
 
         console.draw();
 
+        if (Main.debug.debugEnabled) {
+          if (!glProfiler.isEnabled()) {
+            glProfiler.enable();
+          }
+
+          Main.debug.gl.put("Calls", glProfiler.getCalls() + "");
+          Main.debug.gl.put("Draw Calls", glProfiler.getDrawCalls() + "");
+          Main.debug.gl.put("Shader Switches", glProfiler.getShaderSwitches() + "");
+          Main.debug.gl.put("Texture Bindings", glProfiler.getTextureBindings() + "");
+          Main.debug.gl.put("Vertices", glProfiler.getVertexCount().total + "");
+
+          glProfiler.reset();
+        }
+
         break;
     }
   }
@@ -239,5 +257,6 @@ public class PlayScreen implements Screen {
   @Override
   public void dispose() {
     batch.dispose();
+    glProfiler.disable();
   }
 }
