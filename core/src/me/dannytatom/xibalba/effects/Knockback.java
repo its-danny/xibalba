@@ -47,6 +47,8 @@ public class Knockback extends Effect {
 
               if (WorldManager.mapHelpers.getCell(behindNewPosition).type == MapCell.Type.WALL
                   || WorldManager.mapHelpers.getEnemyAt(behindNewPosition) != null) {
+                Main.cameraShake.shake(.5f, .1f);
+
                 WorldManager.tweens.add(
                     Tween.to(targetVisual.sprite, SpriteAccessor.ALPHA, .05f)
                         .target(.25f).repeatYoyo(1, 0f)
