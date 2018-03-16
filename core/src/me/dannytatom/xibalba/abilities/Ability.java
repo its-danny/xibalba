@@ -17,7 +17,7 @@ public class Ability {
   public AttributesComponent.Type targetType;
   public ArrayList<Effect> effects;
   public int recharge;
-  public int counter = recharge;
+  public int counter;
 
   /**
    * Do the ability.

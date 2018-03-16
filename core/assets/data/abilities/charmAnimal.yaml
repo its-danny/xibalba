@@ -5,6 +5,7 @@ type: ACTIVE
 targetRequired: true
 targetType: ANIMAL
 recharge: 10
+counter: 10
 effects:
   - !Charm {
       type: ACTIVE,

@@ -47,7 +47,7 @@ public class JumpOverEnemy extends Effect {
 
         WorldManager.tweens.add(
             Tween.to(visual.sprite, SpriteAccessor.SCALE, .25f).target(
-                2, 2
+                1.2f, 1.2f
             ).repeatYoyo(1, 0f).ease(Elastic.INOUT)
         );
 

@@ -4,6 +4,7 @@ description: Jump over a nearby enemy
 type: ACTIVE
 targetRequired: true
 recharge: 5
+counter: 5
 effects:
   - !JumpOverEnemy {
       type: ACTIVE,

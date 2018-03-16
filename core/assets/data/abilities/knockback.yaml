@@ -4,6 +4,7 @@ description: Knock back an enemy
 type: ACTIVE
 targetRequired: true
 recharge: 3
+counter: 3
 effects:
   - !Knockback {
       type: ACTIVE,
