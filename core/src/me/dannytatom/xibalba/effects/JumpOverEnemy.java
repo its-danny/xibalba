@@ -2,6 +2,7 @@ package me.dannytatom.xibalba.effects;
 
 import aurelienribon.tweenengine.Tween;
 import aurelienribon.tweenengine.TweenCallback;
+import aurelienribon.tweenengine.equations.Elastic;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.Vector2;
 
@@ -47,7 +48,7 @@ public class JumpOverEnemy extends Effect {
         WorldManager.tweens.add(
             Tween.to(visual.sprite, SpriteAccessor.SCALE, .25f).target(
                 2, 2
-            ).repeatYoyo(1, 0f)
+            ).repeatYoyo(1, 0f).ease(Elastic.INOUT)
         );
 
         WorldManager.tweens.add(
