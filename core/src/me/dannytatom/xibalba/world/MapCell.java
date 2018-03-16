@@ -5,12 +5,13 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 
 public class MapCell {
   public final Sprite sprite;
-  public final Tween tween;
+  public Tween tween;
   public String description;
   public Type type;
   public Covered covered;
   public boolean hidden = true;
   public boolean forgotten = false;
+  public boolean onFire = false;
 
   /**
    * Holds world cell data.

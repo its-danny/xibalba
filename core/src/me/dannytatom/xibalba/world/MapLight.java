@@ -6,6 +6,8 @@ import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
 
+import java.util.Arrays;
+
 import me.dannytatom.xibalba.components.LightComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.utils.ComponentMappers;
@@ -26,7 +28,18 @@ public class MapLight {
   public MapLight(int mapIndex) {
     this.mapIndex = mapIndex;
     this.caster = new ShadowCaster();
-    this.family = Family.all(LightComponent.class).get();
+    this.family = Family.all(LightComponent.class, PositionComponent.class).get();
+
+    Map map = WorldManager.world.getMap(mapIndex);
+    this.lightMap = new float[map.width][map.height];
+    for (float[] row : lightMap) {
+      Arrays.fill(row, 0f);
+    }
+
+    this.colorMap = new Color[map.width][map.height];
+    for (Color[] row : colorMap) {
+      Arrays.fill(row, Color.BLACK);
+    }
   }
 
   public boolean hasLights() {
@@ -41,15 +54,10 @@ public class MapLight {
   public void update(float delta) {
     counter += delta;
 
+    float[][] fovMap = WorldManager.mapHelpers.createFovMapFor(mapIndex);
+    ImmutableArray<Entity> lightSources = WorldManager.engine.getEntitiesFor(family);
+
     if (counter >= .10f) {
-      counter = 0;
-
-      float[][] fovMap = WorldManager.mapHelpers.createFovMapFor(mapIndex);
-      ImmutableArray<Entity> lightSources = WorldManager.engine.getEntitiesFor(family);
-
-      lightMap = new float[fovMap.length][fovMap[0].length];
-      colorMap = new Color[fovMap.length][fovMap[0].length];
-
       for (Entity lightSource : lightSources) {
         LightComponent light = ComponentMappers.light.get(lightSource);
         PositionComponent position = ComponentMappers.position.get(lightSource);
@@ -81,6 +89,8 @@ public class MapLight {
           }
         }
       }
+
+      counter = 0;
     }
   }
 }

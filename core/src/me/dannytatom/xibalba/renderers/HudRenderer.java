@@ -526,6 +526,10 @@ public class HudRenderer {
       statuses.add("[DARK_GRAY]BLEEDING[]");
     }
 
+    if (ComponentMappers.burning.has(entity)) {
+      statuses.add("[DARK_GRAY]BURNING[]");
+    }
+
     if (ComponentMappers.poisoned.has(entity)) {
       statuses.add("[DARK_GRAY]POISONED[]");
     }

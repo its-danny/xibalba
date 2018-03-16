@@ -67,11 +67,7 @@ public class RangeSystem extends UsesEnergySystem {
     ).setCallback(
         (type, source) -> {
           if (type == TweenCallback.COMPLETE) {
-            if (destroy) {
-              WorldManager.itemHelpers.destroy(entity, item);
-            } else {
-              WorldManager.itemHelpers.drop(entity, item, position);
-            }
+            WorldManager.itemHelpers.drop(entity, item, position, destroy);
           }
         }
     ));

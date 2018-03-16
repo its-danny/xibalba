@@ -8,6 +8,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.I18NBundle;
 
+import java.util.ArrayList;
+
 import me.dannytatom.xibalba.Main;
 import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.BodyComponent;
@@ -36,6 +38,7 @@ import me.dannytatom.xibalba.effects.DealDamage;
 import me.dannytatom.xibalba.effects.Poison;
 import me.dannytatom.xibalba.effects.RaiseHealth;
 import me.dannytatom.xibalba.effects.RaiseSpeed;
+import me.dannytatom.xibalba.effects.StartFire;
 import me.dannytatom.xibalba.utils.yaml.EnemyData;
 import me.dannytatom.xibalba.utils.yaml.ItemData;
 import me.dannytatom.xibalba.utils.yaml.ItemRequiredComponentData;
@@ -126,6 +129,7 @@ public class EntityFactory {
     constructor.addTypeDescription(new TypeDescription(DealDamage.class, "!DealDamage"));
     constructor.addTypeDescription(new TypeDescription(Poison.class, "!Poison"));
     constructor.addTypeDescription(new TypeDescription(RaiseHealth.class, "!RaiseHealth"));
+    constructor.addTypeDescription(new TypeDescription(StartFire.class, "!StartFire"));
     TypeDescription itemDescription = new TypeDescription(ItemData.class);
     itemDescription.putListPropertyType("requiredComponent", ItemRequiredComponentData.class);
     constructor.addTypeDescription(itemDescription);
@@ -152,7 +156,11 @@ public class EntityFactory {
         entity.add(new WeaponComponent(data.weaponType, data.ammunition));
         break;
       case "light":
-        entity.add(new LightComponent(data));
+        ArrayList<Color> colors = new ArrayList<>();
+        for (String hex : data.lightColors) {
+          colors.add(Main.parseColor(hex));
+        }
+        entity.add(new LightComponent(data.lightRadius, data.lightFlickers, colors));
         break;
       default:
     }

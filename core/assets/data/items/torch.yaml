@@ -14,6 +14,15 @@ actions:
   - throw
   - hold
 
+verbs:
+  - hit
+
+effects:
+  - !StartFire {
+    type: ACTIVE,
+    trigger: DROP
+  }
+
 lightRadius: 5
 lightFlickers: true
 lightColors:

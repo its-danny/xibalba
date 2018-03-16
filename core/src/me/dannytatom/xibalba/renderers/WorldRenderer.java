@@ -116,7 +116,7 @@ public class WorldRenderer {
       for (int y = 0; y < map.height; y++) {
         MapCell cell = map.getCellMap()[x][y];
 
-        if (cell.hasBlood()) {
+        if (cell.hasBlood() && !cell.onFire) {
           if (god.hasWrath) {
             batch.setShader(null);
           }

@@ -5,6 +5,7 @@ import com.badlogic.ashley.core.Family;
 
 import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
+import me.dannytatom.xibalba.components.statuses.BurningComponent;
 import me.dannytatom.xibalba.components.statuses.DrowningComponent;
 import me.dannytatom.xibalba.components.statuses.StuckComponent;
 import me.dannytatom.xibalba.components.statuses.WetComponent;
@@ -35,6 +36,10 @@ public class TileEffectSystem extends UsesEnergySystem {
           entity.add(new DrowningComponent());
         }
       }
+    }
+
+    if (WorldManager.mapHelpers.getCell(position.pos.x, position.pos.y).onFire) {
+      entity.add(new BurningComponent(5));
     }
 
     Entity trap = WorldManager.mapHelpers.getTrapAt(position.pos);

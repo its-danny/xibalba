@@ -199,6 +199,8 @@ public class PlayerSetup {
     WorldManager.itemHelpers.addToInventory(player, shield, false);
     Entity chippedFlint = WorldManager.entityFactory.createItem("chippedFlint", new Vector2(0, 0));
     WorldManager.itemHelpers.addToInventory(player, chippedFlint, false);
+    Entity torch = WorldManager.entityFactory.createItem("torch", new Vector2(0, 0));
+    WorldManager.itemHelpers.addToInventory(player, torch, false);
 
     return player;
   }

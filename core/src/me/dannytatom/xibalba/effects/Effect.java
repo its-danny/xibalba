@@ -15,6 +15,6 @@ public abstract class Effect {
   }
 
   public enum Trigger {
-    APPLY, CONSUME, HIT, WEAR, INSTANT,
+    APPLY, CONSUME, HIT, WEAR, DROP, INSTANT,
   }
 }

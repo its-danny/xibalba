@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -26,6 +27,7 @@ public class Map {
   public Vector2 exit;
   public MapLight light;
   public MapWeather weather;
+  public ArrayList<MapFire> fires;
   private MapCell[][] map;
   private MapCell.Type[][] flooded;
   private int floodedCount = 0;
@@ -44,6 +46,7 @@ public class Map {
     this.height = this.geometry[0].length;
 
     this.dijkstra = new MapDijkstra(this);
+    this.fires = new ArrayList<>();
   }
 
   /**

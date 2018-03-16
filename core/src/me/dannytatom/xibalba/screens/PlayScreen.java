@@ -76,9 +76,6 @@ public class PlayScreen implements Screen {
     // Generate all dijkstra maps
     WorldManager.world.getCurrentMap().dijkstra.updateAll();
 
-    // Generate light map
-    WorldManager.world.getCurrentMap().light.update(.10f);
-
     // Change state to playing
     WorldManager.state = WorldManager.State.PLAYING;
   }
@@ -132,6 +129,11 @@ public class PlayScreen implements Screen {
         if (WorldManager.world.getCurrentMap().weather != null && Main.debug.weatherEnabled) {
           WorldManager.world.getCurrentMap().weather.update(delta);
         }
+
+        // FIRE!!!
+        WorldManager.world.getCurrentMap().fires.forEach(
+            fire -> fire.update(delta, WorldManager.executeTurn)
+        );
 
         // Keep moving if a key is held down
         if (playerInput.keyHeld != -1) {
@@ -202,6 +204,7 @@ public class PlayScreen implements Screen {
         hudRenderer.render(delta);
 
         console.draw();
+
         break;
     }
   }

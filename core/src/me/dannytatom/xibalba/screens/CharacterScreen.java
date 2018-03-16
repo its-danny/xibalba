@@ -910,7 +910,7 @@ public class CharacterScreen implements Screen {
           WorldManager.itemHelpers.addToInventory(player, skin, false);
         }
 
-        WorldManager.itemHelpers.destroy(player, inventory.items.get(itemSelected));
+        WorldManager.itemHelpers.drop(player, inventory.items.get(itemSelected), true);
         WorldManager.log.add("inventory.skinned", amount);
 
         itemSelected = 0;
@@ -935,7 +935,7 @@ public class CharacterScreen implements Screen {
     bandageButton.setAction(table, () -> {
       if (itemActionTable.getChildren().contains(bandageButton, true)) {
         player.remove(BleedingComponent.class);
-        WorldManager.itemHelpers.destroy(player, inventory.items.get(itemSelected));
+        WorldManager.itemHelpers.drop(player, inventory.items.get(itemSelected), true);
         WorldManager.log.add("inventory.bandaged");
 
         itemSelected = 0;
@@ -996,7 +996,7 @@ public class CharacterScreen implements Screen {
     dropButton.setKeys(Input.Keys.D);
     dropButton.setAction(table, () -> {
       if (itemActionTable.getChildren().contains(dropButton, true)) {
-        WorldManager.itemHelpers.drop(player, inventory.items.get(itemSelected));
+        WorldManager.itemHelpers.drop(player, inventory.items.get(itemSelected), false);
 
         itemSelected = 0;
 

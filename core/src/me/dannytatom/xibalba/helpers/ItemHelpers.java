@@ -472,7 +472,7 @@ public class ItemHelpers {
         player.identifiedItems.add(itemDetails.name);
       }
 
-      destroy(entity, item);
+      drop(entity, item, true);
     }
   }
 
@@ -500,7 +500,7 @@ public class ItemHelpers {
         }
       }
 
-      destroy(entity, applyingItem);
+      drop(entity, applyingItem, true);
     }
   }
 
@@ -538,7 +538,7 @@ public class ItemHelpers {
    * @param item     What we're dropping
    * @param position Where we gonna drop it
    */
-  public void drop(Entity entity, Entity item, Vector2 position) {
+  public void drop(Entity entity, Entity item, Vector2 position, boolean destroy) {
     if (ComponentMappers.inventory.has(entity)) {
       if (isEquipped(entity, item)) {
         remove(entity, item);
@@ -548,8 +548,21 @@ public class ItemHelpers {
 
       WorldManager.entityHelpers.updatePosition(item, position.x, position.y);
 
-      if (ComponentMappers.player.has(entity)) {
+      if (ComponentMappers.effects.has(item)) {
+        for (Effect effect : ComponentMappers.effects.get(item).effects) {
+          if (effect.trigger == Effect.Trigger.DROP) {
+            effect.act(item);
+          }
+        }
+      }
+
+      if (!destroy && ComponentMappers.player.has(entity)) {
         WorldManager.log.add("inventory.dropped", WorldManager.itemHelpers.getName(entity, item));
+      }
+
+      if (destroy) {
+        removeFromInventory(entity, item);
+        WorldManager.world.removeEntity(item);
       }
     }
   }
@@ -560,24 +573,9 @@ public class ItemHelpers {
    * @param entity Whose feet we're dropping shit on
    * @param item   What we're dropping
    */
-  public void drop(Entity entity, Entity item) {
+  public void drop(Entity entity, Entity item, boolean destroy) {
     if (ComponentMappers.inventory.has(entity)) {
-      drop(entity, item, ComponentMappers.position.get(entity).pos);
-    }
-  }
-
-  /**
-   * It's like drop except we remove it 100%.
-   *
-   * @param entity Entity we want to take shit from
-   * @param item   The shit we gonna take
-   */
-  public void destroy(Entity entity, Entity item) {
-    InventoryComponent inventory = ComponentMappers.inventory.get(entity);
-
-    if (inventory != null && item != null) {
-      removeFromInventory(entity, item);
-      WorldManager.world.removeEntity(item);
+      drop(entity, item, ComponentMappers.position.get(entity).pos, destroy);
     }
   }
 

@@ -233,7 +233,7 @@ public class PlayerInput implements InputProcessor {
               = WorldManager.itemHelpers.getRightHand(WorldManager.player);
 
           if (primaryWeapon != null) {
-            WorldManager.itemHelpers.drop(WorldManager.player, primaryWeapon);
+            WorldManager.itemHelpers.drop(WorldManager.player, primaryWeapon, false);
           }
         }
         break;

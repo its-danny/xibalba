@@ -22,6 +22,7 @@ import me.dannytatom.xibalba.systems.actions.MeleeSystem;
 import me.dannytatom.xibalba.systems.actions.MovementSystem;
 import me.dannytatom.xibalba.systems.actions.RangeSystem;
 import me.dannytatom.xibalba.systems.statuses.BleedingSystem;
+import me.dannytatom.xibalba.systems.statuses.BurningSystem;
 import me.dannytatom.xibalba.systems.statuses.CharmedSystem;
 import me.dannytatom.xibalba.systems.statuses.CrippledSystem;
 import me.dannytatom.xibalba.systems.statuses.DrowningSystem;
@@ -83,6 +84,7 @@ public class WorldManager {
     engine.addSystem(new CharmedSystem());
     engine.addSystem(new CrippledSystem());
     engine.addSystem(new BleedingSystem());
+    engine.addSystem(new BurningSystem());
     engine.addSystem(new DrowningSystem());
     engine.addSystem(new StuckSystem());
     engine.addSystem(new PoisonedSystem());

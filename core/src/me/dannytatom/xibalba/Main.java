@@ -149,6 +149,10 @@ public class Main extends Game {
     Colors.put("waterDeepLightGreen", parseColor("13A88F"));
     Colors.put("waterDeepDarkGreen", parseColor("0B8074"));
 
+    Colors.put("fire-1", parseColor("ED6161"));
+    Colors.put("fire-2", parseColor("EDBE61"));
+    Colors.put("fire-3", parseColor("ED9661"));
+
     // Decoration colors
     Colors.put("stone", Colors.get("LIGHT_GRAY"));
     Colors.put("bridge", parseColor("969482"));

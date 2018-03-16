@@ -5,9 +5,6 @@ import com.badlogic.gdx.graphics.Color;
 
 import java.util.ArrayList;
 
-import me.dannytatom.xibalba.Main;
-import me.dannytatom.xibalba.utils.yaml.ItemData;
-
 public class LightComponent implements Component {
   public final float radius;
   public final boolean flickers;
@@ -15,17 +12,10 @@ public class LightComponent implements Component {
 
   /**
    * A light source, gives off light color and increases FoV.
-   *
-   * @param data Item data
    */
-  public LightComponent(ItemData data) {
-    this.radius = data.lightRadius;
-    this.flickers = data.lightFlickers;
-
-    colors = new ArrayList<>();
-
-    for (String color : data.lightColors) {
-      colors.add(Main.parseColor(color));
-    }
+  public LightComponent(float radius, boolean flickers, ArrayList<Color> colors) {
+    this.radius = radius;
+    this.flickers = flickers;
+    this.colors = colors;
   }
 }

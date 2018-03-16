@@ -13,12 +13,14 @@ import java.util.Objects;
 import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.DecorationComponent;
 import me.dannytatom.xibalba.components.EnemyComponent;
+import me.dannytatom.xibalba.components.LightComponent;
 import me.dannytatom.xibalba.components.PlayerComponent;
 import me.dannytatom.xibalba.components.PositionComponent;
 import me.dannytatom.xibalba.components.TrapComponent;
 import me.dannytatom.xibalba.utils.ComponentMappers;
 import me.dannytatom.xibalba.world.Map;
 import me.dannytatom.xibalba.world.MapCell;
+import me.dannytatom.xibalba.world.MapFire;
 import me.dannytatom.xibalba.world.WorldManager;
 
 import org.xguzm.pathfinding.grid.GridCell;
@@ -79,7 +81,9 @@ public class MapHelpers {
 
     if (!blocked) {
       ImmutableArray<Entity> entities =
-          WorldManager.engine.getEntitiesFor(Family.all(PositionComponent.class).get());
+          WorldManager.engine.getEntitiesFor(
+              Family.all(PositionComponent.class).exclude(LightComponent.class).get()
+          );
 
       for (Entity entity : entities) {
         PositionComponent ep = ComponentMappers.position.get(entity);
@@ -259,7 +263,9 @@ public class MapHelpers {
   public Entity getEntityAt(float cellX, float cellY) {
     ImmutableArray<Entity> entities =
         WorldManager.engine.getEntitiesFor(
-            Family.all(PositionComponent.class).exclude(DecorationComponent.class).get()
+            Family.all(PositionComponent.class).exclude(
+                DecorationComponent.class, LightComponent.class
+            ).get()
         );
 
     for (Entity entity : entities) {
@@ -283,7 +289,9 @@ public class MapHelpers {
     ArrayList<Entity> list = new ArrayList<>();
 
     ImmutableArray<Entity> entities =
-        WorldManager.engine.getEntitiesFor(Family.all(PositionComponent.class).get());
+        WorldManager.engine.getEntitiesFor(
+            Family.all(PositionComponent.class).exclude(LightComponent.class).get()
+        );
 
     for (Entity entity : entities) {
       PositionComponent entityPosition = ComponentMappers.position.get(entity);
@@ -507,6 +515,17 @@ public class MapHelpers {
     }
 
     return count;
+  }
+
+  /**
+   * Start a fire.
+   *
+   * @param position Where it all beings
+   */
+  public void startFire(Vector2 position) {
+    WorldManager.world.getMap(WorldManager.world.currentMapIndex).fires.add(
+        new MapFire(WorldManager.world.currentMapIndex, position)
+    );
   }
 
   /**
