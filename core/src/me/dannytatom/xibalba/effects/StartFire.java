@@ -7,12 +7,12 @@ import me.dannytatom.xibalba.world.WorldManager;
 
 public class StartFire extends Effect {
   @Override
-  public void act(Entity entity) {
-    WorldManager.mapHelpers.startFire(ComponentMappers.position.get(entity).pos);
+  public void act(Entity caster, Entity target) {
+    WorldManager.mapHelpers.startFire(ComponentMappers.position.get(target).pos);
   }
 
   @Override
-  public void revoke(Entity entity) {
+  public void revoke(Entity caster, Entity target) {
 
   }
 }

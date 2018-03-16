@@ -25,7 +25,7 @@ public class MapFire {
   /**
    * Handles a single fire on the map.
    *
-   * @param mapIndex          The map
+   * @param mapIndex         The map
    * @param startingPosition The starting position
    */
   public MapFire(int mapIndex, Vector2 startingPosition) {

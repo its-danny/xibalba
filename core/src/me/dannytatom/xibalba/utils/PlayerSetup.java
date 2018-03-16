@@ -24,6 +24,8 @@ import me.dannytatom.xibalba.components.SkillsComponent;
 import me.dannytatom.xibalba.components.TraitsComponent;
 import me.dannytatom.xibalba.components.VisualComponent;
 import me.dannytatom.xibalba.effects.Charm;
+import me.dannytatom.xibalba.effects.JumpOverEnemy;
+import me.dannytatom.xibalba.effects.Knockback;
 import me.dannytatom.xibalba.utils.yaml.GodData;
 import me.dannytatom.xibalba.world.WorldManager;
 
@@ -180,15 +182,22 @@ public class PlayerSetup {
         )
     );
 
-    AbilitiesComponent abilitiesComponent = new AbilitiesComponent();
-
     Constructor constructor = new Constructor(Ability.class);
     constructor.addTypeDescription(new TypeDescription(Charm.class, "!Charm"));
+    constructor.addTypeDescription(new TypeDescription(JumpOverEnemy.class, "!JumpOverEnemy"));
+    constructor.addTypeDescription(new TypeDescription(Knockback.class, "!Knockback"));
     Yaml yaml = new Yaml(constructor);
+
+    AbilitiesComponent abilitiesComponent = new AbilitiesComponent();
     godData.abilities.forEach((String abilityKey) -> {
       Ability ability = (Ability) yaml.load(Main.abilitiesData.get(abilityKey));
       abilitiesComponent.abilities.put(abilityKey, ability);
     });
+
+    Ability jumpOverEnemy = (Ability) yaml.load(Main.abilitiesData.get("jumpOverEnemy"));
+    abilitiesComponent.abilities.put("jumpOverEnemy", jumpOverEnemy);
+    Ability knockback = (Ability) yaml.load(Main.abilitiesData.get("knockback"));
+    abilitiesComponent.abilities.put("knockback", knockback);
 
     player.add(abilitiesComponent);
 

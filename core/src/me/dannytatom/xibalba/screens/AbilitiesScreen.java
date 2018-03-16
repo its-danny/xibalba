@@ -90,6 +90,8 @@ public class AbilitiesScreen implements Screen {
     for (Ability ability : abilities.values()) {
       if (ability.type == Ability.Type.PASSIVE) {
         abilitiesGroup.addActor(new Label(ability.name + " [LIGHT_GRAY]Passive", Main.skin));
+      } else if (ability.counter < ability.recharge) {
+        abilitiesGroup.addActor(new Label(ability.name, Main.skin));
       } else {
         // If you look at the docs for Input.Keys, number keys are offset by 7
         // (e.g. 0 = 7, 1 = 8, etc)
@@ -106,7 +108,7 @@ public class AbilitiesScreen implements Screen {
               playerDetails.targetingAbility = ability;
               WorldManager.inputHelpers.startTargeting(WorldManager.TargetState.ABILITY);
             } else {
-              ability.act(WorldManager.player);
+              ability.act(WorldManager.player, WorldManager.player);
             }
 
             main.setScreen(Main.playScreen);
@@ -122,9 +124,11 @@ public class AbilitiesScreen implements Screen {
           "[DARK_GRAY]" + WordUtils.wrap(ability.description, 140), Main.skin
       ));
 
-      abilitiesGroup.addActor(new Label(
-          "[DARK_GRAY]" + (ability.recharge - ability.counter) + " turns left", Main.skin
-      ));
+      if (ability.counter < ability.recharge) {
+        abilitiesGroup.addActor(new Label(
+            "[DARK_GRAY]" + (ability.recharge - ability.counter) + " turns left", Main.skin
+        ));
+      }
 
       abilitiesGroup.addActor(new Label("", Main.skin));
     }

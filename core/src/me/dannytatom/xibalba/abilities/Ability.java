@@ -22,19 +22,12 @@ public class Ability {
   /**
    * Do the ability.
    *
-   * @param entity Who the ability is acting on
+   * @param caster Who is using the ability
+   * @param target Who the ability is acting on
    */
-  public void act(Entity entity) {
+  public void act(Entity caster, Entity target) {
     for (Effect effect : effects) {
       if (this.counter == this.recharge) {
-        Entity target = null;
-
-        if (ComponentMappers.player.has(entity)) {
-          target = ComponentMappers.player.get(entity).lastHitEntity;
-        } else if (ComponentMappers.brain.get(entity) != null) {
-          target = ComponentMappers.brain.get(entity).target;
-        }
-
         if (this.targetRequired) {
           if (target == null) {
             WorldManager.log.add("effects.requiresTarget", this.name);
@@ -42,15 +35,17 @@ public class Ability {
             return;
           }
 
-          if (ComponentMappers.attributes.get(target).type != this.targetType) {
+          if (this.targetType != null
+              && ComponentMappers.attributes.get(target).type != this.targetType) {
             WorldManager.log.add("effects.failed", this.name);
 
             return;
           }
         }
 
-        effect.act(target);
+        effect.act(caster, target);
 
+        this.counter = 0;
         WorldManager.executeTurn = true;
       } else {
         WorldManager.log.add("effects.failed", this.name);

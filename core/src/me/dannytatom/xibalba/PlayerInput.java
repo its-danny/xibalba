@@ -341,10 +341,17 @@ public class PlayerInput implements InputProcessor {
         }
       }
     } else if (WorldManager.state == WorldManager.State.TARGETING) {
-      if (WorldManager.itemHelpers.getThrowing(WorldManager.player) == null) {
-        handleRange();
-      } else {
-        handleThrow();
+      switch (WorldManager.targetState) {
+        case ABILITY:
+          handleAbility();
+          break;
+        case RELEASE:
+          handleRange();
+          break;
+        case THROW:
+          handleThrow();
+          break;
+        default:
       }
     }
 
@@ -455,13 +462,16 @@ public class PlayerInput implements InputProcessor {
 
   private void handleAbility() {
     PlayerComponent playerDetails = ComponentMappers.player.get(WorldManager.player);
-    Entity enemy = WorldManager.mapHelpers.getEnemyAt(playerDetails.target);
 
-    if (enemy != null) {
-      playerDetails.targetingAbility.act(enemy);
+    if (playerDetails.target != null) {
+      Entity enemy = WorldManager.mapHelpers.getEnemyAt(playerDetails.target);
 
-      WorldManager.executeTurn = true;
-      WorldManager.state = WorldManager.State.PLAYING;
+      if (enemy != null) {
+        playerDetails.targetingAbility.act(WorldManager.player, enemy);
+
+        WorldManager.executeTurn = true;
+        WorldManager.state = WorldManager.State.PLAYING;
+      }
     }
   }
 

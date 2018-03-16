@@ -63,6 +63,10 @@ public class MapHelpers {
     return getCell(WorldManager.world.currentMapIndex, (int) cellX, (int) cellY);
   }
 
+  public MapCell getCell(Vector2 position) {
+    return getCell(position.x, position.y);
+  }
+
   public boolean isBlocked(Vector2 position) {
     return isBlocked(WorldManager.world.currentMapIndex, position);
   }

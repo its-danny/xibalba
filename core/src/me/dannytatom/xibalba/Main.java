@@ -164,6 +164,7 @@ public class Main extends Game {
 
     // Tween manager
     tweenManager = new TweenManager();
+    Tween.setCombinedAttributesLimit(4);
     Tween.registerAccessor(Sprite.class, new SpriteAccessor());
 
     // Cameras

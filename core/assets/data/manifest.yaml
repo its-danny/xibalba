@@ -1,6 +1,8 @@
 abilities:
   - abilities/charmAnimal.yaml
+  - abilities/knockback.yaml
   - abilities/bonusAgainstAnimals.yaml
+  - abilities/jumpOverEnemy.yaml
 traits:
   - traits/perceptive.yaml
   - traits/scout.yaml

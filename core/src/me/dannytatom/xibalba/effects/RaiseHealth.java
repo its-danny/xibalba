@@ -8,12 +8,12 @@ public class RaiseHealth extends Effect {
   public int amount;
 
   @Override
-  public void act(Entity entity) {
-    WorldManager.entityHelpers.raiseHealth(entity, amount);
+  public void act(Entity caster, Entity target) {
+    WorldManager.entityHelpers.raiseHealth(target, amount);
   }
 
   @Override
-  public void revoke(Entity entity) {
+  public void revoke(Entity caster, Entity target) {
 
   }
 }

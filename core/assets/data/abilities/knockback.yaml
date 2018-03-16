@@ -1,0 +1,11 @@
+---
+name: Knock Back
+description: Knock back an enemy
+type: ACTIVE
+targetRequired: true
+recharge: 3
+effects:
+  - !Knockback {
+      type: ACTIVE,
+      trigger: INSTANT
+    }

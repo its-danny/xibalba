@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Vector2;
 import java.util.Objects;
 
 import me.dannytatom.xibalba.Main;
+import me.dannytatom.xibalba.abilities.Ability;
 import me.dannytatom.xibalba.components.AttributesComponent;
 import me.dannytatom.xibalba.components.BodyComponent;
 import me.dannytatom.xibalba.components.BrainComponent;
@@ -206,7 +207,8 @@ public class CombatHelpers {
     VisualComponent targetVisual = ComponentMappers.visual.get(target);
 
     WorldManager.tweens.add(
-        Tween.to(targetVisual.sprite, SpriteAccessor.ALPHA, .05f).target(.25f).repeatYoyo(1, 0f)
+        Tween.to(targetVisual.sprite, SpriteAccessor.ALPHA, .05f)
+            .target(.25f).repeatYoyo(1, 0f)
     );
 
     // Ya didn't miss!
@@ -411,7 +413,7 @@ public class CombatHelpers {
         }
       }
 
-      // Give skill experience
+      // Give experience
 
       SkillsComponent skills = ComponentMappers.skills.get(starter);
       skills.counters.put(skill, skills.counters.get(skill) + 20);
@@ -463,7 +465,7 @@ public class CombatHelpers {
 
         for (Effect effect : starterEffects.effects) {
           if (effect.trigger == Effect.Trigger.HIT) {
-            effect.act(target);
+            effect.act(starter, target);
           }
         }
       }
@@ -478,7 +480,7 @@ public class CombatHelpers {
 
           for (Effect effect : itemEffects.effects) {
             if (effect.trigger == Effect.Trigger.HIT) {
-              effect.act(target);
+              effect.act(starter, target);
             }
           }
 

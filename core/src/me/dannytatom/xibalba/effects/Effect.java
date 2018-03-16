@@ -6,9 +6,9 @@ public abstract class Effect {
   public Type type;
   public Trigger trigger;
 
-  public abstract void act(Entity entity);
+  public abstract void act(Entity caster, Entity target);
 
-  public abstract void revoke(Entity entity);
+  public abstract void revoke(Entity caster, Entity target);
 
   public enum Type {
     ACTIVE, PASSIVE

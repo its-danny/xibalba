@@ -387,7 +387,7 @@ public class ItemHelpers {
 
       for (Effect effect : effects.effects) {
         if (effect.trigger == Effect.Trigger.WEAR) {
-          effect.act(entity);
+          effect.act(entity, entity);
         }
       }
     }
@@ -420,7 +420,7 @@ public class ItemHelpers {
       if (itemEffects != null) {
         for (Effect effect : itemEffects.effects) {
           if (effect.trigger == Effect.Trigger.CONSUME) {
-            effect.act(entity);
+            effect.act(entity, entity);
           }
         }
       }
@@ -525,7 +525,7 @@ public class ItemHelpers {
 
       for (Effect effect : effects.effects) {
         if (effect.trigger == Effect.Trigger.WEAR) {
-          effect.revoke(entity);
+          effect.revoke(entity, entity);
         }
       }
     }
@@ -551,7 +551,7 @@ public class ItemHelpers {
       if (ComponentMappers.effects.has(item)) {
         for (Effect effect : ComponentMappers.effects.get(item).effects) {
           if (effect.trigger == Effect.Trigger.DROP) {
-            effect.act(item);
+            effect.act(item, item);
           }
         }
       }

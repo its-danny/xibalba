@@ -8,12 +8,12 @@ public class DealDamage extends Effect {
   public int damage;
 
   @Override
-  public void act(Entity entity) {
-    WorldManager.entityHelpers.takeDamage(entity, damage);
+  public void act(Entity caster, Entity target) {
+    WorldManager.entityHelpers.takeDamage(target, damage);
   }
 
   @Override
-  public void revoke(Entity entity) {
+  public void revoke(Entity caster, Entity target) {
 
   }
 }
