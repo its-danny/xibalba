@@ -26,6 +26,7 @@ public class LoadingScreen implements Screen {
   private final Main main;
   private final Stage stage;
   private final Label label;
+  private volatile boolean isLoading;
 
   /**
    * Loading screen.
@@ -44,6 +45,8 @@ public class LoadingScreen implements Screen {
     label = new Label("", Main.skin);
     table.add(label);
 
+    isLoading = true;
+
     new Thread(() -> Gdx.app.postRunnable(this::loadAssets)).start();
   }
 
@@ -58,7 +61,7 @@ public class LoadingScreen implements Screen {
 
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-    if (Main.assets.update()) {
+    if (!isLoading && Main.assets.update()) {
       Main.asciiAtlas = Main.assets.get("sprites/qbicfeet_10x10.atlas");
       Main.soundManager = new SoundManager();
 
@@ -164,6 +167,8 @@ public class LoadingScreen implements Screen {
     Main.assets.load("sounds/Stab_Punch_Hack_18.wav", Sound.class);
     Main.assets.load("sounds/Stab_Punch_Hack_19.wav", Sound.class);
     Main.assets.load("sounds/Stab_Punch_Hack_63.wav", Sound.class);
+
+    isLoading = false;
   }
 
   @Override
